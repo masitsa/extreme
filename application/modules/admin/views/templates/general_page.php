@@ -8,7 +8,7 @@
 
 ?>
 <!doctype html>
-<html class="fixed">
+<html class="fixed sidebar-left-collapsed">
 	<head>
         <?php echo $this->load->view('admin/includes/header', $contacts, TRUE); ?>
     </head>
@@ -66,7 +66,7 @@
 		<script src="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/flot-tooltip/jquery.flot.tooltip.js"></script>		
 		<script src="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/flot/jquery.flot.pie.js"></script>		
 		<script src="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/flot/jquery.flot.categories.js"></script>		
-		<script src="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/flot/jquery.flot.resize.js"></script>		
+		<script src="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/flot/jquery.flot.resize.js"></script>
 		<script src="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/jquery-sparkline/jquery.sparkline.js"></script>		
 		<script src="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/raphael/raphael.js"></script>		
 		<script src="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/morris/morris.js"></script>		

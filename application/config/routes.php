@@ -88,8 +88,8 @@ $route['human-resource/deactivate-personnel/(:num)/(:num)'] = 'hr/personnel/deac
 /*
 *	Inventory Routes
 */
-$route['inventory/units-of-measurement'] = 'inventory/configuration/all_units';
-$route['inventory/personnel/(:any)/(:any)/(:num)'] = 'inventory/personnel/index/$1/$2/$3';
+$route['inventory/units-of-measurement'] = 'inventory/unit/index';
+$route['inventory/units-of-measurement/(:any)/(:any)/(:num)'] = 'inventory/unit/index/$1/$2/$3';
 $route['inventory/add-personnel'] = 'inventory/personnel/add_personnel';
 $route['inventory/edit-personnel/(:num)'] = 'inventory/personnel/edit_personnel/$1';
 $route['inventory/edit-personnel/(:num)/(:num)'] = 'inventory/personnel/edit_personnel/$1/$2';
@@ -99,6 +99,38 @@ $route['inventory/activate-personnel/(:num)'] = 'inventory/personnel/activate_pe
 $route['inventory/activate-personnel/(:num)/(:num)'] = 'inventory/personnel/activate_personnel/$1/$2';
 $route['inventory/deactivate-personnel/(:num)'] = 'inventory/personnel/deactivate_personnel/$1';
 $route['inventory/deactivate-personnel/(:num)/(:num)'] = 'inventory/personnel/deactivate_personnel/$1/$2';
+
+/*
+*	Microfinance Routes
+*/
+$route['microfinance/individual'] = 'microfinance/individual/index';
+$route['microfinance/individual/(:any)/(:any)/(:num)'] = 'microfinance/individual/index/$1/$2/$3';
+$route['microfinance/add-individual'] = 'microfinance/individual/add_individual';
+$route['microfinance/edit-individual/(:num)'] = 'microfinance/individual/edit_individual/$1';
+$route['microfinance/edit-individual/(:num)/(:num)'] = 'microfinance/individual/edit_individual/$1/$2';
+$route['microfinance/delete-individual/(:num)'] = 'microfinance/individual/delete_individual/$1';
+$route['microfinance/delete-individual/(:num)/(:num)'] = 'microfinance/individual/delete_individual/$1/$2';
+$route['microfinance/activate-individual/(:num)'] = 'microfinance/individual/activate_individual/$1';
+$route['microfinance/activate-individual/(:num)/(:num)'] = 'microfinance/individual/activate_individual/$1/$2';
+$route['microfinance/deactivate-individual/(:num)'] = 'microfinance/individual/deactivate_individual/$1';
+$route['microfinance/deactivate-individual/(:num)/(:num)'] = 'microfinance/individual/deactivate_individual/$1/$2';
+
+$route['microfinance/savings-plan'] = 'microfinance/savings_plan/index';
+$route['microfinance/savings-plan/(:any)/(:any)/(:num)'] = 'microfinance/savings_plan/index/$1/$2/$3';
+$route['microfinance/add-savings-plan'] = 'microfinance/savings_plan/add_savings_plan';
+$route['microfinance/edit-savings-plan/(:num)'] = 'microfinance/savings_plan/edit_savings_plan/$1';
+$route['microfinance/edit-savings-plan/(:num)/(:num)'] = 'microfinance/savings_plan/edit_savings_plan/$1/$2';
+$route['microfinance/delete-savings-plan/(:num)'] = 'microfinance/savings_plan/delete_savings_plan/$1';
+$route['microfinance/delete-savings-plan/(:num)/(:num)'] = 'microfinance/savings_plan/delete_savings_plan/$1/$2';
+$route['microfinance/activate-savings-plan/(:num)'] = 'microfinance/savings_plan/activate_savings_plan/$1';
+$route['microfinance/activate-savings-plan/(:num)/(:num)'] = 'microfinance/savings_plan/activate_savings_plan/$1/$2';
+$route['microfinance/deactivate-savings-plan/(:num)'] = 'microfinance/savings_plan/deactivate_savings_plan/$1';
+$route['microfinance/deactivate-savings-plan/(:num)/(:num)'] = 'microfinance/savings_plan/deactivate_savings_plan/$1/$2';
+
+$route['microfinance/add-individual-plan/(:num)'] = 'microfinance/individual/add_individual_plan/$1';
+$route['microfinance/activate-individual-plan/(:num)/(:num)'] = 'microfinance/individual/activate_individual_plan/$1/$2';
+$route['microfinance/deactivate-individual-plan/(:num)/(:num)'] = 'microfinance/individual/deactivate_individual_plan/$1/$2';
+
 
 /* End of file routes.php */
 /* Location: ./system/application/config/routes.php */
