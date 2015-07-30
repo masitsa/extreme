@@ -33,7 +33,7 @@ if(!empty($validation_error))
 			
             ?>
             
-            <?php echo form_open($this->uri->uri_string(), array("class" => "form-horizontal", "role" => "form"));?>
+            <?php echo form_open(''.site_url().'human-resource/edit-personnel-account/'.$personnel_id.'', array("class" => "form-horizontal", "role" => "form"));?>
 <div class="row">
 	<div class="col-md-6">
         
@@ -106,7 +106,7 @@ if(!empty($validation_error))
     </div>
 </div>
             <?php echo form_close();?>
-            
+            <?php echo form_open(''.site_url().'human-resource/update-personnel-roles/'.$personnel_id.'', array("class" => "form-horizontal", "role" => "form"));?>
                     <div class="row">
                     	<h3>Edit <?php echo $personnel_fname;?>'s roles</h3>
                     	<div class="col-md-4">
@@ -129,7 +129,7 @@ if(!empty($validation_error))
                             </div>
                             
                         	<div class="child_sections">
-                            	<select class="form-control" name="section_id">
+                            	<select class="form-control" name="child_id">
                                 	<option value="" >--Select section to display sub sections--</option>
                                 </select>
                             </div>
@@ -144,10 +144,11 @@ if(!empty($validation_error))
                                 </div>
                             </div>
                         </div>
-                                                
+            <?php echo form_close();?>                         
                     	<div class="col-md-8">
                         	<h4>Assigned roles</h4>
                         	<?php
+                             // var_dump($roles->num_rows()) or die();
                             	if($roles->num_rows() > 0)
 								{
 									$count = 0;
@@ -160,15 +161,16 @@ if(!empty($validation_error))
                                             <th>Actions</th>
                                         </tr>
                                     <?php
+
 									foreach($roles->result() as $res)
 									{
 										$section_id = $res->section_id;
 										$section_name = $res->section_name;
 										$section_parent = $res->section_parent;
-										
+										$count++;
 										if($section_parent == 0)
 										{
-											$count++;
+											
 											?>
                                             <tr>
                                             	<td><?php echo $count;?></td>

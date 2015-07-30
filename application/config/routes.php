@@ -60,6 +60,7 @@ $route['administration/sections'] = 'admin/sections/index';
 $route['administration/sections/(:any)/(:any)/(:num)'] = 'admin/sections/index/$1/$2/$3';
 $route['administration/add-section'] = 'admin/sections/add_section';
 $route['administration/edit-section/(:num)'] = 'admin/sections/edit_section/$1';
+
 $route['administration/edit-section/(:num)/(:num)'] = 'admin/sections/edit_section/$1/$2';
 $route['administration/delete-section/(:num)'] = 'admin/sections/delete_section/$1';
 $route['administration/delete-section/(:num)/(:num)'] = 'admin/sections/delete_section/$1/$2';
@@ -77,6 +78,8 @@ $route['human-resource/personnel'] = 'hr/personnel/index';
 $route['human-resource/personnel/(:any)/(:any)/(:num)'] = 'hr/personnel/index/$1/$2/$3';
 $route['human-resource/add-personnel'] = 'hr/personnel/add_personnel';
 $route['human-resource/edit-personnel/(:num)'] = 'hr/personnel/edit_personnel/$1';
+$route['human-resource/edit-personnel-about/(:num)'] = 'hr/personnel/update_personnel_about_details/$1';
+$route['human-resource/edit-personnel-account/(:num)'] = 'hr/personnel/update_personnel_account_details/$1';
 $route['human-resource/edit-personnel/(:num)/(:num)'] = 'hr/personnel/edit_personnel/$1/$2';
 $route['human-resource/delete-personnel/(:num)'] = 'hr/personnel/delete_personnel/$1';
 $route['human-resource/delete-personnel/(:num)/(:num)'] = 'hr/personnel/delete_personnel/$1/$2';
@@ -84,6 +87,29 @@ $route['human-resource/activate-personnel/(:num)'] = 'hr/personnel/activate_pers
 $route['human-resource/activate-personnel/(:num)/(:num)'] = 'hr/personnel/activate_personnel/$1/$2';
 $route['human-resource/deactivate-personnel/(:num)'] = 'hr/personnel/deactivate_personnel/$1';
 $route['human-resource/deactivate-personnel/(:num)/(:num)'] = 'hr/personnel/deactivate_personnel/$1/$2';
+$route['human-resource/reset-password/(:num)'] = 'hr/personnel/reset_password/$1';
+$route['human-resource/update-personnel-roles/(:num)'] = 'hr/personnel/update_personnel_roles/$1';
+$route['human-resource/add-emergency-contact/(:num)'] = 'hr/personnel/add_emergency_contact/$1';
+$route['human-resource/activate-emergency-contact/(:num)/(:num)'] = 'hr/personnel/activate_emergency_contact/$1/$2';
+$route['human-resource/deactivate-emergency-contact/(:num)/(:num)'] = 'hr/personnel/deactivate_emergency_contact/$1/$2';
+$route['human-resource/delete-emergency-contact/(:num)/(:num)'] = 'hr/personnel/delete_emergency_contact/$1/$2';
+
+$route['human-resource/add-dependant-contact/(:num)/(:num)'] = 'hr/personnel/add_dependant_contact/$1/$2';
+$route['human-resource/activate-dependant-contact/(:num)/(:num)'] = 'hr/personnel/activate_dependant_contact/$1/$2';
+$route['human-resource/deactivate-dependant-contact/(:num)/(:num)'] = 'hr/personnel/deactivate_dependant_contact/$1/$2';
+$route['human-resource/delete-dependant-contact/(:num)/(:num)'] = 'hr/personnel/delete_dependant_contact/$1/$2';
+
+$route['human-resource/add-personnel-job/(:num)/(:num)'] = 'hr/personnel/add_personnel_job/$1/$2';
+$route['human-resource/activate-personnel-job/(:num)/(:num)'] = 'hr/personnel/activate_personnel_job/$1/$2';
+$route['human-resource/deactivate-personnel-job/(:num)/(:num)'] = 'hr/personnel/deactivate_personnel_job/$1/$2';
+$route['human-resource/delete-personnel-job/(:num)/(:num)'] = 'hr/personnel/delete_personnel_job/$1/$2';
+
+
+$route['human-resource/add-personnel-leave/(:num)/(:num)'] = 'hr/personnel/add_personnel_leave/$1/$2';
+$route['human-resource/activate-personnel-leave/(:num)/(:num)'] = 'hr/personnel/activate_personnel_leave/$1/$2';
+$route['human-resource/deactivate-personnel-leave/(:num)/(:num)'] = 'hr/personnel/deactivate_personnel_leave/$1/$2';
+$route['human-resource/delete-personnel-leave/(:num)/(:num)'] = 'hr/personnel/delete_personnel_leave/$1/$2';
+
 
 /*
 *	Inventory Routes

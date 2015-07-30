@@ -36,24 +36,24 @@ if(!empty($validation_error))
 	$personnel_post_code = set_value('personnel_post_code');
 }
 ?>
-          <section class="panel">
-                <header class="panel-heading">
-                    <h2 class="panel-title">About <?php echo $personnel_onames.' '.$personnel_fname;?></h2>
-                </header>
-                <div class="panel-body">
-                <!-- Adding Errors -->
-            <?php
-            if(isset($error)){
-                echo '<div class="alert alert-danger"> Oh snap! Change a few things up and try submitting again. </div>';
-            }
-            if(!empty($validation_errors))
-            {
-                echo '<div class="alert alert-danger"> Oh snap! '.$validation_errors.' </div>';
-            }
-			
-            ?>
+<section class="panel">
+    <header class="panel-heading">
+        <h2 class="panel-title">About <?php echo $personnel_onames.' '.$personnel_fname;?></h2>
+    </header>
+    <div class="panel-body">
+    <!-- Adding Errors -->
+    <?php
+    if(isset($error)){
+        echo '<div class="alert alert-danger"> Oh snap! Change a few things up and try submitting again. </div>';
+    }
+    if(!empty($validation_errors))
+    {
+        echo '<div class="alert alert-danger"> Oh snap! '.$validation_errors.' </div>';
+    }
+
+    ?>
             
-            <?php echo form_open($this->uri->uri_string(), array("class" => "form-horizontal", "role" => "form"));?>
+<?php echo form_open(''.site_url().'human-resource/edit-personnel-about/'.$personnel_id.'', array("class" => "form-horizontal", "role" => "form"));?>
 <div class="row">
 	<div class="col-md-6">
         <div class="form-group">

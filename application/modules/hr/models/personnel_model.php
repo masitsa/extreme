@@ -88,6 +88,8 @@ class Personnel_model extends CI_Model
 			return FALSE;
 		}
 	}
+
+
 	
 	/*
 	*	Update an existing personnel
@@ -108,14 +110,9 @@ class Personnel_model extends CI_Model
 			'personnel_address'=>$this->input->post('personnel_address'),
 			'personnel_locality'=>$this->input->post('personnel_locality'),
 			'title_id'=>$this->input->post('title_id'),
-			'personnel_username'=>$this->input->post('personnel_username'),
-			'personnel_kin_fname'=>$this->input->post('personnel_kin_fname'),
-			'personnel_kin_onames'=>$this->input->post('personnel_kin_onames'),
-			'personnel_kin_contact'=>$this->input->post('personnel_kin_contact'),
-			'personnel_kin_address'=>$this->input->post('personnel_kin_address'),
-			'kin_relationship_id'=>$this->input->post('kin_relationship_id'),
-			'job_title_id'=>$this->input->post('job_title_id'),
-			'personnel_staff_id'=>$this->input->post('staff_id')
+			'personnel_number'=>$this->input->post('personnel_number'),
+			'personnel_city'=>$this->input->post('personnel_city'),
+			'personnel_post_code'=>$this->input->post('personnel_post_code')
 		);
 		
 		$this->db->where('personnel_id', $personnel_id);
@@ -126,6 +123,103 @@ class Personnel_model extends CI_Model
 		else{
 			return FALSE;
 		}
+	}
+
+	public function update_personnel_account_details($personnel_id)
+	{
+		$data = array(
+			'personnel_username'=>$this->input->post('personnel_username'),
+			'personnel_account_status'=>$this->input->post('personnel_account_status'),
+		);
+		
+		$this->db->where('personnel_id', $personnel_id);
+		if($this->db->update('personnel', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}	
+	}
+	public function update_personnel_roles($personnel_id)
+	{
+		$section_id = $this->input->post('section_id');
+		$child_id = $this->input->post('child_id');
+		if($child_id > 0)
+		{
+
+			$update_section = $child_id;
+		}
+		else
+		{
+
+			$update_section = $section_id;
+		}
+
+		
+		$this->db->from('personnel_section,section');
+		$this->db->select('*');
+		$this->db->where('personnel_section.section_id = section.section_id AND personnel_section.section_id = '.$update_section.' AND personnel_section.personnel_id ='.$personnel_id);
+		$query = $this->db->get();
+
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row;
+			$section_parent = $row->section_parent;
+
+			if($section_parent > 0 AND $section_parent)
+			{
+				$update_section = $section_parent;
+				$data = array(
+					'personnel_id'=>$personnel_id,
+					'section_id'=>$update_section,
+					'created_by'=>$this->session->userdata('personnel_id'),
+					'modified_by'=>$this->session->userdata('personnel_id'),
+					'created'=>date('Y-m-d H:i:s'),
+					'last_modified'=>date('Y-m-d H:i:s'),
+				);
+			}
+			else
+			{
+				$update_section = $update_section;
+				$data = array(
+					'personnel_id'=>$personnel_id,
+					'section_id'=>$update_section,
+					'created_by'=>$this->session->userdata('personnel_id'),
+					'modified_by'=>$this->session->userdata('personnel_id'),
+					'created'=>date('Y-m-d H:i:s'),
+					'last_modified'=>date('Y-m-d H:i:s'),
+				);
+			}
+			$this->db->where('personnel_id', $personnel_id);
+			if($this->db->update('personnel_section', $data))
+			{
+				return TRUE;
+			}
+			else{
+				return FALSE;
+			}	
+		}
+		else
+		{
+			$data = array(
+					'personnel_id'=>$personnel_id,
+					'section_id'=>$update_section,
+					'created_by'=>$this->session->userdata('personnel_id'),
+					'modified_by'=>$this->session->userdata('personnel_id'),
+					'created'=>date('Y-m-d H:i:s'),
+					'last_modified'=>date('Y-m-d H:i:s'),
+			);
+			if($this->db->insert('personnel_section', $data))
+			{
+				return TRUE;
+			}
+			else{
+				return FALSE;
+			}	
+
+		}
+
 	}
 	
 	/*
@@ -308,9 +402,9 @@ class Personnel_model extends CI_Model
 	public function get_emergency_contacts($personnel_id)
 	{
 		//retrieve all users
-		$this->db->from('personnel_emergency');
+		$this->db->from('personnel_emergency,relationship');
 		$this->db->select('*');
-		$this->db->where(array('personnel_emergency.personnel_id' => $personnel_id, 'personnel_emergency.relationship_id' => 'relationship.relationship_id'));
+		$this->db->where('personnel_emergency.relationship_id = relationship.relationship_id AND personnel_emergency.personnel_id ='.$personnel_id);
 		$this->db->order_by('personnel_emergency_fname');
 		$query = $this->db->get();
 		
@@ -325,9 +419,9 @@ class Personnel_model extends CI_Model
 	public function get_personnel_dependants($personnel_id)
 	{
 		//retrieve all users
-		$this->db->from('personnel_dependant');
+		$this->db->from('personnel_dependant,relationship');
 		$this->db->select('*');
-		$this->db->where(array('personnel_dependant.personnel_id' => $personnel_id, 'personnel_dependant.relationship_id' => 'relationship.relationship_id'));
+		$this->db->where('personnel_dependant.relationship_id = relationship.relationship_id AND personnel_dependant.personnel_id = '.$personnel_id);
 		$this->db->order_by('personnel_dependant_fname');
 		$query = $this->db->get();
 		
@@ -345,7 +439,18 @@ class Personnel_model extends CI_Model
 		$this->db->from('personnel_job, job_title');
 		$this->db->select('personnel_job.*, job_title.job_title_name');
 		$this->db->order_by('job_title.job_title_name');
-		$this->db->where(array('personnel_job.personnel_id' => $personnel_id, 'personnel_job.job_title_id' => 'job_title.job_title_id'));
+		$this->db->where('personnel_job.job_title_id = job_title.job_title_id AND personnel_job.personnel_id = '.$personnel_id);
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	public function get_personnel_leave($personnel_id)
+	{
+		//retrieve all users
+		$this->db->from('leave_duration, leave_type');
+		$this->db->select('leave_duration.*, leave_type.leave_type_name');
+		$this->db->order_by('leave_type.leave_type_name');
+		$this->db->where('leave_duration.leave_type_id = leave_type.leave_type_id AND leave_duration.personnel_id = '.$personnel_id);
 		$query = $this->db->get();
 		
 		return $query;
@@ -365,22 +470,7 @@ class Personnel_model extends CI_Model
 		return $result;
 	}
 	
-	/*
-	*	get a single personnel's leave details
-	*	@param int $personnel_id
-	*
-	*/
-	public function get_personnel_leave($personnel_id)
-	{
-		//retrieve all users
-		$this->db->from('leave_duration, leave_type');
-		$this->db->select('leave_duration.*, leave_type.leave_type_name');
-		$this->db->order_by('start_date', 'DESC');
-		$this->db->where(array('leave_duration.personnel_id' => $personnel_id, 'leave_duration.leave_type_id' => 'leave_type.leave_type_id'));
-		$query = $this->db->get();
-		
-		return $query;
-	}
+	
 	
 	/*
 	*	get a single personnel's roles
@@ -391,12 +481,348 @@ class Personnel_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from('personnel_section, section');
-		$this->db->select('personnel_section.*, section.section_name, section.section_position');
+		$this->db->select('personnel_section.*, section.section_name, section.section_position,section.section_parent');
 		$this->db->order_by('section_position', 'ASC');
-		$this->db->where(array('personnel_section.personnel_id' => $personnel_id, 'personnel_section.section_id' => 'section.section_id'));
+		$this->db->where('personnel_section.section_id = section.section_id AND personnel_section.personnel_id = '. $personnel_id);
 		$query = $this->db->get();
 		
 		return $query;
+	}
+
+
+	/*
+	*	Emergency listings
+	*	@param int $personnel_id
+	*
+	*/
+	public function add_emergency_contact($personnel_id)
+	{
+		$data = array(
+			'personnel_emergency_onames'=>ucwords(strtolower($this->input->post('personnel_emergency_onames'))),
+			'personnel_emergency_fname'=>ucwords(strtolower($this->input->post('personnel_emergency_fname'))),
+			'personnel_emergency_email'=>$this->input->post('personnel_emergency_email'),
+			'gender_id'=>$this->input->post('gender_id'),
+			'personnel_id'=>$personnel_id,
+			'personnel_emergency_phone'=>$this->input->post('personnel_emergency_phone'),
+			'relationship_id'=>$this->input->post('relationship_id'),
+			'personnel_emergency_locality'=>$this->input->post('personnel_emergency_locality'),
+			'title_id'=>$this->input->post('title_id'),
+			'personnel_emergency_status'=>$this->input->post('personnel_emergency_status'),
+			'created'=>$this->session->userdata('personnel_id')
+		);
+		
+		if($this->db->insert('personnel_emergency', $data))
+		{
+			return $this->db->insert_id();
+		}
+		else{
+			return FALSE;
+		}
+	}
+
+	/*
+	*	Activate a deactivated personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function activate_emergency_contact($personnel_emergency_id)
+	{
+		$data = array(
+				'personnel_emergency_status' => 1
+			);
+		$this->db->where('personnel_emergency_id', $personnel_emergency_id);
+		
+
+		if($this->db->update('personnel_emergency', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Deactivate an activated personnel
+	*	@param int $personnel_emergency_id
+	*
+	*/
+	public function deactivate_emergency_contact($personnel_emergency_id)
+	{
+		$data = array(
+				'personnel_emergency_status' => 0
+			);
+		$this->db->where('personnel_emergency_id', $personnel_emergency_id);
+		
+		if($this->db->update('personnel_emergency', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+
+	/*
+	*	Delete an existing personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function delete_personnel_emergency_contact($personnel_emergency_id)
+	{
+			if($this->db->delete('personnel_emergency', array('personnel_emergency_id' => $personnel_emergency_id)))
+			{
+				return TRUE;
+			}
+			else{
+				return FALSE;
+			}
+		
+	}
+
+	/*
+	*	Emergency listings
+	*	@param int $personnel_id
+	*
+	*/
+	public function add_dependant_contact($personnel_id)
+	{
+		$data = array(
+			'personnel_dependant_onames'=>ucwords(strtolower($this->input->post('personnel_dependant_onames'))),
+			'personnel_dependant_fname'=>ucwords(strtolower($this->input->post('personnel_dependant_fname'))),
+			'personnel_dependant_email'=>$this->input->post('personnel_dependant_email'),
+			'gender_id'=>$this->input->post('gender_id'),
+			'personnel_id'=>$personnel_id,
+			'personnel_dependant_phone'=>$this->input->post('personnel_dependant_phone'),
+			'relationship_id'=>$this->input->post('relationship_id'),
+			'personnel_dependant_locality'=>$this->input->post('personnel_dependant_locality'),
+			'title_id'=>$this->input->post('title_id'),
+			'personnel_dependant_status'=>$this->input->post('personnel_dependant_status'),
+			'created'=>$this->session->userdata('personnel_id')
+		);
+		
+		if($this->db->insert('personnel_dependant', $data))
+		{
+			return $this->db->insert_id();
+		}
+		else{
+			return FALSE;
+		}
+	}
+
+	/*
+	*	Activate a deactivated personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function activate_dependant_contact($personnel_dependant_id)
+	{
+		$data = array(
+				'personnel_dependant_status' => 1
+			);
+		$this->db->where('personnel_dependant_id', $personnel_dependant_id);
+		
+
+		if($this->db->update('personnel_dependant', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Deactivate an activated personnel
+	*	@param int $personnel_dependant_id
+	*
+	*/
+	public function deactivate_dependant_contact($personnel_dependant_id)
+	{
+		$data = array(
+				'personnel_dependant_status' => 0
+			);
+		$this->db->where('personnel_dependant_id', $personnel_dependant_id);
+		
+		if($this->db->update('personnel_dependant', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+
+	/*
+	*	Delete an existing personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function delete_personnel_dependant_contact($personnel_dependant_id)
+	{
+			if($this->db->delete('personnel_dependant', array('personnel_dependant_id' => $personnel_dependant_id)))
+			{
+				return TRUE;
+			}
+			else{
+				return FALSE;
+			}
+		
+	}
+
+
+
+	/*
+	*	Emergency listings
+	*	@param int $personnel_id
+	*
+	*/
+	public function add_personnel_job($personnel_id)
+	{
+		$data = array(
+			
+			'job_title_id'=>$this->input->post('job_title_id'),
+			'personnel_id'=>$personnel_id,
+			'created'=>$this->session->userdata('personnel_id')
+		);
+		
+		if($this->db->insert('personnel_job', $data))
+		{
+			return $this->db->insert_id();
+		}
+		else{
+			return FALSE;
+		}
+	}
+
+	/*
+	*	Activate a deactivated personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function activate_personnel_job($personnel_job_id)
+	{
+		$data = array(
+				'personnel_job_status' => 1
+			);
+		$this->db->where('personnel_job_id', $personnel_job_id);
+		
+
+		if($this->db->update('personnel_job', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Deactivate an activated personnel
+	*	@param int $personnel_job_id
+	*
+	*/
+	public function deactivate_personnel_job($personnel_job_id)
+	{
+		$data = array(
+				'personnel_job_status' => 0
+			);
+		$this->db->where('personnel_job_id', $personnel_job_id);
+		
+		if($this->db->update('personnel_job', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+
+	/*
+	*	Delete an existing personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function delete_personnel_job($personnel_job_id)
+	{
+			if($this->db->delete('personnel_job', array('personnel_job_id' => $personnel_job_id)))
+			{
+				return TRUE;
+			}
+			else{
+				return FALSE;
+			}
+		
+	}
+	public function add_personnel_leave($personnel_id)
+	{
+		$items = array(
+						'personnel_id' => $personnel_id,
+						'start_date' => $this->input->post("start_date"),
+						'end_date' => $this->input->post("end_date"),
+						'leave_type_id' => $this->input->post("leave_type_id")
+					  );
+		$result = $this->db->insert("leave_duration", $items);
+	}
+
+	/*
+	*	Activate a deactivated personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function activate_personnel_leave($leave_duration_id)
+	{
+		$data = array(
+				'personnel_leave_status' => 1
+			);
+		$this->db->where('leave_duration_id', $leave_duration_id);
+		
+
+		if($this->db->update('leave_duration', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Deactivate an activated personnel
+	*	@param int $leave_duration_id
+	*
+	*/
+	public function deactivate_personnel_leave($leave_duration_id)
+	{
+		$data = array(
+				'personnel_leave_status' => 0
+			);
+		$this->db->where('leave_duration_id', $leave_duration_id);
+		
+		if($this->db->update('leave_duration', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+
+	/*
+	*	Delete an existing personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function delete_personnel_leave($leave_duration_id)
+	{
+			if($this->db->delete('leave_duration', array('leave_duration_id' => $leave_duration_id)))
+			{
+				return TRUE;
+			}
+			else{
+				return FALSE;
+			}
+		
 	}
 }
 ?>

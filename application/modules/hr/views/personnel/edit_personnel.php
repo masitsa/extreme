@@ -2,6 +2,7 @@
 //personnel data
 $row = $personnel->row();
 
+// var_dump($row) or die();
 $personnel_onames = $row->personnel_onames;
 $personnel_fname = $row->personnel_fname;
 $personnel_dob = $row->personnel_dob;
@@ -20,6 +21,7 @@ $personnel_kin_address = $row->personnel_kin_address;
 $kin_relationship_id = $row->kin_relationship_id;
 $job_title_idd = $row->job_title_id;
 $staff_id = $row->personnel_staff_id;
+
 //echo $gender_id;
 //repopulate data if validation errors occur
 $validation_error = validation_errors();
@@ -47,28 +49,41 @@ if(!empty($validation_error))
 }
 ?>
 		<div class="row">
-        	<div class="col-md-2">
+        	<!-- <div class="col-md-2">
             	<img src="<?php echo base_url().'assets/img/avatar.jpg';?>" class="img-responsive img-thumbnail" />
-            </div>
+            </div> -->
             
-            <div class="col-md-7">
-            	<h2><?php echo $personnel_fname.' '.$personnel_onames;?></h2>
+            <div class="col-md-9">
+            	<!-- <h2><?php echo $personnel_fname.' '.$personnel_onames;?></h2>
                 <p>
                     <i class="fa fa-phone"/></i>
                     <span id="mobile_phone"><?php echo $personnel_phone;?></span>
                     <i class="fa fa-envelope"/></i>
                     <span id="work_email"><?php echo $personnel_email;?></span>
-                </p>
+                </p> -->
             </div>
             
         	<div class="col-md-3">
-            	<a href="<?php echo site_url();?>human-resource/personnel" class="btn btn-info pull-right">Back to personnel</a>
+            
             </div>
         </div>
+      	<div class="row">
         
           <section class="panel">
+
                 <header class="panel-heading">
-                    <h2 class="panel-title"><?php echo $title;?></h2>
+                	<div class="row">
+	                	<div class="col-md-6">
+		                    <h2 class="panel-title"><?php echo $title;?> <?php echo $personnel_fname.' '.$personnel_onames;?> Details</h2>
+		                    <i class="fa fa-phone"/></i>
+		                    <span id="mobile_phone"><?php echo $personnel_phone;?></span>
+		                    <i class="fa fa-envelope"/></i>
+		                    <span id="work_email"><?php echo $personnel_email;?></span>
+		                </div>
+		                <div class="col-md-6">
+		                		<a href="<?php echo site_url();?>human-resource/personnel" class="btn btn-sm btn-info pull-right">Back to personnel</a>
+		                </div>
+	                </div>
                 </header>
                 <div class="panel-body">
                     
@@ -120,3 +135,4 @@ if(!empty($validation_error))
                     </div>
                 </div>
             </section>
+        </div>
