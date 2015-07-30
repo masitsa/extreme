@@ -1,10 +1,12 @@
 <?php
+	$result = '';
 	if($jobs->num_rows() > 0)
 	{
 		$count = 0;
 			
 		$result .= 
 		'
+		<br/>
 		<table class="table table-bordered table-striped table-condensed">
 			<thead>
 				<tr>
@@ -30,14 +32,14 @@
 			//create deactivated status display
 			if($personnel_job_status == 0)
 			{
-				$status = '<span class="label label-important">Deactivated</span>';
-				$button = '<a class="btn btn-info" href="'.site_url().'human-resource/activate-position/'.$personnel_job_id.'" onclick="return confirm(\'Do you want to activate '.$job.'?\');" title="Activate '.$job.'"><i class="fa fa-thumbs-up"></i></a>';
+				$status = '<span class="label label-danger">Deactivated</span>';
+				$button = '<a class="btn btn-sm btn-info" href="'.site_url().'human-resource/activate-position/'.$personnel_job_id.'/'.$personnel_id.'" onclick="return confirm(\'Do you want to activate '.$job.'?\');" title="Activate '.$job.'"><i class="fa fa-thumbs-up"></i></a>';
 			}
 			//create activated status display
 			else if($personnel_job_status == 1)
 			{
 				$status = '<span class="label label-success">Active</span>';
-				$button = '<a class="btn btn-default" href="'.site_url().'human-resource/deactivate-position/'.$personnel_job_id.'" onclick="return confirm(\'Do you want to deactivate '.$job.'?\');" title="Deactivate '.$job.'"><i class="fa fa-thumbs-down"></i></a>';
+				$button = '<a class="btn btn-sm btn-default" href="'.site_url().'human-resource/deactivate-position/'.$personnel_job_id.'/'.$personnel_id.'" onclick="return confirm(\'Do you want to deactivate '.$job.'?\');" title="Deactivate '.$job.'"><i class="fa fa-thumbs-down"></i></a>';
 			}
 			
 			$count++;
@@ -50,7 +52,7 @@
 					<td>'.$last_modified.'</td>
 					<td>'.$status.'</td>
 					<td>'.$button.'</td>
-					<td><a href="'.site_url().'human-resource/delete-personnel/'.$personnel_job_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$job.'?\');" title="Delete '.$job.'"><i class="fa fa-trash"></i></a></td>
+					<td><a href="'.site_url().'human-resource/delete-personnel/'.$personnel_job_id.'/'.$personnel_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$job.'?\');" title="Delete '.$job.'"><i class="fa fa-trash"></i></a></td>
 				</tr> 
 			';
 		}
@@ -98,7 +100,7 @@ else
 			
             ?>
             
-            <?php echo form_open('personnel/add-position', array("class" => "form-horizontal", "role" => "form"));?>
+            <?php echo form_open('human-resource/add-personnel-job/'.$personnel_id, array("class" => "form-horizontal", "role" => "form"));?>
 <div class="row">
 	<div class="col-md-8 col-md-offset-2">
         

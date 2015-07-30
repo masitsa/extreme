@@ -74,7 +74,7 @@ a:active {
 
 /* Layout Base - Page Header */
 .page-header {
-	background: #171717;
+	background: #4C66A4;
 	border-bottom: none;
 	border-left: 1px solid #3a3a3a;
 	box-shadow: 1px 3px 0 1px #0088cc;
@@ -85,9 +85,9 @@ a:active {
 
 /* Layout Base - Sidebar Left */
 .sidebar-left {
-	background: #1d2127;
-	box-shadow: -5px 0 0 #2f3139 inset;
-	color: #777777;
+	background: #fff;
+	box-shadow: -5px 0 0 #fff inset;
+	color: #fff;
 	display: table-cell;
 	position: relative;
 	vertical-align: top;
@@ -180,7 +180,7 @@ a:active {
 
 	/* Layout Fixed - Inner Wrapper */
 	html.fixed .inner-wrapper {
-		padding-top: 110px;
+		padding-top: 70px;
 	}
 
 	/* Layout Fixed - Content Body */
@@ -1536,7 +1536,7 @@ html.header-dark .header .input-search .input-group-btn .btn-default {
 }
 
 .sidebar-left .sidebar-header .sidebar-title {
-	color: #465162;
+	color: #4C66A4;
 	padding: 15px;
 	font-size: 15px;
 	font-size: 1.5rem;
@@ -1548,7 +1548,7 @@ html.header-dark .header .input-search .input-group-btn .btn-default {
 	right: 0;
 	width: 73px;
 	height: 50px;
-	background-color: #171717;
+	background-color: #fff;
 	border-radius: 0 0 0 5px;
 	text-align: center;
 	cursor: pointer;
@@ -1565,7 +1565,7 @@ html.header-dark .header .input-search .input-group-btn .btn-default {
 }
 
 .sidebar-left .sidebar-header .sidebar-toggle:hover i {
-	color: #0088cc;
+	color: #4C66A4;
 }
 
 .sidebar-left hr.separator {
@@ -1603,8 +1603,8 @@ html.header-dark .header .input-search .input-group-btn .btn-default {
 
 @media only screen and (min-width: 768px) {
 	html.sidebar-left-collapsed .sidebar-left .nano {
-		background: #1d2127;
-		box-shadow: -5px 0 0 #2f3139 inset;
+		background: #fff;
+		box-shadow: -5px 0 0 #7777 inset;
 	}
 
 	html.sidebar-left-collapsed .sidebar-left .sidebar-title {
@@ -2298,7 +2298,7 @@ ul.nav-main > li > a {
 }
 
 ul.nav-main > li > a:hover, ul.nav-main > li > a:focus {
-	background-color: #21262d;
+	background-color: #7777;
 }
 
 ul.nav-main > li.nav-active > a {
@@ -2306,7 +2306,7 @@ ul.nav-main > li.nav-active > a {
 }
 
 ul.nav-main > li.nav-active > a:hover {
-	color: #abb4be;
+	color: #000;
 }
 
 ul.nav-main > li.nav-active > i {
@@ -2314,13 +2314,13 @@ ul.nav-main > li.nav-active > i {
 }
 
 ul.nav-main > li.nav-expanded > a {
-	background: #21262d;
+	background: #fff;
 }
 
 ul.nav-main li a {
 	font-size: 13px;
 	font-size: 1.3rem;
-	color: #abb4be;
+	color: #4C66A4;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
@@ -2382,7 +2382,7 @@ ul.nav-main li.nav-parent.nav-expanded > ul.nav-children {
 }
 
 ul.nav-main li .nav-children {
-	background: #191c21;
+	background: #fff;
 	box-shadow: 0px -3px 3px -3px rgba(0, 0, 0, 0.7) inset;
 	display: none;
 	padding: 10px 0;
@@ -2394,7 +2394,7 @@ ul.nav-main li .nav-children li a {
 }
 
 ul.nav-main li .nav-children li a:hover, ul.nav-main li .nav-children li a:focus {
-	background: #191c21;
+	background: #fff;
 }
 
 ul.nav-main li .nav-children li a:after {
@@ -5821,7 +5821,7 @@ html.ie11 .scroll-to-top {
 	background: #f6f6f6;
 	border-radius: 5px 5px 0 0;
 	border-bottom: 1px solid #DADADA;
-	padding: 18px;
+	padding: 8px;
 	position: relative;
 }
 
@@ -5931,7 +5931,7 @@ html.ie11 .scroll-to-top {
 
 .panel-title {
 	color: #33353f;
-	font-size: 20px;
+	font-size: 17px;
 	font-weight: 400;
 	line-height: 20px;
 	padding: 0;

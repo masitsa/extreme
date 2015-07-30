@@ -1,15 +1,16 @@
 <?php
 //personnel data
-$row = $personnel->row();
+// $row = $leave->row();
 
-$personnel_id = $row->personnel_id;
-
-	if($jobs->num_rows() > 0)
+// $personnel_id = $row->personnel_id;
+$result ='';
+	if($leave->num_rows() > 0)
 	{
 		$count = 0;
 			
 		$result .= 
 		'
+		<br/>
 		<table class="table table-bordered table-striped table-condensed">
 			<thead>
 				<tr>
@@ -36,14 +37,14 @@ $personnel_id = $row->personnel_id;
 			//create deactivated status display
 			if($leave_duration_status == 0)
 			{
-				$status = '<span class="label label-important">Unclaimed</span>';
-				$button = '<a class="btn btn-info" href="'.site_url().'human-resource/activate-position/'.$leave_duration_id.'" onclick="return confirm(\'Do you want to activate '.$job.'?\');" title="Activate '.$job.'"><i class="fa fa-thumbs-up"></i></a>';
+				$status = '<span class="label label-danger">Unclaimed</span>';
+				$button = '<a class="btn btn-sm btn-info" href="'.site_url().'human-resource/activate-position/'.$leave_duration_id.'/'.$personnel_id.'" onclick="return confirm(\'Do you want to activate '.$start_date.' Leave?\');" title="Activate '.$start_date.' Leave"><i class="fa fa-thumbs-up"></i></a>';
 			}
 			//create activated status display
 			else if($leave_duration_status == 1)
 			{
 				$status = '<span class="label label-success">Claimed</span>';
-				$button = '<a class="btn btn-default" href="'.site_url().'human-resource/deactivate-position/'.$leave_duration_id.'" onclick="return confirm(\'Do you want to deactivate '.$job.'?\');" title="Deactivate '.$job.'"><i class="fa fa-thumbs-down"></i></a>';
+				$button = '<a class="btn btn-sm btn-default" href="'.site_url().'human-resource/deactivate-position/'.$leave_duration_id.'/'.$personnel_id.'" onclick="return confirm(\'Do you want to deactivate '.$start_date.' Leave?\');" title="Deactivate '.$start_date.' Leave"><i class="fa fa-thumbs-down"></i></a>';
 			}
 			
 			$count++;
@@ -56,7 +57,7 @@ $personnel_id = $row->personnel_id;
 					<td>'.$leave_type_name.'</td>
 					<td>'.$status.'</td>
 					<td>'.$button.'</td>
-					<td><a href="'.site_url().'human-resource/delete-leave/'.$leave_duration_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete?\');" title="Delete"><i class="fa fa-trash"></i></a></td>
+					<td><a href="'.site_url().'human-resource/delete-leave/'.$leave_duration_id.'/'.$personnel_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete?\');" title="Delete"><i class="fa fa-trash"></i></a></td>
 				</tr> 
 			';
 		}
@@ -108,7 +109,7 @@ else
 			
             ?>
             
-            <?php echo form_open('human-resource/add-leave', array("class" => "form-horizontal", "role" => "form"));?>
+            <?php echo form_open('human-resource/add-personnel-leave/'.$personnel_id, array("class" => "form-horizontal", "role" => "form"));?>
 <div class="row">
 	<div class="col-md-4">
         

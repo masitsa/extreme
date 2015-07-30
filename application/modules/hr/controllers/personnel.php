@@ -130,6 +130,7 @@ class Personnel extends hr
 		$this->load->view('admin/templates/general_page', $data);
 	}
     
+
 	/*
 	*
 	*	Edit an existing personnel
@@ -138,9 +139,12 @@ class Personnel extends hr
 	*/
 	public function edit_personnel($personnel_id) 
 	{	
+		
 		//open the add new personnel
-		$data['title'] = 'Edit personnel';
+		$data['title'] = 'Edit ';
 		$v_data['title'] = $data['title'];
+
+
 		
 		$v_data['personnel_id'] = $personnel_id;
 		$v_data['relationships'] = $this->personnel_model->get_relationship();
@@ -153,7 +157,7 @@ class Personnel extends hr
 		$v_data['emergency_contacts'] = $this->personnel_model->get_emergency_contacts($personnel_id);
 		$v_data['dependants'] = $this->personnel_model->get_personnel_dependants($personnel_id);
 		$v_data['jobs'] = $this->personnel_model->get_personnel_jobs($personnel_id);
-		$v_data['leave'] = $this->personnel_model->get_personnel_jobs($personnel_id);
+		$v_data['leave'] = $this->personnel_model->get_personnel_leave($personnel_id);
 		$v_data['roles'] = $this->personnel_model->get_personnel_roles($personnel_id);
 		$v_data['leave_types'] = $this->personnel_model->get_leave_types();
 		$v_data['parent_sections'] = $this->sections_model->all_parent_sections('section_position');
@@ -161,7 +165,103 @@ class Personnel extends hr
 		
 		$this->load->view('admin/templates/general_page', $data);
 	}
+
+	public function add_emergency_contact($personnel_id)
+    {
+    	$this->form_validation->set_rules('personnel_emergency_onames', 'Other Names', 'required|xss_clean');
+		$this->form_validation->set_rules('personnel_emergency_fname', 'First Name', 'required|xss_clean');
+		$this->form_validation->set_rules('relationship_id', 'Date of Birth', 'xss_clean');
+		$this->form_validation->set_rules('title_id', 'Title', 'required|xss_clean');
+		
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			
+			if($this->personnel_model->add_emergency_contact($personnel_id))
+			{
+				$this->session->set_userdata("success_message", "Personnel emergency contact added successfully");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+			
+			else
+			{
+				$this->session->set_userdata("error_message","Could not add personnel emergency contact. Please try again");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+		}
+		else
+		{
+			$this->session->set_userdata("error_message","Could not add personnel emergency contact. Please try again");
+			redirect('human-resource/edit-personnel/'.$personnel_id);
+
+		}
+		
+    }
+	public function update_personnel_roles($personnel_id)
+	{
+		$this->form_validation->set_rules('section_id', 'Post code', 'xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			if($this->personnel_model->update_personnel_roles($personnel_id))
+			{
+				$this->session->set_userdata("success_message", "Personnel roles successfully updated");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+			
+			else
+			{
+				$this->session->set_userdata("error_message","Could not update personnel roles. Please try again");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+		}
+		else
+		{
+			$this->session->set_userdata("error_message","Could not update personnel roles. Please try again");
+			redirect('human-resource/edit-personnel/'.$personnel_id);	
+		}
+	}
     
+    public function update_personnel_about_details($personnel_id)
+    {
+    	$this->form_validation->set_rules('personnel_onames', 'Other Names', 'required|xss_clean');
+		$this->form_validation->set_rules('personnel_fname', 'First Name', 'required|xss_clean');
+		$this->form_validation->set_rules('personnel_dob', 'Date of Birth', 'xss_clean');
+		// $this->form_validation->set_rules('personnel_email', 'Email', 'valid_email|is_unique[personnel.personnel_email]|xss_clean');
+		$this->form_validation->set_rules('personnel_phone', 'Phone', 'xss_clean');
+		$this->form_validation->set_rules('personnel_address', 'Address', 'xss_clean');
+		$this->form_validation->set_rules('civil_status_id', 'Civil Status', 'xss_clean');
+		$this->form_validation->set_rules('personnel_locality', 'Locality', 'xss_clean');
+		$this->form_validation->set_rules('title_id', 'Title', 'required|xss_clean');
+		$this->form_validation->set_rules('gender_id', 'Gender', 'required|xss_clean');
+		$this->form_validation->set_rules('personnel_number', 'Personnel number', 'xss_clean');
+		$this->form_validation->set_rules('personnel_city', 'City', 'xss_clean');
+		$this->form_validation->set_rules('personnel_post_code', 'Post code', 'xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			
+			if($this->personnel_model->edit_personnel($personnel_id))
+			{
+				$this->session->set_userdata("success_message", "Personnel updated successfully updated");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+			
+			else
+			{
+				$this->session->set_userdata("error_message","Could not add personnel. Please try again");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+		}
+		else
+		{
+			$this->session->set_userdata("error_message","Could not add personnel. Please try again");
+			redirect('human-resource/edit-personnel/'.$personnel_id);
+		}
+    }
 	/*
 	*
 	*	Edit an existing personnel
@@ -222,6 +322,54 @@ class Personnel extends hr
 		
 		$this->load->view('admin/templates/general_page', $data);
 	}
+
+	public function reset_password($personnel_id)
+	{
+		
+    	$data = array(
+			"personnel_password" => md5(123456)
+		);
+		
+		$this->db->where('personnel_id', $personnel_id);
+		if($this->db->update('personnel', $data))
+		{
+			$this->session->set_userdata('success_message', 'Password updated successfully');
+			redirect('human-resource/edit-personnel/'.$personnel_id);
+		}
+		else{
+			$this->session->set_userdata('success_message', 'Password updated successfully');
+			redirect('human-resource/edit-personnel/'.$personnel_id);
+		}
+		
+	}
+	public function update_personnel_account_details($personnel_id)
+	{
+		
+		$this->form_validation->set_rules('personnel_username', 'Personnel Username', 'required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			
+			if($this->personnel_model->update_personnel_account_details($personnel_id))
+			{
+				$this->session->set_userdata("success_message", "Account status has been updated successfully");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+			
+			else
+			{
+				$this->session->set_userdata("error_message","Could not update personnel account status. Please try again");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+		}
+		else
+		{
+			$this->session->set_userdata("error_message","Ensure that all fields are checked. Please try again");
+			redirect('human-resource/edit-personnel/'.$personnel_id);
+		}
+		
+	}
     
 	/*
 	*
@@ -269,31 +417,7 @@ class Personnel extends hr
 		redirect('human-resource/personnel');
 	}
 	
-	function add_leave()
-	{
-		$this->form_validation->set_rules('personnel_id', 'Personnel', 'trim|numeric|required|xss_clean');
-		$this->form_validation->set_rules('start_date', 'Start Date', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('end_date', 'End Date', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('leave_type_id', 'Leave Type', 'trim|numeric|required|xss_clean');
-
-		if ($this->form_validation->run() == FALSE)//if there is an invalid item
-		{
-			$this->calender($_SESSION['navigation_id'], $_SESSION['sub_navigation_id']);
-		}
-		
-		else//if the input is valid
-		{
-			$items = array(
-						'personnel_id' => $this->input->post("personnel_id"),
-						'start_date' => $this->input->post("start_date"),
-						'end_date' => $this->input->post("end_date"),
-						'leave_type_id' => $this->input->post("leave_type_id")
-					);
-			$result = $this->db->insert("leave_duration", $items);
-			
-			redirect("administration/calender/".$_SESSION['navigation_id']."/".$_SESSION['sub_navigation_id']);
-		}
-	}
+	
 	
 	public function get_section_children($section_id)
 	{
@@ -303,6 +427,7 @@ class Personnel extends hr
 		
 		if($sub_sections->num_rows() > 0)
 		{
+			$children = '<option value="0" >--Select a sub section--</option>';
 			foreach($sub_sections->result() as $res)
 			{
 				$section_id = $res->section_id;
@@ -318,6 +443,261 @@ class Personnel extends hr
 		}
 		
 		echo $children;
+	}
+
+	/*
+	*
+	*	Activate an existing personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function activate_emergency_contact($emergency_contact_id,$personnel_id)
+	{
+		$this->personnel_model->activate_emergency_contact($emergency_contact_id);
+		$this->session->set_userdata('success_message', 'Personnel emergency activated successfully');
+		redirect('human-resource/edit-personnel/'.$personnel_id);
+	}
+    
+	/*
+	*
+	*	Deactivate an existing personnel
+	*	@param int $emergency_contact_id
+	*
+	*/
+	public function deactivate_emergency_contact($emergency_contact_id,$personnel_id)
+	{
+		$this->personnel_model->deactivate_emergency_contact($emergency_contact_id);
+		$this->session->set_userdata('success_message', 'Personnel emergnecy disabled successfully');
+		redirect('human-resource/edit-personnel/'.$personnel_id);
+	}
+
+	/*
+	*
+	*	Delete an existing personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function delete_emergency_contact($personnel_emergency_contact_id,$personnel_id)
+	{
+		if($this->personnel_model->delete_personnel_emergency_contact($personnel_emergency_contact_id))
+		{
+			$this->session->set_userdata('success_message', 'Personnel emergency contact has been deleted');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Personnel emergency contact could not deleted');
+		}
+		redirect('human-resource/edit-personnel/'.$personnel_id);
+	}
+    
+	public function add_dependant_contact($personnel_id)
+    {
+    	$this->form_validation->set_rules('personnel_dependant_onames', 'Other Names', 'required|xss_clean');
+		$this->form_validation->set_rules('personnel_dependant_fname', 'First Name', 'required|xss_clean');
+		$this->form_validation->set_rules('title_id', 'Title', 'required|xss_clean');
+		
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			
+			if($this->personnel_model->add_dependant_contact($personnel_id))
+			{
+				$this->session->set_userdata("success_message", "Personnel dependant contact added successfully");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+			
+			else
+			{
+				$this->session->set_userdata("error_message","Could not add personnel dependant contact. Please try again");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+		}
+		else
+		{
+			$this->session->set_userdata("error_message","Could not add personnel dependant contact. Please try again");
+			redirect('human-resource/edit-personnel/'.$personnel_id);
+
+		}
+		
+    }
+    public function activate_dependant_contact($dependant_contact_id,$personnel_id)
+	{
+		$this->personnel_model->activate_dependant_contact($dependant_contact_id);
+		$this->session->set_userdata('success_message', 'Personnel dependant activated successfully');
+		redirect('human-resource/edit-personnel/'.$personnel_id);
+	}
+    
+	/*
+	*
+	*	Deactivate an existing personnel
+	*	@param int $dependant_contact_id
+	*
+	*/
+	public function deactivate_dependant_contact($dependant_contact_id,$personnel_id)
+	{
+		$this->personnel_model->deactivate_dependant_contact($dependant_contact_id);
+		$this->session->set_userdata('success_message', 'Personnel emergnecy disabled successfully');
+		redirect('human-resource/edit-personnel/'.$personnel_id);
+	}
+
+	/*
+	*
+	*	Delete an existing personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function delete_dependant_contact($personnel_dependant_contact_id,$personnel_id)
+	{
+		if($this->personnel_model->delete_personnel_dependant_contact($personnel_dependant_contact_id))
+		{
+			$this->session->set_userdata('success_message', 'Personnel dependant contact has been deleted');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Personnel dependant contact could not deleted');
+		}
+		redirect('human-resource/edit-personnel/'.$personnel_id);
+	}
+
+	public function add_personnel_job($personnel_id)
+    {
+    	$this->form_validation->set_rules('job_title_id', 'Other Names', 'required|xss_clean');
+	
+		
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			
+			if($this->personnel_model->add_personnel_job($personnel_id))
+			{
+				$this->session->set_userdata("success_message", "Personnel dependant contact added successfully");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+			
+			else
+			{
+				$this->session->set_userdata("error_message","Could not add personnel dependant contact. Please try again");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+		}
+		else
+		{
+			$this->session->set_userdata("error_message","Could not add personnel dependant contact. Please try again");
+			redirect('human-resource/edit-personnel/'.$personnel_id);
+
+		}
+		
+    }
+    public function activate_personnel_job($personnel_job_id,$personnel_id)
+	{
+		$this->personnel_model->activate_personnel_job($personnel_job_id);
+		$this->session->set_userdata('success_message', 'Personnel dependant activated successfully');
+		redirect('human-resource/edit-personnel/'.$personnel_id);
+	}
+    
+	/*
+	*
+	*	Deactivate an existing personnel
+	*	@param int $personnel_job_id
+	*
+	*/
+	public function deactivate_personnel_job($personnel_job_id,$personnel_id)
+	{
+		$this->personnel_model->deactivate_personnel_job($personnel_job_id);
+		$this->session->set_userdata('success_message', 'Personnel emergnecy disabled successfully');
+		redirect('human-resource/edit-personnel/'.$personnel_id);
+	}
+
+	/*
+	*
+	*	Delete an existing personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function delete_personnel_job($personnel_personnel_job_id,$personnel_id)
+	{
+		if($this->personnel_model->delete_personnel_personnel_job($personnel_personnel_job_id))
+		{
+			$this->session->set_userdata('success_message', 'Personnel dependant contact has been deleted');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Personnel dependant contact could not deleted');
+		}
+		redirect('human-resource/edit-personnel/'.$personnel_id);
+	}
+
+	public function add_personnel_leave($personnel_id)
+	{
+		$this->form_validation->set_rules('start_date', 'Start Date', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('end_date', 'End Date', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('leave_type_id', 'Leave Type', 'trim|numeric|required|xss_clean');
+
+		if ($this->form_validation->run())//if there is an invalid item
+		{
+			
+			if($this->personnel_model->add_personnel_leave($personnel_id))
+			{
+				$this->session->set_userdata("success_message", "Personnel leave  added successfully");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+			
+			else
+			{
+				$this->session->set_userdata("error_message","Could not add personnel leave. Please try again");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+		}
+		
+		else//if the input is valid
+		{
+			
+			
+		}
+	}
+	public function activate_personnel_leave($personnel_leave_id,$personnel_id)
+	{
+		$this->personnel_model->activate_personnel_leave($personnel_leave_id);
+		$this->session->set_userdata('success_message', 'Personnel leave activated successfully');
+		redirect('human-resource/edit-personnel/'.$personnel_id);
+	}
+    
+	/*
+	*
+	*	Deactivate an existing personnel
+	*	@param int $personnel_leave_id
+	*
+	*/
+	public function deactivate_personnel_leave($personnel_leave_id,$personnel_id)
+	{
+		$this->personnel_model->deactivate_personnel_leave($personnel_leave_id);
+		$this->session->set_userdata('success_message', 'Personnel leave disabled successfully');
+		redirect('human-resource/edit-personnel/'.$personnel_id);
+	}
+
+	/*
+	*
+	*	Delete an existing personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function delete_personnel_leave($personnel_personnel_leave_id,$personnel_id)
+	{
+		if($this->personnel_model->delete_personnel_personnel_leave($personnel_personnel_leave_id))
+		{
+			$this->session->set_userdata('success_message', 'Personnel leave contact has been deleted');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Personnel leave contact could not deleted');
+		}
+		redirect('human-resource/edit-personnel/'.$personnel_id);
 	}
 }
 ?>
