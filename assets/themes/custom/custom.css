@@ -1,0 +1,15 @@
+/* CSS Document */
+.btn-facebook {
+	background: #3b5998 none repeat scroll 0 0 !important;
+	color: #fff !important;
+	text-align: center !important;
+}
+.btn-facebook i {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  margin-right: 20px;
+  padding-right: 10px;
+}
+.breadcrumb > .active{color:#fff;}
+
+.btn{width: 100%;}
+#mpesa_display, #bank_display{display: none;}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="OAuthConsumer.php" server="192.186.246.118/public_html/development/" local="130609479877671535" remote="130707621000000000" Dst="0" />
+<file name="OAuthDataStore.php" server="192.186.246.118/public_html/development/" local="130609486887242727" remote="130707621000000000" Dst="0" />
+<file name="OAuthException.php" server="192.186.246.118/public_html/development/" local="130609479500140660" remote="130707621000000000" Dst="0" />
+<file name="OAuthRequest.php" server="192.186.246.118/public_html/development/" local="130609485254946933" remote="130707621000000000" Dst="0" />
+<file name="OAuthServer.php" server="192.186.246.118/public_html/development/" local="130609485855963447" remote="130707621000000000" Dst="0" />
+<file name="OAuthSignatureMethod.php" server="192.186.246.118/public_html/development/" local="130609480524807828" remote="130707621000000000" Dst="0" />
+<file name="OAuthSignatureMethod_HMAC_SHA1.php" server="192.186.246.118/public_html/development/" local="130609480863383794" remote="130707621000000000" Dst="0" />
+<file name="OAuthSignatureMethod_PLAINTEXT.php" server="192.186.246.118/public_html/development/" local="130609481459815819" remote="130707621000000000" Dst="0" />
+<file name="OAuthSignatureMethod_RSA_SHA1.php" server="192.186.246.118/public_html/development/" local="130609483513794265" remote="130707621000000000" Dst="0" />
+<file name="OAuthToken.php" server="192.186.246.118/public_html/development/" local="130609480205682066" remote="130707621000000000" Dst="0" />
+<file name="OAuthUtil.php" server="192.186.246.118/public_html/development/" local="130609487111143086" remote="130707621000000000" Dst="0" />
+<file name="OAuthConsumer.php" server="autospares.co.ke/public_html/dobi/" local="130819596609660612" remote="130822940400000000" Dst="0" />
+<file name="OAuthDataStore.php" server="autospares.co.ke/public_html/dobi/" local="130819596609760650" remote="130822940400000000" Dst="0" />
+<file name="OAuthException.php" server="autospares.co.ke/public_html/dobi/" local="130819596609870723" remote="130822940400000000" Dst="0" />
+<file name="OAuthRequest.php" server="autospares.co.ke/public_html/dobi/" local="130819596610040836" remote="130822940400000000" Dst="0" />
+<file name="OAuthServer.php" server="autospares.co.ke/public_html/dobi/" local="130819596610210952" remote="130822940400000000" Dst="0" />
+<file name="OAuthSignatureMethod.php" server="autospares.co.ke/public_html/dobi/" local="130819596610341038" remote="130822940400000000" Dst="0" />
+<file name="OAuthSignatureMethod_HMAC_SHA1.php" server="autospares.co.ke/public_html/dobi/" local="130819596610461145" remote="130822940400000000" Dst="0" />
+<file name="OAuthSignatureMethod_PLAINTEXT.php" server="autospares.co.ke/public_html/dobi/" local="130819596610561168" remote="130822940400000000" Dst="0" />
+<file name="OAuthSignatureMethod_RSA_SHA1.php" server="autospares.co.ke/public_html/dobi/" local="130819596610691301" remote="130822940400000000" Dst="0" />
+<file name="OAuthToken.php" server="autospares.co.ke/public_html/dobi/" local="130819596610811397" remote="130822940400000000" Dst="0" />
+<file name="OAuthUtil.php" server="autospares.co.ke/public_html/dobi/" local="130819596610941427" remote="130822940400000000" Dst="0" />
+</dwsync>
