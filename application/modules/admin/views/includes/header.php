@@ -31,7 +31,7 @@
 		<link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/stylesheets/theme.css" />
 
 		<!-- Theme Custom CSS -->
-		<link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/stylesheets/theme-custom.css">
+		
 
 		<!-- Head Libs -->
 		<script src="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/modernizr/modernizr.js"></script>

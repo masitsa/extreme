@@ -12,7 +12,7 @@
 				<tr>
 					<th>#</th>
 					<th>Position</th>
-					<th>Date assigned</th>
+					<th>Start date</th>
 					<th>Last editted</th>
 					<th colspan="3">Actions</th>
 				</tr>
@@ -26,6 +26,7 @@
 			$personnel_job_id = $row->personnel_job_id;
 			$job = $row->job_title_name;
 			$personnel_job_status = $row->personnel_job_status;
+			$job_commencement_date =  date('jS M Y ',strtotime($row->job_commencement_date));
 			$created = date('jS M Y H:i a',strtotime($row->created));
 			$last_modified = date('jS M Y H:i a',strtotime($row->last_modified));
 			
@@ -48,11 +49,11 @@
 				<tr>
 					<td>'.$count.'</td>
 					<td>'.$job.'</td>
-					<td>'.$created.'</td>
+					<td>'.$job_commencement_date.'</td>
 					<td>'.$last_modified.'</td>
 					<td>'.$status.'</td>
 					<td>'.$button.'</td>
-					<td><a href="'.site_url().'human-resource/delete-personnel/'.$personnel_job_id.'/'.$personnel_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$job.'?\');" title="Delete '.$job.'"><i class="fa fa-trash"></i></a></td>
+					<td><a href="'.site_url().'human-resource/delete-personnel-job/'.$personnel_job_id.'/'.$personnel_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$job.'?\');" title="Delete '.$job.'"><i class="fa fa-trash"></i></a></td>
 				</tr> 
 			';
 		}
@@ -76,11 +77,13 @@ $validation_error = validation_errors();
 if(!empty($validation_error))
 {
 	$job_title_id = set_value('job_title_id');
+	$job_commencement_date = set_value('job_commencement_date');
 }
 
 else
 {
 	$job_title_id = '';
+	$job_commencement_date = '';
 }
 ?>
           <section class="panel">
@@ -88,6 +91,11 @@ else
                     <h2 class="panel-title">Personnel job history</h2>
                 </header>
                 <div class="panel-body">
+                	<div class="row" style="margin-bottom:20px;">
+                        <div class="col-lg-12">
+                            <a href="<?php echo site_url();?>human-resource/configuration" class="btn btn-info pull-right">Edit job titles</a>
+                        </div>
+                    </div>
                 <!-- Adding Errors -->
             <?php
             if(isset($error)){
@@ -102,13 +110,14 @@ else
             
             <?php echo form_open('human-resource/add-personnel-job/'.$personnel_id, array("class" => "form-horizontal", "role" => "form"));?>
 <div class="row">
-	<div class="col-md-8 col-md-offset-2">
+	<div class="col-md-5">
         
         <div class="form-group">
-            <label class="col-lg-3 control-label">Job Title: </label>
+            <label class="col-lg-3 control-label">Job title: </label>
             
             <div class="col-lg-9">
             	<select class="form-control" name="job_title_id">
+                	<option value="">--Select position--</option>
                 	<?php
                     	if($job_titles_query->num_rows() > 0)
 						{
@@ -134,9 +143,28 @@ else
                 </select>
             </div>
         </div>
+   	</div>
+    
+	<div class="col-md-5">
         
         <div class="form-group">
-            <div class="col-lg-9 col-lg-offset-3">
+            <label class="col-lg-3 control-label">Start date: </label>
+            
+            <div class="col-lg-9">
+            	<div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                    <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="job_commencement_date" placeholder="Start date" value="<?php echo $job_commencement_date;?>">
+                </div>
+            </div>
+        </div>
+   	</div>
+    
+	<div class="col-md-2">
+        
+        <div class="form-group">
+            <div class="col-md-12">
             	<div class="form-actions center-align">
                     <button class="btn btn-primary" type="submit">
                         Add position

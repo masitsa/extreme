@@ -1,9 +1,5 @@
 <?php
-//personnel data
-// $row = $leave->row();
-
-// $personnel_id = $row->personnel_id;
-$result ='';
+	$result ='';
 	if($leave->num_rows() > 0)
 	{
 		$count = 0;
@@ -57,7 +53,7 @@ $result ='';
 					<td>'.$leave_type_name.'</td>
 					<td>'.$status.'</td>
 					<td>'.$button.'</td>
-					<td><a href="'.site_url().'human-resource/delete-leave/'.$leave_duration_id.'/'.$personnel_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete?\');" title="Delete"><i class="fa fa-trash"></i></a></td>
+					<td><a href="'.site_url().'human-resource/delete-personnel-leave/'.$leave_duration_id.'/'.$personnel_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete?\');" title="Delete"><i class="fa fa-trash"></i></a></td>
 				</tr> 
 			';
 		}
@@ -178,6 +174,15 @@ else
     </div>
 </div>
             <?php echo form_close();?>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-sm-4 col-sm-offset-8">
+                    <div class="form-actions center-align">
+                        <a href="<?php echo site_url().'human-resource/leave';?>" class="btn btn-info pull-right" type="submit">
+                            View schedule
+                        </a>
+                    </div>
+                </div>
+            </div>
             <?php echo $result;?>
                 </div>
             </section>

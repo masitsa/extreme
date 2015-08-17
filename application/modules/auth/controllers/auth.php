@@ -79,5 +79,11 @@ class Auth extends MX_Controller
 		
 		$this->load->view('templates/login', $data);
 	}
+	
+	public function logout()
+	{
+		$this->session->sess_destroy();
+		redirect('login');
+	}
 }
 ?>

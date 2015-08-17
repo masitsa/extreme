@@ -10,8 +10,10 @@ class Microfinance extends MX_Controller
 		$this->load->model('site/site_model');
 		$this->load->model('admin/users_model');
 		$this->load->model('admin/sections_model');
+		$this->load->model('admin/file_model');
 		$this->load->model('admin/admin_model');
 		$this->load->model('individual_model');
+		$this->load->model('group_model');
 		$this->load->model('savings_plan_model');
 		
 		if(!$this->auth_model->check_login())

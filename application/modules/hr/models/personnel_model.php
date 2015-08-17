@@ -6,6 +6,17 @@ class Personnel_model extends CI_Model
 	*	Retrieve all personnel
 	*
 	*/
+	public function retrieve_personnel()
+	{
+		$this->db->where('personnel_status = 1');
+		$query = $this->db->get('personnel');
+		
+		return $query;
+	}	
+	/*
+	*	Retrieve all personnel
+	*
+	*/
 	public function all_personnel()
 	{
 		$this->db->where('personnel_status = 1');
@@ -438,7 +449,7 @@ class Personnel_model extends CI_Model
 		//retrieve all users
 		$this->db->from('personnel_job, job_title');
 		$this->db->select('personnel_job.*, job_title.job_title_name');
-		$this->db->order_by('job_title.job_title_name');
+		$this->db->order_by('personnel_job.job_commencement_date', 'DESC');
 		$this->db->where('personnel_job.job_title_id = job_title.job_title_id AND personnel_job.personnel_id = '.$personnel_id);
 		$query = $this->db->get();
 		
@@ -481,7 +492,8 @@ class Personnel_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from('personnel_section, section');
-		$this->db->select('personnel_section.*, section.section_name, section.section_position,section.section_parent');
+		$this->db->select('personnel_section.*, section.section_name, section.section_position, section.section_parent');
+		$this->db->order_by('section_parent', 'ASC');
 		$this->db->order_by('section_position', 'ASC');
 		$this->db->where('personnel_section.section_id = section.section_id AND personnel_section.personnel_id = '. $personnel_id);
 		$query = $this->db->get();
@@ -507,8 +519,10 @@ class Personnel_model extends CI_Model
 			'relationship_id'=>$this->input->post('relationship_id'),
 			'personnel_emergency_locality'=>$this->input->post('personnel_emergency_locality'),
 			'title_id'=>$this->input->post('title_id'),
-			'personnel_emergency_status'=>$this->input->post('personnel_emergency_status'),
-			'created'=>$this->session->userdata('personnel_id')
+			//'personnel_emergency_status'=>$this->input->post('personnel_emergency_status'),
+			'created_by'=>$this->session->userdata('personnel_id'),
+			'modified_by'=>$this->session->userdata('personnel_id'),
+			'created'=>date('Y-m-d H:i:s')
 		);
 		
 		if($this->db->insert('personnel_emergency', $data))
@@ -597,8 +611,10 @@ class Personnel_model extends CI_Model
 			'relationship_id'=>$this->input->post('relationship_id'),
 			'personnel_dependant_locality'=>$this->input->post('personnel_dependant_locality'),
 			'title_id'=>$this->input->post('title_id'),
-			'personnel_dependant_status'=>$this->input->post('personnel_dependant_status'),
-			'created'=>$this->session->userdata('personnel_id')
+			//'personnel_dependant_status'=>$this->input->post('personnel_dependant_status'),
+			'created_by'=>$this->session->userdata('personnel_id'),
+			'modified_by'=>$this->session->userdata('personnel_id'),
+			'created'=>date('Y-m-d H:i:s')
 		);
 		
 		if($this->db->insert('personnel_dependant', $data))
@@ -682,8 +698,11 @@ class Personnel_model extends CI_Model
 		$data = array(
 			
 			'job_title_id'=>$this->input->post('job_title_id'),
+			'job_commencement_date'=>$this->input->post('job_commencement_date'),
 			'personnel_id'=>$personnel_id,
-			'created'=>$this->session->userdata('personnel_id')
+			'created_by'=>$this->session->userdata('personnel_id'),
+			'modified_by'=>$this->session->userdata('personnel_id'),
+			'created'=>date('Y-m-d H:i:s')
 		);
 		
 		if($this->db->insert('personnel_job', $data))
@@ -745,14 +764,13 @@ class Personnel_model extends CI_Model
 	*/
 	public function delete_personnel_job($personnel_job_id)
 	{
-			if($this->db->delete('personnel_job', array('personnel_job_id' => $personnel_job_id)))
-			{
-				return TRUE;
-			}
-			else{
-				return FALSE;
-			}
-		
+		if($this->db->delete('personnel_job', array('personnel_job_id' => $personnel_job_id)))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
 	}
 	public function add_personnel_leave($personnel_id)
 	{
@@ -760,9 +778,18 @@ class Personnel_model extends CI_Model
 						'personnel_id' => $personnel_id,
 						'start_date' => $this->input->post("start_date"),
 						'end_date' => $this->input->post("end_date"),
-						'leave_type_id' => $this->input->post("leave_type_id")
+						'leave_type_id' => $this->input->post("leave_type_id"),
+						'created_by'=>$this->session->userdata('personnel_id'),
+						'modified_by'=>$this->session->userdata('personnel_id'),
+						'created'=>date('Y-m-d H:i:s')
 					  );
-		$result = $this->db->insert("leave_duration", $items);
+		if($this->db->insert("leave_duration", $items))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
 	}
 
 	/*
@@ -815,14 +842,29 @@ class Personnel_model extends CI_Model
 	*/
 	public function delete_personnel_leave($leave_duration_id)
 	{
-			if($this->db->delete('leave_duration', array('leave_duration_id' => $leave_duration_id)))
-			{
-				return TRUE;
-			}
-			else{
-				return FALSE;
-			}
-		
+		if($this->db->delete('leave_duration', array('leave_duration_id' => $leave_duration_id)))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+
+	/*
+	*	Delete an existing personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function delete_personnel_role($personnel_section_id)
+	{
+		if($this->db->delete('personnel_section', array('personnel_section_id' => $personnel_section_id)))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
 	}
 }
 ?>

@@ -2,7 +2,8 @@
 
 require_once "./application/modules/admin/controllers/admin.php";
 
-class Categories extends admin {
+class Categories extends admin 
+{
 	var $categories_path;
 	
 	function __construct()

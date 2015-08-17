@@ -78,5 +78,44 @@ class Admin_model extends CI_Model
 		
 		return $crumbs;
 	}
+	
+	public function get_configuration()
+	{
+		return $this->db->get('configuration');
+	}
+	
+	public function edit_configuration($configuration_id)
+	{
+		$data = array(
+			'mandrill' => $this->input->post('mandrill')
+		);
+		
+		if($configuration_id > 0)
+		{
+			$this->db->where('configuration_id', $configuration_id);
+			if($this->db->update('configuration', $data))
+			{
+				return TRUE;
+			}
+			
+			else
+			{
+				return FALSE;
+			}
+		}
+		
+		else
+		{
+			if($this->db->insert('configuration', $data))
+			{
+				return TRUE;
+			}
+			
+			else
+			{
+				return FALSE;
+			}
+		}
+	}
 }
 ?>

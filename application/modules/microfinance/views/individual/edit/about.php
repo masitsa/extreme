@@ -7,6 +7,7 @@ $individual_fname = $row->individual_fname;
 $individual_dob = $row->individual_dob;
 $individual_email = $row->individual_email;
 $individual_phone = $row->individual_phone;
+$individual_phone2 = $row->individual_phone2;
 $individual_address = $row->individual_address;
 $civil_status_id = $row->civilstatus_id;
 $individual_locality = $row->individual_locality;
@@ -15,6 +16,10 @@ $gender_id = $row->gender_id;
 $individual_city = $row->individual_city;
 $individual_number = $row->individual_number;
 $individual_post_code = $row->individual_post_code;
+$document_id = $row->document_id;
+$document_number = $row->document_number;
+$document_place = $row->document_place;
+$individual_email2 = $row->individual_email2;
 
 //repopulate data if validation errors occur
 $validation_error = validation_errors();
@@ -26,14 +31,19 @@ if(!empty($validation_error))
 	$individual_dob = set_value('individual_dob');
 	$individual_email = set_value('individual_email');
 	$individual_phone = set_value('individual_phone');
-	$individual_address = set_value('individual_address');
+	$individual_phone2 = set_value('individual_phone2');
 	$civil_status_id = set_value('civil_status_id');
 	$individual_locality = set_value('individual_locality');
 	$title_id = set_value('title_id');
 	$gender_id = set_value('gender_id');
-	$individual_city = set_value('individual_city');
 	$individual_number = set_value('individual_number');
+	$individual_address = set_value('individual_address');
+	$individual_city = set_value('individual_city');
 	$individual_post_code = set_value('individual_post_code');
+	$document_id = set_value('document_id');
+	$document_number = set_value('document_number');
+	$document_place = set_value('document_place');
+	$individual_email2 = set_value('individual_email2');
 }
 ?>
           <section class="panel">
@@ -53,9 +63,45 @@ if(!empty($validation_error))
 			
             ?>
             
-            <?php echo form_open($this->uri->uri_string(), array("class" => "form-horizontal", "role" => "form"));?>
+            <?php echo form_open_multipart('microfinance/update-individual/'.$individual_id, array("class" => "form-horizontal", "role" => "form"));?>
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-2">
+    	<!-- Image -->
+        <div class="form-group">
+            <div class="col-lg-12">
+                
+                <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="max-width:200px; max-height:200px;">
+                        <img src="<?php echo $image_location;?>" class="img-responsive">
+                    </div>
+                    <div>
+                        <span class="btn btn-file btn-success"><span class="fileinput-new">Select image</span><span class="fileinput-exists">Change</span><input type="file" name="individual_image"></span>
+                        <a href="#" class="btn btn-info fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- Signature -->
+        <div class="form-group">
+            <div class="col-lg-12">
+                
+                <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="max-width:200px; max-height:200px;">
+                        <img src="<?php echo $signature_location;?>" class="img-responsive">
+                    </div>
+                    <div>
+                        <span class="btn btn-file btn-success"><span class="fileinput-new">Select signature</span><span class="fileinput-exists">Change</span><input type="file" name="individual_signature"></span>
+                        <a href="#" class="btn btn-info fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+	</div>
+    
+    <div class="col-md-5">
         <div class="form-group">
             <label class="col-lg-5 control-label">Title: </label>
             
@@ -185,9 +231,6 @@ if(!empty($validation_error))
                 </select>
             </div>
         </div>
-	</div>
-    
-    <div class="col-md-6">
         
         <div class="form-group">
             <label class="col-lg-5 control-label">Email Address: </label>
@@ -198,10 +241,29 @@ if(!empty($validation_error))
         </div>
         
         <div class="form-group">
+            <label class="col-lg-5 control-label">Email Address 2: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="individual_email2" placeholder="Email Address 2" value="<?php echo $individual_email2;?>">
+            </div>
+        </div>
+	</div>
+    
+    <div class="col-md-5">
+        
+        <div class="form-group">
             <label class="col-lg-5 control-label">Phone: </label>
             
             <div class="col-lg-7">
             	<input type="text" class="form-control" name="individual_phone" placeholder="Phone" value="<?php echo $individual_phone;?>">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-lg-5 control-label">Phone 2: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="individual_phone2" placeholder="Phone 2" value="<?php echo $individual_phone2;?>">
             </div>
         </div>
         
@@ -234,6 +296,71 @@ if(!empty($validation_error))
             
             <div class="col-lg-7">
             	<input type="text" class="form-control" name="individual_post_code" placeholder="Post code" value="<?php echo $individual_post_code;?>">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-lg-5 control-label">Document type: </label>
+            
+            <?php
+            	if($document_id == 2)
+				{
+			?>
+            <div class="col-sm-3">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="document_id" value="1" id="document_id1">
+                        National ID
+                    </label>
+                </div>
+            </div>
+            
+            <div class="col-sm-3">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="document_id" value="2" checked="checked" id="document_id2">
+                        Passport
+                    </label>
+                </div>
+            </div>
+            <?php } 
+			
+            	else
+				{
+			?>
+            <div class="col-sm-3">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="document_id" value="1" checked="checked" id="document_id1">
+                        National ID
+                    </label>
+                </div>
+            </div>
+            
+            <div class="col-sm-3">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="document_id" value="2" id="document_id2">
+                        Passport
+                    </label>
+                </div>
+            </div>
+            <?php } ?>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-lg-5 control-label">Document number: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="document_number" placeholder="Document number" value="<?php echo $document_number;?>">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-lg-5 control-label">Place of issue: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="document_place" placeholder="Place of issue" value="<?php echo $document_place;?>">
             </div>
         </div>
         

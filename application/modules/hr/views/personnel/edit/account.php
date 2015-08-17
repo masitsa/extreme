@@ -15,6 +15,7 @@ if(!empty($validation_error))
 	$personnel_username = set_value('personnel_username');
 	$personnel_account_status = set_value('personnel_account_status');
 }
+
 ?>
           <section class="panel">
                 <header class="panel-heading">
@@ -52,20 +53,18 @@ if(!empty($validation_error))
             
             <div class="col-lg-7">
             	<?php
-                	if($personnel_account_status == 1)
+                	if($personnel_account_status == '1')
 					{
 						?>
                         <div class="radio">
                             <label>
-                                <input type="radio" checked="checked" value="1" id="personnel_account_status" name="personnel_account_status">
-                                Active
+                                <input type="radio" checked="checked" value="1" id="personnel_account_status" name="personnel_account_status"> Active
                             </label>
                         </div>
                         
                         <div class="radio">
                             <label>
-                                <input type="radio" checked="" value="0" id="personnel_account_status" name="personnel_account_status">
-                                Disabled
+                                <input type="radio" value="0" id="personnel_account_status" name="personnel_account_status"> Disabled
                             </label>
                         </div>
                         <?php
@@ -76,7 +75,7 @@ if(!empty($validation_error))
 						?>
                         <div class="radio">
                             <label>
-                                <input type="radio" checked="" value="1" id="personnel_account_status" name="personnel_account_status">
+                                <input type="radio" value="1" id="personnel_account_status" name="personnel_account_status">
                                 Active
                             </label>
                         </div>
@@ -98,7 +97,7 @@ if(!empty($validation_error))
 <div class="row" style="margin-top:10px;">
 	<div class="col-md-12">
         <div class="form-actions center-align">
-        	<a href="<?php echo site_url().'human-resource/reset-password/'.$personnel_id;?>" class="btn btn-warning" onclick="return confirm(\'Reset password for '.$personnel_fname.'?\');">Reset Password</a>
+        	<a href="<?php echo site_url().'human-resource/reset-password/'.$personnel_id;?>" class="btn btn-warning" onclick="return confirm('Reset password for <?php echo $personnel_fname;?>?');">Reset Password</a>
             <button class="btn btn-primary" type="submit">
                 Edit account
             </button>
@@ -164,22 +163,23 @@ if(!empty($validation_error))
 
 									foreach($roles->result() as $res)
 									{
+										$personnel_section_id = $res->personnel_section_id;
 										$section_id = $res->section_id;
 										$section_name = $res->section_name;
 										$section_parent = $res->section_parent;
 										$count++;
 										if($section_parent == 0)
 										{
-											
+											$section_children = $this->sections_model->get_sub_sections($section_id);
 											?>
                                             <tr>
                                             	<td><?php echo $count;?></td>
                                             	<td><?php echo $section_name;?></td>
                                             	<td></td>
-                                            	<td><a href="<?php echo site_url().'human-resource/delete-role/'.$section_id; ?>" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete <?php echo $section_name?>?\');" title="Delete <?php echo $section_name;?>"><i class="fa fa-trash"></i></a></td>
+                                            	<td><a href="<?php echo site_url().'human-resource/delete-personnel-role/'.$personnel_section_id.'/'.$personnel_id; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Do you really want to delete <?php echo $section_name?>?');" title="Delete <?php echo $section_name;?>"><i class="fa fa-trash"></i></a></td>
                                             </tr>
                                             <?php
-											foreach($roles->result() as $res2)
+											foreach($section_children->result() as $res2)
 											{
 												$child_section_id = $res2->section_id;
 												$child_section_name = $res2->section_name;
@@ -192,11 +192,27 @@ if(!empty($validation_error))
                                                         <td></td>
                                                         <td></td>
                                                         <td><?php echo $child_section_name;?></td>
-                                                        <td><a href="<?php echo site_url().'human-resource/delete-role/'.$child_section_id; ?>" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete <?php echo $child_section_name?>?\');" title="Delete <?php echo $child_section_name;?>"><i class="fa fa-trash"></i></a></td>
                                                     </tr>
                                                     <?php
 												}
 											}
+										}
+										
+										else
+										{
+											//get parent section
+											$parent_query = $this->sections_model->get_section($section_parent);
+											
+											$parent_row = $parent_query->row();
+											$parent_name = $parent_row->section_name;
+											?>
+                                            <tr>
+                                            	<td><?php echo $count;?></td>
+                                            	<td><?php echo $parent_name;?></td>
+                                            	<td><?php echo $section_name;?></td>
+                                            	<td><a href="<?php echo site_url().'human-resource/delete-personnel-role/'.$personnel_section_id.'/'.$personnel_id; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Do you really want to delete <?php echo $section_name?>?');" title="Delete <?php echo $section_name;?>"><i class="fa fa-trash"></i></a></td>
+                                            </tr>
+                                            <?php
 										}
 									}
 									?>

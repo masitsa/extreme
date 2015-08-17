@@ -236,4 +236,7 @@
 							
                                 </div>
 							</div>
+							<div class="panel-body">
+                            	<?php if(isset($links)){echo $links;}?>
+							</div>
 						</section>

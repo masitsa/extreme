@@ -4,9 +4,22 @@ require_once "./application/modules/microfinance/controllers/microfinance.php";
 
 class Individual extends microfinance 
 {
+	var $individual_path;
+	var $individual_location;
+	var $signature_path;
+	var $signature_location;
+	
 	function __construct()
 	{
 		parent:: __construct();
+		
+		$this->load->library('image_lib');
+		
+		//path to image directory
+		$this->individual_path = realpath(APPPATH . '../assets/img/individuals');
+		$this->individual_location = base_url().'assets/img/individuals/';
+		$this->signature_path = realpath(APPPATH . '../assets/img/signatures');
+		$this->signature_location = base_url().'assets/img/signatures/';
 	}
     
 	/*
@@ -92,6 +105,7 @@ class Individual extends microfinance
 		$this->form_validation->set_rules('individual_dob', 'Date of Birth', 'xss_clean');
 		$this->form_validation->set_rules('individual_email', 'Email', 'valid_email|is_unique[individual.individual_email]|xss_clean');
 		$this->form_validation->set_rules('individual_phone', 'Phone', 'xss_clean');
+		$this->form_validation->set_rules('individual_phone2', 'Phone', 'xss_clean');
 		$this->form_validation->set_rules('individual_address', 'Address', 'xss_clean');
 		$this->form_validation->set_rules('civil_status_id', 'Civil Status', 'xss_clean');
 		$this->form_validation->set_rules('individual_locality', 'Locality', 'xss_clean');
@@ -100,6 +114,10 @@ class Individual extends microfinance
 		$this->form_validation->set_rules('individual_number', 'Individual number', 'xss_clean');
 		$this->form_validation->set_rules('individual_city', 'City', 'xss_clean');
 		$this->form_validation->set_rules('individual_post_code', 'Post code', 'xss_clean');
+		$this->form_validation->set_rules('individual_email2', 'Email 2', 'valid_email|is_unique[individual.individual_email2]|xss_clean');
+		$this->form_validation->set_rules('document_id', 'Document type', 'xss_clean');
+		$this->form_validation->set_rules('document_number', 'Document number', 'xss_clean');
+		$this->form_validation->set_rules('document_place', 'Place of issue', 'xss_clean');
 		
 		//if form conatins invalid data
 		if ($this->form_validation->run())
@@ -136,12 +154,56 @@ class Individual extends microfinance
 	*	@param int $individual_id
 	*
 	*/
-	public function edit_individual($individual_id) 
-	{	
+	public function edit_individual($individual_id, $image_location = NULL, $signature_location = NULL) 
+	{
 		//open the add new individual
 		$data['title'] = 'Edit individual';
 		$v_data['title'] = $data['title'];
+		$v_data['individual'] = $this->individual_model->get_individual($individual_id);
+		$row = $v_data['individual']->row();
 		
+		if($image_location == NULL)
+		{
+			$img = $row->image;
+			
+			if((empty($img)) || ($img == '0'))
+			{
+				$image_location = 'http://placehold.it/200x200?text=image';
+			}
+			
+			else
+			{
+				$image_location = $this->individual_location.$img;
+			}
+		}
+		
+		else
+		{
+			$image_location = $this->individual_location.$image_location;
+		}
+		
+		if($signature_location == NULL)
+		{
+			$img = $row->signature;
+			
+			if((empty($img)) || ($img == '0'))
+			{
+				$signature_location = 'http://placehold.it/200x100?text=signature';
+			}
+			
+			else
+			{
+				$signature_location = $this->signature_location.$img;
+			}
+		}
+		
+		else
+		{
+			$signature_location = $this->signature_location.$signature_location;
+		}
+		
+		$v_data['image_location'] = $image_location;
+		$v_data['signature_location'] = $signature_location;
 		$v_data['individual_id'] = $individual_id;
 		$v_data['relationships'] = $this->individual_model->get_relationship();
 		$v_data['religions'] = $this->individual_model->get_religion();
@@ -149,7 +211,6 @@ class Individual extends microfinance
 		$v_data['titles'] = $this->individual_model->get_title();
 		$v_data['genders'] = $this->individual_model->get_gender();
 		$v_data['job_titles_query'] = $this->individual_model->get_job_titles();
-		$v_data['individual'] = $this->individual_model->get_individual($individual_id);
 		$v_data['emergency_contacts'] = $this->individual_model->get_emergency_contacts($individual_id);
 		$v_data['dependants'] = $this->individual_model->get_individual_dependants($individual_id);
 		$v_data['jobs'] = $this->individual_model->get_individual_jobs($individual_id);
@@ -169,57 +230,195 @@ class Individual extends microfinance
 	*/
 	public function edit_about($individual_id) 
 	{
+		//upload product's gallery images
+		$resize['width'] = 400;
+		$resize['height'] = 400;
+		
+		$resize2['width'] = 400;
+		$resize2['height'] = 200;
+		
+		$image_location = 'http://placehold.it/200x200?text=image';
+		$signature_location = 'http://placehold.it/200x100?text=signature';
+		$image_error = '';
+		$signature_error = '';
+		
+		$this->session->unset_userdata('upload_error_message');
+		$image_upload_name = 'individual_image_name';
+		$signature_upload_name = 'individual_signature_name';
+		
+		//upload image if it has been selected
+		$response = $this->individual_model->upload_image($this->individual_path, $this->individual_location, $resize, $image_upload_name, 'individual_image');
+		if($response)
+		{
+			$image_location = $this->individual_location.$this->session->userdata($image_upload_name);
+		}
+		
+		//case of upload error
+		else
+		{
+			$image_error = $this->session->userdata('upload_error_message');
+			$this->session->unset_userdata('upload_error_message');
+		}
+		
+		//upload image if it has been selected
+		$response = $this->individual_model->upload_image($this->signature_path, $this->signature_location, $resize2, $signature_upload_name, 'individual_signature');
+		if($response)
+		{
+			$signature_location = $this->signature_location.$this->session->userdata($signature_upload_name);
+		}
+		
+		//case of upload error
+		else
+		{
+			$signature_error = $this->session->userdata('upload_error_message');
+			$this->session->unset_userdata('upload_error_message');
+		}
+		
 		//form validation rules
 		$this->form_validation->set_rules('individual_onames', 'Other Names', 'required|xss_clean');
 		$this->form_validation->set_rules('individual_fname', 'First Name', 'required|xss_clean');
 		$this->form_validation->set_rules('individual_dob', 'Date of Birth', 'xss_clean');
-		$this->form_validation->set_rules('individual_email', 'Email', 'valid_email|is_unique[individual.individual_email]|xss_clean');
+		$this->form_validation->set_rules('individual_email', 'Email', 'valid_email|exists[individual.individual_email]|xss_clean');
 		$this->form_validation->set_rules('individual_phone', 'Phone', 'xss_clean');
+		$this->form_validation->set_rules('individual_phone2', 'Phone', 'xss_clean');
 		$this->form_validation->set_rules('individual_address', 'Address', 'xss_clean');
 		$this->form_validation->set_rules('civil_status_id', 'Civil Status', 'xss_clean');
 		$this->form_validation->set_rules('individual_locality', 'Locality', 'xss_clean');
 		$this->form_validation->set_rules('title_id', 'Title', 'required|xss_clean');
 		$this->form_validation->set_rules('gender_id', 'Gender', 'required|xss_clean');
-		$this->form_validation->set_rules('individual_username', 'Username', 'required|xss_clean|is_unique[individual.individual_username]');
-		$this->form_validation->set_rules('individual_kin_fname', 'Next of Kin First Name', 'xss_clean');
-		$this->form_validation->set_rules('individual_kin_onames', 'Next of Kin Other Names', 'xss_clean');
-		$this->form_validation->set_rules('individual_kin_contact', 'Next of Kin Phone', 'xss_clean');
-		$this->form_validation->set_rules('individual_kin_address', 'Next of Kin Address', 'xss_clean');
-		$this->form_validation->set_rules('kin_relationship_id', 'Relationship With Kin', 'xss_clean');
-		$this->form_validation->set_rules('job_title_id', 'Job Title', 'xss_clean');
-		$this->form_validation->set_rules('staff_id', 'Staff ID', 'xss_clean');
+		$this->form_validation->set_rules('individual_number', 'Individual number', 'xss_clean');
+		$this->form_validation->set_rules('individual_city', 'City', 'xss_clean');
+		$this->form_validation->set_rules('individual_post_code', 'Post code', 'xss_clean');
+		$this->form_validation->set_rules('individual_email2', 'Email 2', 'valid_email|exists[individual.individual_email2]|xss_clean');
+		$this->form_validation->set_rules('document_id', 'Document type', 'xss_clean');
+		$this->form_validation->set_rules('document_number', 'Document number', 'xss_clean');
+		$this->form_validation->set_rules('document_place', 'Place of issue', 'xss_clean');
 		
 		//if form has been submitted
 		if ($this->form_validation->run())
 		{
-			//update individual
-			if($this->individual_model->update_individual($individual_id))
+			//update if no image upload errors
+			if(empty($image_error) && empty($signature_error))
 			{
-				$this->session->set_userdata('success_message', 'Individual updated successfully');
-				redirect('microfinance/individual');
+				//update individual
+				$individual = $this->individual_model->get_individual($individual_id);
+				$row = $individual->row();
+				
+				$image = $this->session->userdata($image_upload_name);
+				if(empty($image))
+				{
+					$image = $row->image;
+				}
+				
+				$signature = $this->session->userdata($signature_upload_name);
+				if(empty($signature))
+				{
+					$signature = $row->signature;
+				}
+				
+				if($this->individual_model->edit_individual($individual_id, $image, $signature))
+				{
+					$this->session->set_userdata('success_message', 'Individual\'s general details updated successfully');
+					$this->session->unset_userdata($image_upload_name);
+					$this->session->unset_userdata($signature_upload_name);
+					redirect('microfinance/edit-individual/'.$individual_id);
+				}
+				
+				else
+				{
+					$this->session->set_userdata('error_message', 'Could not update individual\'s general details. Please try again');
+				}
+			}
+			
+			//else return to form to fix upload errors
+			else
+			{
+				$error = '';
+				if(!empty($signature_error))
+				{
+					$error .= '<strong>Signature upload error!</strong> '.$signature_error;
+				}
+				if(!empty($image_error))
+				{
+					$error .= '<br/><strong>Signature upload error!</strong> '.$image_error;
+				}
+				$this->session->set_userdata('error_message', $error);
+			}
+		}
+		
+		$this->edit_individual($individual_id, $this->session->userdata($image_upload_name), $this->session->userdata($signature_upload_name));
+	}
+    
+	/*
+	*
+	*	Edit an existing individual
+	*	@param int $individual_id
+	*
+	*/
+	public function add_emergency($individual_id) 
+	{	
+		//form validation rules
+		$this->form_validation->set_rules('individual_emergency_onames', 'Other Names', 'required|xss_clean');
+		$this->form_validation->set_rules('individual_emergency_fname', 'First Name', 'required|xss_clean');
+		$this->form_validation->set_rules('individual_emergency_dob', 'Date of Birth', 'xss_clean');
+		$this->form_validation->set_rules('individual_emergency_email', 'Email', 'valid_email|is_unique[individual_emergency.individual_emergency_email]|xss_clean');
+		$this->form_validation->set_rules('individual_emergency_phone', 'Phone', 'xss_clean');
+		$this->form_validation->set_rules('individual_emergency_phone2', 'Phone', 'xss_clean');
+		$this->form_validation->set_rules('individual_emergency_address', 'Address', 'xss_clean');
+		$this->form_validation->set_rules('individual_emergency_city', 'City', 'xss_clean');
+		$this->form_validation->set_rules('individual_emergency_post_code', 'Post code', 'xss_clean');
+		$this->form_validation->set_rules('individual_emergency_email2', 'Email 2', 'valid_email|is_unique[individual_emergency.individual_emergency_email2]|xss_clean');
+		$this->form_validation->set_rules('document_id', 'Document type', 'xss_clean');
+		$this->form_validation->set_rules('document_number', 'Document number', 'xss_clean');
+		$this->form_validation->set_rules('document_place', 'Place of issue', 'xss_clean');
+		
+		//if form has been submitted
+		if ($this->form_validation->run())
+		{
+			if($this->individual_model->add_emergency($individual_id))
+			{
+				$this->session->set_userdata('success_message', 'Individual\'s next of kin details updated successfully');
+				redirect('microfinance/edit-individual/'.$individual_id);
 			}
 			
 			else
 			{
-				$this->session->set_userdata('error_message', 'Could not update individual. Please try again');
+				$this->session->set_userdata('error_message', 'Could not update individual\'s next of kin details. Please try again');
 			}
 		}
 		
-		//open the add new individual
-		$data['title'] = 'Edit individual';
-		$v_data['title'] = $data['title'];
+		$this->edit_individual($individual_id);
+	}
+    
+	/*
+	*
+	*	Edit an existing individual
+	*	@param int $individual_id
+	*
+	*/
+	public function add_position($individual_id) 
+	{	
+		//form validation rules
+		$this->form_validation->set_rules('employer', 'Employer', 'required|xss_clean');
+		$this->form_validation->set_rules('job_title', 'Job title', 'required|xss_clean');
+		$this->form_validation->set_rules('employment_date', 'Employment date', 'required|xss_clean');
 		
-		$v_data['individual_id'] = $individual_id;
-		$v_data['relationships'] = $this->individual_model->get_relationship();
-		$v_data['religions'] = $this->individual_model->get_religion();
-		$v_data['civil_statuses'] = $this->individual_model->get_civil_status();
-		$v_data['titles'] = $this->individual_model->get_title();
-		$v_data['genders'] = $this->individual_model->get_gender();
-		$v_data['individual'] = $this->individual_model->get_individual($individual_id);
-		$v_data['job_titles_query'] = $this->individual_model->get_job_titles();
-		$data['content'] = $this->load->view('individual/edit_individual', $v_data, true);
+		//if form has been submitted
+		if ($this->form_validation->run())
+		{
+			if($this->individual_model->add_position($individual_id))
+			{
+				$this->session->set_userdata('success_message', 'Individual\'s position added successfully');
+				redirect('microfinance/edit-individual/'.$individual_id);
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'Could not add individual\'s position details. Please try again');
+			}
+		}
 		
-		$this->load->view('admin/templates/general_page', $data);
+		$this->edit_individual($individual_id);
 	}
     
 	/*
@@ -338,6 +537,68 @@ class Individual extends microfinance
 			$this->session->set_userdata("error_message", "Could not deactivate plan. Please try again");
 		}
 		
+		redirect('microfinance/edit-individual/'.$individual_id);
+	}
+    
+	/*
+	*
+	*	Activate an existing individual
+	*	@param int $individual_id
+	*
+	*/
+	public function activate_position($individual_job_id, $individual_id)
+	{
+		if($this->individual_model->activate_individual_position($individual_job_id))
+		{
+			$this->session->set_userdata('success_message', 'Position activated successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata("error_message", "Could not activate position. Please try again");
+		}
+		
+		redirect('microfinance/edit-individual/'.$individual_id);
+	}
+    
+	/*
+	*
+	*	Dectivate an existing individual
+	*	@param int $individual_savings_id
+	*
+	*/
+	public function deactivate_position($individual_job_id, $individual_id)
+	{
+		if($this->individual_model->deactivate_individual_position($individual_job_id))
+		{
+			$this->session->set_userdata('success_message', 'Position deactivated successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata("error_message", "Could not deactivate position. Please try again");
+		}
+		
+		redirect('microfinance/edit-individual/'.$individual_id);
+	}
+    
+	/*
+	*
+	*	Delete an existing individual
+	*	@param int $individual_id
+	*
+	*/
+	public function delete_emergency($individual_emergency_id, $individual_id)
+	{
+		if($this->individual_model->delete_emergency($individual_emergency_id))
+		{
+			$this->session->set_userdata('success_message', 'Next of kin has been deleted');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Next of kin could not deleted');
+		}
 		redirect('microfinance/edit-individual/'.$individual_id);
 	}
 }

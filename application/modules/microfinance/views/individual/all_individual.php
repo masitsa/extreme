@@ -18,7 +18,7 @@
 						<th><a href="'.site_url().'microfinance/individual/individual_username/'.$order_method.'/'.$page.'">Username</a></th>
 						<th><a href="'.site_url().'microfinance/individual/individual_phone/'.$order_method.'/'.$page.'">Phone</a></th>
 						<th><a href="'.site_url().'microfinance/individual/individual_status/'.$order_method.'/'.$page.'">Status</a></th>
-						<th colspan="5">Actions</th>
+						<th colspan="3">Actions</th>
 					</tr>
 				</thead>
 				  <tbody>
@@ -81,7 +81,6 @@
 						<td>'.$individual_username.'</td>
 						<td>'.$individual_phone.'</td>
 						<td>'.$status.'</td>
-						<td><a href="'.site_url().'microfinance/reset-password/'.$individual_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Reset password for '.$individual_fname.'?\');">Reset Password</a></td>
 						<td><a href="'.site_url().'microfinance/edit-individual/'.$individual_id.'" class="btn btn-sm btn-success" title="Edit '.$individual_name.'"><i class="fa fa-pencil"></i></a></td>
 						<td>'.$button.'</td>
 						<td><a href="'.site_url().'microfinance/delete-individual/'.$individual_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$individual_name.'?\');" title="Delete '.$individual_name.'"><i class="fa fa-trash"></i></a></td>

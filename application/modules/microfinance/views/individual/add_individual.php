@@ -5,6 +5,7 @@ $individual_fname = set_value('individual_fname');
 $individual_dob = set_value('individual_dob');
 $individual_email = set_value('individual_email');
 $individual_phone = set_value('individual_phone');
+$individual_phone2 = set_value('individual_phone2');
 $individual_address = set_value('individual_address');
 $civil_status_id = set_value('civil_status_id');
 $individual_locality = set_value('individual_locality');
@@ -13,6 +14,10 @@ $gender_id = set_value('gender_id');
 $individual_city = set_value('individual_city');
 $individual_number = set_value('individual_number');
 $individual_post_code = set_value('individual_post_code');
+$document_id = set_value('document_id');
+$document_number = set_value('document_number');
+$document_place = set_value('document_place');
+$individual_email2 = set_value('individual_email2');
 ?>          
           <section class="panel">
                 <header class="panel-heading">
@@ -172,10 +177,6 @@ $individual_post_code = set_value('individual_post_code');
             </div>
         </div>
         
-	</div>
-    
-    <div class="col-md-6">
-        
         <div class="form-group">
             <label class="col-lg-5 control-label">Email Address: </label>
             
@@ -185,10 +186,30 @@ $individual_post_code = set_value('individual_post_code');
         </div>
         
         <div class="form-group">
+            <label class="col-lg-5 control-label">Email Address 2: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="individual_email2" placeholder="Email Address 2" value="<?php echo $individual_email2;?>">
+            </div>
+        </div>
+        
+	</div>
+    
+    <div class="col-md-6">
+        
+        <div class="form-group">
             <label class="col-lg-5 control-label">Phone: </label>
             
             <div class="col-lg-7">
             	<input type="text" class="form-control" name="individual_phone" placeholder="Phone" value="<?php echo $individual_phone;?>">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-lg-5 control-label">Phone 2: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="individual_phone2" placeholder="Phone 2" value="<?php echo $individual_phone2;?>">
             </div>
         </div>
         
@@ -224,6 +245,70 @@ $individual_post_code = set_value('individual_post_code');
             </div>
         </div>
         
+        <div class="form-group">
+            <label class="col-lg-5 control-label">Document type: </label>
+            
+            <?php
+            	if($document_id == 2)
+				{
+			?>
+            <div class="col-sm-3">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="document_id" value="1" id="document_id1">
+                        National ID
+                    </label>
+                </div>
+            </div>
+            
+            <div class="col-sm-3">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="document_id" value="2" checked="checked" id="document_id2">
+                        Passport
+                    </label>
+                </div>
+            </div>
+            <?php } 
+			
+            	else
+				{
+			?>
+            <div class="col-sm-3">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="document_id" value="1" checked="checked" id="document_id1">
+                        National ID
+                    </label>
+                </div>
+            </div>
+            
+            <div class="col-sm-3">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="document_id" value="2" id="document_id2">
+                        Passport
+                    </label>
+                </div>
+            </div>
+            <?php } ?>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-lg-5 control-label">Document number: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="document_number" placeholder="Document number" value="<?php echo $document_number;?>">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-lg-5 control-label">Place of issue: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="document_place" placeholder="Place of issue" value="<?php echo $document_place;?>">
+            </div>
+        </div>
         
     </div>
 </div>

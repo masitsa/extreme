@@ -5811,10 +5811,7 @@ html.ie11 .scroll-to-top {
 	-webkit-box-shadow: none;
 	box-shadow: none;
 	border: none;
-	/* WHY?
-	+ .panel {
-		margin-top: 35px;
-	}*/;
+	margin-top: 1em;
 }
 
 .panel-heading {
@@ -17587,3 +17584,8 @@ html.dark .thumbnail {
   opacity: 1;
 }
 .child_sections, .parent_sections{margin-top: 5%;}
+.calender-table div.highlight{background-color:#ccc;height: 89px;}
+.calender-table a div.highlight {text-align:center; background-color:#0088CC; font-weight:bold;line-height: 89px;}
+a:hover{text-decoration:none;}
+.calender-table tbody tr{height: 100px;}
+.big-text{font-size: 2em;}

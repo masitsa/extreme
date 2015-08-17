@@ -47,6 +47,7 @@ $route['404_override'] = '';
 *	Auth Routes
 */
 $route['login'] = 'auth/login_user';
+$route['logout-admin'] = 'auth/logout';
 
 /*
 *	Admin Routes
@@ -56,6 +57,8 @@ $route['dashboard'] = 'admin/dashboard';
 /*
 *	administration Routes
 */
+$route['administration/configuration'] = 'admin/configuration';
+$route['administration/edit-configuration/(:num)'] = 'admin/edit_configuration/$1';
 $route['administration/sections'] = 'admin/sections/index';
 $route['administration/sections/(:any)/(:any)/(:num)'] = 'admin/sections/index/$1/$2/$3';
 $route['administration/add-section'] = 'admin/sections/add_section';
@@ -74,6 +77,10 @@ $route['administration/company-profile'] = 'admin/contacts/show_contacts';
 /*
 *	HR Routes
 */
+$route['human-resource/configuration'] = 'hr/configuration';
+$route['human-resource/add-job-title'] = 'hr/add_job_title';
+$route['human-resource/edit-job-title/(:num)'] = 'hr/edit_job_title/$1';
+$route['human-resource/delete-job-title/(:num)'] = 'hr/delete_job_title/$1';
 $route['human-resource/personnel'] = 'hr/personnel/index';
 $route['human-resource/personnel/(:any)/(:any)/(:num)'] = 'hr/personnel/index/$1/$2/$3';
 $route['human-resource/add-personnel'] = 'hr/personnel/add_personnel';
@@ -94,22 +101,52 @@ $route['human-resource/activate-emergency-contact/(:num)/(:num)'] = 'hr/personne
 $route['human-resource/deactivate-emergency-contact/(:num)/(:num)'] = 'hr/personnel/deactivate_emergency_contact/$1/$2';
 $route['human-resource/delete-emergency-contact/(:num)/(:num)'] = 'hr/personnel/delete_emergency_contact/$1/$2';
 
-$route['human-resource/add-dependant-contact/(:num)/(:num)'] = 'hr/personnel/add_dependant_contact/$1/$2';
+$route['human-resource/add-dependant-contact/(:num)'] = 'hr/personnel/add_dependant_contact/$1';
 $route['human-resource/activate-dependant-contact/(:num)/(:num)'] = 'hr/personnel/activate_dependant_contact/$1/$2';
 $route['human-resource/deactivate-dependant-contact/(:num)/(:num)'] = 'hr/personnel/deactivate_dependant_contact/$1/$2';
 $route['human-resource/delete-dependant-contact/(:num)/(:num)'] = 'hr/personnel/delete_dependant_contact/$1/$2';
 
-$route['human-resource/add-personnel-job/(:num)/(:num)'] = 'hr/personnel/add_personnel_job/$1/$2';
+$route['human-resource/add-personnel-job/(:num)'] = 'hr/personnel/add_personnel_job/$1';
 $route['human-resource/activate-personnel-job/(:num)/(:num)'] = 'hr/personnel/activate_personnel_job/$1/$2';
 $route['human-resource/deactivate-personnel-job/(:num)/(:num)'] = 'hr/personnel/deactivate_personnel_job/$1/$2';
 $route['human-resource/delete-personnel-job/(:num)/(:num)'] = 'hr/personnel/delete_personnel_job/$1/$2';
 
-
-$route['human-resource/add-personnel-leave/(:num)/(:num)'] = 'hr/personnel/add_personnel_leave/$1/$2';
+$route['human-resource/leave'] = 'hr/leave/calender';
+$route['human-resource/leave/(:any)/(:any)'] = 'hr/leave/calender/$1/$2';
+$route['human-resource/view-leave/(:any)'] = 'hr/leave/view_leave/$1';
+$route['human-resource/add-personnel-leave/(:num)'] = 'hr/personnel/add_personnel_leave/$1';
+$route['human-resource/add-leave/(:any)'] = 'hr/leave/add_leave/$1';
+$route['human-resource/add-calender-leave'] = 'hr/leave/add_calender_leave';
+$route['human-resource/activate-leave/(:num)/(:any)'] = 'hr/leave/activate_leave/$1/$2';
+$route['human-resource/deactivate-leave/(:num)/(:any)'] = 'hr/leave/deactivate_leave/$1/$2';
+$route['human-resource/delete-leave/(:num)/(:any)'] = 'hr/leave/delete_leave/$1/$2';
 $route['human-resource/activate-personnel-leave/(:num)/(:num)'] = 'hr/personnel/activate_personnel_leave/$1/$2';
 $route['human-resource/deactivate-personnel-leave/(:num)/(:num)'] = 'hr/personnel/deactivate_personnel_leave/$1/$2';
 $route['human-resource/delete-personnel-leave/(:num)/(:num)'] = 'hr/personnel/delete_personnel_leave/$1/$2';
 
+$route['human-resource/delete-personnel-role/(:num)/(:num)'] = 'hr/personnel/delete_personnel_role/$1/$2';
+
+/*
+*	Accounts Routes
+*/
+$route['accounts/print-payroll'] = 'accounts/payroll/print_payroll';
+$route['accounts/print-payslips'] = 'accounts/payroll/print_payslips';
+$route['accounts/payroll/edit_allowance/(:num)'] = 'accounts/payroll/edit_allowance/$1';
+$route['accounts/payroll/delete_allowance/(:num)'] = 'accounts/payroll/delete_allowance/$1';
+$route['accounts/payroll/edit_deduction/(:num)'] = 'accounts/payroll/edit_deduction/$1';
+$route['accounts/payroll/delete_deduction/(:num)'] = 'accounts/payroll/delete_deduction/$1';
+$route['accounts/payroll/edit_saving/(:num)'] = 'accounts/payroll/edit_saving/$1';
+$route['accounts/payroll/delete_saving/(:num)'] = 'accounts/payroll/delete_saving/$1';
+$route['accounts/payroll/edit_loan_scheme/(:num)'] = 'accounts/payroll/edit_loan_scheme/$1';
+$route['accounts/payroll/delete_loan_scheme/(:num)'] = 'accounts/payroll/delete_loan_scheme/$1';
+$route['accounts/payroll'] = 'accounts/payroll/salaries';
+$route['accounts/payroll/(:any)/(:any)'] = 'accounts/payroll/salaries/$1/$2';
+$route['accounts/payroll/(:any)/(:any)/(:num)'] = 'accounts/payroll/salaries/$1/$2/$3';
+$route['accounts/payment-details/(:num)'] = 'accounts/payroll/payment_details/$1';
+$route['accounts/save-payment-details/(:num)'] = 'accounts/payroll/save_payment_details/$1';
+$route['accounts/update-savings/(:num)'] = 'accounts/payroll/update_savings/$1';
+$route['accounts/update-loan-schemes/(:num)'] = 'accounts/payroll/update_loan_schemes/$1';
+$route['payroll/configuration'] = 'accounts/payroll/payroll_configuration';
 
 /*
 *	Inventory Routes
@@ -133,13 +170,36 @@ $route['microfinance/individual'] = 'microfinance/individual/index';
 $route['microfinance/individual/(:any)/(:any)/(:num)'] = 'microfinance/individual/index/$1/$2/$3';
 $route['microfinance/add-individual'] = 'microfinance/individual/add_individual';
 $route['microfinance/edit-individual/(:num)'] = 'microfinance/individual/edit_individual/$1';
-$route['microfinance/edit-individual/(:num)/(:num)'] = 'microfinance/individual/edit_individual/$1/$2';
+$route['microfinance/update-individual/(:num)'] = 'microfinance/individual/edit_about/$1';
+$route['microfinance/update-emergency/(:num)'] = 'microfinance/individual/edit_emergency/$1';
+$route['microfinance/add-position/(:num)'] = 'microfinance/individual/add_position/$1';
+$route['microfinance/add-nok/(:num)'] = 'microfinance/individual/add_emergency/$1';
 $route['microfinance/delete-individual/(:num)'] = 'microfinance/individual/delete_individual/$1';
 $route['microfinance/delete-individual/(:num)/(:num)'] = 'microfinance/individual/delete_individual/$1/$2';
 $route['microfinance/activate-individual/(:num)'] = 'microfinance/individual/activate_individual/$1';
 $route['microfinance/activate-individual/(:num)/(:num)'] = 'microfinance/individual/activate_individual/$1/$2';
 $route['microfinance/deactivate-individual/(:num)'] = 'microfinance/individual/deactivate_individual/$1';
 $route['microfinance/deactivate-individual/(:num)/(:num)'] = 'microfinance/individual/deactivate_individual/$1/$2';
+$route['microfinance/activate-position/(:num)/(:num)'] = 'microfinance/individual/activate_position/$1/$2';
+$route['microfinance/deactivate-position/(:num)/(:num)'] = 'microfinance/individual/deactivate_position/$1/$2';
+$route['microfinance/delete-emergency/(:num)/(:num)'] = 'microfinance/individual/delete_emergency/$1/$2';
+
+/*
+*	Microfinance Routes
+*/
+$route['microfinance/groups'] = 'microfinance/group/index';
+$route['microfinance/group/(:any)/(:any)/(:num)'] = 'microfinance/group/index/$1/$2/$3';
+$route['microfinance/add-group'] = 'microfinance/group/add_group';
+$route['microfinance/edit-group/(:num)'] = 'microfinance/group/edit_group/$1';
+$route['microfinance/edit-about/(:num)'] = 'microfinance/group/edit_about/$1';
+$route['microfinance/add-member/(:num)'] = 'microfinance/group/add_member/$1';
+$route['microfinance/edit-group/(:num)/(:num)'] = 'microfinance/group/edit_group/$1/$2';
+$route['microfinance/delete-group/(:num)'] = 'microfinance/group/delete_group/$1';
+$route['microfinance/delete-group/(:num)/(:num)'] = 'microfinance/group/delete_group/$1/$2';
+$route['microfinance/activate-group/(:num)'] = 'microfinance/group/activate_group/$1';
+$route['microfinance/activate-group/(:num)/(:num)'] = 'microfinance/group/activate_group/$1/$2';
+$route['microfinance/deactivate-group/(:num)'] = 'microfinance/group/deactivate_group/$1';
+$route['microfinance/deactivate-group/(:num)/(:num)'] = 'microfinance/group/deactivate_group/$1/$2';
 
 $route['microfinance/savings-plan'] = 'microfinance/savings_plan/index';
 $route['microfinance/savings-plan/(:any)/(:any)/(:num)'] = 'microfinance/savings_plan/index/$1/$2/$3';

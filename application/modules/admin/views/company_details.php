@@ -9,11 +9,6 @@
                     <h2 class="panel-title"><?php echo $title;?></h2>
                 </header>
                 <div class="panel-body">
-                	<div class="row" style="margin-bottom:20px;">
-                        <div class="col-lg-12">
-                            <a href="<?php echo site_url();?>admin/categories" class="btn btn-info pull-right">Back to categories</a>
-                        </div>
-                    </div>
                         
             <?php
 				$error2 = validation_errors(); 

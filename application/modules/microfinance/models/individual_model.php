@@ -1,7 +1,61 @@
 <?php
 
 class Individual_model extends CI_Model 
-{	
+{
+	public function upload_image($path, $location, $resize, $name, $upload, $edit = NULL)
+	{
+		if(!empty($_FILES[$upload]['tmp_name']))
+		{
+			$image = $this->session->userdata($name);
+			
+			if((!empty($image)) || ($edit != NULL))
+			{
+				if($edit != NULL)
+				{
+					$image = $edit;
+				}
+				
+				//delete any other uploaded image
+				if($this->file_model->delete_file($path."\\".$image, $location))
+				{
+					//delete any other uploaded thumbnail
+					$this->file_model->delete_file($path."\\thumbnail_".$image, $location);
+				}
+				
+				else
+				{
+					$this->file_model->delete_file($path."/".$image, $location);
+					$this->file_model->delete_file($path."/thumbnail_".$image, $location);
+				}
+			}
+			//Upload image
+			$response = $this->file_model->upload_file($path, $upload, $resize);
+			if($response['check'])
+			{
+				$file_name = $response['file_name'];
+				$thumb_name = $response['thumb_name'];
+					
+				//Set sessions for the image details
+				$this->session->set_userdata($name, $file_name);
+			
+				return TRUE;
+			}
+		
+			else
+			{
+				$this->session->set_userdata('upload_error_message', $response['error']);
+				
+				return FALSE;
+			}
+		}
+		
+		else
+		{
+			$this->session->set_userdata('upload_error_message', '');
+			return FALSE;
+		}
+	}
+	
 	/*
 	*	Retrieve all individual
 	*
@@ -71,13 +125,18 @@ class Individual_model extends CI_Model
 			'individual_email'=>$this->input->post('individual_email'),
 			'gender_id'=>$this->input->post('gender_id'),
 			'individual_phone'=>$this->input->post('individual_phone'),
+			'individual_phone2'=>$this->input->post('individual_phone2'),
 			'civilstatus_id'=>$this->input->post('civil_status_id'),
 			'individual_address'=>$this->input->post('individual_address'),
 			'individual_locality'=>$this->input->post('individual_locality'),
 			'title_id'=>$this->input->post('title_id'),
 			'individual_number'=>$this->input->post('individual_number'),
 			'individual_city'=>$this->input->post('individual_city'),
-			'individual_post_code'=>$this->input->post('individual_post_code')
+			'individual_post_code'=>$this->input->post('individual_post_code'),
+			'individual_email2'=>$this->input->post('individual_email2'),
+			'document_id'=>$this->input->post('document_id'),
+			'document_number'=>$this->input->post('document_number'),
+			'document_place'=>$this->input->post('document_place')
 		);
 		
 		if($this->db->insert('individual', $data))
@@ -95,7 +154,7 @@ class Individual_model extends CI_Model
 	*	@param int $individual_id
 	*
 	*/
-	public function edit_individual($individual_id)
+	public function edit_individual($individual_id, $image, $signature)
 	{
 		$data = array(
 			'individual_onames'=>ucwords(strtolower($this->input->post('individual_onames'))),
@@ -104,18 +163,19 @@ class Individual_model extends CI_Model
 			'individual_email'=>$this->input->post('individual_email'),
 			'gender_id'=>$this->input->post('gender_id'),
 			'individual_phone'=>$this->input->post('individual_phone'),
+			'individual_phone2'=>$this->input->post('individual_phone2'),
 			'civilstatus_id'=>$this->input->post('civil_status_id'),
 			'individual_address'=>$this->input->post('individual_address'),
 			'individual_locality'=>$this->input->post('individual_locality'),
 			'title_id'=>$this->input->post('title_id'),
-			'individual_username'=>$this->input->post('individual_username'),
-			'individual_kin_fname'=>$this->input->post('individual_kin_fname'),
-			'individual_kin_onames'=>$this->input->post('individual_kin_onames'),
-			'individual_kin_contact'=>$this->input->post('individual_kin_contact'),
-			'individual_kin_address'=>$this->input->post('individual_kin_address'),
-			'kin_relationship_id'=>$this->input->post('kin_relationship_id'),
-			'job_title_id'=>$this->input->post('job_title_id'),
-			'individual_staff_id'=>$this->input->post('staff_id')
+			'individual_number'=>$this->input->post('individual_number'),
+			'individual_city'=>$this->input->post('individual_city'),
+			'image'=>$image,
+			'signature'=>$signature,
+			'individual_email2'=>$this->input->post('individual_email2'),
+			'document_id'=>$this->input->post('document_id'),
+			'document_number'=>$this->input->post('document_number'),
+			'document_place'=>$this->input->post('document_place')
 		);
 		
 		$this->db->where('individual_id', $individual_id);
@@ -308,9 +368,9 @@ class Individual_model extends CI_Model
 	public function get_emergency_contacts($individual_id)
 	{
 		//retrieve all users
-		$this->db->from('individual_emergency');
+		$this->db->from('individual_emergency, relationship');
 		$this->db->select('*');
-		$this->db->where(array('individual_emergency.individual_id' => $individual_id, 'individual_emergency.relationship_id' => 'relationship.relationship_id'));
+		$this->db->where('individual_emergency.individual_id = '.$individual_id.' AND individual_emergency.relationship_id = relationship.relationship_id');
 		$this->db->order_by('individual_emergency_fname');
 		$query = $this->db->get();
 		
@@ -473,6 +533,124 @@ class Individual_model extends CI_Model
 		
 
 		if($this->db->update('individual_savings', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Add a new individual
+	*	@param string $image_name
+	*
+	*/
+	public function add_position($individual_id)
+	{
+		$data = array(
+			'employer'=>$this->input->post('employer'),
+			'job_title'=>$this->input->post('job_title'),
+			'employment_date'=>$this->input->post('employment_date'),
+			'individual_id'=>$individual_id,
+			'created'=>date('Y-m-d H:i:s'),
+			'created_by'=>$this->session->userdata('personnel_id'),
+			'modified_by'=>$this->session->userdata('personnel_id')
+		);
+		
+		if($this->db->insert('individual_job', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Activate a individual plan
+	*	@param int $individual_savings_id
+	*
+	*/
+	public function activate_individual_position($individual_job_id)
+	{
+		$data = array(
+				'individual_job_status' => 1
+			);
+		$this->db->where('individual_job_id', $individual_job_id);
+
+		if($this->db->update('individual_job', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Deactivate a individual plan
+	*	@param int $individual_savings_id
+	*
+	*/
+	public function deactivate_individual_position($individual_job_id)
+	{
+		$data = array(
+				'individual_job_status' => 0
+			);
+		$this->db->where('individual_job_id', $individual_job_id);
+
+		if($this->db->update('individual_job', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Add a new individual
+	*	@param string $image_name
+	*
+	*/
+	public function add_emergency($individual_id)
+	{
+		$data = array(
+			'individual_emergency_onames'=>ucwords(strtolower($this->input->post('individual_emergency_onames'))),
+			'individual_emergency_fname'=>ucwords(strtolower($this->input->post('individual_emergency_fname'))),
+			'individual_emergency_dob'=>$this->input->post('individual_emergency_dob'),
+			'individual_emergency_email'=>$this->input->post('individual_emergency_email'),
+			'individual_emergency_phone'=>$this->input->post('individual_emergency_phone'),
+			'individual_emergency_phone2'=>$this->input->post('individual_emergency_phone2'),
+			'individual_emergency_address'=>$this->input->post('individual_emergency_address'),
+			'individual_emergency_city'=>$this->input->post('individual_emergency_city'),
+			'individual_emergency_post_code'=>$this->input->post('individual_emergency_post_code'),
+			'individual_emergency_email2'=>$this->input->post('individual_emergency_email2'),
+			'document_id'=>$this->input->post('document_id'),
+			'document_number'=>$this->input->post('document_number'),
+			'relationship_id'=>$this->input->post('relationship_id'),
+			'individual_id'=>$individual_id
+		);
+		
+		if($this->db->insert('individual_emergency', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Delete an existing individual
+	*	@param int $individual_id
+	*
+	*/
+	public function delete_emergency($individual_emergency_id)
+	{
+		//delete children
+		if($this->db->delete('individual_emergency', array('individual_emergency_id' => $individual_emergency_id)))
 		{
 			return TRUE;
 		}

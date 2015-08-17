@@ -45,15 +45,15 @@ class Sections extends admin
 		$config['prev_link'] = 'Prev';
 		$config['prev_tag_close'] = '</li>';
 		
-		$config['cur_tag_open'] = '<li class="active">';
-		$config['cur_tag_close'] = '</li>';
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
 		
 		$config['num_tag_open'] = '<li>';
 		$config['num_tag_close'] = '</li>';
 		$this->pagination->initialize($config);
 		
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
-        $data["links"] = $this->pagination->create_links();
+        $v_data["links"] = $this->pagination->create_links();
 		$query = $this->sections_model->get_all_sections($table, $where, $config["per_page"], $page, $order, $order_method);
 		
 		//change of order method 

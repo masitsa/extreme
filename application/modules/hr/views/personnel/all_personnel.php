@@ -61,7 +61,7 @@
 				//create deactivated status display
 				if($personnel_status == 0)
 				{
-					$status = '<span class="label label-important">Deactivated</span>';
+					$status = '<span class="label label-default">Deactivated</span>';
 					$button = '<a class="btn btn-info" href="'.site_url().'human-resource/activate-personnel/'.$personnel_id.'" onclick="return confirm(\'Do you want to activate '.$personnel_name.'?\');" title="Activate '.$personnel_name.'"><i class="fa fa-thumbs-up"></i></a>';
 				}
 				//create activated status display
@@ -102,7 +102,7 @@
 		}
 ?>
 
-						<personnel class="panel">
+						<section class="panel">
 							<header class="panel-heading">						
 								<h2 class="panel-title"><?php echo $title;?></h2>
 							</header>
@@ -141,4 +141,4 @@
                             <div class="panel-footer">
                             	<?php if(isset($links)){echo $links;}?>
                             </div>
-						</personnel>
+						</section>

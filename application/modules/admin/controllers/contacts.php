@@ -115,7 +115,7 @@ class Contacts extends admin
 					$this->session->unset_userdata('error_message');
 					$this->session->set_userdata('success_message', 'Company details have been updated successfully');
 					
-					redirect('admin/company-profile');
+					redirect('administration/company-profile');
 				}
 			}
 			

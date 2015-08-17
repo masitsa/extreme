@@ -94,7 +94,7 @@ else
 ?>
           <section class="panel">
                 <header class="panel-heading">
-                    <h2 class="panel-title">Personnel's dependant list</h2>
+                    <h2 class="panel-title">Individual's dependant list</h2>
                 </header>
                 <div class="panel-body">
                 <!-- Adding Errors -->
@@ -121,9 +121,7 @@ else
                 	<?php
                     	if($titles->num_rows() > 0)
 						{
-							$title = $titles->result();
-							
-							foreach($title as $res)
+							foreach($titles->result() as $res)
 							{
 								$db_title_id = $res->title_id;
 								$title_name = $res->title_name;
@@ -135,7 +133,7 @@ else
 								
 								else
 								{
-									
+									echo '<option value="'.$db_title_id.'">'.$title_name.'</option>';
 								}
 							}
 						}
@@ -149,6 +147,14 @@ else
             
             <div class="col-lg-7">
             	<input type="text" class="form-control" name="individual_dependant_fname" placeholder="First Name" value="<?php echo $individual_dependant_fname;?>">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-lg-5 control-label">Other Names: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="individual_dependant_onames" placeholder="Other Names" value="<?php echo $individual_dependant_onames;?>">
             </div>
         </div>
     </div>

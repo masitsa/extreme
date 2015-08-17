@@ -3,7 +3,7 @@
 	{
 		$count = 0;
 			
-		$result .= 
+		$result = 
 		'
 		<table class="table table-bordered table-striped table-condensed">
 			<thead>
@@ -12,8 +12,8 @@
 					<th>Place of work</th>
 					<th>Position</th>
 					<th>Employment date</th>
-					<th>Resignation date</th>
-					<th colspan="3">Actions</th>
+					<th>Status</th>
+					<th colspan="2">Actions</th>
 				</tr>
 			</thead>
 			  <tbody>
@@ -31,14 +31,14 @@
 			//create deactivated status display
 			if($individual_job_status == 0)
 			{
-				$status = '<span class="label label-important">Deactivated</span>';
-				$button = '<a class="btn btn-info" href="'.site_url().'human-resource/activate-position/'.$individual_job_id.'" onclick="return confirm(\'Do you want to activate '.$job.'?\');" title="Activate '.$job.'"><i class="fa fa-thumbs-up"></i></a>';
+				$status = '<span class="label label-default">Former</span>';
+				$button = '<a class="btn btn-info" href="'.site_url().'microfinance/activate-position/'.$individual_job_id.'/'.$individual_id.'" onclick="return confirm(\'Do you want to activate '.$job.'?\');" title="Activate '.$job.'"><i class="fa fa-thumbs-up"></i></a>';
 			}
 			//create activated status display
 			else if($individual_job_status == 1)
 			{
-				$status = '<span class="label label-success">Active</span>';
-				$button = '<a class="btn btn-default" href="'.site_url().'human-resource/deactivate-position/'.$individual_job_id.'" onclick="return confirm(\'Do you want to deactivate '.$job.'?\');" title="Deactivate '.$job.'"><i class="fa fa-thumbs-down"></i></a>';
+				$status = '<span class="label label-success">Current</span>';
+				$button = '<a class="btn btn-default" href="'.site_url().'microfinance/deactivate-position/'.$individual_job_id.'/'.$individual_id.'" onclick="return confirm(\'Do you want to deactivate '.$job.'?\');" title="Deactivate '.$job.'"><i class="fa fa-thumbs-down"></i></a>';
 			}
 			
 			$count++;
@@ -51,7 +51,6 @@
 					<td>'.$employment_date.'</td>
 					<td>'.$status.'</td>
 					<td>'.$button.'</td>
-					<td><a href="'.site_url().'human-resource/delete-individual/'.$individual_job_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$job.'?\');" title="Delete '.$job.'"><i class="fa fa-trash"></i></a></td>
 				</tr> 
 			';
 		}
@@ -67,19 +66,19 @@
 	{
 		$result = "No positions have been assigned";
 	}
-	
+
+$employer = '';
+$job_title = '';
+$employment_date = '';
 
 //repopulate data if validation errors occur
 $validation_error = validation_errors();
 				
 if(!empty($validation_error))
 {
-	$job_title_id = set_value('job_title_id');
-}
-
-else
-{
-	$job_title_id = '';
+	$employer = set_value('employer');
+	$job_title = set_value('job_title');
+	$employment_date = set_value('employment_date');
 }
 ?>
           <section class="panel">
@@ -99,7 +98,7 @@ else
 			
             ?>
             
-            <?php echo form_open('individual/add-position', array("class" => "form-horizontal", "role" => "form"));?>
+            <?php echo form_open('microfinance/add-position/'.$individual_id, array("class" => "form-horizontal", "role" => "form"));?>
 <div class="row">
 	<div class="col-md-4">
     
@@ -107,7 +106,7 @@ else
             <label class="col-lg-5 control-label">Employer: </label>
             
             <div class="col-lg-7">
-            	<input type="text" class="form-control" name="employer" placeholder="Employer">
+            	<input type="text" class="form-control" name="employer" placeholder="Employer" value="<?php echo $employer;?>">
             </div>
         </div>
         
@@ -118,7 +117,7 @@ else
             <label class="col-lg-5 control-label">Job title: </label>
             
             <div class="col-lg-7">
-            	<input type="text" class="form-control" name="job_title" placeholder="Job title">
+            	<input type="text" class="form-control" name="job_title" placeholder="Job title" value="<?php echo $job_title;?>">
             </div>
         </div>
         
@@ -133,9 +132,19 @@ else
                     <span class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                     </span>
-                    <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="start_date" placeholder="Start date">
+                    <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="employment_date" placeholder="Start date" value="<?php echo $employment_date;?>">
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin:10px 0 10px;">
+	<div class="col-md-12">
+        <div class="form-actions center-align">
+            <button class="submit btn btn-primary" type="submit">
+                Add position
+            </button>
         </div>
     </div>
 </div>

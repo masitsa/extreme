@@ -50,7 +50,7 @@ $result = '';
 			else if($personnel_emergency_status == 1)
 			{
 				$status = '<span class="label label-success">Active</span>';
-				$button = '<a class="btn btn-sm btn-danger" href="'.site_url().'human-resource/deactivate-emergency-contact/'.$personnel_emergency_id.'/'.$personnel_id.'" onclick="return confirm(\'Do you want to deactivate '.$personnel_emergency_fname.'?\');" title="Deactivate '.$personnel_emergency_fname.'"><i class="fa fa-thumbs-down"></i></a>';
+				$button = '<a class="btn btn-sm btn-default" href="'.site_url().'human-resource/deactivate-emergency-contact/'.$personnel_emergency_id.'/'.$personnel_id.'" onclick="return confirm(\'Do you want to deactivate '.$personnel_emergency_fname.'?\');" title="Deactivate '.$personnel_emergency_fname.'"><i class="fa fa-thumbs-down"></i></a>';
 			}
 			
 			$count++;

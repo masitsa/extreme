@@ -43,7 +43,7 @@ $result ='';
 			else if($personnel_dependant_status == 1)
 			{
 				$status = '<span class="label label-success">Active</span>';
-				$button = '<a class="btn btn-sm btn-danger" href="'.site_url().'human-resource/deactivate-position/'.$personnel_dependant_id.'/'.$personnel_id.'" onclick="return confirm(\'Do you want to deactivate '.$personnel_dependant_fname.'?\');" title="Deactivate '.$personnel_dependant_fname.'"><i class="fa fa-thumbs-down"></i></a>';
+				$button = '<a class="btn btn-sm btn-default" href="'.site_url().'human-resource/deactivate-position/'.$personnel_dependant_id.'/'.$personnel_id.'" onclick="return confirm(\'Do you want to deactivate '.$personnel_dependant_fname.'?\');" title="Deactivate '.$personnel_dependant_fname.'"><i class="fa fa-thumbs-down"></i></a>';
 			}
 			
 			$count++;
@@ -57,7 +57,7 @@ $result ='';
 					<td>'.$last_modified.'</td>
 					<td>'.$status.'</td>
 					<td>'.$button.'</td>
-					<td><a href="'.site_url().'human-resource/delete-personnel/'.$personnel_dependant_id.'/'.$personnel_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$personnel_dependant_fname.'?\');" title="Delete '.$personnel_dependant_fname.'"><i class="fa fa-trash"></i></a></td>
+					<td><a href="'.site_url().'human-resource/delete-dependant-contact/'.$personnel_dependant_id.'/'.$personnel_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$personnel_dependant_fname.'?\');" title="Delete '.$personnel_dependant_fname.'"><i class="fa fa-trash"></i></a></td>
 				</tr> 
 			';
 		}
