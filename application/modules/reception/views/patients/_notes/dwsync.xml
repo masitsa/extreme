@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="other.php" server="192.168.170.16/sumc/" local="130562061073963953" remote="130564638000000000" Dst="0" />
+<file name="dependants.php" server="192.168.170.16/sumc/" local="130562050516400095" remote="130564638000000000" Dst="0" />
+<file name="search_patient.php" server="192.168.170.16/sumc/" local="130555081000664191" remote="130558592400000000" Dst="0" />
+<file name="search_visit.php" server="192.168.170.16/sumc/" local="130555081000704193" remote="130558592400000000" Dst="0" />
+<file name="queue_summary.php" server="192.168.170.16/sumc/" local="130558656925252278" remote="130558592400000000" Dst="0" />
+<file name="dependants.php" server="192.168.170.16/sumc/development/" local="130562050516400095" remote="130612911600000000" Dst="0" />
+<file name="other.php" server="192.168.170.16/sumc/development/" local="130612895525795580" remote="130612911600000000" Dst="0" />
+<file name="queue_summary.php" server="192.168.170.16/sumc/development/" local="130558656925252278" remote="130612911600000000" Dst="0" />
+<file name="search_patient.php" server="192.168.170.16/sumc/development/" local="130555081000664191" remote="130612911600000000" Dst="0" />
+<file name="search_visit.php" server="192.168.170.16/sumc/development/" local="130555081000704193" remote="130612911600000000" Dst="0" />
+<file name="dependants.php" server="192.168.170.16" local="130547446215830670" remote="130547337600000000" Dst="0" />
+<file name="staff_dependants.php" server="192.168.170.16/sumc/" local="130562159582138548" remote="130564638000000000" Dst="0" />
+<file name="staff_dependants.php" server="192.168.170.16/sumc/development/" local="130586299631530663" remote="130612911600000000" Dst="0" />
+<file name="edit_other_patient.php" server="192.168.170.16/sumc/development/" local="130562046108958004" remote="130612911600000000" Dst="0" />
+<file name="staff.php" server="192.168.170.16/sumc/development/" local="130562121431206147" remote="130612911600000000" Dst="0" />
+<file name="students.php" server="192.168.170.16/sumc/development/" local="130562121626737330" remote="130612911600000000" Dst="0" />
+<file name="edit_other_patient.php" server="192.168.170.16/sumc/" local="130562046108958004" remote="130564638000000000" Dst="0" />
+<file name="staff.php" server="192.168.170.16/sumc/" local="130562121431206147" remote="130564638000000000" Dst="0" />
+<file name="students.php" server="192.168.170.16/sumc/" local="130562121626737330" remote="130564638000000000" Dst="0" />
+<file name="edit_staff_dependant.php" server="192.168.170.16/sumc/development/" local="130586299631030663" remote="130612911600000000" Dst="0" />
+</dwsync>

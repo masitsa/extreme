@@ -14,7 +14,8 @@
     </head>
 
 	<body>
-    	<input type="hidden" id="base_url" value="<?php echo site_url()?>">
+    	<input type="hidden" id="base_url" value="<?php echo site_url();?>">
+    	<input type="hidden" id="config_url" value="<?php echo site_url();?>">
     	<!--[if lt IE 7]>
             <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
         <![endif]-->

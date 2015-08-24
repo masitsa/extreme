@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="diagnose.php" server="192.168.170.16/sumc/development/" local="130555080993343772" remote="130612911000000000" Dst="0" />
+<file name="view_assessment.php" server="192.168.170.16/sumc/development/" local="130584363554139551" remote="130612911000000000" Dst="0" />
+<file name="view_objective_findings.php" server="192.168.170.16/sumc/development/" local="130584363554169553" remote="130612911000000000" Dst="0" />
+<file name="view_plan.php" server="192.168.170.16/sumc/development/" local="130584363554229556" remote="130612911000000000" Dst="0" />
+<file name="view_symptoms.php" server="192.168.170.16/sumc/development/" local="130584363554259558" remote="130612911000000000" Dst="0" />
+<file name="add_objective_findings.php" server="192.168.170.16/sumc/development/" local="130555080993333771" remote="130612911000000000" Dst="0" />
+<file name="disease.php" server="192.168.170.16/sumc/development/" local="130586298303500582" remote="130612911000000000" Dst="0" />
+<file name="get_diagnosis.php" server="192.168.170.16/sumc/development/" local="130586282823493349" remote="130612911000000000" Dst="0" />
+<file name="objective_finding.php" server="192.168.170.16/sumc/development/" local="130555080993523782" remote="130612911000000000" Dst="0" />
+<file name="symptoms.php" server="192.168.170.16/sumc/development/" local="130584363554029545" remote="130612911000000000" Dst="0" />
+<file name="doctors_notes.php" server="192.168.170.16/sumc/development/" local="130555080993493781" remote="130612911000000000" Dst="0" />
+<file name="doctor_notes.php" server="192.168.170.16/sumc/development/" local="130613019975468585" remote="130612911000000000" Dst="0" />
+<file name="nurse_notes.php" server="192.168.170.16/sumc/development/" local="130613019975468585" remote="130612911000000000" Dst="0" />
+<file name="add_objective_findings.php" server="192.168.170.16/sumc/" local="130555080993333771" remote="130586220000000000" Dst="0" />
+<file name="diagnose.php" server="192.168.170.16/sumc/" local="130555080993343772" remote="130586220000000000" Dst="0" />
+<file name="disease.php" server="192.168.170.16/sumc/" local="130586298303500582" remote="130586220000000000" Dst="0" />
+<file name="doctors_notes.php" server="192.168.170.16/sumc/" local="130555080993493781" remote="130586220000000000" Dst="0" />
+<file name="doctor_notes.php" server="192.168.170.16/sumc/" local="130560235296803477" remote="130586220000000000" Dst="0" />
+<file name="get_diagnosis.php" server="192.168.170.16/sumc/" local="130586282823493349" remote="130586220000000000" Dst="0" />
+<file name="nurse_notes.php" server="192.168.170.16/sumc/" local="130560235296833479" remote="130586220000000000" Dst="0" />
+<file name="objective_finding.php" server="192.168.170.16/sumc/" local="130555080993523782" remote="130586220000000000" Dst="0" />
+<file name="symptoms.php" server="192.168.170.16/sumc/" local="130584363554029545" remote="130586220000000000" Dst="0" />
+<file name="view_assessment.php" server="192.168.170.16/sumc/" local="130584363554139551" remote="130586220000000000" Dst="0" />
+<file name="view_objective_findings.php" server="192.168.170.16/sumc/" local="130584363554169553" remote="130586220000000000" Dst="0" />
+<file name="view_plan.php" server="192.168.170.16/sumc/" local="130584363554229556" remote="130586220000000000" Dst="0" />
+<file name="view_symptoms.php" server="192.168.170.16/sumc/" local="130584363554259558" remote="130586220000000000" Dst="0" />
+</dwsync>

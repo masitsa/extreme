@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="drugs.php" server="192.168.170.16/sumc/development/" local="130564613404324522" remote="130612911600000000" Dst="0" />
+<file name="prescription.php" server="192.168.170.16/sumc/development/" local="130585428499391833" remote="130612911600000000" Dst="0" />
+<file name="display_prescription.php" server="192.168.170.16/sumc/" local="130586339340289713" remote="130590357000000000" Dst="0" />
+<file name="drugs.php" server="192.168.170.16/sumc/" local="130564613404324522" remote="130590357000000000" Dst="0" />
+<file name="pharmacy_queue.php" server="192.168.170.16/sumc/" local="130589551262844387" remote="130590357000000000" Dst="0" />
+<file name="prescription.php" server="192.168.170.16/sumc/" local="130585428499391833" remote="130590357000000000" Dst="0" />
+<file name="display_prescription.php" server="192.168.170.16/sumc/development/" local="130586339340289713" remote="130612911600000000" Dst="0" />
+<file name="pharmacy_queue.php" server="192.168.170.16/sumc/development/" local="130594982646694101" remote="130612911600000000" Dst="0" />
+<file name="buy_drug.php" server="192.168.170.16/sumc/" local="130590468279296857" remote="130590360000000000" Dst="0" />
+<file name="add_drug.php" server="192.168.170.16/sumc/" local="130590467966121229" remote="130590359400000000" Dst="0" />
+<file name="deduct_drug.php" server="192.168.170.16/sumc/" local="130590468340904771" remote="130590360000000000" Dst="0" />
+<file name="drugs_list.php" server="192.168.170.16/sumc/" local="130607883933276979" remote="130607774400000000" Dst="0" />
+<file name="drug_deductions.php" server="192.168.170.16/sumc/" local="130589778738737512" remote="130590357000000000" Dst="0" />
+<file name="drug_purchases.php" server="192.168.170.16/sumc/" local="130589771039207640" remote="130590357000000000" Dst="0" />
+<file name="edit_drug.php" server="192.168.170.16/sumc/" local="130590467856540661" remote="130590359400000000" Dst="0" />
+<file name="edit_drug_deduction.php" server="192.168.170.16/sumc/" local="130590468560638481" remote="130590360000000000" Dst="0" />
+<file name="edit_drug_purchase.php" server="192.168.170.16/sumc/" local="130590468620544693" remote="130590360000000000" Dst="0" />
+<file name="prescription_history.php" server="192.168.170.16/sumc/" local="130589551262864388" remote="130590357000000000" Dst="0" />
+<file name="add_drug.php" server="192.168.170.16/sumc/development/" local="130590467966121229" remote="130612911600000000" Dst="0" />
+<file name="buy_drug.php" server="192.168.170.16/sumc/development/" local="130590468279296857" remote="130612911600000000" Dst="0" />
+<file name="deduct_drug.php" server="192.168.170.16/sumc/development/" local="130590468340904771" remote="130612911600000000" Dst="0" />
+<file name="drugs_list.php" server="192.168.170.16/sumc/development/" local="130607883933276979" remote="130612911600000000" Dst="0" />
+<file name="drug_deductions.php" server="192.168.170.16/sumc/development/" local="130589778738737512" remote="130612911600000000" Dst="0" />
+<file name="drug_purchases.php" server="192.168.170.16/sumc/development/" local="130589771039207640" remote="130612911600000000" Dst="0" />
+<file name="edit_drug.php" server="192.168.170.16/sumc/development/" local="130594788841898164" remote="130612911600000000" Dst="0" />
+<file name="edit_drug_deduction.php" server="192.168.170.16/sumc/development/" local="130590468560638481" remote="130612911600000000" Dst="0" />
+<file name="edit_drug_purchase.php" server="192.168.170.16/sumc/development/" local="130590468620544693" remote="130612911600000000" Dst="0" />
+<file name="prescription_history.php" server="192.168.170.16/sumc/development/" local="130589551262864388" remote="130612911600000000" Dst="0" />
+</dwsync>

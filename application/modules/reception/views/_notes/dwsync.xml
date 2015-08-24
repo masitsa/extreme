@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="all_patients.php" server="192.168.170.16/sumc/" local="130562117118689528" remote="130564638000000000" Dst="0" />
+<file name="add_patient.php" server="192.168.170.16/sumc/" local="130562064145359627" remote="130564638000000000" Dst="0" />
+<file name="initiate_lab.php" server="192.168.170.16/sumc/" local="130555080999414119" remote="130558592400000000" Dst="0" />
+<file name="initiate_pharmacy.php" server="192.168.170.16/sumc/" local="130555080999434120" remote="130558592400000000" Dst="0" />
+<file name="initiate_visit.php" server="192.168.170.16/sumc/" local="130564556278547115" remote="130564638000000000" Dst="0" />
+<file name="ongoing_visit.php" server="192.168.170.16/sumc/" local="130565441094770097" remote="130565344800000000" Dst="0" />
+<file name="service_charges_pertype.php" server="192.168.170.16/sumc/" local="130555081000744195" remote="130558592400000000" Dst="0" />
+<file name="show_schedule.php" server="192.168.170.16/sumc/" local="130555081000754196" remote="130558592400000000" Dst="0" />
+<file name="reception_dashboard.php" server="192.168.170.16/sumc/" local="130564556278577116" remote="130564638000000000" Dst="0" />
+<file name="dependants.php" server="192.168.170.16/sumc/" local="130555080999224108" remote="130558592400000000" Dst="0" />
+<file name="add_patient.php" server="192.168.170.16/sumc/development/" local="130588858041583298" remote="130612911600000000" Dst="0" />
+<file name="all_patients.php" server="192.168.170.16/sumc/development/" local="130562117118689528" remote="130612911600000000" Dst="0" />
+<file name="dependants.php" server="192.168.170.16/sumc/development/" local="130555080999224108" remote="130612911600000000" Dst="0" />
+<file name="initiate_lab.php" server="192.168.170.16/sumc/development/" local="130555080999414119" remote="130612911600000000" Dst="0" />
+<file name="initiate_pharmacy.php" server="192.168.170.16/sumc/development/" local="130555080999434120" remote="130612911600000000" Dst="0" />
+<file name="initiate_visit.php" server="192.168.170.16/sumc/development/" local="130603767672068943" remote="130612911600000000" Dst="0" />
+<file name="ongoing_visit.php" server="192.168.170.16/sumc/development/" local="130612895525470575" remote="130612911600000000" Dst="0" />
+<file name="reception_dashboard.php" server="192.168.170.16/sumc/development/" local="130564556278577116" remote="130612911600000000" Dst="0" />
+<file name="service_charges_pertype.php" server="192.168.170.16/sumc/development/" local="130555081000744195" remote="130612911600000000" Dst="0" />
+<file name="show_schedule.php" server="192.168.170.16/sumc/development/" local="130555081000754196" remote="130612911600000000" Dst="0" />
+<file name="ongoing_visit.php" server="192.168.170.16" local="130547296817805592" remote="130547188200000000" Dst="0" />
+<file name="appointment_list.php" server="192.168.170.16/sumc/development/" local="130558655620387644" remote="130612911600000000" Dst="0" />
+<file name="appointment_list.php" server="192.168.170.16/sumc/" local="130558655620387644" remote="130558592400000000" Dst="0" />
+<file name="change_patient_type.php" server="192.168.170.16/sumc/development/" local="130589788905121685" remote="130612911600000000" Dst="0" />
+<file name="change_patient_type.php" server="192.168.170.16/sumc/" local="130555080999054099" remote="130558592400000000" Dst="0" />
+<file name="search_staff.php" server="192.168.170.16/sumc/" local="130559495636161241" remote="130559403600000000" Dst="0" />
+<file name="search_staff.php" server="192.168.170.16/sumc/development/" local="130559495636161241" remote="130612911600000000" Dst="0" />
+<file name="add_other_dependant.php" server="192.168.170.16/sumc/development/" local="130562060095768004" remote="130612911600000000" Dst="0" />
+<file name="general_queue.php" server="192.168.170.16/sumc/development/" local="130612895524400543" remote="130612911600000000" Dst="0" />
+<file name="add_other_dependant.php" server="192.168.170.16/sumc/" local="130562060095768004" remote="130564638000000000" Dst="0" />
+<file name="general_queue.php" server="192.168.170.16/sumc/" local="130564677790657210" remote="130564638000000000" Dst="0" />
+</dwsync>
