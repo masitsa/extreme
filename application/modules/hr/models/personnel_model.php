@@ -14,6 +14,17 @@ class Personnel_model extends CI_Model
 		return $query;
 	}	
 	/*
+	*	Retrieve payroll personnel
+	*
+	*/
+	public function retrieve_payroll_personnel($where)
+	{
+		$this->db->where($where);
+		$query = $this->db->get('personnel');
+		
+		return $query;
+	}	
+	/*
 	*	Retrieve all personnel
 	*
 	*/
@@ -78,6 +89,7 @@ class Personnel_model extends CI_Model
 		$data = array(
 			'personnel_onames'=>ucwords(strtolower($this->input->post('personnel_onames'))),
 			'personnel_fname'=>ucwords(strtolower($this->input->post('personnel_fname'))),
+			'branch_id'=>$this->input->post('branch_id'),
 			'personnel_dob'=>$this->input->post('personnel_dob'),
 			'personnel_email'=>$this->input->post('personnel_email'),
 			'gender_id'=>$this->input->post('gender_id'),
@@ -113,6 +125,7 @@ class Personnel_model extends CI_Model
 		$data = array(
 			'personnel_onames'=>ucwords(strtolower($this->input->post('personnel_onames'))),
 			'personnel_fname'=>ucwords(strtolower($this->input->post('personnel_fname'))),
+			'branch_id'=>$this->input->post('branch_id'),
 			'personnel_dob'=>$this->input->post('personnel_dob'),
 			'personnel_email'=>$this->input->post('personnel_email'),
 			'gender_id'=>$this->input->post('gender_id'),
@@ -272,17 +285,10 @@ class Personnel_model extends CI_Model
 	*/
 	public function delete_personnel($personnel_id)
 	{
-		//delete children
-		if($this->db->delete('personnel', array('personnel_parent' => $personnel_id)))
+		//delete parent
+		if($this->db->delete('personnel', array('personnel_id' => $personnel_id)))
 		{
-			//delete parent
-			if($this->db->delete('personnel', array('personnel_id' => $personnel_id)))
-			{
-				return TRUE;
-			}
-			else{
-				return FALSE;
-			}
+			return TRUE;
 		}
 		else{
 			return FALSE;

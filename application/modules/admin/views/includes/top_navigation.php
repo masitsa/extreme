@@ -3,9 +3,6 @@
 	{
 		$email = $contacts['email'];
 		$email2 = $contacts['email'];
-		$facebook = $contacts['facebook'];
-		$twitter = $contacts['twitter'];
-		$linkedin = $contacts['linkedin'];
 		$logo = $contacts['logo'];
 		$company_name = $contacts['company_name'];
 		$phone = $contacts['phone'];

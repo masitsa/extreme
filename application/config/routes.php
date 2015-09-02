@@ -72,7 +72,19 @@ $route['administration/activate-section/(:num)/(:num)'] = 'admin/sections/activa
 $route['administration/deactivate-section/(:num)'] = 'admin/sections/deactivate_section/$1';
 $route['administration/deactivate-section/(:num)/(:num)'] = 'admin/sections/deactivate_section/$1/$2';
 
-$route['administration/company-profile'] = 'admin/contacts/show_contacts';
+#$route['administration/company-profile'] = 'admin/contacts/show_contacts';
+$route['administration/branches'] = 'admin/branches/index';
+$route['administration/branches/(:any)/(:any)/(:num)'] = 'admin/branches/index/$1/$2/$3';
+$route['administration/branches/(:any)/(:any)'] = 'admin/branches/index/$1/$2';
+$route['administration/add-branch'] = 'admin/branches/add_branch';
+$route['administration/edit-branch/(:num)'] = 'admin/branches/edit_branch/$1';
+$route['administration/edit-branch/(:num)/(:num)'] = 'admin/branches/edit_branch/$1/$2';
+$route['administration/delete-branch/(:num)'] = 'admin/branches/delete_branch/$1';
+$route['administration/delete-branch/(:num)/(:num)'] = 'admin/branches/delete_branch/$1/$2';
+$route['administration/activate-branch/(:num)'] = 'admin/branches/activate_branch/$1';
+$route['administration/activate-branch/(:num)/(:num)'] = 'admin/branches/activate_branch/$1/$2';
+$route['administration/deactivate-branch/(:num)'] = 'admin/branches/deactivate_branch/$1';
+$route['administration/deactivate-branch/(:num)/(:num)'] = 'admin/branches/deactivate_branch/$1/$2';
 
 /*
 *	HR Routes
@@ -129,7 +141,13 @@ $route['human-resource/delete-personnel-role/(:num)/(:num)'] = 'hr/personnel/del
 /*
 *	Accounts Routes
 */
-$route['accounts/print-payroll'] = 'accounts/payroll/print_payroll';
+$route['accounts/change-branch'] = 'accounts/payroll/change_branch';
+$route['accounts/print-payroll/(:num)'] = 'accounts/payroll/print_payroll/$1';
+$route['accounts/salary-data'] = 'accounts/payroll/salaries';
+$route['accounts/search-payroll'] = 'accounts/payroll/search_payroll';
+$route['accounts/close-payroll-search'] = 'accounts/payroll/close_payroll_search';
+$route['accounts/create-payroll'] = 'accounts/payroll/create_payroll';
+$route['accounts/deactivate-payroll/(:num)'] = 'accounts/payroll/deactivate_payroll/$1';
 $route['accounts/print-payslips'] = 'accounts/payroll/print_payslips';
 $route['accounts/payroll/edit_allowance/(:num)'] = 'accounts/payroll/edit_allowance/$1';
 $route['accounts/payroll/delete_allowance/(:num)'] = 'accounts/payroll/delete_allowance/$1';
@@ -139,14 +157,48 @@ $route['accounts/payroll/edit_saving/(:num)'] = 'accounts/payroll/edit_saving/$1
 $route['accounts/payroll/delete_saving/(:num)'] = 'accounts/payroll/delete_saving/$1';
 $route['accounts/payroll/edit_loan_scheme/(:num)'] = 'accounts/payroll/edit_loan_scheme/$1';
 $route['accounts/payroll/delete_loan_scheme/(:num)'] = 'accounts/payroll/delete_loan_scheme/$1';
-$route['accounts/payroll'] = 'accounts/payroll/salaries';
-$route['accounts/payroll/(:any)/(:any)'] = 'accounts/payroll/salaries/$1/$2';
-$route['accounts/payroll/(:any)/(:any)/(:num)'] = 'accounts/payroll/salaries/$1/$2/$3';
+$route['accounts/payroll'] = 'accounts/payroll/payrolls';
 $route['accounts/payment-details/(:num)'] = 'accounts/payroll/payment_details/$1';
 $route['accounts/save-payment-details/(:num)'] = 'accounts/payroll/save_payment_details/$1';
 $route['accounts/update-savings/(:num)'] = 'accounts/payroll/update_savings/$1';
 $route['accounts/update-loan-schemes/(:num)'] = 'accounts/payroll/update_loan_schemes/$1';
 $route['payroll/configuration'] = 'accounts/payroll/payroll_configuration';
+$route['accounts/payroll-configuration'] = 'accounts/payroll/payroll_configuration';
+$route['accounts/payroll/edit-nssf/(:num)'] = 'accounts/payroll/edit_nssf/$1';
+$route['accounts/payroll/edit-nhif/(:num)'] = 'accounts/payroll/edit_nhif/$1';
+$route['accounts/payroll/delete-nhif/(:num)'] = 'accounts/payroll/delete_nhif/$1';
+$route['accounts/payroll/edit-paye/(:num)'] = 'accounts/payroll/edit_paye/$1';
+$route['accounts/payroll/delete-paye/(:num)'] = 'accounts/payroll/delete_paye/$1';
+$route['accounts/payroll/edit-payment/(:num)'] = 'accounts/payroll/edit_payment/$1';
+$route['accounts/payroll/delete-payment/(:num)'] = 'accounts/payroll/delete_payment/$1';
+$route['accounts/payroll/edit-benefit/(:num)'] = 'accounts/payroll/edit_benefit/$1';
+$route['accounts/payroll/delete-benefit/(:num)'] = 'accounts/payroll/delete_benefit/$1';
+$route['accounts/payroll/edit-allowance/(:num)'] = 'accounts/payroll/edit_allowance/$1';
+$route['accounts/payroll/delete-allowance/(:num)'] = 'accounts/payroll/delete_allowance/$1';
+$route['accounts/payroll/edit-deduction/(:num)'] = 'accounts/payroll/edit_deduction/$1';
+$route['accounts/payroll/edit-relief/(:num)'] = 'accounts/payroll/edit_relief/$1';
+$route['accounts/payroll/delete-deduction/(:num)'] = 'accounts/payroll/delete_deduction/$1';
+$route['accounts/payroll/edit-other-deduction/(:num)'] = 'accounts/payroll/edit_other_deduction/$1';
+$route['accounts/payroll/delete-other-deduction/(:num)'] = 'accounts/payroll/delete_other_deduction/$1';
+$route['accounts/payroll/edit-loan-scheme/(:num)'] = 'accounts/payroll/edit_loan_scheme/$1';
+$route['accounts/payroll/delete-loan-scheme/(:num)'] = 'accounts/payroll/delete_loan_scheme/$1';
+$route['accounts/payroll/edit-saving/(:num)'] = 'accounts/payroll/edit_saving/$1';
+$route['accounts/payroll/delete-saving/(:num)'] = 'accounts/payroll/delete_saving/$1';
+$route['accounts/payroll/edit-personnel-payments/(:num)'] = 'accounts/payroll/edit_personnel_payments/$1';
+$route['accounts/payroll/edit-personnel-allowances/(:num)'] = 'accounts/payroll/edit_personnel_allowances/$1';
+$route['accounts/payroll/edit-personnel-benefits/(:num)'] = 'accounts/payroll/edit_personnel_benefits/$1';
+$route['accounts/payroll/edit-personnel-deductions/(:num)'] = 'accounts/payroll/edit_personnel_deductions/$1';
+$route['accounts/payroll/edit-personnel-other-deductions/(:num)'] = 'accounts/payroll/edit_personnel_other_deductions/$1';
+$route['accounts/payroll/edit-personnel-savings/(:num)'] = 'accounts/payroll/edit_personnel_savings/$1';
+$route['accounts/payroll/edit-personnel-loan-schemes/(:num)'] = 'accounts/payroll/edit_personnel_loan_schemes/$1';
+$route['accounts/payroll/edit-personnel-relief/(:num)'] = 'accounts/payroll/edit_personnel_relief/$1';
+$route['accounts/payroll/view-payslip/(:num)'] = 'accounts/payroll/view_payslip/$1';
+
+//Always comes last
+$route['accounts/payroll/(:any)/(:any)'] = 'accounts/payroll/payrolls/$1/$2';
+$route['accounts/payroll/(:any)/(:any)/(:num)'] = 'accounts/payroll/payrolls/$1/$2/$3';
+$route['accounts/salary-data/(:any)/(:any)'] = 'accounts/payroll/salaries/$1/$2';
+$route['accounts/salary-data/(:any)/(:any)/(:num)'] = 'accounts/payroll/salaries/$1/$2/$3';
 
 /*
 *	Inventory Routes

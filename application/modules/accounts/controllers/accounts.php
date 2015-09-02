@@ -13,6 +13,7 @@ class Accounts extends MX_Controller
 		$this->load->model('admin/admin_model');
 		$this->load->model('payroll_model');
 		$this->load->model('hr/personnel_model');
+		$this->load->model('admin/branches_model');
 		
 		if(!$this->auth_model->check_login())
 		{

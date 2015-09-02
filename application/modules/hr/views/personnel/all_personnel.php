@@ -13,6 +13,7 @@
 				<thead>
 					<tr>
 						<th>#</th>
+						<th><a href="'.site_url().'human-resource/personnel/branch_id/'.$order_method.'/'.$page.'">Branch</a></th>
 						<th><a href="'.site_url().'human-resource/personnel/personnel_onames/'.$order_method.'/'.$page.'">Other names</a></th>
 						<th><a href="'.site_url().'human-resource/personnel/personnel_fname/'.$order_method.'/'.$page.'">First name</a></th>
 						<th><a href="'.site_url().'human-resource/personnel/personnel_username/'.$order_method.'/'.$page.'">Username</a></th>
@@ -40,6 +41,7 @@
 			foreach ($query->result() as $row)
 			{
 				$personnel_id = $row->personnel_id;
+				$branch_id = $row->branch_id;
 				$personnel_fname = $row->personnel_fname;
 				$personnel_onames = $row->personnel_onames;
 				$personnel_username = $row->personnel_username;
@@ -71,11 +73,26 @@
 					$button = '<a class="btn btn-default" href="'.site_url().'human-resource/deactivate-personnel/'.$personnel_id.'" onclick="return confirm(\'Do you want to deactivate '.$personnel_name.'?\');" title="Deactivate '.$personnel_name.'"><i class="fa fa-thumbs-down"></i></a>';
 				}
 				
+				//get branch
+				$branch = '';
+				if($branches->num_rows() > 0)
+				{
+					foreach($branches->result() as $res)
+					{
+						$branch_id2 = $res->branch_id;
+						if($branch_id == $branch_id2)
+						{
+							$branch = $res->branch_name;
+						}
+					}
+				}
+				
 				$count++;
 				$result .= 
 				'
 					<tr>
 						<td>'.$count.'</td>
+						<td>'.$branch.'</td>
 						<td>'.$personnel_onames.'</td>
 						<td>'.$personnel_fname.'</td>
 						<td>'.$personnel_username.'</td>

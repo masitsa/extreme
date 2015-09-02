@@ -15,6 +15,7 @@ $gender_id = $row->gender_id;
 $personnel_city = $row->personnel_city;
 $personnel_number = $row->personnel_number;
 $personnel_post_code = $row->personnel_post_code;
+$branch_id = $row->branch_id;
 
 //repopulate data if validation errors occur
 $validation_error = validation_errors();
@@ -34,6 +35,7 @@ if(!empty($validation_error))
 	$personnel_city = set_value('personnel_city');
 	$personnel_number = set_value('personnel_number');
 	$personnel_post_code = set_value('personnel_post_code');
+	$branch_id = set_value('branch_id');
 }
 ?>
 <section class="panel">
@@ -56,6 +58,35 @@ if(!empty($validation_error))
 <?php echo form_open(''.site_url().'human-resource/edit-personnel-about/'.$personnel_id.'', array("class" => "form-horizontal", "role" => "form"));?>
 <div class="row">
 	<div class="col-md-6">
+        <div class="form-group">
+            <label class="col-lg-5 control-label">Branch: </label>
+            
+            <div class="col-lg-7">
+                <select class="form-control" name="branch_id">
+                	<?php
+                    	if($branches->num_rows() > 0)
+						{
+							foreach($branches->result() as $res)
+							{
+								$branch_id2 = $res->branch_id;
+								$branch_name = $res->branch_name;
+								
+								if($branch_id2 == $branch_id)
+								{
+									echo '<option value="'.$branch_id2.'" selected>'.$branch_name.'</option>';
+								}
+								
+								else
+								{
+									echo '<option value="'.$branch_id2.'">'.$branch_name.'</option>';
+								}
+							}
+						}
+					?>
+                </select>
+            </div>
+        </div>
+        
         <div class="form-group">
             <label class="col-lg-5 control-label">Title: </label>
             

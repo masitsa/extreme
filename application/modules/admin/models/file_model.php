@@ -132,7 +132,7 @@ class File_model extends CI_Model
 			else
 			{
 				//Create thumbnail
-				$create = $this->resize_image($image_upload_data['full_path'], $image_upload_data['file_path'].'thumbnail_'.$file_name, 200, 200);
+				$create = $this->resize_image($image_upload_data['full_path'], $image_upload_data['file_path'].'thumbnail_'.$file_name, 100, 100);
 				
 				if($create)
 				{

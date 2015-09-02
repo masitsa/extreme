@@ -215,34 +215,25 @@ class Site_model extends CI_Model
 	
 	public function get_contacts()
 	{
-  		$table = "contacts";
+  		$table = "branch";
 		
 		$query = $this->db->get($table);
 		$contacts = array();
 		if($query->num_rows() > 0)
 		{
 			$row = $query->row();
-			$contacts['email'] = $row->email;
-			$contacts['phone'] = $row->phone;
-			$contacts['facebook'] = $row->facebook;
-			$contacts['twitter'] = $row->twitter;
-			$contacts['linkedin'] = $row->pintrest;
-			$contacts['company_name'] = $row->company_name;
-			$contacts['logo'] = $row->logo;
-			$contacts['address'] = $row->address;
-			$contacts['city'] = $row->city;
-			$contacts['post_code'] = $row->post_code;
-			$contacts['building'] = $row->building;
-			$contacts['floor'] = $row->floor;
-			$contacts['location'] = $row->location;
-			$contacts['working_weekend'] = $row->working_weekend;
-			$contacts['working_weekday'] = $row->working_weekday;
-			$contacts['mission'] = $row->mission;
-			$contacts['vision'] = $row->vision;
-			$contacts['motto'] = $row->motto;
-			$contacts['about'] = $row->about;
-			$contacts['objectives'] = $row->objectives;
-			$contacts['core_values'] = $row->core_values;
+			$contacts['email'] = $row->branch_email;
+			$contacts['phone'] = $row->branch_phone;
+			$contacts['company_name'] = $row->branch_name;
+			$contacts['logo'] = $row->branch_image_name;
+			$contacts['address'] = $row->branch_address;
+			$contacts['city'] = $row->branch_city;
+			$contacts['post_code'] = $row->branch_post_code;
+			$contacts['building'] = $row->branch_building;
+			$contacts['floor'] = $row->branch_floor;
+			$contacts['location'] = $row->branch_location;
+			$contacts['working_weekend'] = $row->branch_working_weekend;
+			$contacts['working_weekday'] = $row->branch_working_weekday;
 		}
 		return $contacts;
 	}

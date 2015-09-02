@@ -13,6 +13,7 @@ $gender_id = set_value('gender_id');
 $personnel_city = set_value('personnel_city');
 $personnel_number = set_value('personnel_number');
 $personnel_post_code = set_value('personnel_post_code');
+$branch_id = set_value('branch_id');
 ?>          
           <section class="panel">
                 <header class="panel-heading">
@@ -27,21 +28,74 @@ $personnel_post_code = set_value('personnel_post_code');
                         
                     <!-- Adding Errors -->
                     <?php
-                    if(isset($error)){
-                        echo '<div class="alert alert-danger"> Oh snap! Change a few things up and try submitting again. </div>';
-                    }
+						$success = $this->session->userdata('success_message');
+						$error = $this->session->userdata('error_message');
+						
+						if(!empty($success))
+						{
+							echo '
+								<div class="alert alert-success">'.$success.'</div>
+							';
+							
+							$this->session->unset_userdata('success_message');
+						}
+						
+						if(!empty($error))
+						{
+							echo '
+								<div class="alert alert-danger">'.$error.'</div>
+							';
+							
+							$this->session->unset_userdata('error_message');
+						}
+			
+						$validation_errors = validation_errors();
+						
+						if(!empty($validation_errors))
+						{
+							echo '<div class="alert alert-danger"> Oh snap! '.$validation_errors.' </div>';
+						}
                     
-                    $validation_errors = validation_errors();
-                    
-                    if(!empty($validation_errors))
-                    {
-                        echo '<div class="alert alert-danger"> Oh snap! '.$validation_errors.' </div>';
-                    }
+						$validation_errors = validation_errors();
+						
+						if(!empty($validation_errors))
+						{
+							echo '<div class="alert alert-danger"> Oh snap! '.$validation_errors.' </div>';
+						}
                     ?>
                     
                     <?php echo form_open($this->uri->uri_string(), array("class" => "form-horizontal", "role" => "form"));?>
 <div class="row">
 	<div class="col-md-6">
+        <div class="form-group">
+            <label class="col-lg-5 control-label">Branch: </label>
+            
+            <div class="col-lg-7">
+                <select class="form-control" name="branch_id">
+                	<?php
+                    	if($branches->num_rows() > 0)
+						{
+							foreach($branches->result() as $res)
+							{
+								$branch_id2 = $res->branch_id;
+								$branch_name = $res->branch_name;
+								
+								if($branch_id2 == $branch_id)
+								{
+									echo '<option value="'.$branch_id2.'" selected>'.$branch_name.'</option>';
+								}
+								
+								else
+								{
+									echo '<option value="'.$branch_id2.'">'.$branch_name.'</option>';
+								}
+							}
+						}
+					?>
+                </select>
+            </div>
+        </div>
+        
         <div class="form-group">
             <label class="col-lg-5 control-label">Title: </label>
             

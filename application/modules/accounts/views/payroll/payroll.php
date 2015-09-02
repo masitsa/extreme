@@ -2,17 +2,9 @@
 <?php
 $personnel_id = $this->session->userdata('personnel_id');
 $personnel_fname = $this->session->userdata('first_name');
-
-if(empty($year)){
-	$year = date("Y");
-}
-if(empty($month)){
-	$month = $this->payroll_model->get_month_id(date("M"));
-}
-
-//HEADER
-$billTotal = 0;
-$total_cost = 0;
+$roll = $payroll->row();
+$year = $roll->payroll_year;
+$month = $roll->month_id;
 
 if ($query->num_rows() > 0)
 {
@@ -26,8 +18,31 @@ if ($query->num_rows() > 0)
 				<th>#</th>
 				<th>Ref</th>
 				<th>Personnel</th>
-				<th>Basic</th>
 				';
+	
+	//payments
+	if($payments->num_rows() > 0)
+	{
+		foreach($payments->result() as $res)
+		{
+			$payment_abbr = $res->payment_name;
+			$payment_id = $res->payment_id;
+			
+			$result .= '<th>'.$payment_abbr.'</th>';
+		}
+	}
+	
+	//benefits
+	if($benefits->num_rows() > 0)
+	{
+		foreach($benefits->result() as $res)
+		{
+			$benefit_abbr = $res->benefit_name;
+			$benefit_id = $res->benefit_id;
+			
+			$result .= '<th>'.$benefit_abbr.'</th>';
+		}
+	}
 	
 	//allowances
 	if($allowances->num_rows() > 0)
@@ -44,12 +59,10 @@ if ($query->num_rows() > 0)
 	//gross
 	$result .= '
 			<th>Gross</th>
+			<th>PAYE</th>
 			<th>NSSF</th>
 			<th>NHIF</th>
-			<th>INS</th>
-			<th>PENS</th>
-			<th>TAXABLE</th>
-			<th>PAYE</th>
+			<th>Life Ins</th>
 	';
 	
 	//deductions
@@ -63,17 +76,20 @@ if ($query->num_rows() > 0)
 			//display all except nssf nhif insurance & pension
 			if(($deduction_id != 1))
 			{
-				if(($deduction_id != 2))
-				{
-					if(($deduction_id != 8))
-					{
-						if($deduction_id != 9)
-						{
-							$result .= '<th>'.$deduction_abbr.'</th>';
-						}
-					}
-				}
+				$result .= '<th>'.$deduction_abbr.'</th>';
 			}
+		}
+	}
+	
+	//other deductions
+	if($other_deductions->num_rows() > 0)
+	{
+		foreach($other_deductions->result() as $res)
+		{
+			$other_deduction_abbr = $res->other_deduction_name;
+			$other_deduction_id = $res->other_deduction_id;
+			
+			$result .= '<th>'.$other_deduction_abbr.'</th>';
 		}
 	}
 	
@@ -100,7 +116,7 @@ if ($query->num_rows() > 0)
 		//basic
 		$table = $this->payroll_model->get_table_id("basic_pay");
 		$table_id = 0;
-		$basic_pay = $this->payroll_model->get_payroll_amount($personnel_id, $year, $month, $table, $table_id);
+		$basic_pay = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
 		$total_basic_pay += $basic_pay;
 		$gross += $basic_pay;
 		
@@ -111,8 +127,38 @@ if ($query->num_rows() > 0)
 				<td>'.$count.'</td>
 				<td>'.$personnel_number.'</td>
 				<td>'.$personnel_onames.' '.$personnel_fname.'</td>
-				<td>'. number_format($basic_pay, 2).'</td>
 		';
+		
+		//payments
+		if($payments->num_rows() > 0)
+		{
+			foreach($payments->result() as $res)
+			{
+				$payment_id = $res->payment_id;
+				$table = $this->payroll_model->get_table_id("payment");
+				$table_id = $payment_id;
+				
+				$payment_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
+				$gross += $payment_amt;
+				$result .= '<td>'.number_format($payment_amt, 2).'</td>';
+			}
+		}
+		
+		//benefits
+		$total_benefits = 0;
+		if($benefits->num_rows() > 0)
+		{
+			foreach($benefits->result() as $res)
+			{
+				$benefit_id = $res->benefit_id;
+				$table = $this->payroll_model->get_table_id("benefit");
+				$table_id = $benefit_id;
+				
+				$benefit_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
+				$total_benefits += $benefit_amt;
+				$result .= '<td>'.number_format($benefit_amt, 2).'</td>';
+			}
+		}
 		
 		//allowances
 		if($allowances->num_rows() > 0)
@@ -123,7 +169,7 @@ if ($query->num_rows() > 0)
 				$table = $this->payroll_model->get_table_id("allowance");
 				$table_id = $allowance_id;
 				
-				$allowance_amt = $this->payroll_model->get_payroll_amount($personnel_id, $year, $month, $table, $table_id);
+				$allowance_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
 				$gross += $allowance_amt;
 				$result .= '<td>'.number_format($allowance_amt, 2).'</td>';
 			}
@@ -136,35 +182,43 @@ if ($query->num_rows() > 0)
 			Select & display untaxable deductions for the personnel
 			--------------------------------------------------------------------------------------
 		*/
-		$table = $this->payroll_model->get_table_id("deduction");
 		
 		//nssf
-		$nssf = $this->payroll_model->get_payroll_amount($personnel_id, $year, $month, $table, 1);
+		$table = $this->payroll_model->get_table_id("nssf");
+		$nssf = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
 		
 		//nhif
-		$nhif = $this->payroll_model->get_payroll_amount($personnel_id, $year, $month, $table, 2);
+		$table = $this->payroll_model->get_table_id("nhif");
+		$nhif = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
 		
-		//insurance
-		$insurance =$this->payroll_model->get_payroll_amount($personnel_id, $year, $month, $table, 8);
+		//paye
+		$table = $this->payroll_model->get_table_id("paye");
+		$paye =$this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
 		
-		//pension
-		$pension = $this->payroll_model->get_payroll_amount($personnel_id, $year, $month, $table, 9);
+		//relief
+		$table = $this->payroll_model->get_table_id("relief");
+		$relief = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
 		
-		//calculate taxable
-		$taxable = $gross - $nssf - $insurance - $pension - $nhif;//echo $taxable."</br>";
-		$paye = $this->payroll_model->paye_view($taxable);
+		//insurance_relief
+		$table = $this->payroll_model->get_table_id("insurance_relief");
+		$insurance_relief = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
+		
+		//relief
+		$table = $this->payroll_model->get_table_id("insurance_amount");
+		$insurance_amount = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
+		//echo $insurance_relief;
+		$paye -= ($relief + $insurance_relief);
 		
 		$result .= 
 		'
+				<td>'.number_format($paye, 2).'</td>
 				<td>'.number_format($nssf, 2).'</td>
 				<td>'.number_format($nhif, 2).'</td>
-				<td>'.number_format($insurance, 2).'</td>
-				<td>'.number_format($pension, 2).'</td>
-				<td>'.number_format($taxable, 2).'</td>
-				<td>'.number_format($paye, 2).'</td>
+				<td>'.number_format($insurance_amount, 2).'</td>
 		';
 		
 		//deductions
+		$table = $this->payroll_model->get_table_id("deduction");
 		$total_deductions = 0;
 		if($deductions->num_rows() > 0)
 		{
@@ -172,22 +226,26 @@ if ($query->num_rows() > 0)
 			{
 				$deduction_id = $res->deduction_id;
 				
-				if(($deduction_id != 1))
-				{
-					if(($deduction_id != 2))
-					{
-						if(($deduction_id != 8))
-						{
-							if($deduction_id != 9)
-							{
-								$table_id = $deduction_id;
-								$deduction_amt = $this->payroll_model->get_payroll_amount($personnel_id, $year, $month, $table, $table_id);
-								$total_deductions += $deduction_amt;
-								$result .= '<td>'.number_format($deduction_amt, 2).'</td>';
-							}
-						}
-					}
-				}
+				$table_id = $deduction_id;
+				$deduction_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
+				$total_deductions += $deduction_amt;
+				$result .= '<td>'.number_format($deduction_amt, 2).'</td>';
+			}
+		}
+		
+		//other_deductions
+		$table = $this->payroll_model->get_table_id("other_deduction");
+		$total_other_deductions = 0;
+		if($other_deductions->num_rows() > 0)
+		{
+			foreach($other_deductions->result() as $res)
+			{
+				$other_deduction_id = $res->other_deduction_id;
+				
+				$table_id = $other_deduction_id;
+				$other_deduction_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
+				$total_other_deductions += $other_deduction_amt;
+				$result .= '<td>'.number_format($other_deduction_amt, 2).'</td>';
 			}
 		}
 		
@@ -205,7 +263,7 @@ if ($query->num_rows() > 0)
 				$table = $this->payroll_model->get_table_id("savings");
 			
 				//get schemes
-				$total_savings += $this->payroll_model->get_payroll_amount($personnel_id, $year, $month, $table, $savings_id);
+				$total_savings += $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $savings_id);
 			}
 		}
 		$result .= '<th>'.number_format($total_savings, 2).'</th>';
@@ -214,6 +272,7 @@ if ($query->num_rows() > 0)
 		$date = date("Y-m-d");
 		$rs_schemes = $this->payroll_model->get_loan_schemes();
 		$total_schemes = 0;
+		$interest = 0;
 		
 		if($rs_schemes->num_rows() > 0)
 		{
@@ -225,10 +284,9 @@ if ($query->num_rows() > 0)
 				$table = $this->payroll_model->get_table_id("loan_scheme");
 			
 				//get schemes
-				$total_schemes += $this->payroll_model->get_payroll_amount($personnel_id, $year, $month, $table, $loan_scheme_id);
+				$total_schemes += $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $loan_scheme_id);
 				
 				//get interest
-				$interest = 0;
 				$rs_interest = $this->payroll_model->get_loan_scheme_interest($personnel_id, $date, $loan_scheme_id);
 				
 				if($rs_interest->num_rows() > 0)
@@ -238,14 +296,15 @@ if ($query->num_rows() > 0)
 						$interest += $res2->interest;
 					}
 				}
-				
-				$total_deductions = $total_deductions + $total_schemes + $interest;
 			}
 		}
 		$result .= '<th>'.number_format(($total_schemes + $interest), 2).'</th>';
-			
+		
+		//total deductions
+		$total_deductions = $total_deductions + $total_other_deductions + $total_schemes + $total_savings + $insurance_amount;
+		
 		//net
-		$net = number_format(round($gross - ($paye + $nssf + $nhif + $insurance + $pension + $total_deductions)), 2, '.', ',');
+		$net = number_format($gross - ($paye + $nssf + $nhif + $total_deductions), 2, '.', ',');
 		
 		$result .= 
 		'
@@ -300,13 +359,13 @@ else
     </head>
     <body class="receipt_spacing">
     	<div class="row" >
-        	<img src="<?php echo base_url().'assets/logo/'.$contacts['logo'];?>" alt="<?php echo $contacts['company_name'];?>" class="img-responsive logo"/>
+        	<img src="<?php echo base_url().'assets/logo/'.$branch_image_name;?>" alt="<?php echo $branch_name;?>" class="img-responsive logo"/>
         	<div class="col-md-12 center-align receipt_bottom_border">
             	<strong>
-                	<?php echo $contacts['company_name'];?><br/>
-                    <?php echo $contacts['address'];?> <?php echo $contacts['post_code'];?> <?php echo $contacts['city'];?><br/>
-                    E-mail: <?php echo $contacts['email'];?>. Tel : <?php echo $contacts['phone'];?><br/>
-                    <?php echo $contacts['location'];?><br/>
+                	<?php echo $branch_name;?><br/>
+                    <?php echo $branch_address;?> <?php echo $branch_post_code;?> <?php echo $branch_city;?><br/>
+                    E-mail: <?php echo $branch_email;?>. Tel : <?php echo $branch_phone;?><br/>
+                    <?php echo $branch_location;?><br/>
                 </strong>
             </div>
         </div>

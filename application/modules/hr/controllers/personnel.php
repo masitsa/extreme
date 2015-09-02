@@ -14,14 +14,14 @@ class Personnel extends hr
 	*	Default action is to show all the personnel
 	*
 	*/
-	public function index($order = 'personnel_onames', $order_method = 'ASC') 
+	public function index($order = 'branch_id', $order_method = 'ASC') 
 	{
 		$where = 'personnel_id > 0';
 		$table = 'personnel';
 		//pagination
 		$segment = 5;
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'human-resource/'.$order.'/'.$order_method;
+		$config['base_url'] = site_url().'human-resource/personnel/'.$order.'/'.$order_method;
 		$config['total_rows'] = $this->users_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -44,15 +44,15 @@ class Personnel extends hr
 		$config['prev_link'] = 'Prev';
 		$config['prev_tag_close'] = '</li>';
 		
-		$config['cur_tag_open'] = '<li class="active">';
-		$config['cur_tag_close'] = '</li>';
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
 		
 		$config['num_tag_open'] = '<li>';
 		$config['num_tag_close'] = '</li>';
 		$this->pagination->initialize($config);
 		
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
-        $data["links"] = $this->pagination->create_links();
+        $v_data["links"] = $this->pagination->create_links();
 		$query = $this->personnel_model->get_all_personnel($table, $where, $config["per_page"], $page, $order, $order_method);
 		
 		//change of order method 
@@ -73,6 +73,7 @@ class Personnel extends hr
 		$v_data['order_method'] = $order_method;
 		$v_data['query'] = $query;
 		$v_data['all_personnel'] = $this->personnel_model->all_personnel();
+		$v_data['branches'] = $this->branches_model->all_branches();
 		$v_data['page'] = $page;
 		$data['content'] = $this->load->view('personnel/all_personnel', $v_data, true);
 		
@@ -87,6 +88,7 @@ class Personnel extends hr
 	public function add_personnel() 
 	{
 		//form validation rules
+		$this->form_validation->set_rules('branch_id', 'Branch', 'xss_clean');
 		$this->form_validation->set_rules('personnel_onames', 'Other Names', 'required|xss_clean');
 		$this->form_validation->set_rules('personnel_fname', 'First Name', 'required|xss_clean');
 		$this->form_validation->set_rules('personnel_dob', 'Date of Birth', 'xss_clean');
@@ -105,7 +107,7 @@ class Personnel extends hr
 		if ($this->form_validation->run())
 		{
 			$personnel_id = $this->personnel_model->add_personnel();
-			if($personnel_id != FALSE)
+			if($personnel_id > 0)
 			{
 				$this->session->set_userdata("success_message", "Personnel added successfully");
 				redirect('human-resource/edit-personnel/'.$personnel_id);
@@ -113,10 +115,11 @@ class Personnel extends hr
 			
 			else
 			{
-				$this->session->set_userdata("error_message","Could not add personnel. Please try again");
+				$this->session->set_userdata("error_message","Could not add personnel. Please try again ".$personnel_id);
 			}
 		}
 		
+		$v_data['branches'] = $this->branches_model->all_branches();
 		$v_data['relationships'] = $this->personnel_model->get_relationship();
 		$v_data['religions'] = $this->personnel_model->get_religion();
 		$v_data['civil_statuses'] = $this->personnel_model->get_civil_status();
@@ -144,6 +147,7 @@ class Personnel extends hr
 		$v_data['title'] = $data['title'];
 		
 		$v_data['personnel_id'] = $personnel_id;
+		$v_data['branches'] = $this->branches_model->all_branches();
 		$v_data['relationships'] = $this->personnel_model->get_relationship();
 		$v_data['religions'] = $this->personnel_model->get_religion();
 		$v_data['civil_statuses'] = $this->personnel_model->get_civil_status();
@@ -224,6 +228,7 @@ class Personnel extends hr
     
     public function update_personnel_about_details($personnel_id)
     {
+		$this->form_validation->set_rules('branch_id', 'Branch', 'xss_clean');
     	$this->form_validation->set_rules('personnel_onames', 'Other Names', 'required|xss_clean');
 		$this->form_validation->set_rules('personnel_fname', 'First Name', 'required|xss_clean');
 		$this->form_validation->set_rules('personnel_dob', 'Date of Birth', 'xss_clean');
@@ -548,6 +553,7 @@ class Personnel extends hr
 	public function delete_dependant_contact($personnel_dependant_contact_id,$personnel_id)
 	{
 		if($this->personnel_model->delete_personnel_dependant_contact($personnel_dependant_contact_id))
+
 		{
 			$this->session->set_userdata('success_message', 'Personnel dependant has been deleted');
 		}
