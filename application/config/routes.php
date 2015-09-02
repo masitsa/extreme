@@ -200,6 +200,7 @@ $route['accounts/payroll/(:any)/(:any)/(:num)'] = 'accounts/payroll/payrolls/$1/
 $route['accounts/salary-data/(:any)/(:any)'] = 'accounts/payroll/salaries/$1/$2';
 $route['accounts/salary-data/(:any)/(:any)/(:num)'] = 'accounts/payroll/salaries/$1/$2/$3';
 
+
 /*
 *	Inventory Routes
 */
@@ -272,3 +273,109 @@ $route['microfinance/deactivate-individual-plan/(:num)/(:num)'] = 'microfinance/
 
 /* End of file routes.php */
 /* Location: ./system/application/config/routes.php */
+
+
+
+/*
+*	reception Routes
+*/
+$route['reception'] = 'reception/index';
+$route['reception/dashboard'] = 'reception/index';
+$route['reception/patients-list'] = 'reception/patients';
+$route['reception/general-queue'] = 'reception/general_queue/reception';
+$route['reception/appointments-list'] = 'reception/appointment_list';
+$route['reception/register-other-patient'] = 'reception/register_other_patient';
+$route['reception/add-patient'] = 'reception/add_patient';
+
+
+/*
+*	nurse Routes
+*/
+$route['nurse'] = 'nurse/index';
+$route['nurse/dashboard'] = 'nurse/index';
+$route['nurse/nurse-queue'] = 'nurse/nurse_queue';
+$route['nurse/general-queue'] = 'reception/general_queue/nurse';
+$route['nurse/visit-history'] = 'reception/visit_list/1/nurse';
+
+
+/*
+*	doctor Routes
+*/
+$route['doctor'] = 'doctor/index';
+$route['doctor/dashboard'] = 'doctor/index';
+$route['doctor/doctors-queue'] = 'doctor/doctor_queue';
+$route['doctor/general-queue'] = 'reception/general_queue/doctor';
+$route['doctor/visit-history'] = 'reception/visit_list/1/doctor';
+$route['doctor/patient-treatment'] = 'nurse/patient_treatment_statement/doctor';
+
+
+
+/*
+*	doctor Routes
+*/
+$route['dental'] = 'dental/index';
+$route['dental/dashboard'] = 'dental/index';
+$route['dental/dental-queue'] = 'dental/dental_queue';
+$route['dental/general-queue'] = 'reception/general_queue/dental';
+$route['dental/visit-history'] = 'reception/visit_list/1/dental';
+$route['dental/patient-treatment'] = 'nurse/patient_treatment_statement/dental';
+
+
+/*
+*	doctor Routes
+*/
+$route['hospital-reports'] = 'hospital-reports/index';
+$route['hospital-reports/patient-statements'] = 'administration/patient_statement';
+$route['hospital-reports/all-transactions'] = 'administration/reports/all_transactions/admin';
+$route['hospital-reports/cash-report'] = 'administration/reports/all_transactions/admin';
+$route['hospital-reports/debtors-report'] = 'administration/reports/debtors_report_data/0';
+$route['hospital-reports/department-report'] = 'administration/reports/department_reports';
+$route['hospital-reports/doctor-reports'] = 'administration/reports/doctor_reports';
+
+
+/*
+*	doctor Routes
+*/
+$route['laboratory'] = 'laboratory/index';
+$route['laboratory/dashboard'] = 'laboratory/index';
+$route['laboratory/lab-queue'] = 'laboratory/lab_queue/12';
+$route['laboratory/general-queue'] = 'reception/general_queue/laboratory';
+
+
+/*
+*	laboratory setup Routes
+*/
+$route['laboratory-setup/classes'] = 'lab_charges/classes';
+$route['laboratory-setup/tests'] = 'lab_charges/test_list';
+
+
+
+/*
+*	pharmacy Routes
+*/
+$route['pharmacy'] = 'pharmacy/index';
+$route['pharmacy/dashboard'] = 'pharmacy/index';
+$route['pharmacy/pharmacy-queue'] = 'pharmacy/pharmacy_queue/12';
+$route['pharmacy/general-queue'] = 'reception/general_queue/pharmacy';
+
+
+/*
+*	pharmacy setup Routes
+*/
+$route['pharmacy-setup/classes'] = 'pharmacy/classes';
+$route['pharmacy-setup/inventory'] = 'pharmacy/inventory';
+$route['pharmacy-setup/brands'] = 'pharmacy/brands';
+$route['pharmacy-setup/generics'] = 'pharmacy/generics';
+$route['pharmacy-setup/containers'] = 'pharmacy/containers';
+$route['pharmacy-setup/types'] = 'pharmacy/types';
+
+
+/*
+*	Inventory Routes
+*/
+$route['accounts'] = 'accounts/index';
+$route['accounts/dashboard'] = 'accounts/index';
+$route['accounts/accounts-queue'] = 'accounts/accounts_queue/12';
+$route['accounts/general-queue'] = 'reception/general_queue/accounts';
+
+

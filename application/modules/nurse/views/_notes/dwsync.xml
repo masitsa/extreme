@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="calculate_bmi.php" server="192.168.170.16/sumc/development/" local="130612895523670501" remote="130612911000000000" Dst="0" />
+<file name="calculate_hwr.php" server="192.168.170.16/sumc/development/" local="130555080992033697" remote="130612911000000000" Dst="0" />
+<file name="nurse_queue.php" server="192.168.170.16/sumc/development/" local="130613019975368584" remote="130612911000000000" Dst="0" />
+<file name="patient_card.php" server="192.168.170.16/sumc/development/" local="130613019975368584" remote="130612911000000000" Dst="0" />
+<file name="procedures_list.php" server="192.168.170.16/sumc/development/" local="130612895524170530" remote="130612911000000000" Dst="0" />
+<file name="show_loaded_vitals.php" server="192.168.170.16/sumc/development/" local="130612895524190531" remote="130612911000000000" Dst="0" />
+<file name="show_previous_vitals.php" server="192.168.170.16/sumc/development/" local="130612895524220533" remote="130612911000000000" Dst="0" />
+<file name="show_vitals.php" server="192.168.170.16/sumc/development/" local="130612895524250535" remote="130612911000000000" Dst="0" />
+<file name="view_procedure.php" server="192.168.170.16/sumc/development/" local="130555080993923805" remote="130612911000000000" Dst="0" />
+<file name="delete_procedure.php" server="192.168.170.16/sumc/development/" local="130555080992273711" remote="130612911000000000" Dst="0" />
+<file name="patient_history.php" server="192.168.170.16/sumc/development/" local="130585428498961808" remote="130612911000000000" Dst="0" />
+<file name="procedure.php" server="192.168.170.16/sumc/development/" local="130564556278417107" remote="130612911000000000" Dst="0" />
+<file name="calculate_hwr.php" server="192.168.170.16/sumc/" local="130555080992033697" remote="130586220000000000" Dst="0" />
+<file name="delete_procedure.php" server="192.168.170.16/sumc/" local="130555080992273711" remote="130586220000000000" Dst="0" />
+<file name="calculate_bmi.php" server="192.168.170.16/sumc/" local="130555080992023696" remote="130586220000000000" Dst="0" />
+<file name="nurse_queue.php" server="192.168.170.16/sumc/" local="130564662769278036" remote="130586220000000000" Dst="0" />
+<file name="patient_card.php" server="192.168.170.16/sumc/" local="130580036714202915" remote="130586220000000000" Dst="0" />
+<file name="patient_history.php" server="192.168.170.16/sumc/" local="130585428498961808" remote="130586220000000000" Dst="0" />
+<file name="procedure.php" server="192.168.170.16/sumc/" local="130564556278417107" remote="130586220000000000" Dst="0" />
+<file name="procedures_list.php" server="192.168.170.16/sumc/" local="130555080993263767" remote="130586220000000000" Dst="0" />
+<file name="show_loaded_vitals.php" server="192.168.170.16/sumc/" local="130580036714382926" remote="130586220000000000" Dst="0" />
+<file name="show_previous_vitals.php" server="192.168.170.16/sumc/" local="130580036714412927" remote="130586220000000000" Dst="0" />
+<file name="show_vitals.php" server="192.168.170.16/sumc/" local="130560395267923302" remote="130586220000000000" Dst="0" />
+<file name="view_procedure.php" server="192.168.170.16/sumc/" local="130555080993923805" remote="130586220000000000" Dst="0" />
+<file name="symptoms_list.php" server="192.168.170.16/sumc/development/" local="130555080993903804" remote="130612911000000000" Dst="0" />
+<file name="dental_visit.php" server="192.168.170.16/sumc/development/" local="130555294732168933" remote="130612911000000000" Dst="0" />
+<file name="from_lab_queue.php" server="192.168.170.16/sumc/development/" local="130558539184567896" remote="130612911000000000" Dst="0" />
+<file name="nurse_dashboard.php" server="192.168.170.16/sumc/development/" local="130564556278007084" remote="130612911000000000" Dst="0" />
+<file name="dental_visit.php" server="192.168.170.16/sumc/" local="130555294732168933" remote="130586220000000000" Dst="0" />
+<file name="from_lab_queue.php" server="192.168.170.16/sumc/" local="130558539184567896" remote="130586220000000000" Dst="0" />
+<file name="nurse_dashboard.php" server="192.168.170.16/sumc/" local="130564556278007084" remote="130586220000000000" Dst="0" />
+<file name="symptoms_list.php" server="192.168.170.16/sumc/" local="130555080993903804" remote="130586220000000000" Dst="0" />
+<file name="load_medication.php" server="192.168.170.16/sumc/" local="130560235296363452" remote="130586220000000000" Dst="0" />
+<file name="load_surgeries.php" server="192.168.170.16/sumc/" local="130560235296383453" remote="130586220000000000" Dst="0" />
+<file name="patient_vaccine.php" server="192.168.170.16/sumc/" local="130560235296403454" remote="130586220000000000" Dst="0" />
+<file name="load_medication.php" server="192.168.170.16/sumc/development/" local="130560235296363452" remote="130612911000000000" Dst="0" />
+<file name="load_surgeries.php" server="192.168.170.16/sumc/development/" local="130560235296383453" remote="130612911000000000" Dst="0" />
+<file name="patient_vaccine.php" server="192.168.170.16/sumc/development/" local="130560235296403454" remote="130612911000000000" Dst="0" />
+<file name="allergies_brief.php" server="192.168.170.16/sumc/" local="130580036714142912" remote="130586197800000000" Dst="0" />
+<file name="allergies_brief.php" server="192.168.170.16/sumc/development/" local="130580036714142912" remote="130612911000000000" Dst="0" />
+<file name="queues_check.php" server="192.168.170.16/sumc/development/" local="130594788841742164" remote="130612911000000000" Dst="0" />
+</dwsync>
