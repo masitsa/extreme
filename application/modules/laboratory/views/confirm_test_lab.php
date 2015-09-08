@@ -98,13 +98,13 @@ foreach ($rs as $key6):
 
 	if($visit_charge_response > 0)
 	{
-		$button = "<a class='btn btn-danger btn-sm' href='".site_url()."/laboratory/remove_cost/".$visit_charge_response."/".$visit_id."' onclick='return confirm('Do you want to remove ".$test." from the invoice ?');'>Remove lab test charge</a>";
+		$button = "<a class='btn btn-danger btn-sm' href='".site_url()."laboratory/remove_cost/".$visit_charge_response."/".$visit_id."' onclick='return confirm('Do you want to remove ".$test." from the invoice ?');'>Remove lab test charge</a>";
 		$status = '';
 	}
 	else
 	{
-		$button = "<a class='btn btn-success btn-sm' onclick='return confirm('Do you want to add ".$test." to the invoice ?');' href='".site_url()."/laboratory/add_lab_cost/".$service_charge_id."/".$visit_id."' >Charge for lab test</a>";
-		$status ="<a class='btn btn-info btn-sm' href='".site_url()."/laboratory/remove_lab_test/".$service_charge_id."/".$visit_id."' >Remove from list</a>";
+		$button = "<a class='btn btn-success btn-sm' onclick='return confirm('Do you want to add ".$test." to the invoice ?');' href='".site_url()."laboratory/add_lab_cost/".$service_charge_id."/".$visit_id."' >Charge for lab test</a>";
+		$status ="<a class='btn btn-info btn-sm' href='".site_url()."laboratory/remove_lab_test/".$service_charge_id."/".$visit_id."' >Remove from list</a>";
 	}
 
 	$s++;

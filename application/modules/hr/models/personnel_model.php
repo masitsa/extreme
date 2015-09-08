@@ -498,7 +498,7 @@ class Personnel_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from('personnel_section, section');
-		$this->db->select('personnel_section.*, section.section_name, section.section_position, section.section_parent');
+		$this->db->select('personnel_section.*, section.section_name, section.section_position, section.section_parent, section.section_icon');
 		$this->db->order_by('section_parent', 'ASC');
 		$this->db->order_by('section_position', 'ASC');
 		$this->db->where('personnel_section.section_id = section.section_id AND personnel_section.personnel_id = '. $personnel_id);

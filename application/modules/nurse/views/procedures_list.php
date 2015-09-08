@@ -32,7 +32,7 @@
                                             if(!empty($search))
 											{
 											?>
-                                            <a href="<?php echo site_url().'/nurse/close_procedure_search/'.$visit_id;?>" class="btn btn-warning pull-right">Close Search</a>
+                                            <a href="<?php echo site_url().'nurse/close_procedure_search/'.$visit_id;?>" class="btn btn-warning pull-right">Close Search</a>
                                             <?php }?>
                                         	<input type="submit" class="btn btn-info pull-right" value="Search" name="search"/>
                                             
@@ -113,7 +113,7 @@
 
    
 
-    var url = "<?php echo site_url();?>/nurse/procedure/"+id+"/"+v_id+"/"+suck;
+    var url = "<?php echo site_url();?>nurse/procedure/"+id+"/"+v_id+"/"+suck;
    
     if(XMLHttpRequestObject) {
                 

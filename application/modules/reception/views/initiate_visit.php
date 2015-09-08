@@ -70,7 +70,7 @@
 		                             <div class="form-group">
 		                             	<label class="col-lg-4 control-label">Visit type: </label>
 										<div class="col-lg-8">
-											<input type="radio" name="visit_type" value="<?php echo $patient_type_id;?>" checked="checked" onclick="do_patient_type_function(1)"><?php echo $patient_type;?>
+											<input type="radio" name="visit_type" value="<?php echo $patient_type_id;?>" checked="checked" onclick="do_patient_type_function(1)">Normal
 		                                    <input type="radio" name="visit_type" value="4" onclick="do_patient_type_function(4)"> Insurance
 										</div>
 		                             </div>

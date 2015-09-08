@@ -71,7 +71,7 @@
         else if (window.ActiveXObject) {
             XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
         }
-        var url = "<?php echo site_url();?>/laboratory/confirm_lab_test_charge/"+visit_id;
+        var url = "<?php echo site_url();?>laboratory/confirm_lab_test_charge/"+visit_id;
 		
         if(XMLHttpRequestObject) {
                     
@@ -90,7 +90,7 @@
     }
   	function open_window_lab(test, visit_id){
 	  var config_url = $('#config_url').val();
-	  window.open(config_url+"/laboratory/laboratory_list/"+test+"/"+visit_id,"Popup","height=1200, width=800, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
+	  window.open(config_url+"laboratory/laboratory_list/"+test+"/"+visit_id,"Popup","height=1200, width=800, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
 	}
 	function get_test_results(page, visit_id){
 
@@ -107,11 +107,11 @@
 	  var config_url = $('#config_url').val();
 	  if((page == 1) || (page == 65) || (page == 85)){
 	    
-	    url = config_url+"/laboratory/test/"+visit_id;
+	    url = config_url+"laboratory/test/"+visit_id;
 	  }
 	  
 	  else if ((page == 75) || (page == 100)){
-	    url = config_url+"/laboratory/test1/"+visit_id;
+	    url = config_url+"laboratory/test1/"+visit_id;
 	  }
 	// alert(url);
 	  if(XMLHttpRequestObject) {
@@ -142,7 +142,7 @@
 		var config_url = $('#config_url').val();
 		
 		var res = document.getElementById("laboratory_result2"+format).value;
-		var data_url = config_url+"/laboratory/save_result_lab";
+		var data_url = config_url+"laboratory/save_result_lab";
          	
         $.ajax({
 			type:'POST',
@@ -166,7 +166,7 @@
 		
 		var res = document.getElementById("laboratory_comment"+id).value;
 		
-		var data_url = config_url+"/laboratory/save_lab_comment";
+		var data_url = config_url+"laboratory/save_lab_comment";
 			
 		$.ajax({
 			type:'POST',
@@ -188,7 +188,7 @@
 		
 		var config_url = $('#config_url').val();
 		var res = document.getElementById("laboratory_result"+id).value;
-        var data_url = config_url+"/laboratory/save_result/"+id+"/"+res+"/"+visit_id;
+        var data_url = config_url+"laboratory/save_result/"+id+"/"+res+"/"+visit_id;
    	 // window.alert(data_url);
          var result_space = $('#result_space'+id).val();//document.getElementById("vital"+vital_id).value;
          	
@@ -224,7 +224,7 @@
 		}
 		var config_url = $('#config_url').val();
 
-		var url = config_url+"/laboratory/send_to_doctor/"+visit_id;
+		var url = config_url+"laboratory/send_to_doctor/"+visit_id;
 					
 		if(XMLHttpRequestObject) {
 					
@@ -254,7 +254,7 @@
 			XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
 		}
 		var config_url = $('#config_url').val();
-		var url = config_url+"/laboratory/finish_lab_test/"+visit_id;
+		var url = config_url+"laboratory/finish_lab_test/"+visit_id;
 				
 		if(XMLHttpRequestObject) {
 					
@@ -275,7 +275,7 @@
 	function save_comment(visit_charge_id){
 		var config_url = $('#config_url').val();
 		var comment = document.getElementById("test_comment").value;
-        var data_url = config_url+"/laboratory/save_comment/"+comment+"/"+visit_charge_id;
+        var data_url = config_url+"laboratory/save_comment/"+comment+"/"+visit_charge_id;
      
         // var comment_tab = $('#comment').val();//document.getElementById("vital"+vital_id).value;
          	
@@ -299,7 +299,7 @@
 	}
 	function print_previous_test(visit_id, patient_id){
 		var config_url = $('#config_url').val();
-    	window.open(config_url+"/laboratory/print_test/"+visit_id+"/"+patient_id,"Popup","height=900,width=1200,,scrollbars=yes,"+
+    	window.open(config_url+"laboratory/print_test/"+visit_id+"/"+patient_id,"Popup","height=900,width=1200,,scrollbars=yes,"+
                         "directories=yes,location=yes,menubar=yes," +
                          "resizable=no status=no,history=no top = 50 left = 100");
 	}

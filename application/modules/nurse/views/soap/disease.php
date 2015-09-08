@@ -170,7 +170,7 @@ function save_disease(val, visit_id){
     XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
   } 
   var config_url = $('#config_url').val();
-  var url = config_url+"/nurse/save_diagnosis/"+val+"/"+visit_id;
+  var url = config_url+"nurse/save_diagnosis/"+val+"/"+visit_id;
   if(XMLHttpRequestObject) {
         
     XMLHttpRequestObject.open("GET", url);
@@ -199,7 +199,7 @@ function save_disease(val, visit_id){
     XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
   }
    var config_url = $('#config_url').val();
-  var url = config_url+"/nurse/get_diagnosis/"+visit_id;
+  var url = config_url+"nurse/get_diagnosis/"+visit_id;
   
   var obj = document.getElementById("disease_list");
       
@@ -224,7 +224,7 @@ $(document).on("click","a.delete_diagnosis",function()
     var diagnosis_id = $(this).attr('href');
     var visit_id = $(this).attr('id');
 	var config_url = $('#config_url').val();
-	var url = config_url+"/nurse/delete_diagnosis/"+diagnosis_id;
+	var url = config_url+"nurse/delete_diagnosis/"+diagnosis_id;
 	
 	$.get(url, function( data ) {
 		get_disease(visit_id);
@@ -246,7 +246,7 @@ function closeit(page, visit_id){
     XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
   }
    var config_url = $('#config_url').val();
-  var url = config_url+"/nurse/diagnose/"+visit_id;
+  var url = config_url+"nurse/diagnose/"+visit_id;
   if(XMLHttpRequestObject) {
         
     XMLHttpRequestObject.open("GET", url);

@@ -472,8 +472,8 @@ class Reception_model extends CI_Model
 	}
 	public function get_doctor()
 	{
-		$table = "personnel, job_title";
-		$where = "job_title.job_title_id = personnel.job_title_id AND job_title.job_title_id = 12";
+		$table = "personnel, personnel_job";
+		$where = "personnel_job.personnel_id = personnel.personnel_id AND personnel_job.job_title_id = 12";
 		$items = "personnel.personnel_onames, personnel.personnel_fname, personnel.personnel_id";
 		$order = "personnel_onames";
 		

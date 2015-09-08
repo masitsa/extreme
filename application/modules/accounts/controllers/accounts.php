@@ -531,6 +531,7 @@ class Accounts extends MX_Controller
 	public function print_invoice_new($visit_id)
 	{
 		$data = array('visit_id'=>$visit_id);
+		$data['contacts'] = $this->site_model->get_contacts();
 		
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
 		$data['patient'] = $patient;
@@ -539,6 +540,7 @@ class Accounts extends MX_Controller
 	public function print_receipt_new($visit_id)
 	{
 		$data = array('visit_id'=>$visit_id);
+		$data['contacts'] = $this->site_model->get_contacts();
 		
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
 		$data['patient'] = $patient;

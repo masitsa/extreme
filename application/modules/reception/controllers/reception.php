@@ -57,8 +57,8 @@ class Reception  extends MX_Controller
 		}
 		
 		$patient_search = $this->session->userdata('patient_search');
-		// $where = '(visit_type_id <> 2 OR visit_type_id <> 1) AND patient_delete = '.$delete;
-		$where = 'visit_type_id = 3 AND patient_delete = '.$delete;
+		//$where = '(visit_type_id <> 2 OR visit_type_id <> 1) AND patient_delete = '.$delete;
+		$where = 'patient_delete = '.$delete;
 		if(!empty($patient_search))
 		{
 			$where .= $patient_search;
@@ -110,8 +110,8 @@ class Reception  extends MX_Controller
 		
 		else
 		{
-			$data['title'] = 'Other Patients';
-			$v_data['title'] = 'Other Patients';
+			$data['title'] = 'Patients';
+			$v_data['title'] = 'Patients';
 		}
 		
 		$v_data['query'] = $query;
@@ -869,16 +869,16 @@ class Reception  extends MX_Controller
 	public function search_patients()
 	{
 		$visit_type_id = $this->input->post('visit_type_id');
-		$strath_no = $this->input->post('strath_no');
+		$patient_number = $this->input->post('patient_number');
 		
 		if(!empty($visit_type_id))
 		{
 			$visit_type_id = ' AND patients.visit_type_id = '.$visit_type_id.' ';
 		}
 		
-		if(!empty($strath_no))
+		if(!empty($patient_number))
 		{
-			$strath_no = ' AND patients.strath_no LIKE '.$strath_no.' ';
+			$patient_number = ' AND patients.patient_number LIKE '.$patient_number.' ';
 		}
 		
 		//search surname

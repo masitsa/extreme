@@ -102,5 +102,34 @@ class Auth extends MX_Controller
 		$this->session->sess_destroy();
 		redirect('login');
 	}
+    
+	/*
+	*
+	*	Dashboard
+	*
+	*/
+	public function dashboard() 
+	{
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
+		
+		else
+		{
+			$this->load->model('hr/personnel_model');
+			$personnel_id = $this->session->uesrdata('personnel_id');
+			$personnel_roles = $this->personnel_model->get_personnel_roles($personnel_id);
+			
+			
+			
+			$data['title'] = $this->site_model->display_page_title();
+			$v_data['title'] = $data['title'];
+			
+			$data['content'] = $this->load->view('dashboard', $v_data, true);
+			
+			$this->load->view('admin/templates/general_page', $data);
+		}
+	}
 }
 ?>

@@ -132,7 +132,6 @@ class Personnel extends hr
 		
 		$this->load->view('admin/templates/general_page', $data);
 	}
-    
 
 	/*
 	*

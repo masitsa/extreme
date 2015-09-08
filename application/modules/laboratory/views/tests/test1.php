@@ -243,7 +243,7 @@ if(!empty($coming_from)){
 		echo"
 			<div class='center-align'>
 				<input type='button' value='Print' name='std' class='btn btn-sm btn-info' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/>
-				<a href='".site_url()."/laboratory/send_to_accounts/".$visit_id."' class='btn btn-sm btn-success' onclick='return confirm(\'Send to accounts?\');'> Send to accounts</a>
+				<a href='".site_url()."laboratory/send_to_accounts/".$visit_id."' class='btn btn-sm btn-success' onclick='return confirm(\'Send to accounts?\');'> Send to accounts</a>
 			</div>
 		";
 		}
@@ -252,8 +252,8 @@ if(!empty($coming_from)){
 			echo"
 			<div class='center-align'>
 				<input type='button' value='Print' name='std' class='btn btn-sm btn-info' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/>
-				<a href='".site_url()."/laboratory/send_to_doctor/".$visit_id."' class='btn btn-sm btn-info' onclick='return confirm(\'Send to doctor?\');'> Send to doctor </a>		
-				<a href='".site_url()."/laboratory/send_to_accounts/".$visit_id."' class='btn btn-sm btn-success' onclick='return confirm(\'Send to accounts?\');'> Send to accounts </a>
+				<a href='".site_url()."laboratory/send_to_doctor/".$visit_id."' class='btn btn-sm btn-info' onclick='return confirm(\'Send to doctor?\');'> Send to doctor </a>		
+				<a href='".site_url()."laboratory/send_to_accounts/".$visit_id."' class='btn btn-sm btn-success' onclick='return confirm(\'Send to accounts?\');'> Send to accounts </a>
 			</div>
 		";
 		}

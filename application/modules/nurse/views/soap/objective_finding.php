@@ -109,7 +109,7 @@ function add_objective_findings(objective_findings_id, visit_id,status){
     XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
   }
   var config_url = $('#config_url').val();
-  var url = config_url+"/nurse/add_objective_findings/"+objective_findings_id+"/"+visit_id+"/"+status;
+  var url = config_url+"nurse/add_objective_findings/"+objective_findings_id+"/"+visit_id+"/"+status;
  
   if(XMLHttpRequestObject) {
     var obj3 = window.opener.document.getElementById("objective_findings");
@@ -154,7 +154,7 @@ function update_visit_obj(objective_findings_id,visit_id,update_id){
 	var id= "myTF".concat(objective_findings_id);
 	var description = document.getElementById(id).value;
 	var config_url = $('#config_url').val();
-  	var url = config_url+"/nurse/add_objective_findings/"+objective_findings_id+"/"+visit_id+"/"+update_id+"/"+description;
+  	var url = config_url+"nurse/add_objective_findings/"+objective_findings_id+"/"+visit_id+"/"+update_id+"/"+description;
 		if(XMLHttpRequestObject) {
 				
 		XMLHttpRequestObject.open("GET", url);

@@ -798,7 +798,7 @@ $p = 0;
 			?>
 			<br/>
 			<div class="center-align">
-			<?php echo '<a href="'.site_url().'/pharmacy/send_to_accounts/'.$visit_id.'" onclick="return confirm(\'Send to accounts?\');" class="btn btn-sm btn-success">Send to Accounts</a>';?>
+			<?php echo '<a href="'.site_url().'pharmacy/send_to_accounts/'.$visit_id.'" onclick="return confirm(\'Send to accounts?\');" class="btn btn-sm btn-success">Send to Accounts</a>';?>
 		 	</div>
 			<?php
 		}else{

@@ -89,6 +89,9 @@ $route['administration/deactivate-branch/(:num)/(:num)'] = 'admin/branches/deact
 /*
 *	HR Routes
 */
+$route['human-resource/my-account'] = 'hr/my_account/account';
+$route['human-resource/my-account/edit-about/(:num)'] = 'hr/personnel/my_account/update_personnel_about_details/$1';
+$route['human-resource/edit-personnel-account/(:num)'] = 'hr/personnel/update_personnel_account_details/$1';
 $route['human-resource/configuration'] = 'hr/configuration';
 $route['human-resource/add-job-title'] = 'hr/add_job_title';
 $route['human-resource/edit-job-title/(:num)'] = 'hr/edit_job_title/$1';
@@ -143,6 +146,11 @@ $route['human-resource/delete-personnel-role/(:num)/(:num)'] = 'hr/personnel/del
 */
 $route['accounts/change-branch'] = 'accounts/payroll/change_branch';
 $route['accounts/print-payroll/(:num)'] = 'accounts/payroll/print_payroll/$1';
+$route['accounts/export-payroll/(:num)'] = 'accounts/payroll/export_payroll/$1';
+$route['accounts/print-payroll-pdf/(:num)'] = 'accounts/payroll/print_payroll_pdf/$1';
+$route['accounts/payroll/print-payslip/(:num)/(:num)'] = 'accounts/payroll/print_payslip/$1/$2';
+$route['accounts/payroll/download-payslip/(:num)/(:num)'] = 'accounts/payroll/download_payslip/$1/$2';
+$route['accounts/payroll-payslips/(:num)'] = 'accounts/payroll/payroll_payslips/$1';
 $route['accounts/salary-data'] = 'accounts/payroll/salaries';
 $route['accounts/search-payroll'] = 'accounts/payroll/search_payroll';
 $route['accounts/close-payroll-search'] = 'accounts/payroll/close_payroll_search';

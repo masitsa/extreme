@@ -125,7 +125,7 @@
 				';
 			}
 			
-			$personnel_query = $this->personnel_model->get_all_personnel();
+			$personnel_query = $this->personnel_model->retrieve_personnel();
 			
 			foreach ($query->result() as $row)
 			{

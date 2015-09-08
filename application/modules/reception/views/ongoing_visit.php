@@ -2,24 +2,18 @@
 <?php echo $this->load->view('patients/search_visit', '', TRUE);?>
 <!-- end search -->
  
-<div class="row">
-    <div class="col-md-12">
+		<section class="panel">
+		        <!-- Widget head -->
+		       <header class="panel-heading">
+		          <h5 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h5>
+		          <div class="widget-icons pull-right">
+		          	 <a href="<?php echo site_url();?>reception/patients-list" class="btn btn-success btn-sm pull-right">  Patients List</a>
+		          </div>
+		          <div class="clearfix"></div>
+		        </header>             
 
-      <!-- Widget -->
-      <div class="widget boxed">
-        <!-- Widget head -->
-        <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-          </div>
-          <div class="clearfix"></div>
-        </div>             
-
-        <!-- Widget content -->
-        <div class="widget-content">
-          <div class="padd">
+		        <!-- Widget content -->
+		        <div class="panel-body">
           <?php
             	$error = $this->session->userdata('error_message');
             	$validation_error = validation_errors();
@@ -411,18 +405,11 @@
 		
 		echo $result;
 ?>
-          </div>
+          		</div>
           
-          <div class="widget-foot">
+		        <div class="panel-footer">
                                 
 				<?php if(isset($links)){echo $links;}?>
-            
-                <div class="clearfix"></div> 
-            
+                
             </div>
-        </div>
-        <!-- Widget ends -->
-
-      </div>
-    </div>
-  </div>
+</section>

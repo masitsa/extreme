@@ -21,7 +21,7 @@
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
 		
@@ -213,7 +213,7 @@
 				
 				if($module != 1)
 				{
-					$to_doctor = '<td><a href="'.site_url().'/laboratory/send_to_doctor/'.$visit_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Send to doctor?\');">To Doctor</a></td>';
+					$to_doctor = '<td><a href="'.site_url().'laboratory/send_to_doctor/'.$visit_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Send to doctor?\');">To Doctor</a></td>';
 				}
 				
 				else
@@ -231,8 +231,8 @@
 							<td>'.$visit_type.'</td>
 							<td>'.$visit_time.'</td>
 							<td>'.$doctor.'</td>
-							<td><a href="'.site_url().'/laboratory/test/'.$visit_id.'/'.$patient_id.'" class="btn btn-sm btn-primary">View Tests</a></td>
-							<td><a href="'.site_url().'/laboratory/print_test/'.$visit_id.'/'.$patient_id.'" class="btn btn-sm btn-success">Print</a></td>
+							<td><a href="'.site_url().'laboratory/test/'.$visit_id.'/'.$patient_id.'" class="btn btn-sm btn-primary">View Tests</a></td>
+							<td><a href="'.site_url().'laboratory/print_test/'.$visit_id.'/'.$patient_id.'" class="btn btn-sm btn-success">Print</a></td>
 						</tr> 
 					';
 			}

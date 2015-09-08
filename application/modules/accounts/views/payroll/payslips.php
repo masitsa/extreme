@@ -34,8 +34,8 @@ $created_by = $this->session->userdata('first_name');
         <!-- IE Support -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <!-- Bootstrap -->
-        <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/bootstrap/css/bootstrap.css" />
-        <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/stylesheets/theme-custom.css">
+        <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/bootstrap/css/bootstrap.css" media="all"/>
+        <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/stylesheets/theme-custom.css" media="all"/>
     </head>
     <body class="receipt_spacing">
     	<div class="row">
@@ -45,7 +45,7 @@ $created_by = $this->session->userdata('first_name');
         </div>
         
         <div class="row">
-        	<div class="col-md-4 col-md-offset-4">
+        	<div class="col-xs-12 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
                 <div class="row">
                     <div class="col-xs-12">
                     	<div class="center-align">
@@ -104,7 +104,7 @@ $created_by = $this->session->userdata('first_name');
                 <!-- Allowances header -->
                 <div class="row">
                 	<div class="col-xs-12">
-                        Allowances
+                        Non cash benefits
                     </div>
                 </div>
                 <!-- End allowances header -->
@@ -133,13 +133,13 @@ $created_by = $this->session->userdata('first_name');
                                     if($id == $benefit_id){
                                         $amount = $allow->amount;
                                         ?>
-                                        <!--<div class="col-xs-6">
+                                        <div class="col-xs-6">
                                         	<strong><?php echo $benefit_name;?></strong>
                                         </div>
                                         
                                         <div class="col-xs-6">
                                             <?php echo number_format($amount, 2);?>
-                                        </div>-->
+                                        </div>
                                         <?php
                                         break;
                                     }
@@ -160,6 +160,20 @@ $created_by = $this->session->userdata('first_name');
 							}
                         }
                     }
+                    ?>
+                </div>
+                
+                <!-- Allowances header -->
+                <div class="row">
+                	<div class="col-xs-12">
+                        Allowances
+                    </div>
+                </div>
+                <!-- End allowances header -->
+                
+                <!-- Allowances -->
+                <div class="row">
+                    <?php
                     
                     /*********** Allowances ***********/
                     $total_allowances = 0;
@@ -212,9 +226,8 @@ $created_by = $this->session->userdata('first_name');
 					$insurance_amount = $insurance_res['amount'];
 					
                     /*********** Taxable ***********/
-        			$taxable = $total_payments + $total_benefits + $total_allowances;
-					$paye = $this->payroll_model->calculate_paye($taxable);
-					$paye_less_relief = $paye - $monthly_relief - $insurance_relief;
+					$gross = ($total_payments + $total_allowances);
+        			$gross_taxable = $gross + $total_benefits;
                     
                     /*********** NSSF ***********/
 					$nssf_query = $this->payroll_model->get_nssf();
@@ -228,18 +241,37 @@ $created_by = $this->session->userdata('first_name');
 							$nssf = $row2->amount;
 						}
 					}
+					$taxable = $gross_taxable - $nssf;
+					
+                    /*********** PAYE ***********/
+					$paye = $this->payroll_model->calculate_paye($gross_taxable);
+					$paye_less_relief = $paye - $monthly_relief - $insurance_relief;
                     ?>
                 </div>
                 
-                <!-- End allowances-->
-                
-                <!-- Tax calculation header -->
-                <div class="row">
-                	<div class="col-xs-12">
-                        Tax calculation
+                <!-- Taxable -->
+                <div class="row" style="border:thin solid #000; border-left:none; border-right:none; border-bottom:none;">
+                	<div class="col-xs-6">
+                        <strong>Gross taxable amount</strong>
+                    </div>
+                    
+                    <div class="col-xs-6">
+                        <?php echo number_format(($gross_taxable), 2);?>
                     </div>
                 </div>
-                <!-- End tax calculation header -->
+                <!-- End taxable -->
+                
+                <!-- NSSF -->
+                <div class="row">
+                	<div class="col-xs-6">
+                        <strong>NSSF</strong>
+                    </div>
+                    
+                    <div class="col-xs-6">
+                       (<?php echo number_format(($nssf), 2);?>)
+                    </div>
+                </div>
+                <!-- End NSSF -->
                 
                 <!-- Taxable -->
                 <div class="row">
@@ -253,29 +285,15 @@ $created_by = $this->session->userdata('first_name');
                 </div>
                 <!-- End taxable -->
                 
-                <!-- Taxable -->
-                <div class="row">
-                	<div class="col-xs-6">
-                        <strong>NSSF benefit</strong>
-                    </div>
-                    
-                    <div class="col-xs-6">
-                        <?php echo number_format(($nssf), 2);?>
-                    </div>
-                </div>
-                <!-- End taxable -->
+                <!-- End allowances-->
                 
-                <!-- Taxable -->
-                <div class="row">
-                	<div class="col-xs-6">
-                        <strong>Gross taxable</strong>
-                    </div>
-                    
-                    <div class="col-xs-6">
-                        <?php echo number_format(($taxable - $nssf), 2);?>
+                <!-- Tax calculation header -->
+                <div class="row" style="border:thin solid #000; border-left:none; border-right:none; border-bottom:none;">
+                	<div class="col-xs-12">
+                        Tax calculation
                     </div>
                 </div>
-                <!-- End taxable -->
+                <!-- End tax calculation header -->
                 
                 <!-- Normal tax -->
                 <div class="row">
@@ -328,7 +346,7 @@ $created_by = $this->session->userdata('first_name');
                 <!-- End PAYE -->
                 
                 <!-- Deductions header -->
-                <div class="row">
+                <div class="row" style="border:thin solid #000; border-left:none; border-right:none; border-bottom:none;">
                 	<div class="col-xs-12">
                         Other deductions
                     </div>
@@ -361,7 +379,6 @@ $created_by = $this->session->userdata('first_name');
                     <?php
                     
                     /*********** NHIF ***********/
-					$gross = ($total_payments + $total_allowances);
 					$nhif_query = $this->payroll_model->calculate_nhif($gross);
 					$nhif = 0;
 					
@@ -442,13 +459,13 @@ $created_by = $this->session->userdata('first_name');
 									if($id == $other_deduction_id){
 										$amount = $allow->amount;
 										?>
-                                        <div class="col-xs-6">
+                                        <!--<div class="col-xs-6">
                                         	<strong><?php echo $other_deduction_name;?></strong>
                                         </div>
                                         
                                         <div class="col-xs-6">
                                             <?php echo number_format($amount, 2);?>
-                                        </div>
+                                        </div>-->
                                         <?php
 										break;
 									}
@@ -466,12 +483,22 @@ $created_by = $this->session->userdata('first_name');
 						}
 					}
 					
+					if($total_other_deductions > 0)
+					{
                     ?>
+                    <div class="col-xs-6">
+                        <strong>Other advances</strong>
+                    </div>
+                    
+                    <div class="col-xs-6">
+                        <?php echo number_format($total_other_deductions, 2);?>
+                    </div>
+                    <?php } ?>
                 </div>
                 <!-- End deductions -->
                 
                 <!-- Savings header -->
-                <div class="row">
+                <div class="row" style="border:thin solid #000; border-left:none; border-right:none; border-bottom:none;">
                 	<div class="col-xs-12">
                         Savings
                     </div>
@@ -529,7 +556,7 @@ $created_by = $this->session->userdata('first_name');
                 <!-- End savings -->
                 
                 <!-- Loans header -->
-                <div class="row">
+                <div class="row" style="border:thin solid #000; border-left:none; border-right:none; border-bottom:none;">
                 	<div class="col-xs-12">
                         Loans
                     </div>
@@ -649,11 +676,38 @@ $created_by = $this->session->userdata('first_name');
                     }
                 }
 				
-				$net_pay = ($total_payments + $total_allowances) - ($paye_less_relief + $nssf + $nhif + $total_deductions + $total_other_deductions + $total_loan_schemes + $total_savings + $insurance_amount);
+				$all_deductions = $paye_less_relief + $nssf + $nhif + $total_deductions + $total_other_deductions + $total_loan_schemes + $total_savings + $insurance_amount;
+				
+				$net_pay = $gross - $all_deductions;
                 ?>
                 <!-- End loans -->
-										
-                <div class="row" style="border:thin solid #000; border-left:none; border-right:none;">
+                
+                <!-- Gross pay -->
+                <div class="row" style="border:thin solid #000; border-left:none; border-right:none; border-bottom:none;">
+                	<div class="col-xs-6">
+                        <strong>Gross pay</strong>
+                    </div>
+                    
+                    <div class="col-xs-6">
+                        <?php echo number_format(($gross), 2);?>
+                    </div>
+                </div>
+                <!-- End Gross -->
+                
+                <!-- Total deductions -->
+                <div class="row">
+                	<div class="col-xs-6">
+                        <strong>Total deductions</strong>
+                    </div>
+                    
+                    <div class="col-xs-6">
+                        (<?php echo number_format(($all_deductions), 2);?>)
+                    </div>
+                </div>
+                <!-- End Total deductions -->
+								
+                <!-- Net pay -->		
+                <div class="row" style="border:thin solid #000; border-left:none; border-right:none; border-top:none;">
                     <div class="col-xs-6">
                         <strong>Net pay</strong>
                     </div>
@@ -662,6 +716,7 @@ $created_by = $this->session->userdata('first_name');
                         <?php echo number_format($net_pay, 2);?>
                     </div>
                 </div>
+                <!-- End Net -->
                 
                 <div class="row receipt_bottom_border" >
                     <div class="col-md-12 center-align">

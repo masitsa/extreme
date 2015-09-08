@@ -25,13 +25,14 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
 <html lang="en">
 
     <head>
-        <title>SUMC | Receipt</title>
+        <title><?php echo $contacts['company_name'];?> | Receipt</title>
         <!-- For mobile content -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- IE Support -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <!-- Bootstrap -->
-        <link href="<?php echo base_url();?>assets/bluish/style/bootstrap.css" rel="stylesheet" media="all">
+        <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/bootstrap/css/bootstrap.css" media="all"/>
+        <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/stylesheets/theme-custom.css" media="all"/>
         <style type="text/css">
         .receipt_spacing{letter-spacing:0px; font-size: 12px;}
         .center-align{margin:0 auto; text-align:center;}
@@ -56,15 +57,18 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
     </style>
     </head>
     <body class="receipt_spacing">
-    	<div class="row" style=" min-height: 50px;">
-        	<img src="<?php echo base_url();?>images/strathmore.gif" class="title-img"/>
+    	<div class="row">
+        	<div class="col-xs-12">
+            	<img src="<?php echo base_url().'assets/logo/'.$contacts['logo'];?>" alt="<?php echo $contacts['company_name'];?>" class="img-responsive logo"/>
+            </div>
+        </div>
+    	<div class="row">
         	<div class="col-md-12 center-align receipt_bottom_border">
             	<strong>
-                	Strathmore University Medical Center<br/>
-                    P.O. Box 59857 00200, Nairobi, Kenya<br/>
-                    E-mail: sumedicalcentre@strathmore.edu. Tel : +254703034011<br/>
-                    Madaraka Estate<br/>
-
+                	<?php echo $contacts['company_name'];?><br/>
+                    P.O. Box <?php echo $contacts['address'];?> <?php echo $contacts['post_code'];?>, <?php echo $contacts['city'];?><br/>
+                    E-mail: <?php echo $contacts['email'];?>. Tel : <?php echo $contacts['phone'];?><br/>
+                    <?php echo $contacts['location'];?>, <?php echo $contacts['building'];?>, <?php echo $contacts['floor'];?><br/>
                 </strong>
             </div>
         </div>

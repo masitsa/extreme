@@ -43,10 +43,10 @@
                     </div>
                     
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Staff/ Student ID: </label>
+                        <label class="col-lg-4 control-label">Patient number: </label>
                         
                         <div class="col-lg-8">
-                            <input type="text" class="form-control" name="strath_no" placeholder="Staff/ Student ID">
+                            <input type="text" class="form-control" name="patient_number" placeholder="Patient number">
                         </div>
                     </div>
                 </div>

@@ -1506,5 +1506,355 @@ class Payroll_model extends CI_Model
 		
 		return $return;
 	}
+	
+	/*
+	*	Export payroll
+	*
+	*/
+	function export_payroll($data)
+	{
+		$this->load->library('excel');
+		
+		$title = $data['date'];
+		$query = $data['query'];
+		$payroll_id = $data['payroll_id'];
+		$payments = $data['payments'];
+		$benefits = $data['benefits'];
+		$allowances = $data['allowances'];
+		$deductions = $data['deductions'];
+		$savings = $data['savings'];
+		$loan_schemes = $data['loan_schemes'];
+		$other_deductions = $data['other_deductions'];
+		
+		if($query->num_rows() > 0)
+		{
+			$count = 0;
+			/*
+				-----------------------------------------------------------------------------------------
+				Document Header
+				-----------------------------------------------------------------------------------------
+			*/
+
+			$row_count = 0;
+			$report[$row_count][0] = '#';
+			$report[$row_count][1] = 'Ref';
+			$report[$row_count][2] = 'Personnel';
+			$count = 3;
+			
+			//payments
+			if($payments->num_rows() > 0)
+			{
+				foreach($payments->result() as $res)
+				{
+					$payment_abbr = $res->payment_name;
+					$payment_id = $res->payment_id;
+					
+					$report[$row_count][$count] = $payment_abbr;
+					$count++;
+				}
+			}
+			
+			//benefits
+			if($benefits->num_rows() > 0)
+			{
+				foreach($benefits->result() as $res)
+				{
+					$benefit_abbr = $res->benefit_name;
+					$benefit_id = $res->benefit_id;
+					
+					$report[$row_count][$count] = $benefit_abbr;
+					$count++;
+				}
+			}
+			
+			//allowances
+			if($allowances->num_rows() > 0)
+			{
+				foreach($allowances->result() as $res)
+				{
+					$allowance_abbr = $res->allowance_abbr;
+					$allowance_id = $res->allowance_id;
+					
+					$report[$row_count][$count] = $allowance_abbr;
+					$count++;
+				}
+			}
+			
+			//totals
+			$report[$row_count][$count] = 'Gross';
+			$count++;
+			$report[$row_count][$count] = 'PAYE';
+			$count++;
+			$report[$row_count][$count] = 'NSSF';
+			$count++;
+			$report[$row_count][$count] = 'NHIF';
+			$count++;
+			$report[$row_count][$count] = 'Life Ins';
+			$count++;
+			
+			//deductions
+			if($deductions->num_rows() > 0)
+			{
+				foreach($deductions->result() as $res)
+				{
+					$deduction_abbr = $res->deduction_abbr;
+					$deduction_id = $res->deduction_id;
+					
+					$report[$row_count][$count] = $deduction_abbr;
+					$count++;
+				}
+			}
+			
+			//other deductions
+			if($other_deductions->num_rows() > 0)
+			{
+				foreach($other_deductions->result() as $res)
+				{
+					$other_deduction_abbr = $res->other_deduction_name;
+					$other_deduction_id = $res->other_deduction_id;
+					
+					$report[$row_count][$count] = $other_deduction_abbr;
+					$count++;
+				}
+			}
+			
+			//totals
+			$report[$row_count][$count] = 'Savings';
+			$count++;
+			$report[$row_count][$count] = 'Loans';
+			$count++;
+			$report[$row_count][$count] = 'Net pay';
+			$total_basic_pay = 0;
+			//display all patient data in the leftmost columns
+			$position = 0;
+			foreach($query->result() as $row)
+			{
+				$row_count++;
+				$count = 0;
+				
+				$personnel_id = $row->personnel_id;
+				$personnel_number = $row->personnel_number;
+				$personnel_fname = $row->personnel_fname;
+				$personnel_onames = $row->personnel_onames;
+				$gross = 0;
+				
+				//basic
+				$table = $this->payroll_model->get_table_id("basic_pay");
+				$table_id = 0;
+				$basic_pay = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
+				$total_basic_pay += $basic_pay;
+				$gross += $basic_pay;
+				
+				$position++;
+				
+				$report[$row_count][$count] = $position;
+				$count++;
+				$report[$row_count][$count] = $personnel_number;
+				$count++;
+				$report[$row_count][$count] = $personnel_onames.' '.$personnel_fname;
+				$count++;
+				
+				//payments
+				if($payments->num_rows() > 0)
+				{
+					foreach($payments->result() as $res)
+					{
+						$payment_id = $res->payment_id;
+						$table = $this->payroll_model->get_table_id("payment");
+						$table_id = $payment_id;
+						
+						$payment_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
+						$gross += $payment_amt;
+						
+						$report[$row_count][$count] = $payment_amt;
+						$count++;
+					}
+				}
+				
+				//benefits
+				$total_benefits = 0;
+				if($benefits->num_rows() > 0)
+				{
+					foreach($benefits->result() as $res)
+					{
+						$benefit_id = $res->benefit_id;
+						$table = $this->payroll_model->get_table_id("benefit");
+						$table_id = $benefit_id;
+						
+						$benefit_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
+						$total_benefits += $benefit_amt;
+						
+						$report[$row_count][$count] = $benefit_amt;
+						$count++;
+					}
+				}
+				
+				//allowances
+				if($allowances->num_rows() > 0)
+				{
+					foreach($allowances->result() as $res)
+					{
+						$allowance_id = $res->allowance_id;
+						$table = $this->payroll_model->get_table_id("allowance");
+						$table_id = $allowance_id;
+						
+						$allowance_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
+						$gross += $allowance_amt;
+						
+						$report[$row_count][$count] = $allowance_amt;
+						$count++;
+					}
+				}
+				
+				$report[$row_count][$count] = $gross;
+				$count++;
+				
+				/*
+					--------------------------------------------------------------------------------------
+					Select & display untaxable deductions for the personnel
+					--------------------------------------------------------------------------------------
+				*/
+				
+				//nssf
+				$table = $this->payroll_model->get_table_id("nssf");
+				$nssf = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
+				
+				//nhif
+				$table = $this->payroll_model->get_table_id("nhif");
+				$nhif = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
+				
+				//paye
+				$table = $this->payroll_model->get_table_id("paye");
+				$paye =$this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
+				
+				//relief
+				$table = $this->payroll_model->get_table_id("relief");
+				$relief = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
+				
+				//insurance_relief
+				$table = $this->payroll_model->get_table_id("insurance_relief");
+				$insurance_relief = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
+				
+				//relief
+				$table = $this->payroll_model->get_table_id("insurance_amount");
+				$insurance_amount = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
+				//echo $insurance_relief;
+				$paye -= ($relief + $insurance_relief);
+				
+				$report[$row_count][$count] = $paye;
+				$count++;
+				$report[$row_count][$count] = $nssf;
+				$count++;
+				$report[$row_count][$count] = $nhif;
+				$count++;
+				$report[$row_count][$count] = $insurance_amount;
+				$count++;
+				
+				//deductions
+				$table = $this->payroll_model->get_table_id("deduction");
+				$total_deductions = 0;
+				if($deductions->num_rows() > 0)
+				{
+					foreach($deductions->result() as $res)
+					{
+						$deduction_id = $res->deduction_id;
+						
+						$table_id = $deduction_id;
+						$deduction_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
+						$total_deductions += $deduction_amt;
+				
+						$report[$row_count][$count] = $deduction_amt;
+						$count++;
+					}
+				}
+				
+				//other_deductions
+				$table = $this->payroll_model->get_table_id("other_deduction");
+				$total_other_deductions = 0;
+				if($other_deductions->num_rows() > 0)
+				{
+					foreach($other_deductions->result() as $res)
+					{
+						$other_deduction_id = $res->other_deduction_id;
+						
+						$table_id = $other_deduction_id;
+						$other_deduction_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
+						$total_other_deductions += $other_deduction_amt;
+				
+						$report[$row_count][$count] = $other_deduction_amt;
+						$count++;
+					}
+				}
+				
+				//savings
+				$rs_savings = $this->payroll_model->get_savings();
+				$total_savings = 0;
+				
+				if($rs_savings->num_rows() > 0)
+				{
+					foreach($rs_savings->result() as $res)
+					{
+						$savings_name = $res->savings_name;
+						$savings_id = $res->savings_id;
+						
+						$table = $this->payroll_model->get_table_id("savings");
+					
+						//get schemes
+						$total_savings += $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $savings_id);
+					}
+				}
+				
+				$report[$row_count][$count] = $total_savings;
+				$count++;
+				
+				//get loan schemes
+				$date = date("Y-m-d");
+				$rs_schemes = $this->payroll_model->get_loan_schemes();
+				$total_schemes = 0;
+				$interest = 0;
+				
+				if($rs_schemes->num_rows() > 0)
+				{
+					foreach($rs_schemes->result() as $res)
+					{
+						$loan_scheme_name = $res->loan_scheme_name;
+						$loan_scheme_id = $res->loan_scheme_id;
+						
+						$table = $this->payroll_model->get_table_id("loan_scheme");
+					
+						//get schemes
+						$total_schemes += $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $loan_scheme_id);
+						
+						//get interest
+						$rs_interest = $this->payroll_model->get_loan_scheme_interest($personnel_id, $date, $loan_scheme_id);
+						
+						if($rs_interest->num_rows() > 0)
+						{
+							foreach($rs_interest->result() as $res2)
+							{
+								$interest += $res2->interest;
+							}
+						}
+					}
+				}
+				
+				$report[$row_count][$count] = $total_schemes;
+				$count++;
+				
+				//total deductions
+				$total_deductions = $total_deductions + $total_other_deductions + $total_schemes + $total_savings + $insurance_amount;
+				
+				//net
+				$net = number_format($gross - ($paye + $nssf + $nhif + $total_deductions), 2, '.', ',');
+				
+				$report[$row_count][$count] = $net;
+				$count++;
+			}
+		}
+		
+		//create the excel document
+		$this->excel->addArray ( $report );
+		$this->excel->generateXML ($title);
+	}
 }
 ?>

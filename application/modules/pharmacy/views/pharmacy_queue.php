@@ -21,7 +21,7 @@
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
 		
@@ -110,7 +110,7 @@
 				
 				if($module != 1)
 				{
-					$to_doctor = '<td><a href="'.site_url().'/lab/send_to_doctor/'.$visit_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Send to doctor?\');">To Doctor</a></td>';
+					$to_doctor = '<td><a href="'.site_url().'lab/send_to_doctor/'.$visit_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Send to doctor?\');">To Doctor</a></td>';
 				}
 				
 				else
@@ -127,10 +127,10 @@
 							<td>'.$visit_time.'</td>
 							<td>'.$coming_from.'</td>
 							<td>'.$doctor.'</td>
-							<td><a href="'.site_url().'/pharmacy/prescription1/'.$visit_id.'/1" class="btn btn-sm btn-info">Prescription</a></td>
-							<td><a href="'.site_url().'/pharmacy/prescription_history/'.$visit_id.'" class="btn btn-sm btn-default">Previous Prescription</a></td>
+							<td><a href="'.site_url().'pharmacy/prescription1/'.$visit_id.'/1" class="btn btn-sm btn-info">Prescription</a></td>
+							<td><a href="'.site_url().'pharmacy/prescription_history/'.$visit_id.'" class="btn btn-sm btn-default">Previous Prescription</a></td>
 						
-							<td><a href="'.site_url().'/pharmacy/send_to_accounts/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to accounts?\');">To Accounts</a></td>
+							<td><a href="'.site_url().'pharmacy/send_to_accounts/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to accounts?\');">To Accounts</a></td>
 						</tr> 
 					';
 			}

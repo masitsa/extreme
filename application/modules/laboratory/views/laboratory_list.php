@@ -131,7 +131,7 @@ var config_url = '<?php echo site_url();?>';
         else if (window.ActiveXObject) {
             XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
         }
-        var url = "<?php echo site_url();?>/laboratory/test_lab/"+visit_id;
+        var url = "<?php echo site_url();?>laboratory/test_lab/"+visit_id;
 		
         if(XMLHttpRequestObject) {
                     
@@ -160,7 +160,7 @@ var config_url = '<?php echo site_url();?>';
     else if (window.ActiveXObject) {
         XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
     }
-    var url = "<?php echo site_url();?>/laboratory/test_lab/"+visit_id+"/"+id;
+    var url = "<?php echo site_url();?>laboratory/test_lab/"+visit_id+"/"+id;
     // window.alert(url);
     if(XMLHttpRequestObject) {
                 
@@ -201,11 +201,11 @@ function get_test_results(page, visit_id){
   var config_url = $('#config_url').val();
   if((page == 1) || (page == 65) || (page == 85)){
     
-    url = config_url+"/laboratory/test/"+visit_id;
+    url = config_url+"laboratory/test/"+visit_id;
   }
   
   else if ((page == 75) || (page == 100)){
-    url = config_url+"/laboratory/test1/"+visit_id;
+    url = config_url+"laboratory/test1/"+visit_id;
   }
   if(XMLHttpRequestObject) {
     if((page == 75) || (page == 85)){
@@ -242,7 +242,7 @@ function delete_cost(visit_charge_id, visit_id){
 	else if (window.ActiveXObject) {
 		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	var url = config_url+"/laboratory/delete_cost/"+visit_charge_id+"/"+visit_id;
+	var url = config_url+"laboratory/delete_cost/"+visit_charge_id+"/"+visit_id;
 	
 	if(XMLHttpRequestObject) {
 		var obj = document.getElementById("lab_table");

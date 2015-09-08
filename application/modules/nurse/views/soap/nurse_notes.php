@@ -74,7 +74,7 @@ echo
 	
 	function save_nurse_notes(visit_id){
 		var config_url = $('#config_url').val();
-        var data_url = config_url+"/nurse/save_nurse_notes/"+visit_id;
+        var data_url = config_url+"nurse/save_nurse_notes/"+visit_id;
         //window.alert(data_url);
          var nurse_notes = $('#nurse_notes_item').val();//document.getElementById("vital"+vital_id).value;
         $.ajax({

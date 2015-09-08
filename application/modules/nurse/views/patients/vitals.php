@@ -583,11 +583,6 @@ function myPopup3(visit_id) {
     window.open( config_url+"nurse/procedures/"+visit_id, "myWindow", "status = 1, height = auto, width = 600, resizable = 0" )
 }
 
-
-
-
-
-
 function calculatevaccinetotal(amount, id, procedure_id, v_id){
        
     var units = document.getElementById('units'+id).value;  

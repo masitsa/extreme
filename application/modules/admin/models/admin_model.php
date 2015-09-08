@@ -87,7 +87,9 @@ class Admin_model extends CI_Model
 	public function edit_configuration($configuration_id)
 	{
 		$data = array(
-			'mandrill' => $this->input->post('mandrill')
+			'mandrill' => $this->input->post('mandrill'),
+			'sms_key' => $this->input->post('sms_key'),
+			'sms_user' => $this->input->post('sms_user')
 		);
 		
 		if($configuration_id > 0)

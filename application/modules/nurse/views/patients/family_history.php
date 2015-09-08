@@ -100,7 +100,7 @@ echo $history;
 		}
 		//var condition = document.getElementById("checkbox"+cond+family);
 			
-		url = config_url+"/nurse/save_family_disease/"+cond+"/"+family+"/"+patient_id;
+		url = config_url+"nurse/save_family_disease/"+cond+"/"+family+"/"+patient_id;
 	
 		if(XMLHttpRequestObject) {
 					
@@ -110,7 +110,7 @@ echo $history;
 				
 				if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
 					
-					$.get( config_url+"/nurse/get_family_history/<?php echo $visit_id;?>", function( data ) {
+					$.get( config_url+"nurse/get_family_history/<?php echo $visit_id;?>", function( data ) {
 						$("#new-nav").html(data);
 					});
 				}
@@ -134,7 +134,7 @@ echo $history;
 		}
 		//var condition = document.getElementById("checkbox"+cond+family);
 			
-		url = config_url+"/nurse/delete_family_disease/"+cond+"/"+family+"/"+patient_id;
+		url = config_url+"nurse/delete_family_disease/"+cond+"/"+family+"/"+patient_id;
 	
 		if(XMLHttpRequestObject) {
 					
@@ -144,7 +144,7 @@ echo $history;
 				
 				if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
 					
-					$.get( config_url+"/nurse/get_family_history/<?php echo $visit_id;?>", function( data ) {
+					$.get( config_url+"nurse/get_family_history/<?php echo $visit_id;?>", function( data ) {
 						$("#new-nav").html(data);
 					});
 				}

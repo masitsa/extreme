@@ -581,7 +581,7 @@ if(!isset($page_name))
 	function update_service_charge(visit_charge_id,visit_id){
          
         var config_url = $('#config_url').val();
-        var data_url = config_url+"/administration/update_visit_charge/"+visit_charge_id;
+        var data_url = config_url+"administration/update_visit_charge/"+visit_charge_id;
         
         var consultation_id = $('#consultation_id'+visit_id).val();
         

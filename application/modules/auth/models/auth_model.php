@@ -81,5 +81,9 @@ class Auth_model extends CI_Model
 			return FALSE;
 		}
 	}
+	
+	public function get_personnel_roles($personnel_id)
+	{
+	}
 }
 ?>

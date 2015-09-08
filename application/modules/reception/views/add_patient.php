@@ -73,21 +73,6 @@
                 </div>
                 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Date of Birth : </label>
-                    
-                    <div class="col-lg-8">
-                        <div id="datetimepicker_other_patient" class="input-append">
-                            <input data-format="yyyy-MM-dd" class="form-control" type="text" name="patient_dob" placeholder="Date of Birth">
-                            <span class="add-on">
-                                &nbsp;<i data-time-icon="icon-time" data-date-icon="icon-calendar" style="cursor:pointer;">
-                                </i>
-                            </span>
-
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
                     <label class="col-lg-4 control-label">Gender: </label>
                     
                     <div class="col-lg-8">
@@ -117,9 +102,7 @@
                         </select>
                     </div>
                 </div>
-             
                 
-               
                 <div class="form-group">
                     <label class="col-lg-4 control-label">Email Address: </label>
                     
@@ -133,6 +116,19 @@
                     
                     <div class="col-lg-8">
                         <input type="text" class="form-control" name="patient_national_id" placeholder="National ID">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Date of Birth : </label>
+            
+                    <div class="col-lg-8">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="patient_dob" placeholder="Date of Birth">
+                        </div>
                     </div>
                 </div>
                 

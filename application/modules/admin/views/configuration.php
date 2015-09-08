@@ -7,6 +7,8 @@
 		$res = $configuration->row();
 		$configuration_id = $res->configuration_id;
 		$mandrill = $res->mandrill;
+		$sms_key = $res->sms_key;
+		$sms_user = $res->sms_user;
 	}
 			
 ?>
@@ -47,6 +49,22 @@
                                     
                                     <div class="col-lg-7">
                                         <input type="text" class="form-control" name="mandrill" placeholder="Email API key" value="<?php echo $mandrill;?>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-lg-5 control-label">SMS Key: </label>
+                                    
+                                    <div class="col-lg-7">
+                                        <input type="text" class="form-control" name="sms_key" placeholder="SMS Key" value="<?php echo $sms_key;?>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-5 control-label">SMS User: </label>
+                                    
+                                    <div class="col-lg-7">
+                                        <input type="text" class="form-control" name="sms_user" placeholder="SMS User" value="<?php echo $sms_user;?>">
                                     </div>
                                 </div>
                             </div>

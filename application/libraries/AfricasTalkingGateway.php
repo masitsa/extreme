@@ -42,10 +42,14 @@ class AfricasTalkingGateway
   const HTTP_CODE_OK      = 200;
   const HTTP_CODE_CREATED = 201;
   
-  public function __construct($username_, $apiKey_)
+  //public function __construct($username_, $apiKey_)
+  public function __construct($params)
   {
-    $this->_username    = $username_;
-    $this->_apiKey      = $apiKey_;
+   	//$this->_username    = $username_;
+    //$this->_apiKey      = $apiKey_;
+	
+    $this->_username    = $params['username'];
+    $this->_apiKey      = $params['apiKey'];
     
     $this->_requestBody = null;
     $this->_requestUrl  = null;

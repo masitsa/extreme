@@ -73,11 +73,7 @@ if ($query->num_rows() > 0)
 			$deduction_abbr = $res->deduction_abbr;
 			$deduction_id = $res->deduction_id;
 			
-			//display all except nssf nhif insurance & pension
-			if(($deduction_id != 1))
-			{
-				$result .= '<th>'.$deduction_abbr.'</th>';
-			}
+			$result .= '<th>'.$deduction_abbr.'</th>';
 		}
 	}
 	
@@ -203,7 +199,7 @@ if ($query->num_rows() > 0)
 		$table = $this->payroll_model->get_table_id("insurance_relief");
 		$insurance_relief = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
 		
-		//relief
+		//insurance_amount
 		$table = $this->payroll_model->get_table_id("insurance_amount");
 		$insurance_amount = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
 		//echo $insurance_relief;
@@ -298,7 +294,7 @@ if ($query->num_rows() > 0)
 				}
 			}
 		}
-		$result .= '<th>'.number_format(($total_schemes + $interest), 2).'</th>';
+		$result .= '<th>'.number_format(($total_schemes), 2).'</th>';
 		
 		//total deductions
 		$total_deductions = $total_deductions + $total_other_deductions + $total_schemes + $total_savings + $insurance_amount;
@@ -354,8 +350,8 @@ else
         <!-- IE Support -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <!-- Bootstrap -->
-        <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/bootstrap/css/bootstrap.css" />
-        <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/stylesheets/theme-custom.css">
+        <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/bootstrap/css/bootstrap.css" media="all"/>
+        <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/stylesheets/theme-custom.css" media="all"/>
     </head>
     <body class="receipt_spacing">
     	<div class="row" >
