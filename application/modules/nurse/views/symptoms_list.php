@@ -117,7 +117,7 @@ function add_symptoms(symptoms_id, status, visit_id){
     XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
   }
   var config_url = $('#config_url').val();
-  var url = config_url+"/nurse/symptoms/"+symptoms_id+"/"+status+"/"+visit_id;
+  var url = config_url+"nurse/symptoms/"+symptoms_id+"/"+status+"/"+visit_id;
 
 
   if(XMLHttpRequestObject) {
@@ -152,7 +152,7 @@ function update_visit_symptoms(symptoms_id,status,visit_id){
     var id= "myTF".concat(symptoms_id);
     var description = document.getElementById(id).value;
      var config_url = $('#config_url').val();
-    var url = config_url+"/nurse/symptoms/"+symptoms_id+"/"+status+"/"+visit_id+"/"+description;
+    var url = config_url+"nurse/symptoms/"+symptoms_id+"/"+status+"/"+visit_id+"/"+description;
 
     if(XMLHttpRequestObject) {
                 
@@ -181,7 +181,7 @@ function symptoms2(visit_id){
         XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
     }
     var config_url = $('#config_url').val();
-    var url = config_url+"/nurse/view_symptoms/"+visit_id;
+    var url = config_url+"nurse/view_symptoms/"+visit_id;
    
     if(XMLHttpRequestObject) {
         

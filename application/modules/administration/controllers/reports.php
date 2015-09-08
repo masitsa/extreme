@@ -82,6 +82,8 @@ class Reports extends administration
 			$segment = 5;	
 		}
 		
+		//echo $where; die();
+		
 		
 		//pagination
 		$this->load->library('pagination');
@@ -125,27 +127,6 @@ class Reports extends administration
 		$v_data['total_patients'] = $config['total_rows'];
 		$v_data['total_services_revenue'] = $this->reports_model->get_total_services_revenue($where, $table);
 		$v_data['total_payments'] = $this->reports_model->get_total_cash_collection($where, $table);
-		//total students debt
-		$where2 = $where.' AND visit.visit_type = 1';
-		$total_students_debt = $this->reports_model->get_total_services_revenue($where2, $table);
-		//students debit notes
-		$where2 = $where.' AND payments.payment_type = 2 AND visit.visit_type = 1';
-		$student_debit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
-		//students credit notes
-		$where2 = $where.' AND payments.payment_type = 3 AND visit.visit_type = 1';
-		$student_credit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
-		$v_data['total_students_debt'] = ($total_students_debt + $student_debit_notes) - $student_credit_notes;
-		
-		//total staff debt
-		$where2 = $where.' AND visit.visit_type = 2';
-		$total_staff_debt = $this->reports_model->get_total_services_revenue($where2, $table);
-		//students debit notes
-		$where2 = $where.' AND payments.payment_type = 2 AND visit.visit_type = 2';
-		$staff_debit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
-		//students credit notes
-		$where2 = $where.' AND payments.payment_type = 3 AND visit.visit_type = 2';
-		$staff_credit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
-		$v_data['total_staff_debt'] = ($total_staff_debt + $staff_debit_notes) - $staff_credit_notes;
 		
 		//total other debt
 		$where2 = $where.' AND visit.visit_type = 3';
@@ -185,14 +166,6 @@ class Reports extends administration
 		//credit notes
 		$where2 = $where.' AND payments.payment_type = 3';
 		$v_data['credit_notes'] = $this->reports_model->get_total_cash_collection($where2, $table);
-		
-		//count student visits
-		$where2 = $where.' AND visit.visit_type = 1';
-		$v_data['students'] = $this->reception_model->count_items($table, $where2);
-		
-		//count staff visits
-		$where2 = $where.' AND visit.visit_type = 2';
-		$v_data['staff'] = $this->reception_model->count_items($table, $where2);
 		
 		//count other visits
 		$where2 = $where.' AND visit.visit_type = 3';
@@ -235,7 +208,7 @@ class Reports extends administration
 	public function search_transactions($module = NULL)
 	{
 		$visit_type_id = $this->input->post('visit_type_id');
-		$strath_no = $this->input->post('strath_no');
+		$patient_number = $this->input->post('patient_number');
 		$personnel_id = $this->input->post('personnel_id');
 		$visit_date_from = $this->input->post('visit_date_from');
 		$visit_date_to = $this->input->post('visit_date_to');
@@ -256,11 +229,11 @@ class Reports extends administration
 			}
 		}
 		
-		if(!empty($strath_no))
+		if(!empty($patient_number))
 		{
-			$strath_no = ' AND patients.strath_no LIKE \'%'.$strath_no.'%\' ';
+			$patient_number = ' AND patients.patient_number LIKE \'%'.$patient_number.'%\' ';
 			
-			$search_title .= 'Staff/Student ID no. '.$strath_no;
+			$search_title .= 'Patient number. '.$patient_number;
 		}
 		
 		if(!empty($personnel_id))
@@ -300,7 +273,7 @@ class Reports extends administration
 			$visit_date = '';
 		}
 		
-		$search = $visit_type_id.$strath_no.$visit_date.$personnel_id;
+		$search = $visit_type_id.$patient_number.$visit_date.$personnel_id;
 		$visit_search = $this->session->userdata('all_transactions_search');
 		
 		if(!empty($visit_search))

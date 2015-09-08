@@ -415,33 +415,30 @@ class Accounts extends MX_Controller
 		$this->form_validation->set_rules('type_payment', 'Type of payment', 'trim|required|xss_clean');
 		$payment_method = $this->input->post('payment_method');
 
-
-		if(!empty($payment_method))
-		{
-			if($payment_method == 1)
-			{
-				// check for cheque number if inserted
-				$this->form_validation->set_rules('cheque_number', 'Cheque Number', 'trim|required|xss_clean');
-			}
-			else if($payment_method == 3)
-			{
-				// check for insuarance number if inserted
-				$this->form_validation->set_rules('insuarance_number', 'Insuarance Number', 'trim|required|xss_clean');
-			}
-			else if($payment_method == 5)
-			{
-				//  check for mpesa code if inserted
-				$this->form_validation->set_rules('mpesa_code', 'Amount', 'trim|required|xss_clean');
-			}
-		}
-
 		// normal or credit note or debit note
 		$type_payment = $this->input->post('type_payment');
-		// type of payment 
-
+		
+		// Normal
 		if($type_payment == 1)
 		{
-
+			if(!empty($payment_method))
+			{
+				if($payment_method == 1)
+				{
+					// check for cheque number if inserted
+					$this->form_validation->set_rules('cheque_number', 'Cheque Number', 'trim|required|xss_clean');
+				}
+				else if($payment_method == 3)
+				{
+					// check for insuarance number if inserted
+					$this->form_validation->set_rules('insuarance_number', 'Insuarance Number', 'trim|required|xss_clean');
+				}
+				else if($payment_method == 5)
+				{
+					//  check for mpesa code if inserted
+					$this->form_validation->set_rules('mpesa_code', 'Amount', 'trim|required|xss_clean');
+				}
+			}
 		}
 		else if($type_payment == 2)
 		{
@@ -469,14 +466,13 @@ class Accounts extends MX_Controller
 				// check if the username and password is for an administrator
 				$checker_response = $this->accounts_model->check_admin_person($username,$password);
 				// end of checker function
-				if($checker_response == FALSE)
+				if(($checker_response > 0))
 				{
-					
-					$this->session->set_userdata("error_message","Seems like you dont have the priviledges to effect this event. Please contact your administrator.");
+					$this->accounts_model->receipt_payment($visit_id, $checker_response);
 				}
 				else
 				{
-					$this->accounts_model->receipt_payment($visit_id,$checker_response);
+					$this->session->set_userdata("error_message","Seems like you dont have the priviledges to effect this event. Please contact your administrator.");
 				}
 			}
 			else
@@ -489,7 +485,7 @@ class Accounts extends MX_Controller
 		}
 		else
 		{
-			$this->session->set_userdata("error_message","Fill in the fields");
+			$this->session->set_userdata("error_message", validation_errors());
 			redirect('accounts/payments/'.$visit_id.'/'.$close_page);
 		}
 	}

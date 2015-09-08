@@ -518,41 +518,62 @@ class Nurse_model extends CI_Model
 		return $result;
 	}
 
-	public function submit_lifestyle_values($patient_id){
-		$excercise= $this->input->post('excercise');
-		$excercise_duration= $this->input->post('excercise_duration');
-		$sleep=$this->input->post('sleep');
-		$meals=$this->input->post('meals');
-		$coffee=$this->input->post('coffee');
-		$housing=$this->input->post('housing');
-		$education_id=$this->input->post('education');
-		$drugs=$this->input->post('drugs');
-		$diet=$this->input->post('diet');
-		$alcohol_qty=$this->input->post('alcohol_qty');
-		$alcohol_percentage=$this->input->post('alcohol_percentage');
-		
-		$data = array(
-			'excersise_id'=>$excercise,
-			'excersise_duration_id'=>$excercise_duration,
-			'sleep_id'=>$sleep,
-			'meals_id'=>$meals,
-			'coffee_id'=>$coffee,
-			'housing_id'=>$housing,
-			'education_id'=>$education_id,
-			'lifestyle_diet'=>$diet,
-			'lifestyle_drugs'=>$drugs,
-			'lifestyle_alcohol_percentage'=>$alcohol_percentage,
-			'lifestyle_alcohol_quantity'=>$alcohol_qty,
-			'patient_id'=>$patient_id
-		);
-		
-		if($this->db->insert('lifestyle', $data))
+	public function submit_lifestyle_values($patient_id)
+	{
+		//delete previous entries
+		$this->db->where('patient_id', $patient_id);
+		if($this->db->delete('lifestyle'))
 		{
-			return $this->db->insert_id();
+			$excercise= $this->input->post('excercise');
+			$excercise_duration= $this->input->post('excercise_duration');
+			$sleep=$this->input->post('sleep');
+			$meals=$this->input->post('meals');
+			$coffee=$this->input->post('coffee');
+			$housing=$this->input->post('housing');
+			$education_id=$this->input->post('education');
+			$drugs=$this->input->post('drugs');
+			$diet=$this->input->post('diet');
+			$alcohol_qty=$this->input->post('alcohol_qty');
+			$alcohol_percentage=$this->input->post('alcohol_percentage');
+			
+			$data = array(
+				'excersise_id'=>$excercise,
+				'excersise_duration_id'=>$excercise_duration,
+				'sleep_id'=>$sleep,
+				'meals_id'=>$meals,
+				'coffee_id'=>$coffee,
+				'housing_id'=>$housing,
+				'education_id'=>$education_id,
+				'lifestyle_diet'=>$diet,
+				'lifestyle_drugs'=>$drugs,
+				'lifestyle_alcohol_percentage'=>$alcohol_percentage,
+				'lifestyle_alcohol_quantity'=>$alcohol_qty,
+				'patient_id'=>$patient_id
+			);
+			
+			if($this->db->insert('lifestyle', $data))
+			{
+				return $this->db->insert_id();
+			}
+			else
+			{
+				return FALSE;
+			}
 		}
-		else{
+		else
+		{
 			return FALSE;
 		}
+	}
+	
+	public function get_patient_lifestyle2($visit_id)
+	{
+		$where = 'visit.patient_id = lifestyle.patient_id AND visit.visit_id = '.$visit_id;
+		$this->db->select('lifestyle.*');
+		$this->db->where($where);
+		$query = $this->db->get('visit, lifestyle');
+		
+		return $query;
 	}
 
 	public function get_symptoms($visit_id){

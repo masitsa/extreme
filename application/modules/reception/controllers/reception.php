@@ -871,14 +871,14 @@ class Reception  extends MX_Controller
 		$visit_type_id = $this->input->post('visit_type_id');
 		$patient_number = $this->input->post('patient_number');
 		
-		if(!empty($visit_type_id))
-		{
-			$visit_type_id = ' AND patients.visit_type_id = '.$visit_type_id.' ';
-		}
-		
 		if(!empty($patient_number))
 		{
 			$patient_number = ' AND patients.patient_number LIKE '.$patient_number.' ';
+		}
+		
+		if(!empty($visit_type_id))
+		{
+			$visit_type_id = ' AND patients.visit_type_id = '.$visit_type_id.' ';
 		}
 		
 		//search surname
@@ -939,7 +939,7 @@ class Reception  extends MX_Controller
 			$other_name = '';
 		}
 		
-		$search = $visit_type_id.$strath_no.$surname.$other_name;
+		$search = $visit_type_id.$patient_number.$surname.$other_name;
 		$this->session->set_userdata('patient_search', $search);
 		
 		$this->patients();
@@ -948,18 +948,18 @@ class Reception  extends MX_Controller
 	public function search_visits($visits, $page_name = NULL)
 	{
 		$visit_type_id = $this->input->post('visit_type_id');
-		$strath_no = $this->input->post('strath_no');
 		$personnel_id = $this->input->post('personnel_id');
 		$visit_date = $this->input->post('visit_date');
+		$patient_number = $this->input->post('patient_number');
+		
+		if(!empty($patient_number))
+		{
+			$patient_number = ' AND patients.patient_number LIKE '.$patient_number.' ';
+		}
 		
 		if(!empty($visit_type_id))
 		{
 			$visit_type_id = ' AND visit.visit_type = '.$visit_type_id.' ';
-		}
-		
-		if(!empty($strath_no))
-		{
-			$strath_no = ' AND patients.strath_no LIKE '.$strath_no.' ';
 		}
 		
 		if(!empty($personnel_id))
@@ -1014,7 +1014,7 @@ class Reception  extends MX_Controller
 		}
 		$other_name .= ') ';
 		
-		$search = $visit_type_id.$strath_no.$surname.$other_name.$visit_date.$personnel_id;
+		$search = $visit_type_id.$patient_number.$surname.$other_name.$visit_date.$personnel_id;
 		$this->session->set_userdata('visit_search', $search);
 		
 		if($visits == 13)
@@ -2406,7 +2406,7 @@ class Reception  extends MX_Controller
 			$other_name = '';
 		}
 		
-		$search = $visit_type_id.$strath_no.$surname.$other_name;
+		$search = $visit_type_id.$patient_number.$surname.$other_name;
 		$this->session->set_userdata('general_queue_search', $search);
 		
 		$this->general_queue($page_name);

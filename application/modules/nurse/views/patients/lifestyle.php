@@ -1,4 +1,35 @@
 <?php
+$patient_lifestyle = $this->nurse_model->get_patient_lifestyle2($visit_id);
+
+$excersise_id = '';
+$excersise_duration_id = '';
+$sleep_id = '';
+$meals_id = '';
+$coffee_id = '';
+$housing_id = '';
+$education_id = '';
+$lifestyle_diet = '';
+$lifestyle_drugs = '';
+$lifestyle_alcohol_percentage = '';
+$ifestyle_alcohol_quantity = '';
+
+if($patient_lifestyle->num_rows() > 0)
+{
+	$row = $patient_lifestyle->row();
+	
+	$excersise_id = $row->excersise_id;
+	$excersise_duration_id = $row->excersise_duration_id;
+	$sleep_id = $row->sleep_id;
+	$meals_id = $row->meals_id;
+	$coffee_id = $row->coffee_id;
+	$housing_id = $row->housing_id;
+	$education_id = $row->education_id;
+	$lifestyle_diet = $row->lifestyle_diet;
+	$lifestyle_drugs = $row->lifestyle_drugs;
+	$lifestyle_alcohol_percentage = $row->lifestyle_alcohol_percentage;
+	$lifestyle_alcohol_quantity = $row->lifestyle_alcohol_quantity;
+}
+ 
 // get all exercises
  $exercise_rs = $this->nurse_model->get_exercices_values();
  // end of all exercises
@@ -45,10 +76,18 @@
 						if(count($exercise_rs) > 0){
 						 	foreach ($exercise_rs as $key ): 
 						 		# code...
-						 		 $exercise_id = $key->excersise_id;
-						 		 $exercise_name = $key->excersise_name;
-
-						 		echo "<option value='$exercise_id'>$exercise_name</option>";
+								 $exercise_id2 = $key->excersise_id;
+								 $exercise_name = $key->excersise_name;
+								 
+								 if($excersise_id == $exercise_id2)
+								 {
+									echo "<option value='$exercise_id2' selected='selected'>$exercise_name</option>";
+								 }
+								
+								else
+								{
+						 			echo "<option value='$exercise_id2'>$exercise_name</option>";
+								}
 
 						 	endforeach;
 						 }
@@ -68,10 +107,18 @@
 						if(count($exerciseduration_rs) > 0){
 						 	foreach ($exerciseduration_rs as $key2 ): 
 						 		# code...
-						 		 $exercise_duration_id = $key2->excersise_duration_id;
+						 		 $exercise_duration_id2 = $key2->excersise_duration_id;
 						 		 $exercise_duration_name = $key2->excersise_duration_name;
-
-						 		echo "<option value='$exercise_duration_id'>$exercise_duration_name</option>";
+								 
+								 if($excersise_duration_id == $exercise_duration_id2)
+								 {
+									echo "<option value='$exercise_duration_id2' selected='selected'>$exercise_duration_name</option>";
+								 }
+								
+								else
+								{
+						 			echo "<option value='$exercise_duration_id2'>$exercise_duration_name</option>";
+								}
 
 						 	endforeach;
 						 }
@@ -91,10 +138,18 @@
 						if(count($sleep_rs) > 0){
 						 	foreach ($sleep_rs as $key3 ): 
 						 		# code...
-						 		 $sleep_id = $key3->sleep_id;
+						 		 $sleep_id2 = $key3->sleep_id;
 						 		 $sleep_name = $key3->sleep_name;
-
-						 		echo "<option value='$sleep_id'>$sleep_name</option>";
+								 
+								 if($sleep_id2 == $sleep_id)
+								 {
+									echo "<option value='$sleep_id2' selected='selected'>$sleep_name</option>";
+								 }
+								
+								else
+								{
+						 			echo "<option value='$sleep_id2'>$sleep_name</option>";
+								}
 
 						 	endforeach;
 						 }
@@ -113,10 +168,18 @@
 						if(count($meal_rs) > 0){
 						 	foreach ($meal_rs as $key4 ): 
 						 		# code...
-						 		 $meals_id = $key4->meals_id;
+						 		 $meals_id2 = $key4->meals_id;
 						 		 $meals_name = $key4->meals_name;
-
-						 		echo "<option value='$meals_id'>$meals_name</option>";
+								 
+								 if($meals_id == $meals_id2)
+								 {
+									echo "<option value='$meals_id2' selected='selected'>$meals_name</option>";
+								 }
+								
+								else
+								{
+						 			echo "<option value='$meals_id2'>$meals_name</option>";
+								}
 
 						 	endforeach;
 						 }
@@ -135,10 +198,18 @@
 						if(count($coffee_rs) > 0){
 						 	foreach ($coffee_rs as $key5 ): 
 						 		# code...
-						 		 $coffee_id = $key5->coffee_id;
+						 		 $coffee_id2 = $key5->coffee_id;
 						 		 $coffee_name = $key5->coffee_name;
-
-						 		echo "<option value='$coffee_id'>$coffee_name</option>";
+								 
+								 if($coffee_id == $coffee_id2)
+								 {
+									echo "<option value='$coffee_id2' selected='selected'>$coffee_name</option>";
+								 }
+								
+								else
+								{
+						 			echo "<option value='$coffee_id2'>$coffee_name</option>";
+								}
 
 						 	endforeach;
 						 }
@@ -157,10 +228,18 @@
 						if(count($housing_rs) > 0){
 						 	foreach ($housing_rs as $key6 ): 
 						 		# code...
-						 		 $housing_id = $key6->housing_id;
+						 		 $housing_id2 = $key6->housing_id;
 						 		 $housing_name = $key6->housing_name;
-
-						 		echo "<option value='$housing_id'>$housing_name</option>";
+								 
+								 if($housing_id == $housing_id2)
+								 {
+									echo "<option value='$housing_id2' selected='selected'>$housing_name</option>";
+								 }
+								
+								else
+								{
+						 			echo "<option value='$housing_id2'>$housing_name</option>";
+								}
 
 						 	endforeach;
 						 }
@@ -179,10 +258,18 @@
 						if(count($education_rs) > 0){
 						 	foreach ($education_rs as $key7 ): 
 						 		# code...
-						 		 $education_id = $key7->education_id;
+						 		 $education_id2 = $key7->education_id;
 						 		 $education_name = $key7->education_name;
-
-						 		echo "<option value='$education_id'>$education_name</option>";
+								 
+								 if($education_id2 == $education_id)
+								 {
+									echo "<option value='$education_id2' selected='selected'>$education_name</option>";
+								 }
+								
+								else
+								{
+						 			echo "<option value='$education_id2'>$education_name</option>";
+								}
 
 						 	endforeach;
 						 }
@@ -200,21 +287,21 @@
             <label class="col-lg-4 control-label">Diet: </label>
             
             <div class="col-lg-8">
-            	<textarea class="form-control" name="diet" placeholder="diet"></textarea>
+            	<textarea class="form-control" name="diet" placeholder="diet"><?php echo $lifestyle_diet;?></textarea>
             </div>
         </div>
         <div class="form-group row">
             <label class="col-lg-4 control-label">Drugs: </label>
             
             <div class="col-lg-8">
-            	<textarea class="form-control" name="drugs" placeholder="drugs"></textarea>
+            	<textarea class="form-control" name="drugs" placeholder="drugs"><?php echo $lifestyle_drugs;?></textarea>
             </div>
         </div>
         <div class="form-group row">
             <label class="col-lg-4 control-label">Alcohol %: </label>
             
             <div class="col-lg-8">
-            	<input type="text" class="form-control" name="alcohol_percentage" placeholder="Address">
+            	<input type="text" class="form-control" name="alcohol_percentage" placeholder="Alcohol %" value="<?php echo $lifestyle_alcohol_percentage;?>">
             </div>
         </div>
         
@@ -223,7 +310,7 @@
             
             <div class="col-lg-8">
 
-            	<input type="text" class="form-control" name="alcohol_qty" placeholder="Address">
+            	<input type="text" class="form-control" name="alcohol_qty" placeholder="Alcohol Qty" value="<?php echo $lifestyle_alcohol_quantity;?>">
             </div>
         </div>
        

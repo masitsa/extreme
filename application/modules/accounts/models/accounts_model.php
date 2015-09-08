@@ -45,12 +45,29 @@ class Accounts_model extends CI_Model
             
             foreach ($item_invoiced_rs as $key_items):
               $s++;
+			  $visit_total = 0;
+			  $service_id = $key_items->service_id;
+			  $service_charge_id = $key_items->service_charge_id;
               $service_charge_name = $key_items->service_charge_name;
               $visit_charge_amount = $key_items->visit_charge_amount;
               $service_name = $key_items->service_name;
               $units = $key_items->visit_charge_units;
+			  
+			  //If pharmacy
+			  	if($service_id == 4)
+				{
+					if($this->accounts_model->in_pres($service_charge_id, $visit_id))
+					{
+						$visit_total = $visit_charge_amount * $units;
+					}
+				}
+				
+				else
+				{
+					$visit_total = $visit_charge_amount * $units;
+				}
 
-              $visit_total = $visit_charge_amount * $units;
+             // $visit_total = $visit_charge_amount * $units;
 
               $total = $total + $visit_total;
             endforeach;
@@ -61,8 +78,6 @@ class Accounts_model extends CI_Model
           	$total_amount = 0;
           }
           $total_amount = ($total + $debit_note_amount) - $credit_note_amount;
-
-          
 
           return $total_amount;
 	}
@@ -246,9 +261,9 @@ class Accounts_model extends CI_Model
 
 	public function get_patient_visit_charge_items($visit_id)
 	{
-		$table = "visit_charge, service_charge,service";
+		$table = "visit_charge, service_charge, service";
 		$where = "service_charge.service_id = service.service_id AND visit_charge.visit_charge_delete = 0 AND visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_id =". $visit_id;
-		$items = "service.service_id,service.service_name,service_charge.service_charge_name,visit_charge.service_charge_id,visit_charge.visit_charge_units, visit_charge.visit_charge_amount, service_charge.service_id,visit_charge.visit_charge_timestamp,visit_charge.visit_charge_id,visit_charge.created_by";
+		$items = "service.service_id,service.service_name,service_charge.service_charge_name,visit_charge.service_charge_id,visit_charge.visit_charge_units, visit_charge.visit_charge_amount, visit_charge.visit_charge_timestamp,visit_charge.visit_charge_id,visit_charge.created_by";
 		$order = "visit_charge.service_charge_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
@@ -314,7 +329,7 @@ class Accounts_model extends CI_Model
 
 
 	public function payments($visit_id){
-		$table = "payments,payment_method";
+		$table = "payments, payment_method";
 		$where = "payment_method.payment_method_id = payments.payment_method_id AND payments.visit_id =". $visit_id;
 		$items = "*";
 		$order = "payments.payment_id";
@@ -866,5 +881,37 @@ class Accounts_model extends CI_Model
 			$service_name = "";
 		}
 		return  $service_name;
+	}
+	public function get_all_notes($visit_id)
+	{
+		$table = "payments, service";
+		$where = "payments.payment_service_id = service.service_id AND (payments.payment_type = 2 OR payments.payment_type = 3) AND payments.visit_id = ". $visit_id;
+		
+		$this->db->select('service.service_name, payments.payment_service_id, payments.amount_paid, payments.payment_type');
+		$this->db->where($where);
+		$query = $this->db->get($table);
+		
+		return $query;
+	}
+	
+	public function in_pres($service_charge_id, $visit_id)
+	{
+		$table = "pres, visit_charge";
+		//$where = "pres.service_charge_id = visit_charge.service_charge_id AND pres.service_charge_id = ". $service_charge_id." AND pres.visit_id = ". $visit_id." AND visit_charge.visit_id = ". $visit_id;
+		$where = "pres.service_charge_id = visit_charge.service_charge_id AND pres.visit_id = visit_charge.visit_id AND pres.service_charge_id = ". $service_charge_id." AND pres.visit_id = ". $visit_id." AND visit_charge.visit_id = ". $visit_id;
+		
+		$this->db->select('*');
+		$this->db->where($where);
+		$query = $this->db->get($table);
+		
+		if($query->num_rows() > 0)
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
 	}
 }

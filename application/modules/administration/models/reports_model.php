@@ -458,8 +458,6 @@ class Reports_model extends CI_Model
 			$report[$row_count][2] = 'Patient';
 			$report[$row_count][3] = 'Category';
 			$report[$row_count][4] = 'Doctor';
-			$report[$row_count][5] = 'School/faculty/department';
-			$report[$row_count][6] = 'Staff/Student/ID No.';
 			$current_column = 7 ;
 			
 			
@@ -477,8 +475,6 @@ class Reports_model extends CI_Model
 			$current_column++;
 			$report[$row_count][$current_column] = 'Invoice Total';
 			$current_column++;
-
-			
 			
 			//get & display all services
 			$payment_method_query = $this->get_all_active_payment_method();
@@ -649,11 +645,7 @@ class Reports_model extends CI_Model
 					$report[$row_count][2] = $patient_surname.' '.$patient_othernames;
 					$report[$row_count][3] = $visit_type;
 					$report[$row_count][4] = $doctor;
-					$report[$row_count][5] = $faculty;
-					$report[$row_count][6] = $strath_no;
 					$current_column= 7;
-					
-					
 
 					//display services charged to patient
 					foreach($services_query->result() as $service)

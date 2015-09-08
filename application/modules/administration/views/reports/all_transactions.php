@@ -6,21 +6,17 @@
 <div class="row">
     <div class="col-md-12">
 
-      <!-- Widget -->
-      <div class="widget boxed">
-        <!-- Widget head -->
-        <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-          </div>
-          <div class="clearfix"></div>
-        </div>             
+ <section class="panel">
+    <header class="panel-heading">
+                <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
+                <div class="widget-icons pull-right">
+                  <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                </div>
+                <div class="clearfix"></div>
+              </header>             
 
-        <!-- Widget content -->
-        <div class="widget-content">
-          <div class="padd">
+          <!-- Widget content -->
+                <div class="panel-body">
           <h5 class="center-align"><?php echo $this->session->userdata('search_title');?></h5>
 <?php
 		$result = '<a href="'.site_url().'administration/reports/export_transactions" class="btn btn-success pull-right">Export</a>';
@@ -44,16 +40,9 @@
 						  <th>Patient</th>
 						  <th>Category</th>
 						  <th>Doctor</th>
-						  <th>School/ Faculty/ Department</th>
-						  <th>Staff/ Student/ID No.</th>
 						  <th>Cash</th>
 						  
 				';
-				
-			foreach($services_query->result() as $service)
-			{
-				//$result .= '<th>'.$service->service_name.'</th>';
-			}
 				
 			$result .= '
 			
@@ -170,10 +159,8 @@
 								<td>'.$patient_surname.' '.$patient_othernames.'</td>
 								<td>'.$visit_type.'</td>
 								<td>'.$doctor.'</td>
-								<td>'.$faculty.'</td>
-								<td>'.$strath_no.'</td>
 								<td>'.$payments_value.'</td>
-						'.$charges;
+								'.$charges;
 						
 					$result .= '
 								<td>'.$invoice_total.'</td>
@@ -193,8 +180,6 @@
 								<td>'.$patient_surname.' '.$patient_othernames.'</td>
 								<td>'.$visit_type.'</td>
 								<td>'.$doctor.'</td>
-								<td>'.$faculty.'</td>
-								<td>'.$strath_no.'</td>
 								<td>'.$payments_value.'</td>
 						'.$charges;
 						
@@ -229,9 +214,7 @@
                 <div class="clearfix"></div> 
             
             </div>
-        </div>
-        <!-- Widget ends -->
-
-      </div>
+        
+		</section>
     </div>
   </div>

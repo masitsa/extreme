@@ -1386,16 +1386,16 @@ class Nurse  extends MX_Controller
 	public function search_visit_patients($module = NULL)
 	{
 		$visit_type_id = $this->input->post('visit_type_id');
-		$strath_no = $this->input->post('strath_no');
+		$patient_number = $this->input->post('patient_number');
+		
+		if(!empty($patient_number))
+		{
+			$patient_number = ' AND patients.patient_number LIKE '.$patient_number.' ';
+		}
 		
 		if(!empty($visit_type_id))
 		{
 			$visit_type_id = ' AND patients.visit_type_id = '.$visit_type_id.' ';
-		}
-		
-		if(!empty($strath_no))
-		{
-			$strath_no = ' AND patients.strath_no LIKE '.$strath_no.' ';
 		}
 		
 		//search surname
@@ -1879,16 +1879,16 @@ class Nurse  extends MX_Controller
 	public function search_patient_treatment_statement($module)
 	{
 		$visit_type_id = $this->input->post('visit_type_id');
-		$strath_no = $this->input->post('strath_no');
+		$patient_number = $this->input->post('patient_number');
+		
+		if(!empty($patient_number))
+		{
+			$patient_number = ' AND patients.patient_number LIKE '.$patient_number.' ';
+		}
 		
 		if(!empty($visit_type_id))
 		{
 			$visit_type_id = ' AND patients.visit_type_id = '.$visit_type_id.' ';
-		}
-		
-		if(!empty($strath_no))
-		{
-			$strath_no = ' AND patients.strath_no  LIKE \'%'.$strath_no.'%\' ';
 		}
 		
 		//search surname

@@ -1,8 +1,16 @@
 <div class="row statistics">
     <div class="col-md-2 col-sm-12">
-        <ul class="today-datas">
-            <!-- List #1 -->
-            <li class="overall-datas">
+    	 <section class="panel">
+            <header class="panel-heading">
+                <h4 class="pull-left"><i class="icon-reorder"></i>Search <?php echo $title;?></h4>
+                <div class="widget-icons pull-right">
+                  <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                </div>
+                <div class="clearfix"></div>
+              </header>             
+        
+              <!-- Widget content -->
+              <div class="panel-body">
                 <h5>Visit Breakdown</h5>
                 <table class="table table-striped table-hover table-condensed">
                 	<thead>
@@ -13,19 +21,11 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th>Staff</th>
-                            <td><?php echo $staff;?></td>
-                        </tr>
-                        <tr>
-                            <th>Students</th>
-                            <td><?php echo $students;?></td>
-                        </tr>
-                        <tr>
                             <th>Insurance</th>
                             <td><?php echo $insurance;?></td>
                         </tr>
                         <tr>
-                            <th>Other</th>
+                            <th>Normal</th>
                             <td><?php echo $other;?></td>
                         </tr>
                     </tbody>
@@ -36,13 +36,22 @@
                 </div>
                 
                 <div class="clearfix"></div>
-            </li>
-        </ul>
+          	</div>
+		</section>
     </div>
     
     <div class="col-md-10 col-sm-12">
-        <ul class="today-datas">
-            <li class="overall-datas">
+    	 <section class="panel">
+            <header class="panel-heading">
+                <h4 class="pull-left"><i class="icon-reorder"></i>Search <?php echo $title;?></h4>
+                <div class="widget-icons pull-right">
+                  <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                </div>
+                <div class="clearfix"></div>
+              </header>             
+        
+              <!-- Widget content -->
+              <div class="panel-body">
                 <div class="row">
                     <div class="col-md-3">
 						<?php
@@ -139,24 +148,16 @@
                         <table class="table table-striped table-hover table-condensed">
                             <tbody>
                                 <tr>
-                                    <th>Student Debt</th>
-                                    <td><?php echo number_format($total_students_debt, 2);?></td>
-                                </tr>
-                                <tr>
-                                    <th>Staff Debt</th>
-                                    <td><?php echo number_format(($total_staff_debt), 2);?></td>
-                                </tr>
-                                <tr>
                                     <th>Insurance Debt</th>
                                     <td><?php echo number_format(($total_insurance_debt), 2);?></td>
                                 </tr>
                                 <tr>
-                                    <th>Other Debt</th>
+                                    <th>Normal Debt</th>
                                     <td><?php echo number_format(($total_other_debt - $total_cash_collection), 2);?></td>
                                 </tr>
                                 <tr>
                                     <th>Total</th>
-                                    <td><?php echo number_format((($total_other_debt - $total_cash_collection) + $total_insurance_debt + $total_staff_debt + $total_students_debt), 2);?></td>
+                                    <td><?php echo number_format((($total_other_debt - $total_cash_collection) + $total_insurance_debt), 2);?></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -173,7 +174,7 @@
                         </div>
                     </div>
                 </div>
-            </li>
-        </ul>
+          	</div>
+		</section>
     </div>
 </div>
