@@ -11,7 +11,7 @@ $education_id = '';
 $lifestyle_diet = '';
 $lifestyle_drugs = '';
 $lifestyle_alcohol_percentage = '';
-$ifestyle_alcohol_quantity = '';
+$lifestyle_alcohol_quantity = '';
 
 if($patient_lifestyle->num_rows() > 0)
 {
@@ -60,8 +60,6 @@ if($patient_lifestyle->num_rows() > 0)
  // end of rs duration 
 
 
-  
- 
 ?>
 <?php echo form_open("nurse/save_lifestyle/".$visit_id, array("class"=>"form-horizontal"));?>
 <div class="row">

@@ -3,30 +3,25 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="pull-right">
-		 <a href="<?php echo site_url()?>/administration/services" class="btn btn-sm btn-primary"> Back to services </a>
-		 <a href="<?php echo site_url()?>/administration/add_service_charge/<?php echo $service_id;?>" class="btn btn-sm btn-success"> Add service Charge </a>
+		 <a href="<?php echo site_url()?>administration/services" class="btn btn-sm btn-primary"> Back to services </a>
+		 <a href="<?php echo site_url()?>administration/add_service_charge/<?php echo $service_id;?>" class="btn btn-sm btn-success"> Add service Charge </a>
 		</div>
 	</div>
 </div>
 <div class="row">
     <div class="col-md-12">
 
-      <!-- Widget -->
-      <div class="widget boxed">
-        <!-- Widget head -->
-        <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> for <?php echo $service_name;?></h4>
-          <div class="widget-icons pull-right">
-         
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-          </div>
-          <div class="clearfix"></div>
-        </div>             
+ <section class="panel">
+    <header class="panel-heading">
+                <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> for <?php echo $service_name;?></h4>
+                <div class="widget-icons pull-right">
+                  <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                </div>
+                <div class="clearfix"></div>
+              </header>             
 
-        <!-- Widget content -->
-        <div class="widget-content">
-          <div class="padd">
+          <!-- Widget content -->
+                <div class="panel-body">
           
 <?php
 		$error = $this->session->userdata('service_charge_error_message');
@@ -51,7 +46,7 @@
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/administration/close_service_charge_search" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'administration/close_service_charge_search" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
 		
@@ -91,8 +86,8 @@
 							<td>'.$visit_type_name.'</td>
 							<td>'.$service_charge_name.'</td>
 							<td>'.$service_charge_amount.'</td>
-							<td><a href="'.site_url().'/administration/edit_service_charge/'.$service_id.'/'.$service_charge_id.'" class="btn btn-sm btn-info"> Edit </a></td>
-							<td><a href="'.site_url().'/administration/delete_service_charge/'.$service_id.'/'.$service_charge_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this charge?\'"> Delete </a></td>
+							<td><a href="'.site_url().'administration/edit_service_charge/'.$service_id.'/'.$service_charge_id.'" class="btn btn-sm btn-info"> Edit </a></td>
+							<td><a href="'.site_url().'administration/delete_service_charge/'.$service_id.'/'.$service_charge_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this charge?\'"> Delete </a></td>
 						</tr> 
 					';
 			}
@@ -120,9 +115,8 @@
                 <div class="clearfix"></div> 
             
             </div>
+        
+		</section>
         </div>
-        <!-- Widget ends -->
-
-      </div>
-    </div>
-  </div>
+        </div>
+        

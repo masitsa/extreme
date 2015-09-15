@@ -2,7 +2,7 @@
  <div class="row">
 	<div class="col-md-12">
 		<div class="pull-right">
-		 <a href="<?php echo site_url()?>/administration/new_service" class="btn btn-sm btn-success">Add a New Service </a>
+		 <a href="<?php echo site_url()?>administration/new_service" class="btn btn-sm btn-success">Add a New Service </a>
 
 		</div>
 	</div>
@@ -10,21 +10,18 @@
 <div class="row">
     <div class="col-md-12">
 
-      <!-- Widget -->
-      <div class="widget boxed">
-        <!-- Widget head -->
-        <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> </h4>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-          </div>
-          <div class="clearfix"></div>
-        </div>             
+      
+ <section class="panel">
+    <header class="panel-heading">
+                <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
+                <div class="widget-icons pull-right">
+                  <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                </div>
+                <div class="clearfix"></div>
+              </header>             
 
-        <!-- Widget content -->
-        <div class="widget-content">
-          <div class="padd">
+          <!-- Widget content -->
+                <div class="panel-body">
           
 <?php
 		$error = $this->session->userdata('service_error_message');
@@ -49,7 +46,7 @@
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
 		
@@ -83,9 +80,9 @@
 						<tr>
 							<td>'.$count.'</td>
 							<td>'.$service_name.'</td>
-							<td><a href="'.site_url().'/administration/service_charges/'.$service_id.'" class="btn btn-sm btn-success">Service Charges</a></td>
-							<td><a href="'.site_url().'/administration/edit_service/'.$service_id.'" class="btn btn-sm btn-info"> Edit </a></td>
-							<td><a href="'.site_url().'/administration/delete_service/'.$service_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this service?\'"> Delete </a></td>
+							<td><a href="'.site_url().'administration/service_charges/'.$service_id.'" class="btn btn-sm btn-success">Service Charges</a></td>
+							<td><a href="'.site_url().'administration/edit_service/'.$service_id.'" class="btn btn-sm btn-info"> Edit </a></td>
+							<td><a href="'.site_url().'administration/delete_service/'.$service_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this service?\'"> Delete </a></td>
 						</tr> 
 					';
 			}
@@ -113,9 +110,8 @@
                 <div class="clearfix"></div> 
             
             </div>
+        
+		</section>
         </div>
-        <!-- Widget ends -->
-
-      </div>
-    </div>
-  </div>
+        </div>
+        

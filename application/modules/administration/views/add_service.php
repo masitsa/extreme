@@ -1,31 +1,27 @@
-<div class="row">
+<div class="row" style="margin-top:10px;">
 	<div class="col-md-12">
 		<div class="pull-right">
-		 <a href="<?php echo site_url()?>/administration/services" class="btn btn-sm btn-primary"> Back to Service List </a>
+		 <a href="<?php echo site_url()?>administration/services" class="btn btn-sm btn-primary"> Back to Service List </a>
 
 		</div>
 	</div>
 </div>
 <div class="row">
     <div class="col-md-12">
+   
+ <section class="panel">
+    <header class="panel-heading">
+                <h4 class="pull-left"><i class="icon-reorder"></i>Search <?php echo $title;?></h4>
+                <div class="widget-icons pull-right">
+                  <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                </div>
+                <div class="clearfix"></div>
+              </header>             
 
-      <!-- Widget -->
-      <div class="widget boxed">
-        <!-- Widget head -->
-        <div class="widget-head">
-
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> </h4>
-          <div class="widget-icons pull-right">
-         
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-          </div>
-          <div class="clearfix"></div>
-        </div>             
-
-        <!-- Widget content -->
-        <div class="widget-content">
-          <div class="padd">
+          <!-- Widget content -->
+                <div class="panel-body">
+          
+			
             <div class="center-align">
               <?php
                 $error = $this->session->userdata('error_message');
@@ -91,14 +87,14 @@
                 </div>
 
                 <div class="center-align">
-                  <button type="submit" class="btn btn-info btn-lg">Add New Service</button>
+                  <button type="submit" class="btn btn-info">Add New Service</button>
                 </div>
             	<?php echo form_close();
             }
             ?>
             
-          </div>
-        </div>
-      </div>
+            </div>
+        
+		</section>
   </div>
 </div>
