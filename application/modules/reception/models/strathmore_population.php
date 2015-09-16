@@ -294,36 +294,7 @@ class Strathmore_population extends CI_Model
 		}
 	}
 	
-	public function create_patient_number()
-	{
-		//select product code
-		$this->db->from('patients');
-		$this->db->select('MAX(patient_number) AS number');
-		$query = $this->db->get();
-
-		if($query->num_rows() > 0)
-		{
-			$result = $query->result();
-			$number =  $result[0]->number;
-			$number++;//go to the next number
-
-			if($number == 1){
-				$number = "SUMC/000001";
-			}
-
-			
-			if($number == 1)
-			{
-				$number = "SUMC/000001";
-			}
-			
-		}
-		else{//start generating receipt numbers
-			$number = "SUMC/000001";
-		}
-
-		return $number;
-	}
+	
 	
 	public function update_patient_numbers()
 	{

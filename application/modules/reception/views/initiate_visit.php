@@ -24,7 +24,7 @@
 							echo '<div class="alert alert-danger center-align">'.$validation_error.'</div>';
 						}
 						?>
-						<?php echo form_open("reception/save_visit/".$patient_id, array("class" => "form-horizontal"));?>
+						<?php echo form_open("reception/save_visit/".$patient_number, array("class" => "form-horizontal"));?>
 						<div class="row">
 							<div class="col-md-6">
 							 <div class="widget boxed">

@@ -26,7 +26,7 @@ class Reception  extends MX_Controller
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit.visit_delete = 0 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0 AND visit.patient_number = patients.patient_number AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$table = 'visit, patients';
 		$query = $this->reception_model->get_all_ongoing_visits2($table, $where, 10, 0);
 		$v_data['query'] = $query;
@@ -154,7 +154,7 @@ class Reception  extends MX_Controller
 		// this is it
 		if($visits != 2)
 		{
-			$where = 'visit.visit_delete = '.$delete.' AND visit.patient_id = patients.patient_id';
+			$where = 'visit.visit_delete = '.$delete.' AND visit.patient_number = patients.patient_number';
 			//terminated visits
 			if($visits == 1)
 			{
@@ -196,7 +196,7 @@ class Reception  extends MX_Controller
 		
 		else
 		{
-			$where = 'visit.visit_delete = '.$delete.' AND visit.patient_id = patients.patient_id';
+			$where = 'visit.visit_delete = '.$delete.' AND visit.patient_number = patients.patient_number';
 		}
 		$visit_search = $this->session->userdata('visit_search');
 		
@@ -320,7 +320,7 @@ class Reception  extends MX_Controller
 	{
 		$segment = 4;
 		
-			$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+			$where = 'visit.visit_delete = 0 AND visit_department.visit_number = visit.visit_number AND visit_department.visit_department_status = 1 AND visit.patient_number = patients.patient_number AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
 
 		
 		$table = 'visit_department, visit, patients';
@@ -502,11 +502,11 @@ class Reception  extends MX_Controller
 		
 		else
 		{
-			$patient_id = $this->reception_model->save_other_patient();
-			//echo $patient_id; die();
-			if($patient_id != FALSE)
+			$patient_number = $this->reception_model->save_other_patient();
+			//echo $patient_number; die();
+			if($patient_number != FALSE)
 			{
-				$this->get_found_patients($patient_id,3);
+				$this->get_found_patients($patient_number,3);
 			}
 			
 			else
@@ -517,10 +517,10 @@ class Reception  extends MX_Controller
 		}
 	}
 	
-	public function get_found_patients($patient_id,$place_id)
+	public function get_found_patients($patient_number,$place_id)
 	{
 		//  1 for students 2 for staff 3 for others 4 for dependants
-		$this->session->set_userdata('patient_search', ' AND patients.patient_id = '.$patient_id);
+		$this->session->set_userdata('patient_search', ' AND patients.patient_number = '.$patient_number.'');
 	
 		redirect('reception/patients-list');
 		
@@ -545,18 +545,20 @@ class Reception  extends MX_Controller
 				{
 					$result_patient = $query_staff->row();
 					$patient_id = $result_patient->patient_id;
+					$patient_number = $result_patient->patient_number;
+					$patient_number = $result_patient->patient_number;
 				}
 				
 				//create patient if not found in patients' table
 				else
 				{
-					$patient_id = $this->reception_model->insert_into_patients($this->input->post('staff_number'),2);
+					$patient_number = $this->reception_model->insert_into_patients($this->input->post('staff_number'),2);
 					
 				}
-				// $this->get_found_patients($patient_id,2);
-				if(!empty($patient_id))
+				// $this->get_found_patients($patient_number,2);
+				if(!empty($patient_number))
 				{
-					$staff_search = ' AND patients.patient_id = '.$patient_id;
+					$staff_search = ' AND patients.patient_number = '.$patient_number.'';
 				}
 				else
 				{
@@ -574,12 +576,12 @@ class Reception  extends MX_Controller
 			{
 				if($this->strathmore_population->get_hr_staff($this->input->post('staff_number')))
 				{
-					$patient_id = $this->reception_model->insert_into_patients($this->input->post('staff_number'),2);
-					if($patient_id != FALSE){
-						// $this->get_found_patients($patient_id,2);
-						if(!empty($patient_id))
+					$patient_number = $this->reception_model->insert_into_patients($this->input->post('staff_number'),2);
+					if($patient_number != FALSE){
+						// $this->get_found_patients($patient_number,2);
+						if(!empty($patient_number))
 						{
-							$staff_search = ' AND patients.patient_id = '.$patient_id;
+							$staff_search = ' AND patients.patient_number = '.$patient_number.'';
 						}
 						else
 						{
@@ -634,20 +636,22 @@ class Reception  extends MX_Controller
 				{
 					$result_patient = $query_staff->row();
 					$patient_id = $result_patient->patient_id;
+					$patient_number = $result_patient->patient_number;
+					$patient_number = $result_patient->patient_number;
 				}
 				else
 				{
-					$patient_id = $this->reception_model->insert_into_patients($this->input->post('student_number'),1);	
+					$patient_number = $this->reception_model->insert_into_patients($this->input->post('student_number'),1);	
 				}
-				//$this->set_visit($patient_id);
-				// $search = ' AND patients.patient_id = '.$patient_id;
+				//$this->set_visit($patient_number);
+				// $search = ' AND patients.patient_number = '.$patient_number;
 				// $this->session->set_userdata('patient_search', $search);
-				// $this->get_found_patients($patient_id,1);
+				// $this->get_found_patients($patient_number,1);
 
 				
-				if(!empty($patient_id))
+				if(!empty($patient_number))
 				{
-					$student_search = ' AND patients.patient_id = '.$patient_id;
+					$student_search = ' AND patients.patient_number = '.$patient_number.'';
 				}
 				else
 				{
@@ -663,12 +667,12 @@ class Reception  extends MX_Controller
 			
 			else
 			{
-				$patient_id = $this->strathmore_population->get_ams_student($this->input->post('student_number'));
-				if($patient_id != FALSE){
-					// $this->set_visit($patient_id);
-					if(!empty($patient_id))
+				$patient_numebr = $this->strathmore_population->get_ams_student($this->input->post('student_number'));
+				if($patient_number != FALSE){
+					// $this->set_visit($patient_number);
+					if(!empty($patient_number))
 					{
-						$student_search = ' AND patients.patient_id = '.$patient_id;
+						$student_search = ' AND patients.patient_number = '.$patient_number.'';
 					}
 					else
 					{
@@ -702,7 +706,7 @@ class Reception  extends MX_Controller
 	*/
 	public function set_visit($primary_key)
 	{
-		$v_data["patient_id"] = $primary_key;
+		$v_data["patient_number"] = $primary_key;
 		$v_data['visit_departments'] = $this->reception_model->get_visit_departments();
 		$v_data['charge'] = $this->reception_model->get_service_charges($primary_key);
 		$v_data['doctor'] = $this->reception_model->get_doctor();
@@ -725,7 +729,7 @@ class Reception  extends MX_Controller
 		$this->load->view('admin/templates/general_page', $data);	
 	}
 	
-	public function save_visit($patient_id)
+	public function save_visit($patient_number)
 	{
 		$this->form_validation->set_rules('visit_date', 'Visit Date', 'required');
 		$this->form_validation->set_rules('department_id', 'Department', 'required|is_natural_no_zero');
@@ -771,7 +775,7 @@ class Reception  extends MX_Controller
 		
 		if ($this->form_validation->run() == FALSE)
 		{
-			$this->set_visit($patient_id);
+			$this->set_visit($patient_number);
 		}
 		else
 		{
@@ -796,7 +800,7 @@ class Reception  extends MX_Controller
 				$close_card=2;		
 			}
 			//  check if the student exisit for that day and the close card 0;
-			$check_visits = $this->reception_model->check_patient_exist($patient_id,$visit_date);
+			$check_visits = $this->reception_model->check_patient_exist($patient_number,$visit_date);
 			$check_count = count($check_visits);
 
 			if($check_count > 0)
@@ -808,7 +812,7 @@ class Reception  extends MX_Controller
 			{
 				
 					//create visit
-					$visit_id = $this->reception_model->create_visit($visit_date, $patient_id, $doctor_id, $patient_insurance_id, $patient_insurance_number, $patient_type, $timepicker_start, $timepicker_end, $appointment_id, $close_card);
+					$visit_number = $this->reception_model->create_visit($visit_date, $patient_number, $doctor_id, $patient_insurance_id, $patient_insurance_number, $patient_type, $timepicker_start, $timepicker_end, $appointment_id, $close_card);
 				
 				
 				
@@ -816,7 +820,7 @@ class Reception  extends MX_Controller
 				if($_POST['department_id'] == 7 || $_POST['department_id'] == 12)
 				{
 					
-					 $this->reception_model->save_visit_consultation_charge($visit_id, $service_charge_id);	
+					 $this->reception_model->save_visit_consultation_charge($visit_number, $service_charge_id);	
 					
 				}
 				
@@ -824,10 +828,10 @@ class Reception  extends MX_Controller
 				if($appointment_id == 0)
 				{
 					//update patient last visit
-					$this->reception_model->set_last_visit_date($patient_id, $visit_date);
+					$this->reception_model->set_last_visit_date($patient_number, $visit_date);
 					
 					$department_id = $this->input->post('department_id');
-					if($this->reception_model->set_visit_department($visit_id, $department_id))
+					if($this->reception_model->set_visit_department($visit_number, $department_id))
 					{
 						$this->session->set_userdata('success_message', 'Visit has been initiated');
 					}
@@ -868,7 +872,7 @@ class Reception  extends MX_Controller
 		
 		if(!empty($patient_number))
 		{
-			$patient_number = ' AND patients.patient_number LIKE '.$patient_number.' ';
+			$patient_number = ' AND patients.patient_number LIKE "'.$patient_number.'" ';
 		}
 		
 		if(!empty($patient_national_id))
@@ -949,7 +953,7 @@ class Reception  extends MX_Controller
 		
 		if(!empty($patient_number))
 		{
-			$patient_number = ' AND patients.patient_number LIKE '.$patient_number.' ';
+			$patient_number = ' AND patients.patient_number LIKE "'.$patient_number.'" ';
 		}
 		
 		if(!empty($visit_type_id))
@@ -1059,7 +1063,7 @@ class Reception  extends MX_Controller
 			$patient_insurance_id = $this->input->post("patient_insurance_id");
 			$insert = array(
 				"close_card" => 0,
-				"patient_id" => $primary_key,
+				"patient_number" => $primary_key,
 				"visit_type" => $visit_type_id,
 				"patient_insurance_id" => $patient_insurance_id,
 				"patient_insurance_number" => $patient_insurance_number,
@@ -1073,7 +1077,7 @@ class Reception  extends MX_Controller
 		}
 	}
 	
-	public function save_initiate_pharmacy($patient_id)
+	public function save_initiate_pharmacy($patient_number)
 	{
 		$this->form_validation->set_rules('patient_type', 'Patient Type', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('insurance_id', 'Insurance Company', 'trim|xss_clean');
@@ -1093,7 +1097,7 @@ class Reception  extends MX_Controller
 			$patient_insurance_id = $this->input->post("patient_insurance_id");
 				$insert = array(
 					"close_card" => 0,
-					"patient_id" => $patient_id,
+					"patient_number" => $patient_number,
 					"visit_type" => $visit_type_id,
 					"patient_insurance_id" => $patient_insurance_id,
 					"patient_insurance_number" => $patient_insurance_number,
@@ -1156,11 +1160,11 @@ class Reception  extends MX_Controller
 	}
 	
 	
-	public function dependants($patient_id)
+	public function dependants($patient_number)
 	{
-		$v_data['dependants_query'] = $this->reception_model->get_all_patient_dependant($patient_id);
-		$v_data['patient_query'] = $this->reception_model->get_patient_data($patient_id);
-		$v_data['patient_id'] = $patient_id;
+		$v_data['dependants_query'] = $this->reception_model->get_all_patient_dependant($patient_number);
+		$v_data['patient_query'] = $this->reception_model->get_patient_data($patient_number);
+		$v_data['patient_number'] = $patient_number;
 		$v_data['relationships'] = $this->reception_model->get_relationship();
 		$v_data['religions'] = $this->reception_model->get_religion();
 		$v_data['civil_statuses'] = $this->reception_model->get_civil_status();
@@ -1174,7 +1178,7 @@ class Reception  extends MX_Controller
 		$this->load->view('admin/templates/general_page', $data);	
 	}
 	
-	public function register_dependant($patient_id, $visit_type_id, $staff_no)
+	public function register_dependant($patient_number, $visit_type_id, $staff_no)
 	{
 		//form validation rules
 		$this->form_validation->set_rules('title_id', 'Title', 'is_numeric|xss_clean');
@@ -1188,7 +1192,7 @@ class Reception  extends MX_Controller
 		//if form conatins invalid data
 		if ($this->form_validation->run() == FALSE)
 		{
-			$this->dependants($patient_id);
+			$this->dependants($patient_number);
 		}
 		
 		else
@@ -1196,37 +1200,37 @@ class Reception  extends MX_Controller
 			//add staff dependant
 			if($visit_type_id == 2)
 			{
-				$patient_id = $this->reception_model->save_dependant_patient($staff_no);
+				$patient_number = $this->reception_model->save_dependant_patient($staff_no);
 			}
 			
 			else
 			{
-				$patient_id = $this->reception_model->save_other_dependant_patient($patient_id);
+				$patient_number = $this->reception_model->save_other_dependant_patient($patient_number);
 			}
 			
-			if($patient_id != FALSE)
+			if($patient_number != FALSE)
 			{
 				//initiate visit for the patient
 				$this->session->set_userdata('success_message', 'Patient added successfully');
-				$this->get_found_patients($patient_id,3);
+				$this->get_found_patients($patient_number,3);
 			}
 			
 			else
 			{
 				$this->session->set_userdata('error_message', 'Could not create patient. Please try again');
-				$this->dependants($patient_id);
+				$this->dependants($patient_number);
 			}
 		}
 	}
 	
-	public function end_visit($visit_id, $page = NULL)
+	public function end_visit($visit_number, $page = NULL)
 	{
 		$data = array(
         	"close_card" => 1,
         	"visit_time_out" => date('Y-m-d H:i:s')
     	);
 		$table = "visit";
-		$key = $visit_id;
+		$key = $visit_number;
 		$this->database->update_entry($table, $data, $key);
 		
 		if($page == 0)
@@ -1258,7 +1262,7 @@ class Reception  extends MX_Controller
 	public function appointment_list()
 	{
 		// this is it
-		$where = 'visit.visit_delete = 0 AND patients.patient_delete = 0 AND visit.patient_id = patients.patient_id AND visit.appointment_id = 1 AND visit.close_card = 2';
+		$where = 'visit.visit_delete = 0 AND patients.patient_delete = 0 AND visit.patient_number = patients.patient_number AND visit.appointment_id = 1 AND visit.close_card = 2';
 		$appointment_search = $this->session->userdata('visit_search');
 		
 		if(!empty($appointment_search))
@@ -1321,16 +1325,16 @@ class Reception  extends MX_Controller
 		// end of it
 	}
 	
-	public function initiate_visit_appointment($visit_id)
+	public function initiate_visit_appointment($visit_number)
 	{
 		$data = array(
         	"close_card" => 0
     	);
 		$table = "visit";
-		$key = $visit_id;
+		$key = $visit_number;
 		
 		$this->database->update_entry($table, $data, $key);
-		$this->reception_model->set_visit_department($visit_id, 7);
+		$this->reception_model->set_visit_department($visit_number, 7);
 		
 		$this->session->set_userdata('success_message', 'The patient has been added to the queue');
 		$this->visit_list(0);
@@ -1359,10 +1363,12 @@ class Reception  extends MX_Controller
 				$time_end = $visit_date.' '.$res->time_end.':00 GMT+0300';
 				$visit_type_name = $res->visit_type_name.' Appointment';
 				$patient_id = $res->patient_id;
+				$patient_number = $res->patient_number;
 				$dependant_id = $res->dependant_id;
 				$visit_type = $res->visit_type;
 				$visit_id = $res->visit_id;
 				$strath_no = $res->strath_no;
+				$visit_number = $res->visit_number;
 				$patient_data = $this->reception_model->get_patient_details($appointments_result, $visit_type, $dependant_id, $strath_no);
 				$color = $this->reception_model->random_color();
 				
@@ -1372,7 +1378,7 @@ class Reception  extends MX_Controller
 				$data['backgroundColor'][$r] = $color;
 				$data['borderColor'][$r] = $color;
 				$data['allDay'][$r] = FALSE;
-				$data['url'][$r] = site_url().'reception/search_appointment/'.$visit_id;
+				$data['url'][$r] = site_url().'reception/search_appointment/'.$visit_number;
 				$r++;
 			}
 		}
@@ -1381,27 +1387,27 @@ class Reception  extends MX_Controller
 		echo json_encode($data);
 	}
 	
-	function search_appointment($visit_id)
+	function search_appointment($visit_number)
 	{
-		if($visit_id > 0)
+		if($visit_number > 0)
 		{
-			$search = ' AND visit.visit_id = '.$visit_id;
+			$search = ' AND visit.visit_number = '.$visit_number.'';
 			$this->session->set_userdata('visit_search', $search);
 		}
 		
 		redirect('reception/appointment_list');
 	}
 	
-	public function delete_patient($patient_id, $page)
+	public function delete_patient($patient_number, $page)
 	{
-		if($this->reception_model->delete_patient($patient_id))
+		if($this->reception_model->delete_patient($patient_number))
 		{
 			$this->session->set_userdata('success_message', 'The patient has been deleted successfully');
 		}
 		
 		else
 		{
-			$this->session->set_userdata('error_message', 'Could not delete patient. Please <a href="'.site_url().'reception/delete_patient/'.$patient_id.'">try again</a>');
+			$this->session->set_userdata('error_message', 'Could not delete patient. Please <a href="'.site_url().'reception/delete_patient/'.$patient_number.'">try again</a>');
 		}
 		
 		if($page == 1)
@@ -1425,22 +1431,22 @@ class Reception  extends MX_Controller
 		}
 	}
 	
-	public function delete_visit($visit_id, $visit)
+	public function delete_visit($visit_number, $visit)
 	{
-		if($this->reception_model->delete_visit($visit_id))
+		if($this->reception_model->delete_visit($visit_number))
 		{
 			$this->session->set_userdata('success_message', 'The visit has been deleted successfully');
 		}
 		
 		else
 		{
-			$this->session->set_userdata('error_message', 'Could not delete visit. Please <a href="'.site_url().'reception/delete_patient/'.$patient_id.'">try again</a>');
+			$this->session->set_userdata('error_message', 'Could not delete visit. Please <a href="'.site_url().'reception/delete_patient/'.$visit_number.'">try again</a>');
 		}
 		
 		redirect('reception/visit_list/'.$visit);
 	}
 	
-	public function change_patient_type($patient_id)
+	public function change_patient_type($patient_number)
 	{
 		//form validation rules
 		$this->form_validation->set_rules('visit_type_id', 'Visit Type', 'required|is_numeric|xss_clean');
@@ -1449,7 +1455,7 @@ class Reception  extends MX_Controller
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{
-			if($this->reception_model->change_patient_type($patient_id))
+			if($this->reception_model->change_patient_type($patient_number))
 			{
 				$this->session->set_userdata('success_message', 'Patient type updated successfully');
 			}
@@ -1471,7 +1477,7 @@ class Reception  extends MX_Controller
 			
 		}
 		
-		$v_data['patient'] = $this->reception_model->patient_names2($patient_id);
+		$v_data['patient'] = $this->reception_model->patient_names2($patient_number);
 		$data['content'] = $this->load->view('change_patient_type', $v_data, true);
 		$data['sidebar'] = 'reception_sidebar';
 		$data['title'] = 'Change Patient Type';
@@ -1479,10 +1485,10 @@ class Reception  extends MX_Controller
 		$this->load->view('admin/templates/general_page', $data);
 	}
 
-	public function change_patient_to_others($patient_id,$visit_type_idd)
+	public function change_patient_to_others($patient_number,$visit_type_idd)
 	{
 		
-		if($this->reception_model->change_patient_type_to_others($patient_id,$visit_type_idd))
+		if($this->reception_model->change_patient_type_to_others($patient_number,$visit_type_idd))
 		{
 			$this->session->set_userdata('success_message', 'Patient type updated successfully');
 		}
@@ -1517,11 +1523,11 @@ class Reception  extends MX_Controller
 		
 		else
 		{
-			$patient_id = $this->reception_model->add_sbs_patient();
-			if($patient_id != FALSE)
+			$patient_number = $this->reception_model->add_sbs_patient();
+			if($patient_number != FALSE)
 			{
 				$this->session->set_userdata('success_message', 'Patient added successfully');
-				$this->get_found_patients($patient_id,2);
+				$this->get_found_patients($patient_number,2);
 			}
 			
 			else
@@ -2016,11 +2022,11 @@ class Reception  extends MX_Controller
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{
-			$patient_id = $this->reception_model->save_dependant_patient($this->input->post('staff_number'));
+			$patient_number = $this->reception_model->save_dependant_patient($this->input->post('staff_number'));
 			
-			if($patient_id != FALSE)
+			if($patient_number != FALSE)
 			{
-				$this->session->set_userdata('patient_dependants_search', ' AND patients.patient_id = '.$patient_id);
+				$this->session->set_userdata('patient_dependants_search', ' AND patients.patient_number = '.$patient_number.'');
 				
 				redirect('reception/staff_dependants');
 			}
@@ -2071,7 +2077,7 @@ class Reception  extends MX_Controller
 	*	Edit other patient
 	*
 	*/
-	public function edit_patient($patient_id)
+	public function edit_patient($patient_number)
 	{
 		//form validation rules
 		$this->form_validation->set_rules('title_id', 'Title', 'is_numeric|xss_clean');
@@ -2096,7 +2102,7 @@ class Reception  extends MX_Controller
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{
-			if($this->reception_model->edit_other_patient($patient_id))
+			if($this->reception_model->edit_other_patient($patient_number))
 			{
 				$this->session->set_userdata("success_message","Patient edited successfully");
 				//redirect('reception/patients');
@@ -2113,7 +2119,7 @@ class Reception  extends MX_Controller
 		$v_data['civil_statuses'] = $this->reception_model->get_civil_status();
 		$v_data['titles'] = $this->reception_model->get_title();
 		$v_data['genders'] = $this->reception_model->get_gender();
-		$v_data['patient'] = $this->reception_model->get_patient_data($patient_id);
+		$v_data['patient'] = $this->reception_model->get_patient_data($patient_number);
 		$v_data['insurance'] = $this->reception_model->get_insurance();
 		$data['content'] = $this->load->view('patients/edit_other_patient', $v_data, true);
 		
@@ -2126,7 +2132,7 @@ class Reception  extends MX_Controller
 	*	Edit other patient
 	*
 	*/
-	public function edit_staff($patient_id)
+	public function edit_staff($patient_number)
 	{
 		//form validation rules
 		$this->form_validation->set_rules('phone_number', 'Primary Phone', 'trim|xss_clean');
@@ -2135,7 +2141,7 @@ class Reception  extends MX_Controller
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{
-			if($this->reception_model->edit_staff_patient($patient_id))
+			if($this->reception_model->edit_staff_patient($patient_number))
 			{
 				$this->session->set_userdata("success_message","Patient edited successfully");
 				//redirect('reception/patients');
@@ -2152,7 +2158,7 @@ class Reception  extends MX_Controller
 		$v_data['civil_statuses'] = $this->reception_model->get_civil_status();
 		$v_data['titles'] = $this->reception_model->get_title();
 		$v_data['genders'] = $this->reception_model->get_gender();
-		$v_data['patient'] = $this->reception_model->get_patient_staff_data($patient_id);
+		$v_data['patient'] = $this->reception_model->get_patient_staff_data($patient_number);
 		$data['content'] = $this->load->view('patients/edit_staff', $v_data, true);
 		
 		$data['title'] = 'Edit Patients';
@@ -2163,7 +2169,7 @@ class Reception  extends MX_Controller
 	*	Edit other patient
 	*
 	*/
-	public function edit_student($patient_id)
+	public function edit_student($patient_number)
 	{
 		//form validation rules
 		$this->form_validation->set_rules('phone_number', 'Primary Phone', 'trim|xss_clean');
@@ -2172,7 +2178,7 @@ class Reception  extends MX_Controller
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{
-			if($this->reception_model->edit_student_patient($patient_id))
+			if($this->reception_model->edit_student_patient($patient_number))
 			{
 				$this->session->set_userdata("success_message","Patient edited successfully");
 				//redirect('reception/patients');
@@ -2189,14 +2195,14 @@ class Reception  extends MX_Controller
 		$v_data['civil_statuses'] = $this->reception_model->get_civil_status();
 		$v_data['titles'] = $this->reception_model->get_title();
 		$v_data['genders'] = $this->reception_model->get_gender();
-		$v_data['patient'] = $this->reception_model->get_patient_student_data($patient_id);
+		$v_data['patient'] = $this->reception_model->get_patient_student_data($patient_number);
 		$data['content'] = $this->load->view('patients/edit_student', $v_data, true);
 		
 		$data['title'] = 'Edit Patients';
 		$data['sidebar'] = 'reception_sidebar';
 		$this->load->view('admin/templates/general_page', $data);	
 	}
-	public function edit_staff_dependant_patient($patient_id)
+	public function edit_staff_dependant_patient($patient_number)
 	{
 		//form validation rules
 		$this->form_validation->set_rules('title_id', 'Title', 'is_numeric|xss_clean');
@@ -2212,7 +2218,7 @@ class Reception  extends MX_Controller
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{
-			if($this->reception_model->edit_staff_dependant_patient($patient_id))
+			if($this->reception_model->edit_staff_dependant_patient($patient_number))
 			{
 				$this->session->set_userdata("success_message","Patient edited successfully");
 				
@@ -2229,7 +2235,7 @@ class Reception  extends MX_Controller
 		$v_data['civil_statuses'] = $this->reception_model->get_civil_status();
 		$v_data['titles'] = $this->reception_model->get_title();
 		$v_data['genders'] = $this->reception_model->get_gender();
-		$v_data['patient'] = $this->reception_model->get_patient_data($patient_id);
+		$v_data['patient'] = $this->reception_model->get_patient_data($patient_number);
 		$data['content'] = $this->load->view('patients/edit_staff_dependant', $v_data, true);
 		
 		$data['title'] = 'Edit Staff Dependant';
@@ -2237,9 +2243,9 @@ class Reception  extends MX_Controller
 		$this->load->view('admin/templates/general_page', $data);	
 	}
 	
-	public function patient_names($visit_id)
+	public function patient_names($visit_number)
 	{
-		var_dump($this->reception_model->patient_names2(NULL, $visit_id));
+		var_dump($this->reception_model->patient_names2(NULL, $visit_number));
 	}
 	
 	public function sort_student_duplicates($per_page, $page)
@@ -2263,17 +2269,17 @@ class Reception  extends MX_Controller
 					
 					//get the patient id that will stand for the duplicates
 					$result = $check->result();
-					$standing_patient_id = $result[0]->patient_id;
+					$standing_patient_number = $result[0]->patient_number;
 					
 					for($r = 1; $r < $check->num_rows(); $r++)
 					{
-						$patient_id = $result[$r]->patient_id;
+						$patient_number = $result[$r]->patient_number;
 						//update visit data
-						if($this->reception_model->change_patient_id($standing_patient_id, $patient_id))
+						if($this->reception_model->change_patient_id($standing_patient_number, $patient_number))
 						{
 							//delete duplicate
-							$this->reception_model->delete_duplicate_patient($patient_id);
-							echo 'Faults = '.$faults_count.' :: student = '.$student_number.' :: changed from = '.$patient_id.' :: changed to = '.$standing_patient_id.'<br/>';
+							$this->reception_model->delete_duplicate_patient($patient_number);
+							echo 'Faults = '.$faults_count.' :: student = '.$student_number.' :: changed from = '.$patient_number.' :: changed to = '.$standing_patient_number.'<br/>';
 						}
 					}
 				}
@@ -2296,6 +2302,7 @@ class Reception  extends MX_Controller
 				$dob = $res->DOB;
 				$gender = $res->Gender;
 				$patient_id = $res->patient_id;
+				$patient_number = $res->patient_number;
 				
 				if($gender == 'Male')
 				{
@@ -2320,7 +2327,7 @@ class Reception  extends MX_Controller
 					'patient_date_of_birth' => $dob
 				);
 				
-				$this->db->where('patient_id', $patient_id);
+				$this->db->where('patient_number', $patient_number);
 				if($this->db->update('patients', $data))
 				{
 					echo 'Updated :: '.$surname.' '.$other_names.'<br/>';
@@ -2413,9 +2420,9 @@ class Reception  extends MX_Controller
 		$this->general_queue($page_name);
 	}
 	
-	public function check_patient($visit_id)
+	public function check_patient($visit_number)
 	{
-		$result = $this->reception_model->patient_names2(NULL, $visit_id);
+		$result = $this->reception_model->patient_names2(NULL, $visit_number);
 		
 		var_dump($result);
 	}

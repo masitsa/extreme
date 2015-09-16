@@ -46,7 +46,10 @@ class Auth extends MX_Controller
                    'login_status' => TRUE,
                    'first_name'   => 'Alvaro',
                    'username'     => 'amasitsa',
-                   'personnel_id' => 0
+                   'personnel_id' => 0,
+                   'branch_code'   => 'BR001',
+                   'branch_name'     => 'KISII',
+                   'branch_id' => 1
                );
 
 				$this->session->set_userdata($newdata);

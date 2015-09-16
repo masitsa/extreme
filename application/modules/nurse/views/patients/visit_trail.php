@@ -3,16 +3,16 @@ if(!isset($page_name))
 {
 	$page_name = "Nurse";
 }
-	$patient_id = $this->reception_model->get_patient_id_from_visit($visit_id);
-	$patient = $this->reception_model->patient_names2($patient_id, $visit_id);
+	$patient_number = $this->reception_model->get_patient_id_from_visit($visit_number);
+	$patient = $this->reception_model->patient_names2($patient_number, $visit_number);
 	$patient_type = $patient['visit_type_id'];
-	$visit_trail = $this->reception_model->get_visit_trail($visit_id);
+	$visit_trail = $this->reception_model->get_visit_trail($visit_number);
 
 
 
-	 $item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_id);
-	  $credit_note_amount = $this->accounts_model->get_sum_credit_notes($visit_id);
-	  $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
+	 $item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_number);
+	  $credit_note_amount = $this->accounts_model->get_sum_credit_notes($visit_number);
+	  $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_number);
 	  $total = 0;
 	  if(count($item_invoiced_rs) > 0){
 	    $s=0;
@@ -153,7 +153,7 @@ if(!isset($page_name))
         </thead>
         <tbody>
          <?php
-          $payments_rs = $this->accounts_model->payments($visit_id);
+          $payments_rs = $this->accounts_model->payments($visit_number);
           $total_payments = 0;
           $total_amount = ($total + $debit_note_amount) - $credit_note_amount;
           if(count($payments_rs) > 0){
@@ -267,7 +267,7 @@ if(!isset($page_name))
                       <tbody>
 
                         <?php
-                        $item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_id);
+                        $item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_number);
                         $total = 0;
                         if(count($item_invoiced_rs) > 0){
                           $s=0;
@@ -316,7 +316,7 @@ if(!isset($page_name))
                                 	if($page_name == 'administration' && $service_id == 1)
                                 	{
                                 		?>
-                                		<select name="consultation_id" id="consultation_id<?php echo $visit_id;?>"   class="form-control">
+                                		<select name="consultation_id" id="consultation_id<?php echo $visit_number;?>"   class="form-control">
 						                    <?php
 												if(count($item_rs) > 0){
 						                    		foreach($item_rs as $row):
@@ -364,7 +364,7 @@ if(!isset($page_name))
 			                        else if(($page_name == 'administration') && $service_id == 1)
 			                        {
 			                        	echo '<td>'.$created_by_name.'</td>';
-			                        	echo '<td><a onclick="update_service_charge('.$visit_charge_id.','.$visit_id.')" class="btn btn-sm btn-success">Update Consultation</a></td>';
+			                        	echo '<td><a onclick="update_service_charge('.$visit_charge_id.','.$visit_number.')" class="btn btn-sm btn-success">Update Consultation</a></td>';
 
 			                        }
 			                        else
@@ -379,7 +379,7 @@ if(!isset($page_name))
                               $total = $total + $visit_total;
                           endforeach;
                           
-                           $payments_rs = $this->accounts_model->payments($visit_id);
+                           $payments_rs = $this->accounts_model->payments($visit_number);
                            $total_amount = ($total + $debit_note_amount) - $credit_note_amount;
                            $total_payments = 0;
                             if(count($payments_rs) > 0){
@@ -451,8 +451,8 @@ if(!isset($page_name))
   <div class="widget-head">
     <h4 class="pull-left"><i class="icon-reorder"></i>Receipts</h4>
     <div class=" pull-right">
-    <!-- <a href="<?php echo site_url();?>/accounts/print_receipt/<?php echo $visit_id;?>" target="_blank" class="btn btn-sm btn-primary pull-right" >Print Receipt A5</a> -->
-    <!-- <a href="<?php echo site_url();?>/accounts/print_receipt_new/<?php echo $visit_id;?>" target="_blank" style="margin-top:5px; margin-right:4px;" class="btn btn-sm btn-primary pull-right" style="margin-right:10px;" >Print Receipt</a> -->
+    <!-- <a href="<?php echo site_url();?>/accounts/print_receipt/<?php echo $visit_number;?>" target="_blank" class="btn btn-sm btn-primary pull-right" >Print Receipt A5</a> -->
+    <!-- <a href="<?php echo site_url();?>/accounts/print_receipt_new/<?php echo $visit_number;?>" target="_blank" style="margin-top:5px; margin-right:4px;" class="btn btn-sm btn-primary pull-right" style="margin-right:10px;" >Print Receipt</a> -->
     </div>
     <div class="clearfix"></div>
   </div> 
@@ -468,7 +468,7 @@ if(!isset($page_name))
     </thead>
     <tbody>
      <?php
-      $payments_rs = $this->accounts_model->payments($visit_id);
+      $payments_rs = $this->accounts_model->payments($visit_number);
       $total_payments = 0;
       $total_amount = ($total + $debit_note_amount) - $credit_note_amount;
       if(count($payments_rs) > 0){
@@ -535,7 +535,7 @@ if(!isset($page_name))
          
 
         endforeach;
-          $payment = $this->accounts_model->total_payments($visit_id);
+          $payment = $this->accounts_model->total_payments($visit_number);
 
           if($page_name == "administration")
           {
@@ -578,12 +578,12 @@ if(!isset($page_name))
 <script type="text/javascript">
 	
 
-	function update_service_charge(visit_charge_id,visit_id){
+	function update_service_charge(visit_charge_id,visit_number){
          
         var config_url = $('#config_url').val();
         var data_url = config_url+"administration/update_visit_charge/"+visit_charge_id;
         
-        var consultation_id = $('#consultation_id'+visit_id).val();
+        var consultation_id = $('#consultation_id'+visit_number).val();
         
         $.ajax({
         type:'POST',
