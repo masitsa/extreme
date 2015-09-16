@@ -24,7 +24,7 @@
 							echo '<div class="alert alert-danger center-align">'.$validation_error.'</div>';
 						}
 						?>
-						<?php echo form_open("reception/save_visit/".$patient_number, array("class" => "form-horizontal"));?>
+						<?php echo form_open("reception/save_visit/".$patient_id, array("class" => "form-horizontal"));?>
 						<div class="row">
 							<div class="col-md-6">
 							 <div class="widget boxed">
@@ -48,9 +48,11 @@
 						                        	<?php
 											                            	
 														if($visit_departments->num_rows() > 0){
+
 						                            		foreach($visit_departments->result() as $row):
-																$department_name = $row->departments_name;
+																$department_name = $row->department_name;
 																$department_id = $row->department_id;
+
 																
 																if($department_id == set_value('department_id'))
 																{
@@ -81,7 +83,6 @@
 												<select name="patient_insurance_id" class="form-control">
 														<option value="">--- Select Insurance Company---</option>
 															<?php
-
 															if(count($patient_insurance) > 0){	
 															foreach($patient_insurance as $row):
 																	// $company_name = $row->company_name;
@@ -400,20 +401,14 @@
 		}
 		
 	}
-
 	function check_department_type(){
 		var myTarget = document.getElementById("department_id").value;
-
 		var myTarget2 = document.getElementById("department_type");
-
 		var myTarget3 = document.getElementById("patient_type_div");
-
 		// counseling department div
 		var myTarget4 = document.getElementById("counseling_department");
 		// end of counseling department div
-
 		
-
 		if(myTarget==7)
 		{
 		 	myTarget2.style.display = 'block';
@@ -425,14 +420,12 @@
 		 	myTarget4.style.display = 'block';
 		 	myTarget2.style.display = 'none';
 		 	myTarget3.style.display = 'none';
-
 		}
 		else{
 	 	 	myTarget2.style.display = 'none';
 	 	 	myTarget3.style.display = 'block';	
 	 	 	myTarget4.style.display = 'none';
 		}
-
 	}
 	
 	$(document).on("change","select#patient_type",function(e){
@@ -447,10 +440,8 @@
 			$('#insured_company').css('display', 'none');
 		}
 	});
-
 	function do_patient_type_function(patient_type_id)
 	{
-
 		if(patient_type_id == '4')
 		{
 			$('#insured_company').css('display', 'block');
@@ -466,7 +457,5 @@
 		
 		// getCity(data_url);
 	}
-
 	
 </script>
-
