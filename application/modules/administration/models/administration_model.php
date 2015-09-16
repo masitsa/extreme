@@ -177,12 +177,12 @@ class Administration_model extends CI_Model
 		return $query;
 	}
 
-	public function patient_account_balance($patient_id)
+	public function patient_account_balance($patient_number)
 	{
 		//retrieve all users
 		$this->db->from('visit');
 		$this->db->select('*');
-		$this->db->where('patient_id = '.$patient_id);
+		$this->db->where('patient_number = "'.$patient_number.'"');
 		$this->db->order_by('visit_date','desc');
 		$query = $this->db->get();
 

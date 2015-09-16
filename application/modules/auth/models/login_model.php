@@ -122,15 +122,27 @@ class Login_model extends CI_Model
 				{
 					// personnel should change his password
 					// $newdata = array('personnel_id'=> $result[0]->personnel_id);
+					
+
 					$newdata = array(
 					   'login_status'     	=> TRUE,
 	                   'personnel_fname'  	=> $result[0]->personnel_fname,
 	                   'first_name'     	=> $result[0]->personnel_fname,
 	                   'personnel_email'	=> $result[0]->personnel_email,
-	                   'personnel_id'  		=> $result[0]->personnel_id
+	                   'personnel_id'  		=> $result[0]->personnel_id,
+	                   'branch_id'  		=> $branch_details[0]->branch_id,
+	                   'branch_code'  		=> $branch_details[0]->branch_code,
+	                   'branch_name'  		=> $branch_details[0]->branch_name,
 			         );
 
 					$this->session->set_userdata($newdata);
+
+					//  set branch detail to session 
+
+
+					
+
+
 					
 					return 'limit';
 
@@ -202,6 +214,7 @@ class Login_model extends CI_Model
 			return FALSE;
 		}
 	}
+	
 	
 	/*
 	*	Update user's last login date
