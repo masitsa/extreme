@@ -43,18 +43,13 @@ class Reception  extends MX_Controller
 		$this->load->view('admin/templates/general_page', $data);	
 	}
 	
-	public function patients($delete = 0)
+	/*
+	* Code for displaying deleted patients removed
+	*/
+	public function patients()
 	{
-		if($delete == 1)
-		{
-			$segment = 4;
-		}
-		
-		else
-		{
-			$segment = 3;
-			$delete = 0;
-		}
+		$delete = 0;
+		$segment = 3;
 		
 		$patient_search = $this->session->userdata('patient_search');
 		//$where = '(visit_type_id <> 2 OR visit_type_id <> 1) AND patient_delete = '.$delete;
@@ -67,7 +62,7 @@ class Reception  extends MX_Controller
 		$table = 'patients';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'reception/patients-list';
+		$config['base_url'] = site_url().'reception/patients';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -868,7 +863,7 @@ class Reception  extends MX_Controller
 	
 	public function search_patients()
 	{
-		$visit_type_id = $this->input->post('visit_type_id');
+		$patient_national_id = $this->input->post('patient_national_id');
 		$patient_number = $this->input->post('patient_number');
 		
 		if(!empty($patient_number))
@@ -876,9 +871,9 @@ class Reception  extends MX_Controller
 			$patient_number = ' AND patients.patient_number LIKE '.$patient_number.' ';
 		}
 		
-		if(!empty($visit_type_id))
+		if(!empty($patient_national_id))
 		{
-			$visit_type_id = ' AND patients.visit_type_id = '.$visit_type_id.' ';
+			$patient_national_id = ' AND patients.patient_national_id = '.$patient_national_id.' ';
 		}
 		
 		//search surname
@@ -939,7 +934,7 @@ class Reception  extends MX_Controller
 			$other_name = '';
 		}
 		
-		$search = $visit_type_id.$patient_number.$surname.$other_name;
+		$search = $patient_national_id.$patient_number.$surname.$other_name;
 		$this->session->set_userdata('patient_search', $search);
 		
 		$this->patients();

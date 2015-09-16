@@ -140,12 +140,11 @@ if(!empty($validation_error))
                                 <label class="col-lg-4 control-label">Date of Birth: </label>
                                 
                                 <div class="col-lg-8">
-                                    <div id="datetimepicker1" class="input-append">
-                                        <input data-format="yyyy-MM-dd" class="form-control" type="text" name="patient_dob" placeholder="Date of Birth" value="<?php echo $patient_date_of_birth;?>">
-                                        <span class="add-on">
-                                            &nbsp;<i data-time-icon="icon-time" data-date-icon="icon-calendar">
-                                            </i>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
                                         </span>
+                                        <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="patient_dob" placeholder="Date of Birth" value="<?php echo $patient_date_of_birth;?>">
                                     </div>
                                 </div>
                             </div>

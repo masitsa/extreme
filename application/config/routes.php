@@ -142,6 +142,49 @@ $route['human-resource/delete-personnel-leave/(:num)/(:num)'] = 'hr/personnel/de
 $route['human-resource/delete-personnel-role/(:num)/(:num)'] = 'hr/personnel/delete_personnel_role/$1/$2';
 
 /*
+*	Hospital administration
+*/
+$route['hospital-administration/services'] = 'hospital_administration/services/index';
+$route['hospital-administration/services/(:any)/(:any)/(:num)'] = 'hospital_administration/services/index/$1/$2/$3';
+$route['hospital-administration/services/(:any)/(:any)'] = 'hospital_administration/services/index/$1/$2';
+$route['hospital-administration/add-service'] = 'hospital_administration/services/add_service';
+$route['hospital-administration/edit-service/(:num)'] = 'hospital_administration/services/edit_service/$1';
+$route['hospital-administration/edit-service/(:num)/(:num)'] = 'hospital_administration/services/edit_service/$1/$2';
+$route['hospital-administration/delete-service/(:num)'] = 'hospital_administration/services/delete_service/$1';
+$route['hospital-administration/delete-service/(:num)/(:num)'] = 'hospital_administration/services/delete_service/$1/$2';
+$route['hospital-administration/activate-service/(:num)'] = 'hospital_administration/services/activate_service/$1';
+$route['hospital-administration/activate-service/(:num)/(:num)'] = 'hospital_administration/services/activate_service/$1/$2';
+$route['hospital-administration/deactivate-service/(:num)'] = 'hospital_administration/services/deactivate_service/$1';
+$route['hospital-administration/deactivate-service/(:num)/(:num)'] = 'hospital_administration/services/deactivate_service/$1/$2';
+
+$route['hospital-administration/service-charges/(:num)'] = 'hospital_administration/services/service_charges/$1';
+$route['hospital-administration/services-charges/(:num)/(:any)/(:any)/(:num)'] = 'hospital_administration/services/service_charges/$1/$2/$3/$4';
+$route['hospital-administration/services-charges/(:num)/(:any)/(:any)'] = 'hospital_administration/services/service_charges/$1/$2/$3';
+$route['hospital-administration/add-service-charge/(:num)'] = 'hospital_administration/services/add_service_charge/$1';
+$route['hospital-administration/edit-service-charge/(:num)/(:num)'] = 'hospital_administration/services/edit_service_charge/$1/$2';
+$route['hospital-administration/delete-service-charge/(:num)/(:num)'] = 'hospital_administration/services/delete_service_charge/$1/$2';
+$route['hospital-administration/activate-service-charge/(:num)/(:num)'] = 'hospital_administration/services/activate_service_charge/$1/$2';
+$route['hospital-administration/deactivate-service-charge/(:num)/(:num)'] = 'hospital_administration/services/deactivate_service_charge/$1/$2';
+
+$route['hospital-administration/visit-types'] = 'hospital_administration/visit_types/index';
+$route['hospital-administration/visit-types/(:any)/(:any)/(:num)'] = 'hospital_administration/visit_types/index/$1/$2/$3';
+$route['hospital-administration/visit-types/(:any)/(:any)'] = 'hospital_administration/visit_types/index/$1/$2';
+$route['hospital-administration/add-visit-type'] = 'hospital_administration/visit_types/add_visit_type';
+$route['hospital-administration/edit-visit-type/(:num)'] = 'hospital_administration/visit_types/edit_visit_type/$1';
+$route['hospital-administration/delete-visit-type/(:num)'] = 'hospital_administration/visit_types/delete_visit_type/$1';
+$route['hospital-administration/activate-visit-type/(:num)'] = 'hospital_administration/visit_types/activate_visit_type/$1';
+$route['hospital-administration/deactivate-visit-type/(:num)'] = 'hospital_administration/visit_types/deactivate_visit_type/$1';
+
+$route['hospital-administration/departments'] = 'hospital_administration/departments/index';
+$route['hospital-administration/departments/(:any)/(:any)/(:num)'] = 'hospital_administration/departments/index/$1/$2/$3';
+$route['hospital-administration/departments/(:any)/(:any)'] = 'hospital_administration/departments/index/$1/$2';
+$route['hospital-administration/add-department'] = 'hospital_administration/departments/add_department';
+$route['hospital-administration/edit-department/(:num)'] = 'hospital_administration/departments/edit_department/$1';
+$route['hospital-administration/delete-department/(:num)'] = 'hospital_administration/departments/delete_department/$1';
+$route['hospital-administration/activate-department/(:num)'] = 'hospital_administration/departments/activate_department/$1';
+$route['hospital-administration/deactivate-department/(:num)'] = 'hospital_administration/departments/deactivate_department/$1';
+
+/*
 *	Accounts Routes
 */
 $route['accounts/change-branch'] = 'accounts/payroll/change_branch';

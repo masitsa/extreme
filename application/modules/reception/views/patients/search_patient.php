@@ -2,8 +2,7 @@
     <header class="panel-heading">
         <h5 class="pull-left"><i class="icon-reorder"></i>Search Patients</h5>
         <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
+            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a>
         </div>
     
     	<div class="clearfix"></div>
@@ -18,7 +17,7 @@
             ?>
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group">
+                    <!--<div class="form-group">
                         <label class="col-lg-4 control-label">Patient Type: </label>
                         
                         <div class="col-lg-8">
@@ -35,6 +34,14 @@
                                     }
                                 ?>
                             </select>
+                        </div>
+                    </div>-->
+                    
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">I.D. number: </label>
+                        
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" name="patient_national_id" placeholder="National ID">
                         </div>
                     </div>
                     

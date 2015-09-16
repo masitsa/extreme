@@ -34,7 +34,7 @@ class Hr extends MX_Controller
 		
 		$data['content'] = $this->load->view('dashboard', $v_data, true);
 		
-		$this->load->view('templates/general_page', $data);
+		$this->load->view('admin/templates/general_page', $data);
 	}
     
 	/*
