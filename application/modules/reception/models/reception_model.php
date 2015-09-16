@@ -1,5 +1,4 @@
 <?php
-
 class Reception_model extends CI_Model 
 {
 	/*
@@ -122,11 +121,10 @@ class Reception_model extends CI_Model
 	{
 		//  instert data into the patients table
 		$date = date("Y-m-d H:i:s");
-		$patient_data = array('patient_number'=>$this->strathmore_population->create_patient_number(),'patient_date'=>$date,'visit_type_id'=>$visit_type,'strath_no'=>$strath_no,'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
+		$patient_data = array('patient_number'=>$this->create_patient_number(),'patient_date'=>$date,'visit_type_id'=>$visit_type,'strath_no'=>$strath_no,'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
 		$this->db->insert('patients', $patient_data);
 		return $this->db->insert_id();
 	}
-
 	/*
 	*	Retrieve a single student
 	*	@param int $strath_no
@@ -228,9 +226,10 @@ class Reception_model extends CI_Model
 			'patient_number'=>$this->create_patient_number(),
 			'created_by'=>$this->session->userdata('personnel_id'),
 			'modified_by'=>$this->session->userdata('personnel_id'),
-			'visit_type_id'=>3,
-			'branch_id'=>$this->session->userdata('branch_id'),
+			'visit_type_id'=>2,
+			'dependant_id'=>$this->input->post('dependant_id'),
 			'insurance_company_id'=>$this->input->post('insurance_company_id'),
+			'branch_code'=>$this->session->userdata('branch_code'),
 			'patient_kin_phonenumber1'=>$this->input->post('next_of_kin_contact')
 		);
 		
@@ -242,44 +241,12 @@ class Reception_model extends CI_Model
 			return FALSE;
 		}
 	}
-
-	public function create_patient_number()
-	{
-		//select product code
-		$this->db->from('patients');
-		$this->db->where('branch_id = '.$this->session->userdata('branch_id'));
-		$this->db->select('MAX(patient_number) AS number');
-		$query = $this->db->get();
-
-		if($query->num_rows() > 0)
-		{
-			$result = $query->result();
-			$number =  $result[0]->number;
-			$number++;//go to the next number
-
-			if($number == 1){
-				$number = "".$this->session->userdata('branch_code')."-0000001";
-			}
-
-			
-			if($number == 1)
-			{
-				$number = "".$this->session->userdata('branch_code')."-0000001";
-			}
-			
-		}
-		else{//start generating receipt numbers
-			$number = "".$this->session->userdata('branch_code')."-0000001";
-		}
-
-		return $number;
-	}
 	
 	/*
 	*	Edit other patient
 	*
 	*/
-	public function edit_other_patient($patient_number)
+	public function edit_other_patient($patient_id)
 	{
 		$data = array(
 			'patient_surname'=>ucwords(strtolower($this->input->post('patient_surname'))),
@@ -295,16 +262,16 @@ class Reception_model extends CI_Model
 			'relationship_id'=>$this->input->post('relationship_id'),
 			'patient_national_id'=>$this->input->post('patient_national_id'),
 			'patient_date'=>date('Y-m-d H:i:s'),
-			'patient_number'=>$this->strathmore_population->create_patient_number(),
 			'created_by'=>$this->session->userdata('personnel_id'),
 			'modified_by'=>$this->session->userdata('personnel_id'),
 			'visit_type_id'=>3,
 			'dependant_id'=>$this->input->post('dependant_id'),
 			'insurance_company_id'=>$this->input->post('insurance_company_id'),
+			'branch_code'=>$this->session->userdata('branch_code'),
 			'patient_kin_phonenumber1'=>$this->input->post('next_of_kin_contact')
 		);
 		
-		$this->db->where('patient_number', $patient_number);
+		$this->db->where('patient_id', $patient_id);
 		if($this->db->update('patients', $data))
 		{
 			return TRUE;
@@ -313,19 +280,18 @@ class Reception_model extends CI_Model
 			return FALSE;
 		}
 	}
-
 	/*
 	*	Edit other patient
 	*
 	*/
-	public function edit_staff_patient($patient_number)
+	public function edit_staff_patient($patient_id)
 	{
 		$data = array(
 			'patient_phone1'=>$this->input->post('phone_number'),
 			'patient_phone2'=>$this->input->post('patient_phone2')
 		);
 		
-		$this->db->where('patient_number', $patient_number);
+		$this->db->where('patient_id', $patient_id);
 		if($this->db->update('patients', $data))
 		{
 			return TRUE;
@@ -334,14 +300,14 @@ class Reception_model extends CI_Model
 			return FALSE;
 		}
 	}
-	public function edit_student_patient($patient_number)
+	public function edit_student_patient($patient_id)
 	{
 		$data = array(
 			'patient_phone1'=>$this->input->post('phone_number'),
 			'patient_phone2'=>$this->input->post('patient_phone2')
 		);
 		
-		$this->db->where('patient_number', $patient_number);
+		$this->db->where('patient_id', $patient_id);
 		if($this->db->update('patients', $data))
 		{
 			return TRUE;
@@ -351,7 +317,7 @@ class Reception_model extends CI_Model
 		}
 	}
 	 
-	function edit_staff_dependant_patient($patient_number)
+	function edit_staff_dependant_patient($patient_id)
 	{
 		$data = array(
 			'patient_surname'=>ucwords(strtolower($this->input->post('patient_surname'))),
@@ -365,7 +331,7 @@ class Reception_model extends CI_Model
 			'modified_by'=>$this->session->userdata('personnel_id')
 		);
 		
-		$this->db->where('patient_number', $patient_number);
+		$this->db->where('patient_id', $patient_id);
 		if($this->db->update('patients', $data))
 		{
 			return TRUE;
@@ -411,7 +377,7 @@ class Reception_model extends CI_Model
 				'visit_type_id'=>2,
 				'relationship_id'=>$this->input->post('relationship_id'),
 				'patient_date'=>date('Y-m-d H:i:s'),
-				'patient_number'=>$this->strathmore_population->create_patient_number(),
+				'patient_number'=>$this->create_patient_number(),
 				'created_by'=>$this->session->userdata('personnel_id'),
 				'modified_by'=>$this->session->userdata('personnel_id')
 			);
@@ -435,7 +401,7 @@ class Reception_model extends CI_Model
 	*	Save dependant patient
 	*
 	*/
-	public function save_other_dependant_patient($patient_number)
+	public function save_other_dependant_patient($patient_id)
 	{
 		$data = array(
 			'visit_type_id'=>3,
@@ -448,10 +414,10 @@ class Reception_model extends CI_Model
 			'civil_status_id'=>$this->input->post('civil_status_id'),
 			'relationship_id'=>$this->input->post('relationship_id'),
 			'patient_date'=>date('Y-m-d H:i:s'),
-			'patient_number'=>$this->strathmore_population->create_patient_number(),
+			'patient_number'=>$this->create_patient_number(),
 			'created_by'=>$this->session->userdata('personnel_id'),
 			'modified_by'=>$this->session->userdata('personnel_id'),
-			'dependant_id'=>$patient_number
+			'dependant_id'=>$patient_id
 		);
 		
 		if($this->db->insert('patients', $data))
@@ -463,10 +429,10 @@ class Reception_model extends CI_Model
 		}
 	}
 	
-	public function get_service_charges($patient_number)
+	public function get_service_charges($patient_id)
 	{
 		$table = "service_charge";
-		$where = "service_charge.service_id = 1 AND service_charge.visit_type_id = (SELECT visit_type_id FROM patients WHERE patient_number = '".$patient_number."')";
+		$where = "service_charge.service_id = 1 AND service_charge.visit_type_id = (SELECT visit_type_id FROM patients WHERE patient_id = $patient_id)";
 		$items = "service_charge.service_charge_name, service_charge_id";
 		$order = "service_charge_name";
 		
@@ -489,10 +455,10 @@ class Reception_model extends CI_Model
 		endforeach;
 		return $visit_type2;
 	}
-	public function save_consultation_charge($visit_number, $service_charge_id, $service_charge)
+	public function save_consultation_charge($visit_id, $service_charge_id, $service_charge)
 	{
 		$insert = array(
-        	"visit_number" => $visit_number,
+        	"visit_id" => $visit_id,
         	"service_charge_id" => $service_charge_id,
         	"visit_charge_amount" => $service_charge
     	);
@@ -536,12 +502,12 @@ class Reception_model extends CI_Model
 		return $result;
 	}
 	
-	public function patient_names2($patient_number, $visit_number = NULL)
+	public function patient_names2($patient_id, $visit_id = NULL)
 	{
-		if($visit_number == NULL)
+		if($visit_id == NULL)
 		{
 			$table = "patients";
-			$where = "patient_number = '".$patient_number."'";
+			$where = "patient_id = ".$patient_id;
 			$items = "*";
 			$order = "patient_surname";
 		}
@@ -549,7 +515,7 @@ class Reception_model extends CI_Model
 		else
 		{
 			$table = "patients, visit";
-			$where = "patients.patient_number = visit.patient_number AND visit.visit_number = '".$visit_number."'";
+			$where = "patients.patient_id = visit.patient_id AND visit.visit_id = ".$visit_id;
 			$items = "patients.*, visit.visit_type";
 			$order = "patient_surname";
 		}
@@ -559,7 +525,6 @@ class Reception_model extends CI_Model
 		foreach ($result as $row)
 		{
 			$patient_id = $row->patient_id;
-			$patient_number = $row->patient_number;
 			$dependant_id = $row->dependant_id;
 			$patient_number = $row->patient_number;
 			$dependant_id = $row->dependant_id;
@@ -571,110 +536,33 @@ class Reception_model extends CI_Model
 			$last_modified = $row->last_modified;
 			$last_visit = $row->last_visit;
 			
-			if($visit_number != NULL)
+			$patient_type = $this->reception_model->get_patient_type($visit_type_id);
+				
+				
+				
+			$patient_othernames = $row->patient_othernames;
+			$patient_surname = $row->patient_surname;
+			$patient_date_of_birth = $row->patient_date_of_birth;
+			$gender_id = $row->gender_id;
+			$faculty ='';
+			if($gender_id == 1)
 			{
-				$visit_type = $row->visit_type;
-				$check_id = $visit_type;
-				
-				//a student being charged as an outsider
-				if(($visit_type == 3) && ($visit_type_id == 1))
-				{
-					$check_id = $visit_type_id;
-					$visit_type = 0;
-				}
-				
-				//staff being charged as an outsider
-				if(($visit_type == 3) && ($visit_type_id == 2))
-				{
-					$check_id = $visit_type_id;
-					$visit_type = 0;
-				}
+				$gender = 'M';
 			}
-			
 			else
 			{
-				$check_id = $visit_type_id;
-				$visit_type = 0;
-			}
-			
-			if($check_id < 3 && $dependant_id != NULL)
-			{
-				$patient_data = $this->get_strath_patient_data($check_id, $visit_number, $strath_no, $row, $dependant_id, $visit_type_id, $patient_number);
-				$visit_type = $patient_data['visit_type'];
-				$patient_type = $patient_data['patient_type'];
-				$patient_othernames = $patient_data['patient_othernames'];
-				$patient_surname = $patient_data['patient_surname'];
-				$patient_date_of_birth = $patient_data['patient_date_of_birth'];
-				$gender = $patient_data['gender'];
-				$faculty = $patient_data['faculty'];
-			}
-			
-			//other patient
-			else
-			{
-				$patient_type = $this->reception_model->get_patient_type($visit_type_id);
-				
-				if($visit_type == 3)
-				{
-					$visit_type = 'Other';
-				}
-				else if($visit_type == 2)
-				{
-					$visit_type = 'Staff';
-				}
-				else if($visit_type == 1)
-				{
-					$visit_type = 'Student';
-				}
-				else if($visit_type == 4)
-				{
-					$visit_type = 'Insurance';
-				}
-				else
-				{
-					$visit_type = 'General';
-				}
-				
-				$patient_othernames = $row->patient_othernames;
-				$patient_surname = $row->patient_surname;
-				$patient_date_of_birth = $row->patient_date_of_birth;
-				$gender_id = $row->gender_id;
-				$faculty ='';
-				if($gender_id == 1)
-				{
-					$gender = 'M';
-				}
-				else
-				{
-					$gender = 'F';
-				}
-					
-				if(($patient_surname == '0.00') && ($patient_othernames == '0.00'))
-				{
-					$patient_data = $this->get_strath_patient_data($visit_type_id, $visit_number, $strath_no, $row, $dependant_id, $visit_type_id, $patient_number);
-					$patient_othernames = $patient_data['patient_othernames'];
-					$patient_surname = $patient_data['patient_surname'];
-					$patient_date_of_birth = $patient_data['patient_date_of_birth'];
-					$gender = $patient_data['gender'];
-					$faculty = $patient_data['faculty'];
-
-				}
-				
+				$gender = 'F';
 			}
 		}
-
 		// calculate patient balance
 		$this->load->model('administration/administration_model');
-
-		$account_balance = $this->administration_model->patient_account_balance($patient_number);
-
+		$account_balance = $this->administration_model->patient_account_balance($patient_id);
 		// end of patient balance
-
-		$patient['patient_number'] = $patient_number;
+		$patient['patient_id'] = $patient_id;
 		$patient['account_balance'] = $account_balance;
-		$patient['visit_type'] = $visit_type;
+		$patient['visit_type'] = $visit_type_id;
 		$patient['patient_type'] = $patient_type;
-		$patient['visit_type_id'] = $check_id;
+		$patient['visit_type_id'] = $visit_type_id;
 		$patient['patient_othernames'] = $patient_othernames;
 		$patient['patient_surname'] = $patient_surname;
 		$patient['patient_date_of_birth'] = $patient_date_of_birth;
@@ -682,11 +570,10 @@ class Reception_model extends CI_Model
 		$patient['patient_number'] = $patient_number;
 		$patient['faculty'] = $faculty;
 		$patient['staff_dependant_no'] = $dependant_id;
-
 		return $patient;
 	}
 	
-	public function get_strath_patient_data($check_id, $visit_number, $strath_no, $row, $dependant_id, $visit_type_id, $patient_number)
+	public function get_strath_patient_data($check_id, $visit_id, $strath_no, $row, $dependant_id, $visit_type_id, $patient_id)
 	{
 		//staff & dependant
 		if($check_id == 2)
@@ -733,7 +620,7 @@ class Reception_model extends CI_Model
 				else
 				{
 					$patient_othernames = '<span class="label label-important">Dependant not found: '.$strath_no.'</span>';
-					$patient_surname = $patient_number;
+					$patient_surname = $patient_id;
 					$patient_date_of_birth = '';
 					$relationship = '';
 					$gender = '';
@@ -831,7 +718,7 @@ class Reception_model extends CI_Model
 			else
 			{
 				$patient_othernames = '<span class="label label-important">Student not found: '.$strath_no.'</span>';
-				$patient_surname = $patient_number;
+				$patient_surname = $patient_id;
 				$patient_date_of_birth = '';
 				$relationship = '';
 				$gender = '';
@@ -865,7 +752,6 @@ class Reception_model extends CI_Model
 		$patient['patient_date_of_birth'] = $patient_date_of_birth;
 		$patient['gender'] = $gender;
 		$patient['faculty'] = $faculty;
-
 		return $patient;
 	}
 	public function get_staff_faculty_details($strath_no)
@@ -885,7 +771,7 @@ class Reception_model extends CI_Model
 		}
 		return $department;
 	}
-	public function get_patient_insurance($patient_number)
+	public function get_patient_insurance($patient_id)
 	{
 		$table = "insurance_company";
 		$where = "insurance_company_id > 0";
@@ -900,8 +786,7 @@ class Reception_model extends CI_Model
 		$table = "visit";
 		$where = "personnel_id = '$personelle_id' and visit_date >= '$date' and time_start <> 0 and time_end <> 0";
 		$items = "*";
-		$order = "visit_number";
-
+		$order = "visit_id";
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
 		return $result;
@@ -916,7 +801,6 @@ class Reception_model extends CI_Model
 		
 		return $result;
 	}
-
 	public function get_service_charges_per_type($patient_type){
 		$table = "service_charge";
 		$where = "visit_type_id = $patient_type and service_id = 1 and service_charge_status = 1";
@@ -960,17 +844,16 @@ class Reception_model extends CI_Model
 		return $result;
 	}
 	
-	public function get_patient_id_from_visit($visit_number)
+	public function get_patient_id_from_visit($visit_id)
 	{
-		$this->db->where('visit_number = "'.$visit_number.'"');
-		$this->db->select("patient_number");
+		$this->db->where("visit_id = ".$visit_id);
+		$this->db->select("patient_id");
 		$query = $this->db->get('visit');
 		
 		$row = $query->row();
 		
-		return $row->patient_number;
+		return $row->patient_id;
 	}
-
 	
 	public function get_patient_type($visit_type_id, $dependant_id = NULL)
 	{
@@ -1016,41 +899,39 @@ class Reception_model extends CI_Model
 	*	@param int $patient_id
 	*
 	*/
-	public function get_patient_data($patient_number)
+	public function get_patient_data($patient_id)
 	{
 		$this->db->from('patients');
 		$this->db->select('*');
-		$this->db->where('patient_number = "'.$patient_number.'"');
+		$this->db->where('patient_id = '.$patient_id);
 		$query = $this->db->get();
 		
 		return $query;
 	}
-
 	/*
 	*	Retrieve a single patient's details
 	*	@param int $patient_id
 	*
 	*/
-	public function get_patient_staff_data($patient_number)
+	public function get_patient_staff_data($patient_id)
 	{
 		$this->db->from('patients,staff');
 		$this->db->select('*');
-		$this->db->where('patients.strath_no = staff.Staff_Number AND patient_number = "'.$patient_number.'"');
+		$this->db->where('patients.strath_no = staff.Staff_Number AND patient_id = '.$patient_id);
 		$query = $this->db->get();
 		
 		return $query;
 	}
-
 	/*
 	*	Retrieve a single patient's details
 	*	@param int $patient_id
 	*
 	*/
-	public function get_patient_student_data($patient_number)
+	public function get_patient_student_data($patient_id)
 	{
 		$this->db->from('patients,student');
 		$this->db->select('*');
-		$this->db->where('patients.strath_no = student.student_Number AND patient_number = "'.$patient_number.'"');
+		$this->db->where('patients.strath_no = student.student_Number AND patient_id = '.$patient_id);
 		$query = $this->db->get();
 		
 		return $query;
@@ -1076,11 +957,11 @@ class Reception_model extends CI_Model
 	*	@param int $strath_no
 	*
 	*/
-	public function get_all_patient_dependant($patient_number)
+	public function get_all_patient_dependant($patient_id)
 	{
 		$this->db->from('patients');
 		$this->db->select('*');
-		$this->db->where('dependant_id = \''.$patient_number.'\'');
+		$this->db->where('dependant_id = \''.$patient_id.'\'');
 		$query = $this->db->get();
 		
 		return $query;
@@ -1091,21 +972,21 @@ class Reception_model extends CI_Model
 	*	@param int $strath_no
 	*
 	*/
-	public function get_all_staff_dependants($patient_number)
+	public function get_all_staff_dependants($patient_id)
 	{
 		$this->db->from('patients, staff_dependants, staff');
 		$this->db->select('staff_dependants.*, staff.Staff_Number');
-		$this->db->where('patients.strath_no = staff.Staff_Number AND staff.staff_system_id = staff_dependants.staff_id AND patients.patient_number = \''.$patient_number.'\'');
+		$this->db->where('patients.strath_no = staff.Staff_Number AND staff.staff_system_id = staff_dependants.staff_id AND patients.patient_id = \''.$patient_id.'\'');
 		$query = $this->db->get();
 		
 		return $query;
 	}
-	public function check_student_exist($patient_number,$visit_date)
+	public function check_student_exist($patient_id,$visit_date)
 	{
 		$table = "visit";
-		$where = "patient_number = '". $patient_number ."' AND visit_date = ".$visit_date;
+		$where = "patient_id = ". $patient_id ." AND visit_date = ".$visit_date;
 		$items = "*";
-		$order = "visit_number";
+		$order = "visit_id";
 			//echo $sql;
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
@@ -1240,7 +1121,7 @@ class Reception_model extends CI_Model
 		return $patient;
 	}
 	
-	public function delete_patient($patient_number)
+	public function delete_patient($patient_id)
 	{
 		$data = array
 		(
@@ -1249,7 +1130,7 @@ class Reception_model extends CI_Model
 			"date_deleted" => date('Y-m-d H:i:s')
 		);
 		
-		$this->db->where('patient_number', $patient_number);
+		$this->db->where('patient_id', $patient_id);
 		if($this->db->update('patients', $data))
 		{
 			return TRUE;
@@ -1261,7 +1142,7 @@ class Reception_model extends CI_Model
 		}
 	}
 	
-	public function delete_visit($visit_number)
+	public function delete_visit($visit_id)
 	{
 		$data = array
 		(
@@ -1270,7 +1151,7 @@ class Reception_model extends CI_Model
 			"date_deleted" => date('Y-m-d H:i:s')
 		);
 		
-		$this->db->where('visit_number', $visit_number);
+		$this->db->where('visit_id', $visit_id);
 		if($this->db->update('visit', $data))
 		{
 			return TRUE;
@@ -1281,12 +1162,12 @@ class Reception_model extends CI_Model
 			return FALSE;
 		}
 	}
-	public function get_visit_date($visit_number)
+	public function get_visit_date($visit_id)
 	{
 		$table = "visit";
-		$where = 'visit_number = "'.$visit_number.'"';
+		$where = "visit_id = ".$visit_id;
 		$items = "visit_date";
-		$order = "visit_number";
+		$order = "visit_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		$num_rows = count($result);
@@ -1301,15 +1182,14 @@ class Reception_model extends CI_Model
 			return "None";
 		}
 	}
-	public function change_patient_type_to_others($patient_number,$visit_type_idd)
+	public function change_patient_type_to_others($patient_id,$visit_type_idd)
 	{
 		
 		//  get the details
-
 		if($visit_type_idd == 1)
 		{
 			// get student details from students table
-			$student_rs = $this->get_student_details($patient_number);
+			$student_rs = $this->get_student_details($patient_id);
 			$num_rows = count($student_rs);
 			
 			if($num_rows > 0){
@@ -1322,7 +1202,6 @@ class Reception_model extends CI_Model
 					$gender = $key->gender;
 					$GUARDIAN_NAME = $key->GUARDIAN_NAME;
 				endforeach;
-
 				if($gender == "Male")
 				{
 					$gender_id = 1;
@@ -1343,11 +1222,9 @@ class Reception_model extends CI_Model
 					"gender_id" => $gender_id,
 					"patient_kin_sname" => $GUARDIAN_NAME,
 					"modified_by " => $this->session->userdata('personnel_id')
-
-
 				);
 				
-				$this->db->where('patient_number', $patient_number);
+				$this->db->where('patient_id', $patient_id);
 				if($this->db->update('patients', $data))
 				{
 					return TRUE;
@@ -1361,12 +1238,11 @@ class Reception_model extends CI_Model
 				return FALSE;
 			}
 			
-
 		}
 		else
 		{
 			// get student details from students table
-			$staff_rs = $this->get_staff_details($patient_number);
+			$staff_rs = $this->get_staff_details($patient_id);
 			$num_rows = count($staff_rs);
 			
 			if($num_rows > 0){
@@ -1378,7 +1254,6 @@ class Reception_model extends CI_Model
 					$contact = $key->contact;
 					$gender = $key->gender;
 				endforeach;
-
 				if($gender == "M")
 				{
 					$gender_id = 1;
@@ -1398,11 +1273,9 @@ class Reception_model extends CI_Model
 					"patient_phone1" => $contact,
 					"gender_id" => $gender_id,
 					"modified_by " => $this->session->userdata('personnel_id')
-
-
 				);
 				
-				$this->db->where('patient_number', $patient_number);
+				$this->db->where('patient_id', $patient_id);
 				if($this->db->update('patients', $data))
 				{
 					return TRUE;
@@ -1416,13 +1289,11 @@ class Reception_model extends CI_Model
 				return FALSE;
 			}
 		}
-
 	}
-
-	public function get_student_details($patient_number)
+	public function get_student_details($patient_id)
 	{
 		$table = "patients,student";
-		$where = "patients.patient_number = '".$patient_number."' AND patients.strath_no = student.student_Number";
+		$where = "patients.patient_id = ".$patient_id." AND patients.strath_no = student.student_Number";
 		$items = "student.Surname,student.Other_names,student.DOB,student.contact,student.gender,student.GUARDIAN_NAME,student.student_Number";
 		$order = "student.student_id";
 		
@@ -1431,10 +1302,10 @@ class Reception_model extends CI_Model
 		return $result;
 	
 	}
-	public function get_staff_details($patient_number)
+	public function get_staff_details($patient_id)
 	{
 		$table = "patients,staff";
-		$where = "patients.patient_number = '".$patient_number."' AND patients.strath_no = staff.Staff_Number";
+		$where = "patients.patient_id = ".$patient_id." AND patients.strath_no = staff.Staff_Number";
 		$items = "staff.Surname,staff.Other_names,staff.DOB,staff.contact,staff.gender,staff.Staff_Number";
 		$order = "staff.staff_id";
 		
@@ -1443,7 +1314,7 @@ class Reception_model extends CI_Model
 		return $result;
 	
 	}
-	public function change_patient_type($patient_number)
+	public function change_patient_type($patient_id)
 	{
 	
 		// check if the staff of student exist 
@@ -1465,7 +1336,7 @@ class Reception_model extends CI_Model
 					"strath_no" => $student_number
 				);
 				
-				$this->db->where('patient_number', $patient_number);
+				$this->db->where('patient_id', $patient_id);
 				if($this->db->update('patients', $data))
 				{
 					return TRUE;
@@ -1488,7 +1359,7 @@ class Reception_model extends CI_Model
 				$data_array = array(
 				'visit_type_id'=>2
 				);
-				$this->db->where('patient_number', $patient_number);
+				$this->db->where('patient_id', $patient_id);
 				$this->db->update('patients', $data_array);
 				// end of changing the patient type
 				return TRUE;
@@ -1506,7 +1377,6 @@ class Reception_model extends CI_Model
 							$patient_date_of_birth = $key->patient_date_of_birth;
 							$gender_id = $key->gender_id;
 							$patient_id = $key->patient_id;
-							$patient_number = $key->patient_number;
 							$contact = $key->patient_phone1;
 						}
 						if($gender_id == 1)
@@ -1550,7 +1420,7 @@ class Reception_model extends CI_Model
 							$data_array = array(
 							'visit_type_id'=>2
 							);
-							$this->db->where('patient_number', $patient_number);
+							$this->db->where('patient_id', $patient_id);
 							$this->db->update('patients', $data_array);
 							// end of changing the patient type
 							return TRUE;
@@ -1586,7 +1456,7 @@ class Reception_model extends CI_Model
 					"strath_no" => $staff_number
 				);
 				
-				$this->db->where('patient_number', $patient_number);
+				$this->db->where('patient_id', $patient_id);
 				if($this->db->update('patients', $data))
 				{
 					return TRUE;
@@ -1612,7 +1482,7 @@ class Reception_model extends CI_Model
 						"patient_national_id" => $national_id
 					);
 					
-					$this->db->where('patient_number', $patient_number);
+					$this->db->where('patient_id', $patient_id);
 					if($this->db->update('patients', $data))
 					{
 						return TRUE;
@@ -1641,7 +1511,7 @@ class Reception_model extends CI_Model
 			$table = "patients";
 			$where = "patient_national_id = '$strath_no'";
 			$items = "*";
-			$order = "patients.patient_number";
+			$order = "patients.patient_id";
 			
 			$result = $this->database->select_entries_where($table, $where, $items, $order);
 		}
@@ -1651,11 +1521,10 @@ class Reception_model extends CI_Model
 			$table = "patients";
 			$where = "strath_no = '$strath_no'";
 			$items = "*";
-			$order = "patients.patient_number";
+			$order = "patients.patient_id";
 			
 			$result = $this->database->select_entries_where($table, $where, $items, $order);
 		}
-
 		
 		return $result;
 	}
@@ -1674,7 +1543,7 @@ class Reception_model extends CI_Model
 		$table = "patients";
 		$where = "patient_national_id = ".$national_id;
 		$items = "*";
-		$order = "patients.patient_number";
+		$order = "patients.patient_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
@@ -1738,7 +1607,7 @@ class Reception_model extends CI_Model
 						'strath_no'=>$this->input->post('strath_no'),
 						'visit_type_id'=>2,
 						'patient_date'=>date('Y-m-d H:i:s'),
-						'patient_number'=>$this->strathmore_population->create_patient_number(),
+						'patient_number'=>$this->create_patient_number(),
 						'created_by'=>$this->session->userdata('personnel_id'),
 						'modified_by'=>$this->session->userdata('personnel_id')
 					);
@@ -1769,7 +1638,7 @@ class Reception_model extends CI_Model
 		$where = "strath_no = '".$strath_no."'";
 		}
 		$items = "*";
-		$order = "patients.patient_number";
+		$order = "patients.patient_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
@@ -1788,7 +1657,6 @@ class Reception_model extends CI_Model
 		return $result;
 	
 	}
-
 	public function bulk_add_sbs_staff()
 	{
 		$query = $this->db->get('staff2');
@@ -1836,24 +1704,22 @@ class Reception_model extends CI_Model
 		return $color;
 	}
 	
-	public function get_patient_data_from_visit($visit_number)
+	public function get_patient_data_from_visit($visit_id)
 	{
 		$this->db->select('visit.*, patients.*');
-		$this->db->where('visit.patient_number = patients.patient_number AND visit.visit_number = "'.$visit_number.'"');
+		$this->db->where("visit.patient_id = patients.patient_id AND visit.visit_id = ".$visit_id);
 		$query = $this->db->get('visit, patients');
 		
 		$row = $query->row();
 		
 		return $row;
 	}
-
 	public function calculate_age($patient_date_of_birth)
 	{
 		$value = $this->dateDiff(date('y-m-d  h:i'), $patient_date_of_birth." 00:00", 'year');
 		
 		return $value;
 	}
-
 	public function dateDiff($time1, $time2, $interval) 
 	{
 	    // If not numeric then convert texts to unix timestamps
@@ -1891,11 +1757,11 @@ class Reception_model extends CI_Model
 	 
 	    return $diff;
   	}
-  	function check_patient_exist($patient_number,$visit_date){
+  	function check_patient_exist($patient_id,$visit_date){
   		$table = "visit";
-		$where = "visit.patient_number = '".$patient_number ."' AND visit.visit_date = '$visit_date' AND close_card = 0 AND visit.visit_delete = 0";
+		$where = "visit.patient_id =" .$patient_id ." AND visit.visit_date = '$visit_date' AND close_card = 0 AND visit.visit_delete = 0";
 		$items = "*";
-		$order = "visit.visit_number";
+		$order = "visit.visit_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
@@ -1920,13 +1786,13 @@ class Reception_model extends CI_Model
 	*	Create remove visit department
 	*
 	*/
-	public function remove_visit_department($visit_number)
+	public function remove_visit_department($visit_id)
 	{
 		$update['visit_department_status'] = 0;
 		$update['modified_by'] = $this->session->userdata('personnel_id');
 		$update['last_modified'] = date('Y-m-d H:i:s');
 		
-		$this->db->where(array('visit_department_status' => 1, 'visit_number' => $visit_number));
+		$this->db->where(array('visit_department_status' => 1, 'visit_id' => $visit_id));
 		
 		if($this->db->update('visit_department', $update))
 		{
@@ -1942,12 +1808,12 @@ class Reception_model extends CI_Model
 	*	Create visit department
 	*
 	*/
-	public function set_visit_department($visit_number, $department_id)
+	public function set_visit_department($visit_id, $department_id)
 	{
-		if($this->remove_visit_department($visit_number))
+		if($this->remove_visit_department($visit_id))
 		{
 			$data = array(
-				'visit_number'=>$visit_number,
+				'visit_id'=>$visit_id,
 				'department_id'=>$department_id,
 				'created'=>date('Y-m-d H:i:s'),
 				'created_by'=>$this->session->userdata('personnel_id'),
@@ -1969,13 +1835,13 @@ class Reception_model extends CI_Model
 		}
 	}
 	
-	public function save_visit_consultation_charge($visit_number, $service_charge_id)
+	public function save_visit_consultation_charge($visit_id, $service_charge_id)
 	{
 		//add charge for visit
 		$service_charge = $this->reception_model->get_service_charge($service_charge_id);		
 		
 		$visit_charge_data = array(
-			"visit_number" => $visit_number,
+			"visit_id" => $visit_id,
 			"service_charge_id" => $service_charge_id,
 			"created_by" => $this->session->userdata("personnel_id"),
 			"date" => date("Y-m-d"),
@@ -1992,20 +1858,20 @@ class Reception_model extends CI_Model
 		}
 	}
 	
-	public function set_last_visit_date($patient_number, $visit_date)
+	public function set_last_visit_date($patient_id, $visit_date)
 	{
 		$patient_date = array(
 			"last_visit" => $visit_date
 		);
-		$this->db->where('patient_number', $patient_number);
+		$this->db->where('patient_id', $patient_id);
 		$this->db->update('patients', $patient_date);
 	}
 	
-	public function create_visit($visit_date, $patient_number, $doctor_id, $patient_insurance_id, $patient_insurance_number, $patient_type, $timepicker_start, $timepicker_end, $appointment_id, $close_card)
+	public function create_visit($visit_date, $patient_id, $doctor_id, $patient_insurance_id, $patient_insurance_number, $patient_type, $timepicker_start, $timepicker_end, $appointment_id, $close_card)
 	{
-		$visit_number = $this->create_visit_number();
 		$visit_data = array(
 			"visit_date" => $visit_date,
+			"patient_id" => $patient_id,
 			"personnel_id" => $doctor_id,
 			"patient_insurance_id" => $patient_insurance_id,
 			"patient_insurance_number" => $patient_insurance_number,
@@ -2014,53 +1880,17 @@ class Reception_model extends CI_Model
 			"time_end"=>$timepicker_end,
 			"appointment_id"=>$appointment_id,
 			"close_card"=>$close_card,
-			"branch_id"=>$this->session->userdata('branch_id'),
-			"patient_number"=>$patient_number,
-			"visit_number"=>$visit_number,
 		);
-
 		$this->db->insert('visit', $visit_data);
-		// $visit_number = $this->db->insert_id();
+		$visit_id = $this->db->insert_id();
 		
-		return $visit_number;
-	}
-
-	public function create_visit_number()
-	{
-		//select product code
-		$this->db->from('visit');
-		$this->db->where('branch_id = '.$this->session->userdata('branch_id'));
-		$this->db->select('MAX(visit_number) AS number');
-		$query = $this->db->get();
-
-		if($query->num_rows() > 0)
-		{
-			$result = $query->result();
-			$number =  $result[0]->number;
-			$number++;//go to the next number
-
-			if($number == 1){
-				$number = "".$this->session->userdata('branch_code')."-0000001";
-			}
-
-			
-			if($number == 1)
-			{
-				$number = "".$this->session->userdata('branch_code')."-0000001";
-			}
-			
-		}
-		else{//start generating receipt numbers
-			$number = "".$this->session->userdata('branch_code')."-0000001";
-		}
-
-		return $number;
+		return $visit_id;
 	}
 	
-	public function coming_from($visit_number)
+	public function coming_from($visit_id)
 	{
-		$where = 'visit_department.visit_number = "'.$visit_number.'" AND visit_department.department_id = departments.department_id AND visit_department.visit_department_status = 0';
-		$this->db->select('departments.departments_name');
+		$where = 'visit_department.visit_id = '.$visit_id.' AND visit_department.department_id = departments.department_id AND visit_department.visit_department_status = 0';
+		$this->db->select('departments.department_name');
 		$this->db->where($where);
 		$this->db->order_by('visit_department.last_modified','DESC');
 		$query = $this->db->get('visit_department, departments', 1, 0);
@@ -2068,7 +1898,7 @@ class Reception_model extends CI_Model
 		if($query->num_rows() > 0)
 		{
 			$row = $query->row();
-			return $row->departments_name;
+			return $row->department_name;
 		}
 		
 		else
@@ -2077,17 +1907,17 @@ class Reception_model extends CI_Model
 		}
 	}
 	
-	public function going_to($visit_number)
+	public function going_to($visit_id)
 	{
-		$where = 'visit_department.visit_number = "'.$visit_number.'" AND visit_department.department_id = departments.department_id AND visit_department.visit_department_status = 1';
-		$this->db->select('departments.departments_name');
+		$where = 'visit_department.visit_id = '.$visit_id.' AND visit_department.department_id = departments.department_id AND visit_department.visit_department_status = 1';
+		$this->db->select('departments.department_name');
 		$this->db->where($where);
 		$query = $this->db->get('visit_department, departments', 1, 0);
 		
 		if($query->num_rows() > 0)
 		{
 			$row = $query->row();
-			return $row->departments_name;
+			return $row->department_name;
 		}
 		
 		else
@@ -2096,10 +1926,10 @@ class Reception_model extends CI_Model
 		}
 	}
 	
-	public function get_visit_trail($visit_number)
+	public function get_visit_trail($visit_id)
 	{
-		$where = 'visit_department.visit_number = "'.$visit_number.'" AND visit_department.department_id = departments.department_id AND visit_department.created_by = personnel.personnel_id';
-		$this->db->select('departments.departments_name, personnel.personnel_fname, visit_department.*');
+		$where = 'visit_department.visit_id = '.$visit_id.' AND visit_department.department_id = departments.department_id AND visit_department.created_by = personnel.personnel_id';
+		$this->db->select('departments.department_name, personnel.personnel_fname, visit_department.*');
 		$this->db->where($where);
 		$this->db->order_by('visit_department.created','ASC');
 		$query = $this->db->get('visit_department, departments, personnel');
@@ -2198,10 +2028,10 @@ class Reception_model extends CI_Model
 		return $query;
 	}
 	
-	public function change_patient_id($standing_patient_number, $patient_number)
+	public function change_patient_id($standing_patient_id, $patient_id)
 	{
-		$where['patient_number'] = $patient_number;
-		$items['patient_number'] = $standing_patient_number;
+		$where['patient_id'] = $patient_id;
+		$items['patient_id'] = $standing_patient_id;
 		
 		$this->db->where($where);
 		if($this->db->update('visit', $items))
@@ -2215,9 +2045,9 @@ class Reception_model extends CI_Model
 		}
 	}
 	
-	public function delete_duplicate_patient($patient_number)
+	public function delete_duplicate_patient($patient_id)
 	{
-		$where['patient_number'] = $patient_number;
+		$where['patient_id'] = $patient_id;
 		
 		$this->db->where($where);
 		if($this->db->delete('patients'))
@@ -2230,6 +2060,33 @@ class Reception_model extends CI_Model
 			return FALSE;
 		}
 	}
+	public function create_patient_number()
+	{
+		//select product code
+		$this->db->where('branch_code = "'.$this->session->userdata('branch_code').'"');
+		$this->db->from('patients');
+		$this->db->select('MAX(patient_number) AS number');
+		$query = $this->db->get();
+		if($query->num_rows() > 0)
+		{
+			$result = $query->result();
+			$number =  $result[0]->number;
+			$number++;//go to the next number
+			if($number == 1){
+				$number = "".$this->session->userdata('branch_code')."-000001";
+			}
+			
+			if($number == 1)
+			{
+				$number = "".$this->session->userdata('branch_code')."-000001";
+			}
+			
+		}
+		else{//start generating receipt numbers
+			$number = "".$this->session->userdata('branch_code')."-000001";
+		}
+		return $number;
+	}
 	
 	/*
 	*	Retrieve all students in SUMC db
@@ -2237,7 +2094,7 @@ class Reception_model extends CI_Model
 	*/
 	public function get_all_dependants()
 	{
-		$this->db->select('patients.patient_number, staff_dependants.DOB, staff_dependants.Gender, staff_dependants.surname, staff_dependants.other_names');
+		$this->db->select('patients.patient_id, staff_dependants.DOB, staff_dependants.Gender, staff_dependants.surname, staff_dependants.other_names');
 		$this->db->from('patients, staff_dependants');
 		$this->db->where('patients.visit_type_id = 2 AND patients.strath_no > 0 AND patients.strath_no = staff_dependants.staff_dependants_id');
 		$query = $this->db->get();

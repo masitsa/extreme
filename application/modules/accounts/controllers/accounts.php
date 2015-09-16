@@ -1,5 +1,4 @@
 <?php   if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
 class Accounts extends MX_Controller 
 {
 	function __construct()
@@ -118,9 +117,7 @@ class Accounts extends MX_Controller
 		$this->load->view('admin/templates/general_page', $data);
 		// end of it
 		
-
 	}
-
 	public function search_visits($pager)
 	{
 		$visit_type_id = $this->input->post('visit_type_id');
@@ -197,7 +194,6 @@ class Accounts extends MX_Controller
 		else if($pager == 2)
 		{
 			$this->accounts_unclosed_queue();
-
 		}
 		else if($pager == 3)
 		{
@@ -220,7 +216,6 @@ class Accounts extends MX_Controller
 		else if($pager == 2)
 		{
 			$this->accounts_unclosed_queue();
-
 		}
 		else if($pager == 3)
 		{
@@ -299,7 +294,6 @@ class Accounts extends MX_Controller
 		$this->load->view('admin/templates/general_page', $data);
 		// end of it
 		
-
 	}
 	public function accounts_closed_visits()
 	{
@@ -369,9 +363,7 @@ class Accounts extends MX_Controller
 		$this->load->view('admin/templates/general_page', $data);
 		// end of it
 		
-
 	}
-
 	public function invoice($visit_id)
 	{
 		?>
@@ -397,14 +389,12 @@ class Accounts extends MX_Controller
 		$patient_surname = $patient['patient_surname'];
 		$account_balance = $patient['account_balance'];
 		$primary_key = $patient['patient_id'];
-
 		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span> Account Balance : <span style="font-weight: normal;">'.$account_balance.'</span> <a href="'.site_url().'/administration/individual_statement/'.$primary_key.'/3" class="btn btn-sm btn-primary" target="_blank" style="margin-top: 5px;">Patient Statement</a>';
 		$v_data['close_page'] = $close_page;
 		$data['content'] = $this->load->view('payments', $v_data, true);
 		
 		$data['title'] = 'Patient Card';
 		$data['sidebar'] = 'accounts_sidebar';
-
 		$this->load->view('admin/templates/general_page', $data);
 	}
 	
@@ -414,7 +404,6 @@ class Accounts extends MX_Controller
 		$this->form_validation->set_rules('amount_paid', 'Amount', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('type_payment', 'Type of payment', 'trim|required|xss_clean');
 		$payment_method = $this->input->post('payment_method');
-
 		// normal or credit note or debit note
 		$type_payment = $this->input->post('type_payment');
 		
@@ -453,7 +442,6 @@ class Accounts extends MX_Controller
 			$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
 		}
-
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{
@@ -462,7 +450,6 @@ class Accounts extends MX_Controller
 			{
 				$username=$this->input->post('username');
 				$password=$this->input->post('password');
-
 				// check if the username and password is for an administrator
 				$checker_response = $this->accounts_model->check_admin_person($username,$password);
 				// end of checker function
@@ -542,7 +529,6 @@ class Accounts extends MX_Controller
 		$data['patient'] = $patient;
 		$this->load->view('receipt', $data);
 	}
-
 	public function bulk_close_visits($page)
 	{
 		$total_visits = sizeof($_POST['visit']);

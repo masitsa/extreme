@@ -65,7 +65,6 @@
 					  <thead>
 						<tr>
 						  <th>#</th>
-						  <th>Patient Number</th>
 						  <th>Surname</th>
 						  <th>Other Names</th>
 						  <th>Contact details</th>
@@ -104,8 +103,8 @@
 			
 			foreach ($query->result() as $row)
 			{
+
 				$patient_id = $row->patient_id;
-				$patient_number = $row->patient_number;
 				$dependant_id = $row->dependant_id;
 				$strath_no = $row->strath_no;
 				$created_by = $row->created_by;
@@ -116,9 +115,7 @@
 				$last_modified = $row->last_modified;
 				$last_visit = $row->last_visit;
 				$patient_phone1 = $row->patient_phone1;
-
-
-				$patient = $this->reception_model->patient_names2($patient_number);
+				$patient = $this->reception_model->patient_names2($patient_id);
 				$patient_type = $patient['patient_type'];
 				$patient_othernames = $patient['patient_othernames'];
 				$patient_surname = $patient['patient_surname'];
@@ -133,8 +130,8 @@
 				{
 					$last_visit = '';
 				}
-				
-				$patient = $this->reception_model->patient_names2($patient_number);
+				$patient = $this->reception_model->patient_names2($patient_id);
+
 				$patient_type = $patient['patient_type'];
 				$patient_othernames = $patient['patient_othernames'];
 				$patient_surname = $patient['patient_surname'];
@@ -189,7 +186,6 @@
 						<tr>
 							<td>'.$count.'</td>
 							<td>'.$patient_type.'</td>
-							<td>'.$patient_number.' </td>
 							<td>'.$patient_surname.'</td>
 							<td>'.$patient_othernames.'</td>
 							<td>'.date('jS M Y H:i a',strtotime($created)).'</td>
@@ -206,18 +202,17 @@
 					'
 						<tr>
 							<td>'.$count.'</td>
-							<td>'.$patient_number.' </td>
 							<td>'.$patient_surname.' </td>
 							<td>'.$patient_othernames.'</td>
 							<td>'.$patient_phone1.'</td>
 							<!--<td>'.date('jS M Y H:i a',strtotime($created)).'</td>-->
 							<td>'.$last_visit.'</td>
 							<td>  '.number_format($account_balance,0).'</td>
-							<td><a href="'.site_url().'reception/set_visit/'.$patient_number.'" class="btn btn-sm btn-success">Visit</a></td>
-							<td><a href="'.site_url().'reception/edit_patient/'.$patient_number.'" class="btn btn-sm btn-warning">Edit </a></td>
-							<td><a href="'.site_url().'administration/individual_statement/'.$patient_number.'/2" class="btn btn-sm btn-danger" target="_blank">Patient Statement</a></td>
-							<!--<td><a href="'.site_url().'reception/change_patient_type/'.$patient_number.'" class="btn btn-sm btn-primary">Change patient type</a></td>
-							<td><a href="'.site_url().'reception/delete_patient/'.$patient_number.'/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">Delete</a></td>-->
+							<td><a href="'.site_url().'reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-success">Visit</a></td>
+							<td><a href="'.site_url().'reception/edit_patient/'.$patient_id.'" class="btn btn-sm btn-warning">Edit </a></td>
+							<td><a href="'.site_url().'administration/individual_statement/'.$patient_id.'/2" class="btn btn-sm btn-danger" target="_blank">Patient Statement</a></td>
+							<!--<td><a href="'.site_url().'reception/change_patient_type/'.$patient_id.'" class="btn btn-sm btn-primary">Change patient type</a></td>
+							<td><a href="'.site_url().'reception/delete_patient/'.$patient_id.'/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">Delete</a></td>-->
 						</tr> 
 					';
 				}

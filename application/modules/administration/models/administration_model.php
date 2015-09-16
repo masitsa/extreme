@@ -1,8 +1,6 @@
 <?php
-
 class Administration_model extends CI_Model 
 {
-
 	public function get_all_services($table, $where, $per_page, $page, $order = NULL)
 	{
 		//retrieve all users
@@ -42,16 +40,13 @@ class Administration_model extends CI_Model
 		}
 		return $service_name;
 	}
-
 	public function submit_service_charges($service_id)
 	{
 		$service_charge_name = $this->input->post('service_charge_name');
 		$charge = $this->input->post('charge');
 		$patient_type = $this->input->post('patient_type');
-
 		//  check if the value exisit
 		$result = $this->check_service_charge_exist($service_id,$patient_type,$service_charge_name);
-
 		if($result == TRUE)
 		{
 			return FALSE;
@@ -60,12 +55,9 @@ class Administration_model extends CI_Model
 		{
 			$visit_data = array('service_id'=>$service_id,'service_charge_name'=>$service_charge_name,'service_charge_amount'=>$charge,'visit_type_id'=>$patient_type, 'service_charge_status'=>1);
 			$this->db->insert('service_charge', $visit_data);
-
 			return TRUE;
 		}
-
 	}
-
 	public function check_service_charge_exist($service_id,$patient_type,$service_charge_name)
 	{
 		$table = "service_charge";
@@ -93,17 +85,13 @@ class Administration_model extends CI_Model
 		$order = "service_charge_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
-
 		return $result;
-
 	}
 	public function submit_service()
 	{
 		$service_name = $this->input->post('service_name');
-
 		//  check if the value exisit
 		$result = $this->check_service_exist($service_name);
-
 		if($result == TRUE)
 		{
 			return FALSE;
@@ -112,10 +100,8 @@ class Administration_model extends CI_Model
 		{
 			$visit_data = array('service_name'=>$service_name);
 			$this->db->insert('service', $visit_data);
-
 			return TRUE;
 		}
-
 	}
 	public function check_service_exist($service_name)
 	{
@@ -176,19 +162,16 @@ class Administration_model extends CI_Model
 		
 		return $query;
 	}
-
-	public function patient_account_balance($patient_number)
+	public function patient_account_balance($patient_id)
 	{
 		//retrieve all users
 		$this->db->from('visit');
 		$this->db->select('*');
-		$this->db->where('patient_number = "'.$patient_number.'"');
+		$this->db->where('patient_id = '.$patient_id);
 		$this->db->order_by('visit_date','desc');
 		$query = $this->db->get();
-
 		$total_invoiced_amount = 0;
 		$total_paid_amount = 0;
-
 		if ($query->num_rows() > 0)
 		{
 			foreach ($query->result() as $row)
@@ -198,7 +181,6 @@ class Administration_model extends CI_Model
 				$visit_date = $row->visit_date;
 				$total_invoice = $this->accounts_model->total_invoice($visit_id);
 				$total_payments = $this->accounts_model->total_payments($visit_id);
-
 				$total_paid_amount = $total_paid_amount + $total_payments;
 				$total_invoiced_amount = $total_invoiced_amount + $total_invoice;
 				
@@ -210,7 +192,6 @@ class Administration_model extends CI_Model
 		{
 			$difference = $total_invoiced_amount -$total_paid_amount;
 		}
-
 		return $difference;
 	}
 }

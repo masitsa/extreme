@@ -1,12 +1,10 @@
 <?php
-
 class Accounts_model extends CI_Model 
 {
-
-	public function payments2($visit_number)
+	public function payments2($visit_id)
 	{
 		$table = "payments";
-		$where = "payments.visit_number = '".$visit_number."'";
+		$where = "payments.visit_id =". $visit_id;
 		$items = "payments.amount_paid,payments.payment_type";
 		$order = "amount_paid";
 		
@@ -33,11 +31,11 @@ class Accounts_model extends CI_Model
 		
 		return $value;
 	}
-	public function total_invoice($visit_number)
+	public function total_invoice($visit_id)
 	{
-		 $item_invoiced_rs = $this->get_patient_visit_charge_items($visit_number);
-         $credit_note_amount = $this->get_sum_credit_notes($visit_number);
-         $debit_note_amount = $this->get_sum_debit_notes($visit_number);
+		 $item_invoiced_rs = $this->get_patient_visit_charge_items($visit_id);
+         $credit_note_amount = $this->get_sum_credit_notes($visit_id);
+         $debit_note_amount = $this->get_sum_debit_notes($visit_id);
          $total = 0;
           $total_amount =  0;
           if(count($item_invoiced_rs) > 0){
@@ -56,7 +54,7 @@ class Accounts_model extends CI_Model
 			  //If pharmacy
 			  	if($service_id == 4)
 				{
-					if($this->accounts_model->in_pres($service_charge_id, $visit_number))
+					if($this->accounts_model->in_pres($service_charge_id, $visit_id))
 					{
 						$visit_total = $visit_charge_amount * $units;
 					}
@@ -66,9 +64,7 @@ class Accounts_model extends CI_Model
 				{
 					$visit_total = $visit_charge_amount * $units;
 				}
-
              // $visit_total = $visit_charge_amount * $units;
-
               $total = $total + $visit_total;
             endforeach;
             $total_amount = $total;
@@ -78,12 +74,11 @@ class Accounts_model extends CI_Model
           	$total_amount = 0;
           }
           $total_amount = ($total + $debit_note_amount) - $credit_note_amount;
-
           return $total_amount;
 	}
-	public function total_payments($visit_number)
+	public function total_payments($visit_id)
 	{
-	      $payments_rs = $this->accounts_model->payments($visit_number);
+	      $payments_rs = $this->accounts_model->payments($visit_id);
 	      $total_payments = 0;
 	      
 	      if(count($payments_rs) > 0)
@@ -110,22 +105,18 @@ class Accounts_model extends CI_Model
 	      }
 	      return $total_payments;
 	}
-
-	public function total($visit_number)
+	public function total($visit_id)
 	{
 	 	$total=""; 
 	 	$temp="";
 		
 		//identify patient/visit type
-
-		$visit_type_rs = $this->nurse_model->get_visit_type($visit_number);
+		$visit_type_rs = $this->nurse_model->get_visit_type($visit_id);
 		foreach ($visit_type_rs as $key):
 			$visit_t = $key->visit_type;
 		endforeach;
-
 		//  get patient id 
-		$patient_id = $this->nurse_model->get_patient_id($visit_number);
-
+		$patient_id = $this->nurse_model->get_patient_id($visit_id);
 	
 		//  get the visit type details
 		$type_details_rs = $this->visit_type_details($visit_t);
@@ -138,7 +129,7 @@ class Accounts_model extends CI_Model
 		if ($visit_type_name=="Insurance")
 		{
 			//  get insuarance amounts 
-			$insurance_rs = $this->get_service_charges_amounts($visit_number);
+			$insurance_rs = $this->get_service_charges_amounts($visit_id);
 		    $num_rows = count($insurance_rs);
 			foreach ($insurance_rs as $key_values):
 				$service_id1  = $key_values->service_id;
@@ -170,30 +161,24 @@ class Accounts_model extends CI_Model
 				$total=($sum*$visit_charge_units)+$temp;	$temp=$total;
 						
 			endforeach;
-
 			return $total;
 		}
 		else
 		{
-			$amount_rs = $this->get_service_charges_amounts($visit_number);
+			$amount_rs = $this->get_service_charges_amounts($visit_id);
 		    $num_rows = count($amount_rs);
 			foreach ($amount_rs as $key_values):
-
 				$service_id1  = $key_values->service_id;
 				$visit_charge_amount  = $key_values->visit_charge_amount;
 				$visit_charge_units  = $key_values->visit_charge_units;
 				$amount=$visit_charge_amount*$visit_charge_units;
-
-
 				$total = $total + $amount;
 						
 			endforeach;
-
 			return $total;
 		}
 	
 	}
-
 	function visit_type_details($visit_type_id){
 		$table = "visit_type";
 		$where = "visit_type.visit_type_id =". $visit_type_id;
@@ -205,11 +190,11 @@ class Accounts_model extends CI_Model
 		return $result;
 	}
 	
-	function get_service_charges_amounts($visit_number)
+	function get_service_charges_amounts($visit_id)
 	{
 		$table = "visit_charge, service_charge";
 		$where = "service_charge.service_charge_id = visit_charge.service_charge_id
-		AND visit_charge.visit_number =". $visit_number;
+		AND visit_charge.visit_id =". $visit_id;
 		$items = "visit_charge.visit_charge_amount,visit_charge.visit_charge_units,visit_charge.service_charge_id,service_charge.service_id";
 		$order = "visit_charge.service_charge_id";
 		
@@ -218,7 +203,6 @@ class Accounts_model extends CI_Model
 		return $result;
 		
 	}
-
 	function get_dicountend_values($patient_id,$service_id)
 	{
 		$table = "insurance_discounts";
@@ -229,9 +213,7 @@ class Accounts_model extends CI_Model
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
 		return $result;
-
 	}
-
 	function get_payment_methods()
 	{
 		$table = "payment_method";
@@ -242,9 +224,7 @@ class Accounts_model extends CI_Model
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
 		return $result;
-
 	}
-
 	public function balance($payments, $invoice_total)
 	{
 		
@@ -258,36 +238,31 @@ class Accounts_model extends CI_Model
 	
 		return $value;
 	}
-
-	public function get_patient_visit_charge_items($visit_number)
+	public function get_patient_visit_charge_items($visit_id)
 	{
 		$table = "visit_charge, service_charge, service";
-		$where = "service_charge.service_id = service.service_id AND visit_charge.visit_charge_delete = 0 AND visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_number = '".$visit_number."'";
+		$where = "service_charge.service_id = service.service_id AND visit_charge.visit_charge_delete = 0 AND visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_id =". $visit_id;
 		$items = "service.service_id,service.service_name,service_charge.service_charge_name,visit_charge.service_charge_id,visit_charge.visit_charge_units, visit_charge.visit_charge_amount, visit_charge.visit_charge_timestamp,visit_charge.visit_charge_id,visit_charge.created_by";
 		$order = "visit_charge.service_charge_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
 		return $result;
-
 	}
-
-	public function get_patient_visit_charge($visit_number)
+	public function get_patient_visit_charge($visit_id)
 	{
 		$table = "visit_charge, service_charge, service";
-		$where = "service_charge.service_id = service.service_id AND visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_number = '".$visit_number."'";
+		$where = "service_charge.service_id = service.service_id AND visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_id =". $visit_id;
 		$items = "DISTINCT(service_charge.service_id) AS service_id, service.service_name,";
 		$order = "service_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
 		return $result;
-
 	}
-
-	public function total_debit_note_per_service($service_id,$visit_number){
+	public function total_debit_note_per_service($service_id,$visit_id){
 		$table = "payments,payment_method";
-		$where = "payment_method.payment_method_id = payments.payment_method_id AND payments.payment_type = 2 AND payments.payment_service_id = ".$service_id." AND payments.visit_number = ''";
+		$where = "payment_method.payment_method_id = payments.payment_method_id AND payments.payment_type = 2 AND payments.payment_service_id = ".$service_id." AND payments.visit_id =". $visit_id;
 		$items = "SUM(amount_paid) AS total_debit";
 		$order = "payments.payment_id";
 		
@@ -304,11 +279,9 @@ class Accounts_model extends CI_Model
 		 }
 		 return $total_debit;
 	}
-
-	public function total_credit_note_per_service($service_id,$visit_number){
-
+	public function total_credit_note_per_service($service_id,$visit_id){
 		$table = "payments,payment_method";
-		$where = "payment_method.payment_method_id = payments.payment_method_id AND payments.payment_type = 3 AND payments.payment_service_id = ".$service_id." AND payments.visit_number = '".$visit_number."'";
+		$where = "payment_method.payment_method_id = payments.payment_method_id AND payments.payment_type = 3 AND payments.payment_service_id = ".$service_id." AND payments.visit_id =". $visit_id;
 		$items = "SUM(amount_paid) AS total_credit";
 		$order = "payments.payment_id";
 		
@@ -325,12 +298,9 @@ class Accounts_model extends CI_Model
 		 }
 		 return $total_credit;
 	}
-
-
-
-	public function payments($visit_number){
+	public function payments($visit_id){
 		$table = "payments, payment_method";
-		$where = "payment_method.payment_method_id = payments.payment_method_id AND payments.visit_number = '".$visit_number."'";
+		$where = "payment_method.payment_method_id = payments.payment_method_id AND payments.visit_id =". $visit_id;
 		$items = "*";
 		$order = "payments.payment_id";
 		
@@ -338,10 +308,10 @@ class Accounts_model extends CI_Model
 		
 		return $result;
 	}
-	public function get_sum_credit_notes($visit_number)
+	public function get_sum_credit_notes($visit_id)
 	{
 		$table = "payments";
-		$where = "payments.payment_type = 3 AND payments.visit_number = '".$visit_number."'";
+		$where = "payments.payment_type = 3 AND payments.visit_id =". $visit_id;
 		$items = "SUM(payments.amount_paid) AS amount_paid";
 		$order = "payments.payment_id";
 		
@@ -349,11 +319,9 @@ class Accounts_model extends CI_Model
 		
 		if(count($result) > 0)
 		{
-
 			foreach ($result as $key):
 				# code...
 				$amount = $key->amount_paid;
-
 				if(!is_numeric($amount))
 				{
 					return 0;
@@ -368,12 +336,11 @@ class Accounts_model extends CI_Model
 		{
 			return 0;
 		}
-
 	}
-	public function get_sum_debit_notes($visit_number)
+	public function get_sum_debit_notes($visit_id)
 	{
 		$table = "payments";
-		$where = "payments.payment_type = 2 AND payments.visit_number = '".$visit_number."'";
+		$where = "payments.payment_type = 2 AND payments.visit_id =". $visit_id;
 		$items = "SUM(payments.amount_paid) AS amount_paid";
 		$order = "payments.payment_id";
 		
@@ -381,11 +348,9 @@ class Accounts_model extends CI_Model
 		
 		if(count($result) > 0)
 		{
-
 			foreach ($result as $key):
 				# code...
 				$amount = $key->amount_paid;
-
 				if(!is_numeric($amount))
 				{
 					return 0;
@@ -400,9 +365,7 @@ class Accounts_model extends CI_Model
 		{
 			return 0;
 		}
-
 	}
-
 	public function  get_payment_peronnel($payment_id)
 	{
 		$table = "payments";
@@ -414,11 +377,9 @@ class Accounts_model extends CI_Model
 		
 		if(count($result) > 0)
 		{
-
 			foreach ($result as $key):
 				# code...
 				$payment_created_by = $key->payment_created_by;
-
 				if(!is_numeric($payment_created_by))
 				{
 					return 0;
@@ -434,11 +395,10 @@ class Accounts_model extends CI_Model
 			return 0;
 		}
 	}
-	public function receipt_payment($visit_number,$personnel_id = NULL){
+	public function receipt_payment($visit_id,$personnel_id = NULL){
 		$amount = $this->input->post('amount_paid');
 		$payment_method=$this->input->post('payment_method');
 		$type_payment=$this->input->post('type_payment');
-
 		if($type_payment == 2 || $type_payment == 3)
 		{
 			$service_id = $this->input->post('service_id');
@@ -447,7 +407,6 @@ class Accounts_model extends CI_Model
 		{
 			$service_id = 0;
 		}
-
 		if($payment_method == 1)
 		{
 			// check for cheque number if inserted
@@ -469,7 +428,7 @@ class Accounts_model extends CI_Model
 			$transaction_code = '';
 		}
 		
-		$data = array('visit_number' => $visit_number,'payment_method_id'=>$payment_method,'amount_paid'=>$amount,'personnel_id'=>$this->session->userdata("personnel_id"),'payment_type'=>$type_payment,'transaction_code'=>$transaction_code,'payment_service_id'=>$service_id,'payment_created'=>date("Y-m-d"),'payment_created_by'=>$this->session->userdata("personnel_id"),'approved_by'=>$personnel_id,'date_approved'=>date('Y-m-d'));
+		$data = array('visit_id' => $visit_id,'payment_method_id'=>$payment_method,'amount_paid'=>$amount,'personnel_id'=>$this->session->userdata("personnel_id"),'payment_type'=>$type_payment,'transaction_code'=>$transaction_code,'payment_service_id'=>$service_id,'payment_created'=>date("Y-m-d"),'payment_created_by'=>$this->session->userdata("personnel_id"),'approved_by'=>$personnel_id,'date_approved'=>date('Y-m-d'));
 		if($this->db->insert('payments', $data))
 		{
 			return $this->db->insert_id();
@@ -477,7 +436,6 @@ class Accounts_model extends CI_Model
 		else{
 			return FALSE;
 		}
-
 	}
 	public function check_admin_person($username,$password)
 	{
@@ -492,11 +450,9 @@ class Accounts_model extends CI_Model
 		
 		if(count($result) > 0)
 		{
-
 			foreach ($result as $row2):
 				$personnel_id = $row2->personnel_id;
 			endforeach;
-
 			return $personnel_id;	
 		}
 		else{
@@ -505,12 +461,12 @@ class Accounts_model extends CI_Model
 		
 		
 	}
-	public function add_billing($visit_number)
+	public function add_billing($visit_id)
 	{
 		$billing_method_id = $this->input->post('billing_method_id');
 		$data = array('bill_to_id' => $billing_method_id);
 		
-		$this->db->where('visit_number', $visit_number);
+		$this->db->where('visit_id', $visit_id);
 		if($this->db->update('visit', $data))
 		{
 			return TRUE;
@@ -518,33 +474,32 @@ class Accounts_model extends CI_Model
 		else{
 			return FALSE;
 		}
-
 	}
 	
-	public function receipt($visit_number, $invoice = NULL)
+	public function receipt($visit_id, $invoice = NULL)
 	{
 		// if($invoice != NULL)
 		// {
 		// 	$title = 'INVOICE';
 		// 	$heading = 'Invoice';
-		// 	$number = 'INV/00'.$visit_number;
+		// 	$number = 'INV/00'.$visit_id;
 		// }
 		// else
 		// {
 		// 	$title = 'RECEIPT';
 		// 	$heading = 'Receipt';
-		// 	$number = 'REC/00'.$visit_number;
+		// 	$number = 'REC/00'.$visit_id;
 		// }
 		$title = 'INVOICE';
 		$heading = 'Invoice';
-		$number = 'INV/00'.$visit_number;
+		$number = 'INV/00'.$visit_id;
 		$personnel_id = $this->session->userdata('personnel_id');
 		/*
 			-----------------------------------------------------------------------------------------
 			Retrieve the details of the patient
 			-----------------------------------------------------------------------------------------
 		*/
-		$patient = $this->reception_model->get_patient_data_from_visit($visit_number);
+		$patient = $this->reception_model->get_patient_data_from_visit($visit_id);
 		$strath_no = $patient->strath_no;
 		$visit_type = $patient->visit_type;
 		$doctor_id = $patient->personnel_id;
@@ -553,7 +508,7 @@ class Accounts_model extends CI_Model
 		$visit_date = date('jS M Y H:i a',strtotime($patient->visit_time));
 		$dependant_id = $patient->dependant_id;
 				
-		$patient = $this->reception_model->patient_names2(NULL, $visit_number);
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
 		$visit_type = $patient['visit_type'];
 		$patient_type = $patient['patient_type'];
 		$patient_othernames = $patient['patient_othernames'];
@@ -650,7 +605,7 @@ class Accounts_model extends CI_Model
 		
 		$this->fpdf->SetTextColor(0, 0, 0); //226, 225, 225
 		$this->fpdf->SetDrawColor(0, 0, 0); //226, 225, 225
-		$item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_number);
+		$item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_id);
 		$total = 0;
 		$pageH = 6;
 		$width = 22.5;
@@ -710,7 +665,7 @@ class Accounts_model extends CI_Model
 		{
 			$width = 60;
 			
-			$payments_rs = $this->accounts_model->payments($visit_number);
+			$payments_rs = $this->accounts_model->payments($visit_id);
 			$total_payments = 0;
 			
 			if(count($payments_rs) > 0)
@@ -743,15 +698,14 @@ class Accounts_model extends CI_Model
 		$this->fpdf->Cell(50,$pageH,'','B');
 		$this->fpdf->Cell(25,$pageH,'Approved By:','0',0, 'L');
 		$this->fpdf->Cell(50,$pageH,'','B');
-
 		$this->fpdf->Output();
 	}
 	
-	public function get_att_doctor($visit_number)
+	public function get_att_doctor($visit_id)
 	{
 		$this->db->select('personnel.personnel_fname, personnel.personnel_onames');
 		$this->db->from('personnel, visit');
-		$this->db->where("personnel.personnel_id = visit.personnel_id AND visit.visit_number = '".$visit_number."'");
+		$this->db->where('personnel.personnel_id = visit.personnel_id AND visit.visit_id = '.$visit_id);
 		
 		$query = $this->db->get();
 		
@@ -791,11 +745,11 @@ class Accounts_model extends CI_Model
 		return $personnel;
 	}
 	
-	public function get_visit_date($visit_number)
+	public function get_visit_date($visit_id)
 	{
 		$this->db->select('visit_date');
 		$this->db->from('visit');
-		$this->db->where("visit_number = '".$visit_number."'");
+		$this->db->where('visit_id = '.$visit_id);
 		
 		$query = $this->db->get();
 		
@@ -813,13 +767,13 @@ class Accounts_model extends CI_Model
 		return $visit_date;
 	}
 	
-	public function end_visit($visit_number)
+	public function end_visit($visit_id)
 	{
 		$data = array(
         	"close_card" => 1
     	);
 		
-		$this->db->where('visit_number', $visit_number);
+		$this->db->where('visit_id', $visit_id);
 		
 		if($this->db->update('visit', $data))
 		{
@@ -840,9 +794,9 @@ class Accounts_model extends CI_Model
 		return $query;
 	}
 	
-	public function get_bill_to($visit_number)
+	public function get_bill_to($visit_id)
 	{
-		$this->db->where('visit_number', $visit_number);
+		$this->db->where('visit_id', $visit_id);
 		$query = $this->db->get('visit');
 		$row = $query->row();
 		return $row->bill_to_id;
@@ -859,14 +813,12 @@ class Accounts_model extends CI_Model
 		
 		return $result;
 	}
-
 	public function get_service_detail($service_id)
 	{
 		$table = "service";
 		$where = "service_id = ".$service_id;
 		$items = "*";
 		$order = "service_id";
-
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
 		if(count($result) > 0)
@@ -882,10 +834,10 @@ class Accounts_model extends CI_Model
 		}
 		return  $service_name;
 	}
-	public function get_all_notes($visit_number)
+	public function get_all_notes($visit_id)
 	{
 		$table = "payments, service";
-		$where = "payments.payment_service_id = service.service_id AND (payments.payment_type = 2 OR payments.payment_type = 3) AND payments.visit_number = '".$visit_number."'";
+		$where = "payments.payment_service_id = service.service_id AND (payments.payment_type = 2 OR payments.payment_type = 3) AND payments.visit_id = ". $visit_id;
 		
 		$this->db->select('service.service_name, payments.payment_service_id, payments.amount_paid, payments.payment_type');
 		$this->db->where($where);
@@ -894,11 +846,11 @@ class Accounts_model extends CI_Model
 		return $query;
 	}
 	
-	public function in_pres($service_charge_id, $visit_number)
+	public function in_pres($service_charge_id, $visit_id)
 	{
 		$table = "pres, visit_charge";
-		//$where = "pres.service_charge_id = visit_charge.service_charge_id AND pres.service_charge_id = ". $service_charge_id." AND pres.visit_number = ". $visit_number." AND visit_charge.visit_number = ". $visit_number;
-		$where = "pres.service_charge_id = visit_charge.service_charge_id AND pres.visit_number = visit_charge.visit_number AND pres.service_charge_id = ". $service_charge_id." AND pres.visit_number = '".$visit_number."' AND visit_charge.visit_number = '".$visit_number."'";
+		//$where = "pres.service_charge_id = visit_charge.service_charge_id AND pres.service_charge_id = ". $service_charge_id." AND pres.visit_id = ". $visit_id." AND visit_charge.visit_id = ". $visit_id;
+		$where = "pres.service_charge_id = visit_charge.service_charge_id AND pres.visit_id = visit_charge.visit_id AND pres.service_charge_id = ". $service_charge_id." AND pres.visit_id = ". $visit_id." AND visit_charge.visit_id = ". $visit_id;
 		
 		$this->db->select('*');
 		$this->db->where($where);
@@ -915,3 +867,4 @@ class Accounts_model extends CI_Model
 		}
 	}
 }
+?>
