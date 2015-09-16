@@ -13,10 +13,10 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th><a href="'.site_url().'admin/visit_types/visit_type_name/'.$order_method.'/'.$page.'">Visit type</a></th>
-						<th><a href="'.site_url().'admin/visit_types/last_modified/'.$order_method.'/'.$page.'">Last modified</a></th>
-						<th><a href="'.site_url().'admin/visit_types/modified_by/'.$order_method.'/'.$page.'">Modified by</a></th>
-						<th><a href="'.site_url().'admin/visit_types/visit_type_status/'.$order_method.'/'.$page.'">Status</a></th>
+						<th><a href="'.site_url().'admin/beds/bed_number/'.$room_id.'/'.$order_method.'/'.$page.'">Number</a></th>
+						<th><a href="'.site_url().'admin/beds/last_modified/'.$room_id.'/'.$order_method.'/'.$page.'">Last modified</a></th>
+						<th><a href="'.site_url().'admin/beds/modified_by/'.$room_id.'/'.$order_method.'/'.$page.'">Modified by</a></th>
+						<th><a href="'.site_url().'admin/beds/bed_status/'.$room_id.'/'.$order_method.'/'.$page.'">Status</a></th>
 						<th colspan="5">Actions</th>
 					</tr>
 				</thead>
@@ -38,25 +38,25 @@
 			
 			foreach ($query->result() as $row)
 			{
-				$visit_type_id = $row->visit_type_id;
-				$visit_type_name = $row->visit_type_name;
-				$visit_type_status = $row->visit_type_status;
+				$bed_id = $row->bed_id;
+				$bed_number = $row->bed_number;
+				$bed_status = $row->bed_status;
 				$created_by = $row->created_by;
 				$modified_by = $row->modified_by;
 				$last_modified = date('jS M Y H:i a',strtotime($row->last_modified));
 				$created = date('jS M Y H:i a',strtotime($row->created));
 				
 				//create deactivated status display
-				if($visit_type_status == 0)
+				if($bed_status == 0)
 				{
 					$status = '<span class="label label-default">Deactivated</span>';
-					$button = '<a class="btn btn-info btn-sm" href="'.site_url().'hospital-administration/activate-visit-type/'.$visit_type_id.'" onclick="return confirm(\'Do you want to activate '.$visit_type_name.'?\');" title="Activate '.$visit_type_name.'"><i class="fa fa-thumbs-up"></i> Activate</a>';
+					$button = '<a class="btn btn-info btn-sm" href="'.site_url().'hospital-administration/activate-bed/'.$room_id.'/'.$bed_id.'" onclick="return confirm(\'Do you want to activate '.$bed_number.'?\');" title="Activate '.$bed_number.'"><i class="fa fa-thumbs-up"></i> Activate</a>';
 				}
 				//create activated status display
-				else if($visit_type_status == 1)
+				else if($bed_status == 1)
 				{
 					$status = '<span class="label label-success">Active</span>';
-					$button = '<a class="btn btn-default btn-sm" href="'.site_url().'hospital-administration/deactivate-visit-type/'.$visit_type_id.'" onclick="return confirm(\'Do you want to deactivate '.$visit_type_name.'?\');" title="Deactivate '.$visit_type_name.'"><i class="fa fa-thumbs-down"></i> Deactivate</a>';
+					$button = '<a class="btn btn-default btn-sm" href="'.site_url().'hospital-administration/deactivate-bed/'.$room_id.'/'.$bed_id.'" onclick="return confirm(\'Do you want to deactivate '.$bed_number.'?\');" title="Deactivate '.$bed_number.'"><i class="fa fa-thumbs-down"></i> Deactivate</a>';
 				}
 				
 				//creators & editors
@@ -68,12 +68,12 @@
 						
 						if($user_id == $created_by)
 						{
-							$created_by = $adm->personnel_fname;
+							$created_by = $adm->first_name;
 						}
 						
 						if($user_id == $modified_by)
 						{
-							$modified_by = $adm->personnel_fname;
+							$modified_by = $adm->first_name;
 						}
 					}
 				}
@@ -86,13 +86,14 @@
 				'
 					<tr>
 						<td>'.$count.'</td>
-						<td>'.$visit_type_name.'</td>
+						<td>'.$bed_number.'</td>
 						<td>'.$last_modified.'</td>
 						<td>'.$modified_by.'</td>
 						<td>'.$status.'</td>
-						<td><a href="'.site_url().'hospital-administration/edit-visit-type/'.$visit_type_id.'" class="btn btn-sm btn-info" title="Edit '.$visit_type_name.'"><i class="fa fa-pencil"></i> Edit</a></td>
+						<td><a href="'.site_url().'hospital-administration/beds/'.$bed_id.'" class="btn btn-sm btn-warning" title="View beds for '.$bed_number.'"><i class="fa fa-bed"></i> Beds</a></td>
+						<td><a href="'.site_url().'hospital-administration/edit-bed/'.$room_id.'/'.$bed_id.'" class="btn btn-sm btn-info" title="Edit '.$bed_number.'"><i class="fa fa-pencil"></i> Edit</a></td>
 						<td>'.$button.'</td>
-						<td><a href="'.site_url().'hospital-administration/delete-visit-type/'.$visit_type_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$visit_type_name.'?\');" title="Delete '.$visit_type_name.'"><i class="fa fa-trash"></i> Delete</a></td>
+						<td><a href="'.site_url().'hospital-administration/delete-bed/'.$room_id.'/'.$bed_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$bed_number.'?\');" title="Delete '.$bed_number.'"><i class="fa fa-trash"></i> Delete</a></td>
 					</tr> 
 				';
 			}
@@ -106,7 +107,7 @@
 		
 		else
 		{
-			$result .= "There are no visit types";
+			$result .= "There are no beds";
 		}
 ?>
 
@@ -121,7 +122,8 @@
 							<div class="panel-body">
                             	<div class="row" style="margin-bottom:20px;">
                                     <div class="col-lg-12">
-                                    	<a href="<?php echo site_url();?>hospital-administration/add-visit-type" class="btn btn-success btn-sm pull-right">Add Visit type</a>
+                                    	<a href="<?php echo site_url();?>hospital-administration/rooms/<?php echo $ward_id;?>" class="btn btn-primary btn-sm pull-right">Back to rooms</a>
+                                    	<a href="<?php echo site_url();?>hospital-administration/add-bed/<?php echo $room_id;?>" class="btn btn-success btn-sm pull-right" style="margin-right:20px;">Add bed</a>
                                     </div>
                                 </div>
                                 <?php

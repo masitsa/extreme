@@ -17,6 +17,9 @@ class Hospital_administration extends MX_Controller
 		$this->load->model('companies_model');
 		$this->load->model('visit_types_model');
 		$this->load->model('departments_model');
+		$this->load->model('wards_model');
+		$this->load->model('rooms_model');
+		$this->load->model('beds_model');
 		
 		if(!$this->auth_model->check_login())
 		{

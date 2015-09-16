@@ -93,7 +93,7 @@ class Visit_types extends Hospital_administration
 		//if form has been submitted
 		if ($this->form_validation->run())
 		{
-			if($this->visit_types_model->add_visit_type($file_name))
+			if($this->visit_types_model->add_visit_type())
 			{
 				$this->session->set_userdata('success_message', 'Visit type added successfully');
 				redirect('hospital-administration/visit-types');
