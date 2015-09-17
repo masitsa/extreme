@@ -30,7 +30,7 @@
                     
                     <?php echo form_open($this->uri->uri_string(), array("class" => "form-horizontal", "role" => "form"));?>
                     <div class="row">
-                    	<div class="col-md-3">
+                    	<div class="col-md-6">
                             <!-- Company Name -->
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Name</label>
@@ -38,9 +38,16 @@
                                     <input type="text" class="form-control" name="sync_table_name" placeholder="Name" value="<?php echo set_value('sync_table_name');?>">
                                 </div>
                             </div>
+                            <!-- Company Name -->
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Table key name</label>
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control" name="table_key_name" placeholder="Table key name" value="<?php echo set_value('table_key_name');?>">
+                                </div>
+                            </div>
                         </div>
                         
-                    	<div class="col-md-5">
+                    	<div class="col-md-6">
                             <!-- Company Name -->
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Cloud save function</label>
@@ -48,9 +55,6 @@
                                     <input type="text" class="form-control" name="sync_table_cloud_save_function" placeholder="Cloud save function" value="<?php echo set_value('sync_table_cloud_save_function');?>">
                                 </div>
                             </div>
-                        </div>
-                        
-                    	<div class="col-md-4">
                             <!-- Activate checkbox -->
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Activate?</label>

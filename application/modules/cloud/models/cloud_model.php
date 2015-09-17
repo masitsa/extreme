@@ -9,7 +9,7 @@ class Cloud_model extends CI_Model
 		//initiate the response array
 		$response = array();
 
-		//get sycn tables
+		//get sync tables
 		$query = $this->get_sync_tables();
 		if($query->num_rows() > 0)
 		{
@@ -20,8 +20,8 @@ class Cloud_model extends CI_Model
 				//patients data
 				$sync_data = $decoded->$field;
 			    $patient_data = $sync_data[0];
-				//instert data into the patients table
-				if($this->function($patient_data))
+				//insert data into the patients table
+				if($this->$function($patient_data))
 				{
 					$response[$field] = 'true';
 				}

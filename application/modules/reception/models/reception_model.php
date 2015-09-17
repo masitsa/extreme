@@ -2295,7 +2295,9 @@ class Reception_model extends CI_Model
 					// check if the number already exists
 					if($this->check_current_number_exisits($current_patient_number))
 					{
-					
+						//number exists
+						$comment .= '<br/>Not saved ensure you have a patient number entered'.$items['patient_surname'];
+						$class = 'danger';
 					}
 					else
 					{

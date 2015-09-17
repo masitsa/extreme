@@ -40,6 +40,7 @@ class Sync_tables_model extends CI_Model
 	public function add_sync_table()
 	{
 		$data = array(
+				'table_key_name'=>$this->input->post('table_key_name'),
 				'sync_table_name'=>$this->input->post('sync_table_name'),
 				'sync_table_cloud_save_function'=>$this->input->post('sync_table_cloud_save_function'),
 				'sync_table_status'=>$this->input->post('sync_table_status'),
@@ -68,6 +69,7 @@ class Sync_tables_model extends CI_Model
 	public function update_sync_table($sync_table_id)
 	{
 		$data = array(
+				'table_key_name'=>$this->input->post('table_key_name'),
 				'sync_table_name'=>$this->input->post('sync_table_name'),
 				'sync_table_cloud_save_function'=>$this->input->post('sync_table_cloud_save_function'),
 				'sync_table_status'=>$this->input->post('sync_table_status'),
