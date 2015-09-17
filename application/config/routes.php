@@ -211,6 +211,15 @@ $route['hospital-administration/delete-bed/(:num)/(:num)'] = 'hospital_administr
 $route['hospital-administration/activate-bed/(:num)/(:num)'] = 'hospital_administration/beds/activate_bed/$1/$2';
 $route['hospital-administration/deactivate-bed/(:num)/(:num)'] = 'hospital_administration/beds/deactivate_bed/$1/$2';
 
+$route['hospital-administration/insurance-companies'] = 'hospital_administration/companies/index';
+$route['hospital-administration/insurance-companies/(:any)/(:any)/(:num)'] = 'hospital_administration/companies/index/$1/$2/$3';
+$route['hospital-administration/insurance-companies/(:any)/(:any)'] = 'hospital_administration/companies/index/$1/$2';
+$route['hospital-administration/add-insurance-company'] = 'hospital_administration/companies/add_company';
+$route['hospital-administration/edit-insurance-company/(:num)'] = 'hospital_administration/companies/edit_company/$1';
+$route['hospital-administration/delete-insurance-company/(:num)'] = 'hospital_administration/companies/delete_company/$1';
+$route['hospital-administration/activate-insurance-company/(:num)'] = 'hospital_administration/companies/activate_company/$1';
+$route['hospital-administration/deactivate-insurance-company/(:num)'] = 'hospital_administration/companies/deactivate_company/$1';
+
 /*
 *	Accounts Routes
 */
@@ -364,6 +373,9 @@ $route['reception/general-queue'] = 'reception/general_queue/reception';
 $route['reception/appointments-list'] = 'reception/appointment_list';
 $route['reception/register-other-patient'] = 'reception/register_other_patient';
 $route['reception/add-patient'] = 'reception/add_patient';
+$route['reception/validate-import'] = 'reception/do_patients_import';
+$route['reception/import-template'] = 'reception/import_template';
+$route['reception/import-patients'] = 'reception/import_patients';
 
 
 /*
