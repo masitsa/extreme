@@ -2,6 +2,7 @@
 // require_once "./application/modules/auth/controllers/auth.php";
 class Reception  extends MX_Controller
 {	
+	var $csv_path;
 	function __construct()
 	{
 		parent:: __construct();
@@ -17,6 +18,8 @@ class Reception  extends MX_Controller
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
 		$this->load->model('administration/personnel_model');
+		
+		$this->csv_path = realpath(APPPATH . '../assets/csv');
 	}
 	
 	public function index()
@@ -2200,6 +2203,64 @@ class Reception  extends MX_Controller
 		$result = $this->reception_model->patient_names2(NULL, $visit_id);
 		
 		var_dump($result);
+	}
+	function import_template()
+	{
+		//export products template in excel 
+		 $this->reception_model->import_template();
+	}
+	function import_patients()
+	{
+		//open the add new product
+		$v_data['title'] = 'Import Patients';
+		$data['title'] = 'Import Patients';
+		$data['content'] = $this->load->view('patients/import_patients', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	
+	function do_patients_import()
+	{
+		if(isset($_FILES['import_csv']))
+		{
+			if(is_uploaded_file($_FILES['import_csv']['tmp_name']))
+			{
+				//import products from excel 
+				$response = $this->reception_model->import_csv_products($this->csv_path);
+				
+				if($response == FALSE)
+				{
+				}
+				
+				else
+				{
+					if($response['check'])
+					{
+						$v_data['import_response'] = $response['response'];
+					}
+					
+					else
+					{
+						$v_data['import_response_error'] = $response['response'];
+					}
+				}
+			}
+			
+			else
+			{
+				$v_data['import_response_error'] = 'Please select a file to import.';
+			}
+		}
+		
+		else
+		{
+			$v_data['import_response_error'] = 'Please select a file to import.';
+		}
+		
+		//open the add new product
+		$v_data['title'] = 'Import Patients';
+		$data['title'] = 'Import Patients';
+		$data['content'] = $this->load->view('patients/import_patients', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
 	}
 }
 ?>

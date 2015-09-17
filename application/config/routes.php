@@ -373,6 +373,9 @@ $route['reception/general-queue'] = 'reception/general_queue/reception';
 $route['reception/appointments-list'] = 'reception/appointment_list';
 $route['reception/register-other-patient'] = 'reception/register_other_patient';
 $route['reception/add-patient'] = 'reception/add_patient';
+$route['reception/validate-import'] = 'reception/do_patients_import';
+$route['reception/import-template'] = 'reception/import_template';
+$route['reception/import-patients'] = 'reception/import_patients';
 
 
 /*

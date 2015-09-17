@@ -47,7 +47,7 @@ class Auth extends MX_Controller
                    'first_name'   => 'Alvaro',
                    'username'     => 'amasitsa',
                    'personnel_id' => 0,
-                   'branch_code'   => 'BR001',
+                   'branch_code'   => 'KA',
                    'branch_name'     => 'KISII',
                    'branch_id' => 1
                );

@@ -9,8 +9,8 @@
         <header class="panel-heading">
           <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
           <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
+            <a href="<?php echo base_url();?>reception/import-patients" class="btn btn-success  btn-sm pull-right" style="margin-left:10px;">Import Patients</a>
+				<a href="<?php echo base_url();?>reception/add-patient" class="btn btn-success btn-sm pull-right">Add Patient</a>
           </div>
           <div class="clearfix"></div>
         </header>             
@@ -43,7 +43,8 @@
 		
 		if($delete != 1)
 		{
-			$result = '<a href="'.site_url().'reception/add-patient" class="btn btn-success btn-sm pull-right">Add Patient</a>';
+			$result = '
+				';
 		}
 		
 		else
@@ -65,6 +66,8 @@
 					  <thead>
 						<tr>
 						  <th>#</th>
+						  <th>Patient Number</th>
+						  <th>Card Number</th>
 						  <th>Surname</th>
 						  <th>Other Names</th>
 						  <th>Contact details</th>
@@ -115,6 +118,8 @@
 				$last_modified = $row->last_modified;
 				$last_visit = $row->last_visit;
 				$patient_phone1 = $row->patient_phone1;
+				$patient_number = $row->patient_number;
+				$current_patient_number = $row->current_patient_number;
 				$patient = $this->reception_model->patient_names2($patient_id);
 				$patient_type = $patient['patient_type'];
 				$patient_othernames = $patient['patient_othernames'];
@@ -202,6 +207,8 @@
 					'
 						<tr>
 							<td>'.$count.'</td>
+							<td>'.$patient_number.' </td>
+							<td>'.$current_patient_number.'</td>
 							<td>'.$patient_surname.' </td>
 							<td>'.$patient_othernames.'</td>
 							<td>'.$patient_phone1.'</td>
