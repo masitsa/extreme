@@ -42,6 +42,7 @@ class Sync_model extends CI_Model
 	{
 
 		$table_sync_array = $this->get_all_tables_sync();
+		$patients = array();
 
 		if($table_sync_array->num_rows() > 0)
 		{
@@ -69,7 +70,7 @@ class Sync_model extends CI_Model
 							
 							$date = date("Y-m-d H:i:s");
 							$sync_data = array('branch_code'=>$this->session->userdata('branch_code'),'sync_status'=>0,'sync_type'=>0,'sync_table_id'=>$sync_table_id,'sync_table_key'=>$table_key);
-							$this->db->insert('sync', $patient_data);
+							$this->db->insert('sync', $sync_data);
 						 	array_push($patients[$sync_table_name], $value);
 						}
 					}
@@ -93,7 +94,7 @@ class Sync_model extends CI_Model
 
 							$date = date("Y-m-d H:i:s");
 							$sync_data = array('branch_code'=>$this->session->userdata('branch_code'),'sync_status'=>0,'sync_type'=>0,'sync_table_id'=>$sync_table_id,'sync_table_key'=>$table_key);
-							$this->db->insert('sync', $patient_data);
+							$this->db->insert('sync', $sync_data);
 							array_push($patients[$sync_table_name], $key);
 						}
 						
