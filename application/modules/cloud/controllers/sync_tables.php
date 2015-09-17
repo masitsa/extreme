@@ -91,6 +91,7 @@ class Sync_tables extends MX_Controller
 	{
 		//form validation rules
 		$this->form_validation->set_rules('sync_table_name', 'Name', 'required|xss_clean');
+		$this->form_validation->set_rules('table_key_name', 'Table key name', 'required|xss_clean');
 		$this->form_validation->set_rules('sync_table_status', 'Sync table Status', 'required|xss_clean');
 		$this->form_validation->set_rules('sync_table_cloud_save_function', 'Cloud save function', 'required|xss_clean');
 		
@@ -120,6 +121,7 @@ class Sync_tables extends MX_Controller
 	{
 		//form validation rules
 		$this->form_validation->set_rules('sync_table_name', 'Name', 'required|xss_clean');
+		$this->form_validation->set_rules('table_key_name', 'Table key name', 'required|xss_clean');
 		$this->form_validation->set_rules('sync_table_status', 'sync_table Status', 'required|xss_clean');
 		$this->form_validation->set_rules('sync_table_cloud_save_function', 'Cloud save function', 'required|xss_clean');
 		

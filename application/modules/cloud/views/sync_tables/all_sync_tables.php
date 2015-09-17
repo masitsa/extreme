@@ -14,6 +14,7 @@
 					<tr>
 						<th>#</th>
 						<th><a href="'.site_url().'cloud/sync-tables/sync_table_name/'.$order_method.'/'.$page.'">Table</a></th>
+						<th><a href="'.site_url().'cloud/sync-tables/table_key_name/'.$order_method.'/'.$page.'">Key name</a></th>
 						<th><a href="'.site_url().'cloud/sync-tables/sync_table_cloud_save_function/'.$order_method.'/'.$page.'">Cloud save fn</a></th>
 						<th><a href="'.site_url().'cloud/sync-tables/last_modified/'.$order_method.'/'.$page.'">Last modified</a></th>
 						<th><a href="'.site_url().'cloud/sync-tables/modified_by/'.$order_method.'/'.$page.'">Modified by</a></th>
@@ -40,6 +41,7 @@
 			foreach ($query->result() as $row)
 			{
 				$sync_table_id = $row->sync_table_id;
+				$table_key_name = $row->table_key_name;
 				$sync_table_name = $row->sync_table_name;
 				$sync_table_cloud_save_function = $row->sync_table_cloud_save_function;
 				$sync_table_status = $row->sync_table_status;
@@ -89,6 +91,7 @@
 					<tr>
 						<td>'.$count.'</td>
 						<td>'.$sync_table_name.'</td>
+						<td>'.$table_key_name.'</td>
 						<td>'.$sync_table_cloud_save_function.'</td>
 						<td>'.$last_modified.'</td>
 						<td>'.$modified_by.'</td>
@@ -109,7 +112,7 @@
 		
 		else
 		{
-			$result .= "There are no sync_tables";
+			$result .= "There are no sync tables";
 		}
 ?>
 
