@@ -43,7 +43,7 @@ class Cloud_model extends CI_Model
 				else
 				{
 					$row_response[$sync_table_name]['response'] = 'false';
-					$row_response[$sync_table_name]['message'] = $table_key_name.' data does not exist';
+					$row_response[$sync_table_name]['message'] = $sync_table_name.' data does not exist';
 				}
 				
 				array_push($response, $row_response);
