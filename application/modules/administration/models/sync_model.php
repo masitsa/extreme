@@ -7,34 +7,44 @@ class Sync_model extends CI_Model
 	{
 		// get the patient id and the branch id and patient
 			$patient_details = $this->get_table_details($visit_id);
-			$url = 'http://159.203.78.242/cloud/save_cloud_data';
-			$test_url = 'http://159.203.78.242/cloud/test';
-			//Encode the array into JSON.
 
-			//The JSON data.
-			$data_string = json_encode($patient_details);
-			//var_dump($data_string);
-			try{                                                                                                         
-
-				$ch = curl_init($url);                                                                      
-				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
-				curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
-				    'Content-Type: application/json',                                                                                
-				    'Content-Length: ' . strlen($data_string))                                                                       
-				);                                                                                                                   
-				                                                                                                                     
-				$result = curl_exec($ch);
-				curl_close($ch);
-
-				var_dump($result);
-			}
-			catch(Exception $e)
+			// var_dump($patient_details); die();
+			if(count($patient_details) > 0)
 			{
-				return "something went wrong";
-					
+
+				$test_url = 'http://159.203.78.242/cloud/test';
+				//Encode the array into JSON.
+
+				//The JSON data.
+				$data_string = json_encode($patient_details);
+				//var_dump($data_string);
+				try{                                                                                                         
+
+					$ch = curl_init($url);                                                                      
+					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+					curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+					    'Content-Type: application/json',                                                                                
+					    'Content-Length: ' . strlen($data_string))                                                                       
+					);                                                                                                                   
+					                                                                                                                     
+					$result = curl_exec($ch);
+					curl_close($ch);
+
+					var_dump($result);
+				}
+				catch(Exception $e)
+				{
+					echo "something went wrong";
+						
+				}
 			}
+			else
+			{
+				echo "no data to sync";
+			}
+			
 		
 	}
 	
