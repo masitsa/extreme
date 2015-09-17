@@ -18,6 +18,7 @@ class Administration  extends MX_Controller
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
 		$this->load->model('reception/database');
+		$this->load->model('administration/sync_model');
 		$this->load->model('administration/personnel_model');
 	}
 	
@@ -31,7 +32,10 @@ class Administration  extends MX_Controller
 		$data['sidebar'] = 'admin_sidebar';
 		$this->load->view('admin/templates/general_page', $data);
 	}
-
+	public function check()
+	{
+		$this->sync_model->syn_up_on_closing_visit(1);
+	}
 	public function services($page_name = NULL)
 	{
 		// this is it
