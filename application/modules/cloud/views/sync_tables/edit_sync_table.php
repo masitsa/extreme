@@ -23,6 +23,7 @@
 			$sync_table_name = $sync_table[0]->sync_table_name;
 			$table_key_name = $sync_table[0]->table_key_name;
 			$sync_table_status = $sync_table[0]->sync_table_status;
+			$branch_code = $sync_table[0]->branch_code;
 			$sync_table_cloud_save_function = $sync_table[0]->sync_table_cloud_save_function;
             
             $validation_errors = validation_errors();
@@ -31,6 +32,7 @@
             {
 				$sync_table_name = set_value('sync_table_name');
 				$table_key_name = set_value('table_key_name');
+				$branch_code = set_value('branch_code');
 				$sync_table_cloud_save_function = set_value('sync_table_cloud_save_function');
 				$sync_table_status = set_value('sync_table_status');
 				
@@ -53,6 +55,12 @@
                         <label class="col-lg-4 control-label">Table key name</label>
                         <div class="col-lg-8">
                             <input type="text" class="form-control" name="table_key_name" placeholder="Table key name" value="<?php echo $table_key_name;?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Branch code</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" name="branch_code" placeholder="Branch code" value="<?php echo $branch_code;?>">
                         </div>
                     </div>
                 </div>

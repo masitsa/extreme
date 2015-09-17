@@ -45,6 +45,12 @@
                                     <input type="text" class="form-control" name="table_key_name" placeholder="Table key name" value="<?php echo set_value('table_key_name');?>">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Branch code</label>
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control" name="branch_code" placeholder="Branch code" value="<?php echo set_value('branch_code');?>">
+                                </div>
+                            </div>
                         </div>
                         
                     	<div class="col-md-6">

@@ -11,7 +11,7 @@ class Sync_model extends CI_Model
 			// var_dump($patient_details); die();
 			if(count($patient_details) > 0)
 			{
-
+				$url = 'http://159.203.78.242/cloud/save_cloud_data';
 				$test_url = 'http://159.203.78.242/cloud/test';
 				//Encode the array into JSON.
 

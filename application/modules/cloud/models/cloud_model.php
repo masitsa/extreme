@@ -5,7 +5,7 @@ class Cloud_model extends CI_Model
 	{
 		//decode the json data
 		$decoded = json_decode($json);
-
+		
 		//get sync tables
 		$query = $this->get_sync_tables();
 		if($query->num_rows() > 0)
@@ -20,19 +20,22 @@ class Cloud_model extends CI_Model
 				$table_key_name = $res->table_key_name;
 				$function = $res->sync_table_cloud_save_function;
 				//patients data
+				
 				if(isset($decoded->$sync_table_name))
 				{
 					$sync_data = $decoded->$sync_table_name;
 					$patient_data = $sync_data[0];
 					//insert data into the patients table
+					
 					$table_key_value = $this->$function($patient_data);
+					
 					if($table_key_value > 0)
 					{
 						$row_response[$sync_table_name]['response'] = 'true';
 						$row_response[$sync_table_name]['remote_pk'] = $table_key_value;
 						$row_response[$sync_table_name]['local_pk'] = $patient_data->$table_key_name;
 					}
-	
+					
 					else
 					{
 						$row_response[$sync_table_name]['response'] = 'false';
@@ -72,7 +75,7 @@ class Cloud_model extends CI_Model
 		$res = $patients;
 
 		$patient_number = $res->patient_number;
-
+		
 		//check if patient number exists
 		$this->db->where('patient_number', $patient_number);
 		$query = $this->db->get('patients');

@@ -14,6 +14,7 @@
 					<tr>
 						<th>#</th>
 						<th><a href="'.site_url().'cloud/sync-tables/sync_table_name/'.$order_method.'/'.$page.'">Table</a></th>
+						<th><a href="'.site_url().'cloud/sync-tables/branch_code/'.$order_method.'/'.$page.'">Branch code</a></th>
 						<th><a href="'.site_url().'cloud/sync-tables/table_key_name/'.$order_method.'/'.$page.'">Key name</a></th>
 						<th><a href="'.site_url().'cloud/sync-tables/sync_table_cloud_save_function/'.$order_method.'/'.$page.'">Cloud save fn</a></th>
 						<th><a href="'.site_url().'cloud/sync-tables/last_modified/'.$order_method.'/'.$page.'">Last modified</a></th>
@@ -41,6 +42,7 @@
 			foreach ($query->result() as $row)
 			{
 				$sync_table_id = $row->sync_table_id;
+				$branch_code = $row->branch_code;
 				$table_key_name = $row->table_key_name;
 				$sync_table_name = $row->sync_table_name;
 				$sync_table_cloud_save_function = $row->sync_table_cloud_save_function;
@@ -91,6 +93,7 @@
 					<tr>
 						<td>'.$count.'</td>
 						<td>'.$sync_table_name.'</td>
+						<td>'.$branch_code.'</td>
 						<td>'.$table_key_name.'</td>
 						<td>'.$sync_table_cloud_save_function.'</td>
 						<td>'.$last_modified.'</td>
