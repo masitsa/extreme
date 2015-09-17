@@ -16,6 +16,7 @@ class Cloud_model extends CI_Model
 			
 			foreach($query->result() as $res)
 			{
+				$sync_table_id = $res->sync_table_id;
 				$sync_table_name = $res->sync_table_name;
 				$table_key_name = $res->table_key_name;
 				$function = $res->sync_table_cloud_save_function;
@@ -41,10 +42,30 @@ class Cloud_model extends CI_Model
 										'remote_pk' => $table_key_value,
 										'local_pk' => $patient_data->$table_key_name
 							);
+							
+							$save_data = array(
+								'branch_code'=>$branch_code,
+								'sync_status'=>1,
+								'sync_type'=>0,
+								'sync_table_id'=>$sync_table_id,
+								'sync_table_key'=>$table_key_value,
+								'created'=>date('Y-m-d H:i:s')
+							);
+							$this->db->insert('sync', $save_data);
 						}
 						
 						else
 						{
+							$save_data = array(
+								'branch_code'=>$branch_code,
+								'sync_status'=>0,
+								'sync_type'=>0,
+								'sync_table_id'=>$sync_table_id,
+								'sync_table_key'=>$table_key_value,
+								'created'=>date('Y-m-d H:i:s')
+							);
+							$this->db->insert('sync', $save_data);
+							
 							$response[$sync_table_name][$r]['response'] = 'false';
 							$response[$sync_table_name][$r]['local_pk'] = $patient_data->$table_key_name;
 						}

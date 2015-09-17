@@ -18,6 +18,7 @@ class Reception  extends MX_Controller
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
 		$this->load->model('administration/personnel_model');
+		$this->load->model('administration/sync_model');
 		
 		$this->csv_path = realpath(APPPATH . '../assets/csv');
 	}
@@ -1006,29 +1007,63 @@ class Reception  extends MX_Controller
 		$key = $visit_id;
 		$this->database->update_entry($table, $data, $key);
 		
-		if($page == 0)
-		{
-			redirect('reception/visit_list/0');
-		}
+		//sync data
+		$response = $this->sync_model->syn_up_on_closing_visit($visit_id);
 		
-		if($page == 1)
+		if($response)
 		{
-			redirect('accounts/accounts_queue');
-		}
-		
-		if($page == 2)
-		{
-			redirect('accounts/accounts_unclosed_queue');
-		}
-		
-		if($page == 3)
-		{
-			redirect('accounts/accounts_closed_queue');
+			if($page == 0)
+			{
+				redirect('reception/visit_list/0');
+			}
+			
+			if($page == 1)
+			{
+				redirect('accounts/accounts_queue');
+			}
+			
+			if($page == 2)
+			{
+				redirect('accounts/accounts_unclosed_queue');
+			}
+			
+			if($page == 3)
+			{
+				redirect('accounts/accounts_closed_queue');
+			}
+			
+			else
+			{
+				redirect('reception/visit_list/'.$page);
+			}
 		}
 		
 		else
 		{
-			redirect('reception/visit_list/'.$page);
+			if($page == 0)
+			{
+				redirect('reception/visit_list/0');
+			}
+			
+			if($page == 1)
+			{
+				redirect('accounts/accounts_queue');
+			}
+			
+			if($page == 2)
+			{
+				redirect('accounts/accounts_unclosed_queue');
+			}
+			
+			if($page == 3)
+			{
+				redirect('accounts/accounts_closed_queue');
+			}
+			
+			else
+			{
+				redirect('reception/visit_list/'.$page);
+			}
 		}
 	}
 	public function appointment_list()

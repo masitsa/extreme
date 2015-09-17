@@ -28,23 +28,24 @@ class Sync_model extends CI_Model
 				);                                                                                                                     
 				$result = curl_exec($ch);
 				curl_close($ch);
-				$this->parse_sync_up_response($result);
+				$response = $this->parse_sync_up_response($result);
 			}
 			catch(Exception $e)
 			{
-				echo "something went wrong";
+				$response = "something went wrong";
 					
 			}
 		}
 		else
 		{
-			echo "no data to sync";
+			$response = "no data to sync";
 		}
+		
+		return $response;
 	}
 	
 	public function get_table_details($visit_id)
 	{
-
 		$table_sync_array = $this->get_all_tables_sync();
 		$patients = array();
 
@@ -61,8 +62,7 @@ class Sync_model extends CI_Model
 				$table_key_name = $key->table_key_name;
 				
 				if($sync_table_name == 'patients')
-				{	
-
+				{
 					$where = 'visit.patient_id = patients.patient_id AND visit.branch_code = "'.$this->session->userdata('branch_code').'" AND visit.visit_id = '.$visit_id;
 
 					$this->db->where($where);
@@ -77,7 +77,16 @@ class Sync_model extends CI_Model
 							# code...
 							$table_key = $key->table_key_name;
 							
-							$sync_data = array('branch_code'=>$this->session->userdata('branch_code'),'sync_status'=>0,'sync_type'=>0,'sync_table_id'=>$sync_table_id,'sync_table_key'=>$table_key);
+							$sync_data = array(
+								'branch_code'=>$this->session->userdata('branch_code'),
+								'sync_status'=>0,
+								'sync_type'=>0,
+								'sync_table_id'=>$sync_table_id,
+								'sync_table_key'=>$table_key,
+								'created'=>date('Y-m-d H:i:s'),
+								'created_by'=>$this->session->userdata('personnel_id'),
+								'last_modified_by'=>$this->session->userdata('personnel_id')
+							);
 							$this->db->insert('sync', $sync_data);
 						 	array_push($patients[$sync_table_name], $value);
 						}
@@ -101,7 +110,16 @@ class Sync_model extends CI_Model
 							$table_key = $key->$table_key_name;
 
 							$date = date("Y-m-d H:i:s");
-							$sync_data = array('branch_code'=>$this->session->userdata('branch_code'),'sync_status'=>0,'sync_type'=>0,'sync_table_id'=>$sync_table_id,'sync_table_key'=>$table_key);
+							$sync_data = array(
+								'branch_code'=>$this->session->userdata('branch_code'),
+								'sync_status'=>0,
+								'sync_type'=>0,
+								'sync_table_id'=>$sync_table_id,
+								'sync_table_key'=>$table_key,
+								'created'=>date('Y-m-d H:i:s'),
+								'created_by'=>$this->session->userdata('personnel_id'),
+								'last_modified_by'=>$this->session->userdata('personnel_id')
+							);
 							$this->db->insert('sync', $sync_data);
 							array_push($patients[$sync_table_name], $key);
 						}
@@ -124,12 +142,13 @@ class Sync_model extends CI_Model
 	public function parse_sync_up_response($result)
 	{	
 		$sync_response = json_decode($result);
+		var_dump($sync_response);
 		/*$patients = $sync_response->patients;
 		$location = $patients[0];
 		var_dump($location->response);*/
 		
 		//get sync tables
-		$query = $this->get_sync_tables();
+		$query = $this->get_all_tables_sync();
 		if($query->num_rows() > 0)
 		{
 			//initiate the response array
@@ -155,10 +174,9 @@ class Sync_model extends CI_Model
 						$reply = $patient_data->response;
 						$remote_pk = $patient_data->remote_pk;
 						$local_pk = $patient_data->local_pk;
-						$sync_id = $patient_data->sync_id;
 						
 						//update sync table if response is true
-						if($response == 'true')
+						if($reply == 'true')
 						{
 							$data = array(
 								'remote_pk' => $remote_pk,
@@ -167,27 +185,29 @@ class Sync_model extends CI_Model
 							$this->db->where('sync_table_id = '.$sync_table_id.' AND sync_table_key = '.$local_pk);
 							$this->db->update('sync', $data);
 							
-							echo 'Sync successfull<br/>';
+							$response = 'Sync successfull<br/>';
 						}
 						
 						else
 						{
-							echo 'Sync failed<br/>';
+							$response = 'Sync failed<br/>';
 						}
 					}
 				}
 				
 				else
 				{
-					echo $sync_table_name.' data does not exist<br/>';
+					$response = $sync_table_name.' data does not exist<br/>';
 				}
 			}
 		}
 
 		else
 		{
-			echo 'No sync tables are set<br/>';
+			$response = 'No sync tables are set<br/>';
 		}
+		
+		return $response;
 	}
 	public function get_all_tables_sync()
 	{
@@ -279,7 +299,7 @@ class Sync_model extends CI_Model
 
 	}
 
-	public function sync_data_down()
+	public function sync_data_down($branch_code = 'KA')
 	{
 		// $json = file_get_contents('php://input');
 
@@ -327,7 +347,7 @@ class Sync_model extends CI_Model
 			}
 
 		// }
-			var_dump($arraySend)or die();
+		var_dump($arraySend)or die();
 
 	}
 
