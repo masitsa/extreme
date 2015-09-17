@@ -70,12 +70,12 @@
 						
 						if($user_id == $created_by)
 						{
-							$created_by = $adm->first_name;
+							$created_by = $adm->personnel_fname;
 						}
 						
 						if($user_id == $modified_by)
 						{
-							$modified_by = $adm->first_name;
+							$modified_by = $adm->personnel_fname;
 						}
 					}
 				}

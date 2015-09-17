@@ -1,3 +1,21 @@
 /* Add here all your CSS customizations */
 .center-align{margin: 0 auto; text-align:center;}
 .logo img{margin: 0 auto; max-height:67px;}
+
+
+/* Chart */
+
+#curve-chart,#live-chart,#pie-chart,#pie-chart2,#pie-chart3{
+	height: 350px;
+	max-width: 100%;
+}
+
+#bar-chart{
+	height: 350px;
+	width: 99.5%;	
+}
+
+#pie-chart,#pie-chart2,#pie-chart3{
+	max-width: 300px;
+	margin: 10px auto;
+}

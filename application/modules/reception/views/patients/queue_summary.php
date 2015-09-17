@@ -1,22 +1,17 @@
 <div class="row">
     <div class="col-md-12">
 
-      <!-- Widget -->
-      <div class="widget">
-        <!-- Widget head -->
-        <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i>Queue Summary</h4>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-          </div>
-          <div class="clearfix"></div>
-        </div>             
-
-        <!-- Widget content -->
-        <div class="widget-content">
-          <div class="padd">
-          
+        <section class="panel">
+            <header class="panel-heading">
+                <h4 class="pull-left"><i class="icon-reorder"></i>Queue summary</h4>
+                <div class="widget-icons pull-right">
+                  <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                </div>
+                <div class="clearfix"></div>
+            </header>             
+    
+            <!-- Widget content -->
+            <div class="panel-body">
 <?php
 		$result = '';
 		
@@ -180,8 +175,5 @@
             
             </div>
         </div>
-        <!-- Widget ends -->
-
-      </div>
-    </div>
-  </div>
+    
+    </section>

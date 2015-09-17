@@ -14,10 +14,10 @@ class Companies extends Hospital_administration
 	*	Default action is to show all the companies
 	*
 	*/
-	public function all_companies($order = 'company_name', $order_method = 'ASC') 
+	public function index($order = 'insurance_company_name', $order_method = 'ASC') 
 	{
-		$where = 'company_id > 0';
-		$table = 'company';
+		$where = 'insurance_company_id > 0';
+		$table = 'insurance_company';
 		//pagination
 		$segment = 5;
 		$this->load->library('pagination');
@@ -66,7 +66,7 @@ class Companies extends Hospital_administration
 			$order_method = 'DESC';
 		}
 		
-		$data['title'] = 'Companies';
+		$data['title'] = 'Insurance companies';
 		$v_data['title'] = $data['title'];
 		
 		$v_data['order'] = $order;
@@ -87,31 +87,31 @@ class Companies extends Hospital_administration
 	public function add_company() 
 	{
 		//form validation rules
-		$this->form_validation->set_rules('company_name', 'Company Name', 'required|xss_clean');
-		$this->form_validation->set_rules('company_contact_person_name', 'Contact name', 'required|xss_clean');
-		$this->form_validation->set_rules('company_contact_person_phone1', 'Contact phone 1', 'required|xss_clean');
-		$this->form_validation->set_rules('company_contact_person_phone2', 'Contact phone 2', 'required|xss_clean');
-		$this->form_validation->set_rules('company_contact_person_email1', 'Contact email 1', 'required|xss_clean');
-		$this->form_validation->set_rules('company_contact_person_email2', 'Contact email 2', 'required|xss_clean');
-		$this->form_validation->set_rules('company_description', 'Company description', 'required|xss_clean');
-		$this->form_validation->set_rules('company_status', 'Company Status', 'required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_name', 'Company Name', 'required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_name', 'Contact name', 'required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_phone1', 'Contact phone 1', 'required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_phone2', 'Contact phone 2', 'xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_email1', 'Contact email 1', 'valid_email|required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_email2', 'Contact email 2', 'valid_email|xss_clean');
+		$this->form_validation->set_rules('insurance_company_description', 'Company description', 'xss_clean');
+		$this->form_validation->set_rules('insurance_company_status', 'Company Status', 'required|xss_clean');
 		
 		//if form has been submitted
 		if ($this->form_validation->run())
 		{
 			if($this->companies_model->add_company())
 			{
-				$this->session->set_userdata('success_message', 'Company added successfully');
-				redirect('hospital-administration/companies');
+				$this->session->set_userdata('success_message', 'Insurance ompany added successfully');
+				redirect('hospital-administration/insurance-companies');
 			}
 			
 			else
 			{
-				$this->session->set_userdata('error_message', 'Could not add company. Please try again');
+				$this->session->set_userdata('error_message', 'Could not add insurance company. Please try again');
 			}
 		}
 		
-		$data['title'] = 'Add company';
+		$data['title'] = 'Add insurance company';
 		$v_data['title'] = $data['title'];
 		$data['content'] = $this->load->view('companies/add_company', $v_data, true);
 		$this->load->view('admin/templates/general_page', $data);
@@ -126,11 +126,14 @@ class Companies extends Hospital_administration
 	public function edit_company($company_id) 
 	{
 		//form validation rules
-		$this->form_validation->set_rules('company_name', 'Company Name', 'required|xss_clean');
-		$this->form_validation->set_rules('company_status', 'Company Status', 'required|xss_clean');
-		$this->form_validation->set_rules('company_preffix', 'Company Preffix', 'required|xss_clean');
-		$this->form_validation->set_rules('company_parent', 'Company Parent', 'required|xss_clean');
-		$this->form_validation->set_message("is_unique", "A unique preffix is requred.");
+		$this->form_validation->set_rules('insurance_company_name', 'Company Name', 'required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_name', 'Contact name', 'required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_phone1', 'Contact phone 1', 'required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_phone2', 'Contact phone 2', 'xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_email1', 'Contact email 1', 'valid_email|required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_email2', 'Contact email 2', 'valid_email|xss_clean');
+		$this->form_validation->set_rules('insurance_company_description', 'Company description', 'xss_clean');
+		$this->form_validation->set_rules('insurance_company_status', 'Company Status', 'required|xss_clean');
 		
 		//if form has been submitted
 		if ($this->form_validation->run())
@@ -139,7 +142,7 @@ class Companies extends Hospital_administration
 			if($this->companies_model->update_company($company_id))
 			{
 				$this->session->set_userdata('success_message', 'Company updated successfully');
-				redirect('admin/companies');
+				redirect('hospital-administration/insurance-companies');
 			}
 			
 			else
@@ -157,8 +160,7 @@ class Companies extends Hospital_administration
 		
 		if ($query->num_rows() > 0)
 		{
-			$v_data['company'] = $query->result();
-			$v_data['all_companies'] = $this->companies_model->all_parent_companies();
+			$v_data['company_array'] = $query->row();
 			
 			$data['content'] = $this->load->view('companies/edit_company', $v_data, true);
 		}
@@ -179,23 +181,9 @@ class Companies extends Hospital_administration
 	*/
 	public function delete_company($company_id)
 	{
-		//delete company image
-		$query = $this->companies_model->get_company($company_id);
-		
-		if ($query->num_rows() > 0)
-		{
-			$result = $query->result();
-			$image = $result[0]->company_image_name;
-			
-			$this->load->model('file_model');
-			//delete image
-			$this->file_model->delete_file($this->companies_path."/images/".$image);
-			//delete thumbnail
-			$this->file_model->delete_file($this->companies_path."/thumbs/".$image);
-		}
 		$this->companies_model->delete_company($company_id);
 		$this->session->set_userdata('success_message', 'Company has been deleted');
-		redirect('admin/companies');
+		redirect('hospital-administration/insurance-companies');
 	}
     
 	/*
@@ -208,7 +196,7 @@ class Companies extends Hospital_administration
 	{
 		$this->companies_model->activate_company($company_id);
 		$this->session->set_userdata('success_message', 'Company activated successfully');
-		redirect('admin/companies');
+		redirect('hospital-administration/insurance-companies');
 	}
     
 	/*
@@ -221,7 +209,7 @@ class Companies extends Hospital_administration
 	{
 		$this->companies_model->deactivate_company($company_id);
 		$this->session->set_userdata('success_message', 'Company disabled successfully');
-		redirect('admin/companies');
+		redirect('hospital-administration/insurance-companies');
 	}
 }
 ?>

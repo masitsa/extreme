@@ -14,6 +14,8 @@
 
 		<!-- Vendor CSS -->
 		<link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/bootstrap/css/bootstrap.css" />
+      	<!-- Calendar -->
+      	<link rel="stylesheet" href="<?php echo base_url()."assets/bluish/"?>style/fullcalendar.css">
 		<link rel="stylesheet" href="<?php echo base_url()."assets/themes/";?>fontawesome/css/font-awesome.css">
 		<link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/magnific-popup/magnific-popup.css" />
 		<link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/bootstrap-datepicker/css/datepicker3.css" />

@@ -2,23 +2,15 @@
 <?php echo $this->load->view('patients/search_visit', '', TRUE);?>
 <!-- end search -->
  
-<div class="row">
-    <div class="col-md-12">
-
-      <!-- Widget -->
-      <div class="widget boxed">
-        <!-- Widget head -->
-        <div class="widget-head">
+ <section class="panel">
+    <header class="panel-heading">
           <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
           <div class="widget-icons pull-right">
             <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
           </div>
           <div class="clearfix"></div>
-        </div>             
-
-        <!-- Widget content -->
-        <div class="widget-content">
+        </header>
+      <div class="panel-body">
           <div class="padd">
           
 <?php
@@ -26,7 +18,7 @@
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/reception/close_visit_search/'.$visit.'" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'reception/close_visit_search/'.$visit.'" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
 		
@@ -43,7 +35,7 @@
 						  <th>#</th>
 						  <th>Visit Date</th>
 						  <th>Patient</th>
-						  <th>Patient Type</th>
+						  <th>I.D. No.</th>
 						  <th>Visit Type</th>
 						  <th>Time Start</th>
 						  <th>Time End</th>
@@ -74,7 +66,7 @@
 				$dependant_id = $row->dependant_id;
 				$strath_no = $row->strath_no;
 				$visit_type_id = $row->visit_type_id;
-				$visit_type = $row->visit_type;
+				$visit_type_name = $row->visit_type_name;
 				$time_start = $row->time_start;
 				$time_end = $row->time_end;
 				
@@ -84,6 +76,7 @@
 				$patient_othernames = $patient['patient_othernames'];
 				$patient_surname = $patient['patient_surname'];
 				$patient_date_of_birth = $patient['patient_date_of_birth'];
+				$patient_national_id = $patient['patient_national_id'];
 				$gender = $patient['gender'];
 				
 				//creators and editors
@@ -121,12 +114,12 @@
 						<td>'.$count.'</td>
 						<td>'.$visit_date.'</td>
 						<td>'.$patient_surname.' '.$patient_othernames.'</td>
-						<td>'.$patient_type.'</td>
-						<td>'.$visit_type.'</td>
+						<td>'.$patient_national_id.'</td>
+						<td>'.$visit_type_name.'</td>
 						<td>'.$time_start.'</td>
 						<td>'.$time_end.'</td>
 						<td>'.$doctor.'</td>
-						<td><a href="'.site_url().'/reception/initiate_visit_appointment/'.$visit_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Do you really want to start this visit ?\');">Start Visit</a></td>
+						<td><a href="'.site_url().'reception/initiate_visit_appointment/'.$visit_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Do you really want to start this visit ?\');">Start Visit</a></td>
 					</tr> 
 				';
 			}
@@ -146,6 +139,22 @@
 		
 		echo $result;
 ?>
+		<?php
+		$error = $this->session->userdata('error_message');
+		$success = $this->session->userdata('success_message');
+		
+		if(!empty($error))
+		{
+			echo '<div class="alert alert-danger">'.$error.'</div>';
+			$this->session->unset_userdata('error_message');
+		}
+		
+		if(!empty($success))
+		{
+			echo '<div class="alert alert-success">'.$success.'</div>';
+			$this->session->unset_userdata('success_message');
+		}
+		?>
           </div>
           
           <div class="widget-foot">
@@ -157,7 +166,6 @@
             </div>
         </div>
         <!-- Widget ends -->
+       
 
-      </div>
-    </div>
-  </div>
+  </section>

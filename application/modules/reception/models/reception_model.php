@@ -228,7 +228,7 @@ class Reception_model extends CI_Model
 			'modified_by'=>$this->session->userdata('personnel_id'),
 			'visit_type_id'=>2,
 			'dependant_id'=>$this->input->post('dependant_id'),
-			'insurance_company_id'=>$this->input->post('insurance_company_id'),
+			//'insurance_company_id'=>$this->input->post('insurance_company_id'),
 			'branch_code'=>$this->session->userdata('branch_code'),
 			'patient_kin_phonenumber1'=>$this->input->post('next_of_kin_contact')
 		);
@@ -531,15 +531,11 @@ class Reception_model extends CI_Model
 			$strath_no = $row->strath_no;
 			$created_by = $row->created_by;
 			$modified_by = $row->modified_by;
-			$visit_type_id = $row->visit_type_id;
 			$created = $row->patient_date;
 			$last_modified = $row->last_modified;
 			$last_visit = $row->last_visit;
 			
-			$patient_type = $this->reception_model->get_patient_type($visit_type_id);
-				
-				
-				
+			$patient_national_id = $row->patient_national_id;
 			$patient_othernames = $row->patient_othernames;
 			$patient_surname = $row->patient_surname;
 			$patient_date_of_birth = $row->patient_date_of_birth;
@@ -553,6 +549,26 @@ class Reception_model extends CI_Model
 			{
 				$gender = 'F';
 			}
+			if($visit_id == NULL)
+			{
+				$visit_type_id = '';
+				$visit_type_name = '';
+			}
+			
+			else
+			{
+				$visit_type_id = $row->visit_type;
+				$this->db->where('visit_type_id', $visit_type_id);
+				$this->db->select('visit_type_name');
+				$query = $this->db->get('visit_type');
+				$visit_type_name = '';
+				
+				if($query->num_rows() > 0)
+				{
+					$row2 = $query->row();
+					$visit_type_name = $row2->visit_type_name;
+				}
+			}
 		}
 		// calculate patient balance
 		$this->load->model('administration/administration_model');
@@ -560,8 +576,10 @@ class Reception_model extends CI_Model
 		// end of patient balance
 		$patient['patient_id'] = $patient_id;
 		$patient['account_balance'] = $account_balance;
+		$patient['patient_national_id'] = $patient_national_id;
 		$patient['visit_type'] = $visit_type_id;
-		$patient['patient_type'] = $patient_type;
+		$patient['visit_type_name'] = $visit_type_name;
+		$patient['patient_type'] = $visit_type_id;
 		$patient['visit_type_id'] = $visit_type_id;
 		$patient['patient_othernames'] = $patient_othernames;
 		$patient['patient_surname'] = $patient_surname;
@@ -774,7 +792,7 @@ class Reception_model extends CI_Model
 	public function get_patient_insurance($patient_id)
 	{
 		$table = "insurance_company";
-		$where = "insurance_company_id > 0";
+		$where = "insurance_company_status = 1";
 		$items = "*";
 		$order = "insurance_company_name";
 		
@@ -801,9 +819,32 @@ class Reception_model extends CI_Model
 		
 		return $result;
 	}
-	public function get_service_charges_per_type($patient_type){
+	public function get_services_per_department($department_id)
+	{
+		$table = "service";
+		$where = "department_id = $department_id AND service_status = 1";
+		$items = "*";
+		$order = "department_id";
+			//echo $sql;
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	public function get_service_charges_per_type($patient_type, $service_id)
+	{
 		$table = "service_charge";
-		$where = "visit_type_id = $patient_type and service_id = 1 and service_charge_status = 1";
+		$where = "visit_type_id = $patient_type and service_id = $service_id and service_charge_status = 1";
+		$items = "*";
+		$order = "visit_type_id";
+			//echo $sql;
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	public function get_service_charges_per_visit_type($patient_type)
+	{
+		$table = "service_charge";
+		$where = "visit_type_id = $patient_type and service_charge_status = 1";
 		$items = "*";
 		$order = "visit_type_id";
 			//echo $sql;
@@ -1782,6 +1823,16 @@ class Reception_model extends CI_Model
 		return $query;
 	}
 	
+	public function get_visit_types()
+	{
+		$this->db->from('visit_type');
+		$this->db->select('*');
+		$this->db->where('visit_type_status = 1');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	
 	/*
 	*	Create remove visit department
 	*
@@ -1867,15 +1918,15 @@ class Reception_model extends CI_Model
 		$this->db->update('patients', $patient_date);
 	}
 	
-	public function create_visit($visit_date, $patient_id, $doctor_id, $patient_insurance_id, $patient_insurance_number, $patient_type, $timepicker_start, $timepicker_end, $appointment_id, $close_card)
+	public function create_visit($visit_date, $patient_id, $doctor_id, $insurance_limit, $insurance_number, $visit_type_id, $timepicker_start, $timepicker_end, $appointment_id, $close_card)
 	{
 		$visit_data = array(
 			"visit_date" => $visit_date,
 			"patient_id" => $patient_id,
 			"personnel_id" => $doctor_id,
-			"patient_insurance_id" => $patient_insurance_id,
-			"patient_insurance_number" => $patient_insurance_number,
-			"visit_type" => $patient_type,
+			"insurance_limit" => $insurance_limit,
+			"patient_insurance_number" => $insurance_number,
+			"visit_type" => $visit_type_id,
 			"time_start"=>$timepicker_start,
 			"time_end"=>$timepicker_end,
 			"appointment_id"=>$appointment_id,
@@ -1928,11 +1979,12 @@ class Reception_model extends CI_Model
 	
 	public function get_visit_trail($visit_id)
 	{
-		$where = 'visit_department.visit_id = '.$visit_id.' AND visit_department.department_id = departments.department_id AND visit_department.created_by = personnel.personnel_id';
-		$this->db->select('departments.department_name, personnel.personnel_fname, visit_department.*');
+		$where = 'visit_department.visit_id = '.$visit_id.' AND visit_department.department_id = departments.department_id';
+		$this->db->select('departments.department_name, visit_department.*');
 		$this->db->where($where);
+		$this->db->join('personnel', 'visit_department.created_by = personnel.personnel_id', 'left');
 		$this->db->order_by('visit_department.created','ASC');
-		$query = $this->db->get('visit_department, departments, personnel');
+		$query = $this->db->get('visit_department, departments');
 		
 		return $query;
 	}

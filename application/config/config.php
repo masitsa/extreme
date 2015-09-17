@@ -17,7 +17,7 @@
 |
 */
 $config['base_url'] = 'http://localhost/erp/';
-#$config['base_url'] = 'http://erp.autospares.co.ke/';
+#$config['base_url'] = 'http://192.168.1.100/';
 
 /*
 |--------------------------------------------------------------------------

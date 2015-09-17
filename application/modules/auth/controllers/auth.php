@@ -4,7 +4,7 @@ class Auth extends MX_Controller
 	function __construct()
 	{
 		parent:: __construct();
-		$this->load->model('auth_model');
+		$this->load->model('auth/auth_model');
 		$this->load->model('site/site_model');
 	}
 	

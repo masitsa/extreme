@@ -274,34 +274,6 @@ class Reception  extends MX_Controller
 		
 		$data['content'] = $this->load->view('ongoing_visit', $v_data, true);
 		
-		if($page_name == 'nurse')
-		{
-			$data['sidebar'] = 'nurse_sidebar';
-		}
-		
-		else if($page_name == 'doctor')
-		{
-			$data['sidebar'] = 'doctor_sidebar';
-		}
-		
-		else if($page_name == 'dental')
-		{
-			$data['sidebar'] = 'dental_sidebar';
-		}
-		else if($page_name == 'physiotherapy')
-		{
-			$data['sidebar'] = 'physiotherapy_sidebar';
-		}
-		else if($page_name == 'ultra_sound')
-		{
-			$data['sidebar'] = 'ultra_sound_sidebar';
-		}
-		
-		else
-		{
-			$data['sidebar'] = 'reception_sidebar';
-		}
-		
 		$this->load->view('admin/templates/general_page', $data);
 		// end of it
 	}
@@ -383,40 +355,6 @@ class Reception  extends MX_Controller
 		$v_data['doctors'] = $this->reception_model->get_doctor();
 		
 		$data['content'] = $this->load->view('general_queue', $v_data, true);
-		
-		if($page_name == 'nurse')
-		{
-			$data['sidebar'] = 'nurse_sidebar';
-		}
-		
-		else if($page_name == 'doctor')
-		{
-			$data['sidebar'] = 'doctor_sidebar';
-		}
-		
-		else if($page_name == 'laboratory')
-		{
-			$data['sidebar'] = 'lab_sidebar';
-		}
-		
-		else if($page_name == 'pharmacy')
-		{
-			$data['sidebar'] = 'pharmacy_sidebar';
-		}
-		
-		else if($page_name == 'accounts')
-		{
-			$data['sidebar'] = 'accounts_sidebar';
-		}
-		else if($page_name == 'administration')
-		{
-			$data['sidebar'] = 'admin_sidebar';
-		}
-		
-		else
-		{
-			$data['sidebar'] = 'reception_sidebar';
-		}
 		
 		$this->load->view('admin/templates/general_page', $data);
 		// end of it
@@ -523,165 +461,28 @@ class Reception  extends MX_Controller
 		
 	}
 	
-	public function search_staff()
+	public function get_department_services($department_id)
 	{
-		$staff_number = $this->input->post('staff_number');
-		if(!empty($staff_number))
-		{
-			$query = $this->reception_model->get_staff($this->input->post('staff_number'));
-			
-			//found in our database
-			if (($query->num_rows() > 0) && (!isset($_POST['dependant'])))
-			{
-				$query_staff = $this->reception_model->get_patient_staff($this->input->post('staff_number'));
-				
-				//exists in patients table
-				if ($query_staff->num_rows() > 0)
-				{
-					$result_patient = $query_staff->row();
-					$patient_id = $result_patient->patient_id;
-				}
-				
-				//create patient if not found in patients' table
-				else
-				{
-					$patient_id = $this->reception_model->insert_into_patients($this->input->post('staff_number'),2);
-					
-				}
-				// $this->get_found_patients($patient_id,2);
-				if(!empty($patient_id))
-				{
-					$staff_search = ' AND patients.patient_id = '.$patient_id;
-				}
-				else
-				{
-					$staff_search = '';
-				}
-				$search = $staff_search;
-				$this->session->set_userdata('patient_staff_search', $search);
-				
-				$this->staff();
-				
-			}
-			
-			else if (!isset($_POST['dependant']))
-			{
-				if($this->strathmore_population->get_hr_staff($this->input->post('staff_number')))
-				{
-					$patient_id = $this->reception_model->insert_into_patients($this->input->post('staff_number'),2);
-					if($patient_id != FALSE){
-						// $this->get_found_patients($patient_id,2);
-						if(!empty($patient_id))
-						{
-							$staff_search = ' AND patients.patient_id = '.$patient_id;
-						}
-						else
-						{
-							$staff_search = '';
-						}
-						$search = $staff_search;
-						$this->session->set_userdata('patient_staff_search', $search);
-						
-						$this->staff();
-					}else{
-						$this->add_patient();
-					}
-				}
-				
-				else
-				{
-					$this->add_patient();
-				}
-			
-			}
-			
-			//case of a dependant
-			else
-			{
-				$this->add_patient($this->input->post('staff_number'));
-			}
-			
-		}
+		echo '<option value="0">--Select Service--</option>';
 		
-		else
-		{
-			redirect('reception/patients-list');
+		$service_charge = $this->reception_model->get_services_per_department($department_id);
+		foreach($service_charge AS $key) 
+		{ 
+			echo '<option value="'.$key->service_id.'">'.$key->service_name.'</option>';
 		}
 	}
 	
-	public function search_student()
+	public function get_services_charges($patient_type_id, $service_id)
 	{
-		$student_number = $this->input->post('student_number');
-		if(!empty($student_number))
-		{
-			$query = $this->reception_model->get_student($this->input->post('student_number'));
-			
-			//found in our database
-			if ($query->num_rows() > 0)
-			{
-				//check if they exist in patients
-				$query_staff = $this->reception_model->get_patient_staff($this->input->post('student_number'));
-				
-				if ($query_staff->num_rows() > 0)
-				{
-					$result_patient = $query_staff->row();
-					$patient_id = $result_patient->patient_id;
-				}
-				else
-				{
-					$patient_id = $this->reception_model->insert_into_patients($this->input->post('student_number'),1);	
-				}
-				//$this->set_visit($patient_id);
-				// $search = ' AND patients.patient_id = '.$patient_id;
-				// $this->session->set_userdata('patient_search', $search);
-				// $this->get_found_patients($patient_id,1);
-				
-				if(!empty($patient_id))
-				{
-					$student_search = ' AND patients.patient_id = '.$patient_id;
-				}
-				else
-				{
-					$student_search = '';
-				}
-				$search = $student_search;
-				$this->session->set_userdata('patient_student_search', $search);
-				
-				$this->students();
-			}
-			
-			else
-			{
-				$patient_id = $this->strathmore_population->get_ams_student($this->input->post('student_number'));
-				if($patient_id != FALSE){
-					// $this->set_visit($patient_id);
-					if(!empty($patient_id))
-					{
-						$student_search = ' AND patients.patient_id = '.$patient_id;
-					}
-					else
-					{
-						$student_search = '';
-					}
-					$search = $student_search;
-					$this->session->set_userdata('patient_student_search', $search);
-					
-					$this->students();
-				}else{
-					$this->session->set_userdata("error_message","Could not add patient. Please try again");
-					$this->add_patient();
-				}
-	
-			}
-		}
+		echo '<option value="0">--Select Consultation Charge--</option>';
 		
-		else
-		{
-			// redirect('reception/patients-list');
-			$this->session->set_userdata("error_message","Please enter a student number and try again");
-			$this->add_patient();
+		$service_charge = $this->reception_model->get_service_charges_per_type($patient_type_id, $service_id);
+		foreach($service_charge AS $key) 
+		{ 
+			echo '<option value="'.$key->service_charge_id.'">'.$key->service_charge_name.'</option>';
 		}
 	}
+	
 	/*
 	*	Add a visit
 	*
@@ -690,24 +491,21 @@ class Reception  extends MX_Controller
 	{
 		$v_data["patient_id"] = $primary_key;
 		$v_data['visit_departments'] = $this->reception_model->get_visit_departments();
+		$v_data['visit_types'] = $this->reception_model->get_visit_types();
 		$v_data['charge'] = $this->reception_model->get_service_charges($primary_key);
 		$v_data['doctor'] = $this->reception_model->get_doctor();
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['patient_insurance'] = $this->reception_model->get_patient_insurance($primary_key);
 		$patient = $this->reception_model->patient_names2($primary_key);
-		$patient_type = $patient['patient_type'];
-		$patient_othernames = $patient['patient_othernames'];
-		$patient_surname = $patient['patient_surname'];
-		$patient_type_id = $patient['visit_type_id'];
-		$account_balance = $patient['account_balance'];
+		$v_data['patient_type'] = $patient['patient_type'];
+		$v_data['patient_othernames'] = $patient['patient_othernames'];
+		$v_data['patient_surname'] = $patient['patient_surname'];
+		$v_data['patient_type_id'] = $patient['visit_type_id'];
+		$v_data['account_balance'] = $patient['account_balance'];
 		
-		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Patient Type: <span style="font-weight: normal;">'.$patient_type.'</span> Account Balance : <span style="font-weight: normal;">'.$account_balance.'</span> <a href="'.site_url().'administration/individual_statement/'.$primary_key.'/2" class="btn btn-sm btn-primary" target="_blank" style="margin-top: 5px;">Patient Statement</a>';
-		$v_data['patient_type_id'] = $patient_type_id;
-		$v_data['patient_type'] = $patient_type;
-		$data['content'] = $this->load->view('initiate_visit', $v_data, true);
+		$data['content'] = $this->load->view('visit/initiate_visit', $v_data, true);
 		
-		$data['title'] = 'Start Visit';
-		$data['sidebar'] = 'reception_sidebar';
+		$data['title'] = 'Create Visit';
 		$this->load->view('admin/templates/general_page', $data);	
 	}
 	
@@ -715,16 +513,15 @@ class Reception  extends MX_Controller
 	{
 		$this->form_validation->set_rules('visit_date', 'Visit Date', 'required');
 		$this->form_validation->set_rules('department_id', 'Department', 'required|is_natural_no_zero');
-		$patient_type = '';
-		//var_dump()
+		$this->form_validation->set_rules('visit_type_id', 'Visit type', 'required|is_natural_no_zero');
+		$visit_type_id = $this->input->post("visit_type_id"); 
+		
 		if(isset($_POST['department_id'])){
 			if($_POST['department_id'] == 7)
 			{
 				//if nurse visit doctor must be selected
 				$this->form_validation->set_rules('personnel_id', 'Doctor', 'required|is_natural_no_zero');
 				$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required|is_natural_no_zero');
-				$this->form_validation->set_rules('patient_type_id', 'Patient Type', 'required|is_natural_no_zero');
-				$patient_type = $this->input->post("patient_type_id"); 
 				$service_charge_id = $this->input->post("service_charge_name");
 				$doctor_id = $this->input->post('personnel_id');
 			}
@@ -733,23 +530,19 @@ class Reception  extends MX_Controller
 				//if nurse visit doctor must be selected
 				$this->form_validation->set_rules('personnel_id2', 'Doctor', 'required|is_natural_no_zero');
 				$this->form_validation->set_rules('service_charge_name2', 'Consultation Type', 'required|is_natural_no_zero');
-				$this->form_validation->set_rules('patient_type_id', 'Patient Type', 'required|is_natural_no_zero');
-				$patient_type = $this->input->post("patient_type_id"); 
 				$service_charge_id = $this->input->post("service_charge_name2");
 				$doctor_id = $this->input->post('personnel_id2');
 			}
 			else 
 			{
-				$this->form_validation->set_rules('patient_type_id', 'Patient Type', 'required|is_natural_no_zero');
-				$patient_type = $this->input->post("patient_type_id"); 
 				$service_charge_id = 0;
 				$doctor_id = 0;
 			}
 		}
 		
-		if($patient_type==4){
-			$this->form_validation->set_rules('patient_insurance_id', 'Insurance Company', 'required');
-			$this->form_validation->set_rules('insurance_number', 'Insurance Number', 'required');
+		if($visit_type_id != 1){
+			$this->form_validation->set_rules('insurance_limit', 'Insurance limit', 'required');
+			$this->form_validation->set_rules('insurance_number', 'Insurance number', 'required');
 		}
 		
 		if ($this->form_validation->run() == FALSE)
@@ -758,46 +551,41 @@ class Reception  extends MX_Controller
 		}
 		else
 		{
-			$patient_insurance_id = $this->input->post("patient_insurance_id");
-			$patient_insurance_number = $this->input->post("insurance_number");
+			$insurance_limit = $this->input->post("insurance_limit");
+			$insurance_number = $this->input->post("insurance_number");
 			
 			//$visit_type = $this->get_visit_type($type_name);
 			$visit_date = $this->input->post("visit_date");
 			$timepicker_start = $this->input->post("timepicker_start");
 			$timepicker_end = $this->input->post("timepicker_end");
 			
-			$appointment_id;
-			$close_card;	
-			if(($timepicker_end=="")||($timepicker_start=="")){
-				$appointment_id=0;	
-				$close_card=0;
+			$appointment_id = $this->input->post("appointment_id");
+			if($appointment_id == 1)
+			{
+				$close_card = 2;
 			}
-			else{
-				$appointment_id=1;
-				$close_card=2;		
+			else
+			{		
+				$close_card = 0;
 			}
 			//  check if the student exisit for that day and the close card 0;
-			$check_visits = $this->reception_model->check_patient_exist($patient_id,$visit_date);
+			$check_visits = $this->reception_model->check_patient_exist($patient_id, $visit_date);
 			$check_count = count($check_visits);
 			if($check_count > 0)
 			{
-				$this->session->set_userdata('error_message', 'Seems like there is another visit initiated');
-				$this->visit_list(0);
+				$this->session->set_userdata('error_message', 'Seems like there is another visit has been initiated');
+				redirect('reception/general-queue');
 			}
+			
 			else
 			{
-				
-					//create visit
-					$visit_id = $this->reception_model->create_visit($visit_date, $patient_id, $doctor_id, $patient_insurance_id, $patient_insurance_number, $patient_type, $timepicker_start, $timepicker_end, $appointment_id, $close_card);
-				
-				
+				//create visit
+				$visit_id = $this->reception_model->create_visit($visit_date, $patient_id, $doctor_id, $insurance_limit, $insurance_number, $visit_type_id, $timepicker_start, $timepicker_end, $appointment_id, $close_card);
 				
 				//save consultation charge for nurse visit and counseling
 				if($_POST['department_id'] == 7 || $_POST['department_id'] == 12)
 				{
-					
-					 $this->reception_model->save_visit_consultation_charge($visit_id, $service_charge_id);	
-					
+					$this->reception_model->save_visit_consultation_charge($visit_id, $service_charge_id);	
 				}
 				
 				//set visit department if not appointment
@@ -809,7 +597,14 @@ class Reception  extends MX_Controller
 					$department_id = $this->input->post('department_id');
 					if($this->reception_model->set_visit_department($visit_id, $department_id))
 					{
-						$this->session->set_userdata('success_message', 'Visit has been initiated');
+						if($appointment_id == 0)
+						{
+							$this->session->set_userdata('success_message', 'Visit has been initiated');
+						}
+						else
+						{
+							$this->session->set_userdata('success_message', 'Appointment has been created');
+						}
 					}
 					else
 					{
@@ -822,7 +617,7 @@ class Reception  extends MX_Controller
 					$this->session->set_userdata('success_message', 'Visit has been initiated');
 				}
 				
-				$this->visit_list(0);
+				redirect('reception/general-queue');
 			}
 			
 		}
@@ -848,12 +643,12 @@ class Reception  extends MX_Controller
 		
 		if(!empty($patient_number))
 		{
-			$patient_number = ' AND patients.patient_number LIKE '.$patient_number.' ';
+			$patient_number = ' AND patients.patient_number LIKE \'%'.$patient_number.'%\'';
 		}
 		
 		if(!empty($patient_national_id))
 		{
-			$patient_national_id = ' AND patients.patient_national_id = '.$patient_national_id.' ';
+			$patient_national_id = ' AND patients.patient_national_id = \''.$patient_national_id.'\' ';
 		}
 		
 		//search surname
@@ -926,10 +721,16 @@ class Reception  extends MX_Controller
 		$personnel_id = $this->input->post('personnel_id');
 		$visit_date = $this->input->post('visit_date');
 		$patient_number = $this->input->post('patient_number');
+		$patient_national_id = $this->input->post('patient_national_id');
+		
+		if(!empty($patient_national_id))
+		{
+			$patient_national_id = ' AND patients.patient_national_id = \''.$patient_national_id.'\' ';
+		}
 		
 		if(!empty($patient_number))
 		{
-			$patient_number = ' AND patients.patient_number LIKE '.$patient_number.' ';
+			$patient_number = ' AND patients.patient_number LIKE \'%'.$patient_number.'%\'';
 		}
 		
 		if(!empty($visit_type_id))
@@ -989,7 +790,7 @@ class Reception  extends MX_Controller
 		}
 		$other_name .= ') ';
 		
-		$search = $visit_type_id.$patient_number.$surname.$other_name.$visit_date.$personnel_id;
+		$search = $visit_type_id.$patient_number.$surname.$other_name.$visit_date.$patient_national_id.$personnel_id;
 		$this->session->set_userdata('visit_search', $search);
 		
 		if($visits == 13)
@@ -1089,7 +890,7 @@ class Reception  extends MX_Controller
 		
 		if($visit == 13)
 		{
-			$this->appointment_list();
+			redirect('reception/appointments-list');
 		}
 		
 		else
@@ -1305,7 +1106,7 @@ class Reception  extends MX_Controller
 		$this->reception_model->set_visit_department($visit_id, 7);
 		
 		$this->session->set_userdata('success_message', 'The patient has been added to the queue');
-		$this->visit_list(0);
+		redirect('reception/general-queue');
 	}
 	
 	function get_appointments()
@@ -2301,6 +2102,18 @@ class Reception  extends MX_Controller
 	{
 		$visit_type_id = $this->input->post('visit_type_id');
 		$strath_no = $this->input->post('strath_no');
+		$patient_national_id = $this->input->post('patient_national_id');
+		$patient_number = $this->input->post('patient_number');
+		
+		if(!empty($patient_number))
+		{
+			$patient_number = ' AND patients.patient_number LIKE \'%'.$patient_number.'%\'';
+		}
+		
+		if(!empty($patient_national_id))
+		{
+			$patient_national_id = ' AND patients.patient_national_id = \''.$patient_national_id.'\' ';
+		}
 		
 		if(!empty($visit_type_id))
 		{
@@ -2370,7 +2183,7 @@ class Reception  extends MX_Controller
 			$other_name = '';
 		}
 		
-		$search = $visit_type_id.$patient_number.$surname.$other_name;
+		$search = $visit_type_id.$patient_number.$surname.$other_name.$patient_national_id;
 		$this->session->set_userdata('general_queue_search', $search);
 		
 		$this->general_queue($page_name);

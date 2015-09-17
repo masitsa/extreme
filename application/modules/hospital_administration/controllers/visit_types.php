@@ -87,8 +87,9 @@ class Visit_types extends Hospital_administration
 	public function add_visit_type() 
 	{
 		//form validation rules
-		$this->form_validation->set_rules('visit_type_name', 'Visit_type Name', 'required|xss_clean');
-		$this->form_validation->set_rules('visit_type_status', 'Visit_type Status', 'required|xss_clean');
+		$this->form_validation->set_rules('visit_type_name', 'Visit type Name', 'required|xss_clean');
+		$this->form_validation->set_rules('visit_type_status', 'Visit type Status', 'required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_id', 'Insurance company', 'xss_clean');
 		
 		//if form has been submitted
 		if ($this->form_validation->run())
@@ -104,7 +105,7 @@ class Visit_types extends Hospital_administration
 				$this->session->set_userdata('error_message', 'Could not add visit type. Please try again');
 			}
 		}
-		
+		$v_data['insurance_companies'] = $this->companies_model->all_companies();
 		$data['title'] = 'Add visit type';
 		$v_data['title'] = $data['title'];
 		$data['content'] = $this->load->view('visit_types/add_visit_type', $v_data, true);
@@ -120,8 +121,9 @@ class Visit_types extends Hospital_administration
 	public function edit_visit_type($visit_type_id) 
 	{
 		//form validation rules
-		$this->form_validation->set_rules('visit_type_name', 'Visit_type Name', 'required|xss_clean');
-		$this->form_validation->set_rules('visit_type_status', 'Visit_type Status', 'required|xss_clean');
+		$this->form_validation->set_rules('visit_type_name', 'Visit type Name', 'required|xss_clean');
+		$this->form_validation->set_rules('visit_type_status', 'Visit type Status', 'required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_id', 'Insurance company', 'xss_clean');
 		
 		//if form has been submitted
 		if ($this->form_validation->run())
@@ -139,6 +141,7 @@ class Visit_types extends Hospital_administration
 			}
 		}
 		
+		$v_data['insurance_companies'] = $this->companies_model->all_companies();
 		//open the add new visit_type
 		$data['title'] = 'Edit visit type';
 		$v_data['title'] = $data['title'];

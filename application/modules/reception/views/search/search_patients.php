@@ -49,6 +49,14 @@
                             <input type="text" class="form-control" name="patient_number" placeholder="Patient number">
                         </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">I.D. No.: </label>
+                        
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" name="patient_national_id" placeholder="I.D. No.">
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="col-md-6">
@@ -68,11 +76,15 @@
                             <input type="text" class="form-control" name="othernames" placeholder="Other Names">
                         </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <div class="col-lg-8 col-lg-offset-4">
+                            <div class="center-align">
+                                <button type="submit" class="btn btn-info">Search</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <br/>
-            <div class="center-align">
-            	<button type="submit" class="btn btn-info btn-sm">Search</button>
             </div>
             <?php
             echo form_close();

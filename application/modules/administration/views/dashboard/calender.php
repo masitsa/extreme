@@ -1,21 +1,20 @@
-<div class="widget">
-  <!-- Widget title -->
-  <div class="widget-head">
-      <h4 class="pull-left"><i class="icon-calendar"></i>Appointments</h4>
-      <div class="widget-icons pull-right">
-          <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a>
-          <a href="#" class="wclose"><i class="icon-remove"></i></a>
-      </div>
-      <div class="clearfix"></div>
-  </div>
-  <div class="widget-content">
-      <!-- Widget content -->
-      <div class="padd">
-          <!-- Below line produces calendar. I am using FullCalendar plugin. -->
-          <div id="appointments"></div>
-      </div>
-  </div>
-</div>
+
+    <section class="panel">
+        <header class="panel-heading">
+            <h4 class="pull-left"><i class="icon-reorder"></i>Appointments</h4>
+            <div class="widget-icons pull-right">
+              <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+            </div>
+            <div class="clearfix"></div>
+        </header>             
+
+        <!-- Widget content -->
+        <div class="panel-body">
+            <!-- Below line produces calendar. I am using FullCalendar plugin. -->
+            <div id="appointments"></div>
+        </div>
+    
+    </section>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -26,7 +25,7 @@ $(document).ready(function() {
     var y = date.getFullYear();
   $.ajax({
 	type:'POST',
-	url: config_url+"/reception/get_appointments",
+	url: config_url+"reception/get_appointments",
 	cache:false,
 	contentType: false,
 	processData: false,

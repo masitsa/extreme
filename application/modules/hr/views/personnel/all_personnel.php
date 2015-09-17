@@ -142,10 +142,10 @@
 								}
 								?>
                             	<div class="row" style="margin-bottom:20px;">
-                                    <div class="col-lg-2 col-lg-offset-8">
+                                    <!--<div class="col-lg-2 col-lg-offset-8">
                                         <a href="<?php echo site_url();?>human-resource/export-personnel" class="btn btn-sm btn-success pull-right">Export</a>
-                                    </div>
-                                    <div class="col-lg-2">
+                                    </div>-->
+                                    <div class="col-lg-12">
                                     	<a href="<?php echo site_url();?>human-resource/add-personnel" class="btn btn-sm btn-info pull-right">Add Personnel</a>
                                     </div>
                                 </div>

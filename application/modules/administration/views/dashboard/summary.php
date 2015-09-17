@@ -97,7 +97,7 @@
 //Get patients per day for the last 7 days
 $.ajax({
 	type:'POST',
-	url: config_url+"/administration/charts/latest_patient_totals",
+	url: config_url+"administration/charts/latest_patient_totals",
 	cache:false,
 	contentType: false,
 	processData: false,
@@ -123,7 +123,7 @@ $.ajax({
 //Get Revenue for the individual revenue types
 $.ajax({
 	type:'POST',
-	url: config_url+"/administration/charts/queue_total",
+	url: config_url+"administration/charts/queue_total",
 	cache:false,
 	contentType: false,
 	processData: false,
@@ -149,7 +149,7 @@ $.ajax({
 //Get payment methods
 $.ajax({
 	type:'POST',
-	url: config_url+"/administration/charts/payment_methods",
+	url: config_url+"administration/charts/payment_methods",
 	cache:false,
 	contentType: false,
 	processData: false,

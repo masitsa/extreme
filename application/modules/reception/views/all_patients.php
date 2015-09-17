@@ -208,7 +208,7 @@
 							<!--<td>'.date('jS M Y H:i a',strtotime($created)).'</td>-->
 							<td>'.$last_visit.'</td>
 							<td>  '.number_format($account_balance,0).'</td>
-							<td><a href="'.site_url().'reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-success">Visit</a></td>
+							<td><a href="'.site_url().'reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-info">Visit</a></td>
 							<td><a href="'.site_url().'reception/edit_patient/'.$patient_id.'" class="btn btn-sm btn-warning">Edit </a></td>
 							<td><a href="'.site_url().'administration/individual_statement/'.$patient_id.'/2" class="btn btn-sm btn-danger" target="_blank">Patient Statement</a></td>
 							<!--<td><a href="'.site_url().'reception/change_patient_type/'.$patient_id.'" class="btn btn-sm btn-primary">Change patient type</a></td>
