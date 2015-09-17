@@ -457,3 +457,14 @@ $route['accounts/accounts-queue'] = 'accounts/accounts_queue/12';
 $route['accounts/general-queue'] = 'reception/general_queue/accounts';
 
 
+/*
+*	Cloud Routes
+*/
+$route['cloud/sync-tables'] = 'cloud/sync_tables/index';
+$route['cloud/sync-tables/(:any)/(:any)/(:num)'] = 'cloud/sync_tables/index/$1/$2/$3';
+$route['cloud/sync-tables/(:any)/(:any)'] = 'cloud/sync_tables/index/$1/$2';
+$route['cloud/add-sync-table'] = 'cloud/sync_tables/add_sync_table';
+$route['cloud/edit-sync-table/(:num)'] = 'cloud/sync_tables/edit_sync_table/$1';
+$route['cloud/delete-sync-table/(:num)'] = 'cloud/sync_tables/delete_sync_table/$1';
+$route['cloud/activate-sync-table/(:num)'] = 'cloud/sync_tables/activate_sync_table/$1';
+$route['cloud/deactivate-sync-table/(:num)'] = 'cloud/sync_tables/deactivate_sync_table/$1';

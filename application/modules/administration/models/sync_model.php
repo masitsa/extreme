@@ -7,38 +7,28 @@ class Sync_model extends CI_Model
 	{
 		// get the patient id and the branch id and patient
 			$patient_details = $this->get_table_details($visit_id);
-			
-			try{
+			$url = 'http://159.203.78.242/cloud/save_cloud_data';
+			$test_url = 'http://159.203.78.242/cloud/test';
+			//Encode the array into JSON.
 
-				//API Url
-				$url = 'http://159.203.78.242/cloud/save_cloud_data';
-				// $url = 'http://localhost/cloud/save_cloud_data';
-				 
-				//Initiate cURL.
-				$ch = curl_init($url);
-				 
-				//The JSON data.
-				
-				 
-				//Encode the array into JSON.
-				$jsonDataEncoded = json_encode($patient_details);
-				 
-				//Tell cURL that we want to send a POST request.
-				curl_setopt($ch, CURLOPT_POST, 1);
-				 
-				//Attach our encoded JSON string to the POST fields.
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonDataEncoded);
-				 
-				//Set the content type to application/json
-				curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json')); 
-				 
-				//Execute the request
-				 $result = curl_exec($ch);
-				return "good work";
+			//The JSON data.
+			$data_string = json_encode($patient_details);
+			//var_dump($data_string);
+			try{                                                                                                         
 
-				// save items as passed
+				$ch = curl_init($url);                                                                      
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+				    'Content-Type: application/json',                                                                                
+				    'Content-Length: ' . strlen($data_string))                                                                       
+				);                                                                                                                   
+				                                                                                                                     
+				$result = curl_exec($ch);
+				curl_close($ch);
 
-				//in the case of an exceptions save them to the database
+				var_dump($result);
 			}
 			catch(Exception $e)
 			{

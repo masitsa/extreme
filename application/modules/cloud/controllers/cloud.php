@@ -12,9 +12,30 @@ class Cloud  extends MX_Controller
 	public function save_cloud_data()
 	{
 		
-		// $info = file_get_contents('http://159.203.78.242/cloud/save_cloud_data');
-		
-	    $this->cloud_model->insert_into_test('sdaasda');
+		$json = file_get_contents('php://input');
+
+	    $response = $this->cloud_model->save_visit_data($json);
+
+	    /*$decoded = json_decode($json);
+	    $patients = $decoded->patients;
+	    $member = $patients[0];
+		var_dump($member->patient_id);*/
+
+		echo json_encode($response);
+	}
+
+	public function test()
+	{
+		$json = file_get_contents('php://input');
+		$obj = json_decode($json);
+
+		$data = array(
+				'name' => $json
+			);
+
+		$this->db->insert('test', $data);
+
+		echo json_encode('true');
 	}
 }
 ?>
