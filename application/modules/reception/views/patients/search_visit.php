@@ -1,20 +1,12 @@
-<!-- Widget -->
-<div class="widget boxed">
-    <!-- Widget head -->
-    <div class="widget-head">
-        <h4 class="pull-left"><i class="icon-reorder"></i>Search Visits</h4>
-        <div class="widget-icons pull-right">
+ <section class="panel">
+    <header class="panel-heading">
+          <h4 class="pull-left"><i class="icon-reorder"></i>Search appointments</h4>
+          <div class="widget-icons pull-right">
             <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-        </div>
-    
-    	<div class="clearfix"></div>
-    
-    </div>             
-    
-    <!-- Widget content -->
-    <div class="widget-content">
-    	<div class="padd">
+          </div>
+          <div class="clearfix"></div>
+        </header>
+      <div class="panel-body">
 			<?php
             echo form_open("reception/search_visits/".$visit.'/'.$page_name, array("class" => "form-horizontal"));
             ?>
@@ -67,6 +59,14 @@
                             <input type="text" class="form-control" name="patient_number" placeholder="Patient number">
                         </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">I.D. No.: </label>
+                        
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" name="patient_national_id" placeholder="I.D. No.">
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="col-md-6">
@@ -75,12 +75,11 @@
                         <label class="col-lg-4 control-label">Visit Date: </label>
                         
                         <div class="col-lg-8">
-                            <div id="datetimepicker1" class="input-append">
-                                <input data-format="yyyy-MM-dd" class="form-control" type="text" name="visit_date" placeholder="Visit Date">
-                                <span class="add-on" style="cursor:pointer;">
-                                    &nbsp;<i data-time-icon="icon-time" data-date-icon="icon-calendar">
-                                    </i>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
                                 </span>
+                                <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="visit_date" placeholder="Visit Date">
                             </div>
                         </div>
                     </div>
@@ -100,15 +99,22 @@
                             <input type="text" class="form-control" name="othernames" placeholder="Other Names">
                         </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <div class="col-lg-8 col-lg-offset-4">
+                            <div class="center-align">
+                                <button type="submit" class="btn btn-info">Search</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <div class="center-align">
-            	<button type="submit" class="btn btn-info btn-lg">Search</button>
-            </div>
+           
             <?php
             echo form_close();
             ?>
-    	</div>
-    </div>
-</div>
+          </div>
+       
+
+  </section>

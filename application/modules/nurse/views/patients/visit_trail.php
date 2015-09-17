@@ -3,31 +3,37 @@ if(!isset($page_name))
 {
   $page_name = "Nurse";
 }
-  $patient_id = $this->reception_model->get_patient_id_from_visit($visit_id);
-  $patient = $this->reception_model->patient_names2($patient_id, $visit_id);
-  $patient_type = $patient['visit_type_id'];
-  $visit_trail = $this->reception_model->get_visit_trail($visit_id);
-   $item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_id);
-    $credit_note_amount = $this->accounts_model->get_sum_credit_notes($visit_id);
-    $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
-    $total = 0;
-    if(count($item_invoiced_rs) > 0){
-      $s=0;
-      
-      foreach ($item_invoiced_rs as $key_items):
-        $s++;
-        $service_charge_name = $key_items->service_charge_name;
-        $visit_charge_amount = $key_items->visit_charge_amount;
-        $service_name = $key_items->service_name;
-         $units = $key_items->visit_charge_units;
-         $visit_total = $visit_charge_amount * $units;
-         $total = $total + $visit_total;
-      endforeach;
-        $total_amount = $total ;
-        
-    }else{
-        $total_amount = 0;
-    }
+$patient_id = $this->reception_model->get_patient_id_from_visit($visit_id);
+$patient = $this->reception_model->patient_names2($patient_id, $visit_id);
+$patient_type = $patient['visit_type_id'];
+$visit_trail = $this->reception_model->get_visit_trail($visit_id);
+$item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_id);
+$credit_note_amount = $this->accounts_model->get_sum_credit_notes($visit_id);
+$debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
+$total = 0;
+
+if(count($item_invoiced_rs) > 0)
+{
+	$s=0;
+	
+	foreach ($item_invoiced_rs as $key_items):
+	$s++;
+	$service_charge_name = $key_items->service_charge_name;
+	$visit_charge_amount = $key_items->visit_charge_amount;
+	$service_name = $key_items->service_name;
+	$units = $key_items->visit_charge_units;
+	$visit_total = $visit_charge_amount * $units;
+	$total = $total + $visit_total;
+	endforeach;
+	$total_amount = $total ;
+
+}
+
+else
+{
+	$total_amount = 0;
+}
+
   if($visit_trail->num_rows() > 0)
   {
     $trail = 
@@ -48,9 +54,17 @@ if(!isset($page_name))
     foreach($visit_trail->result() as $res)
     {
       $count++;
-      $department_name = $res->departments_name;
+      $department_name = $res->department_name;
       $created = date('H:i a',strtotime($res->created));
-      $created_by = $res->personnel_fname;
+	  if(isset($res->personnel_fname))
+	  {
+      	$created_by = $res->personnel_fname;
+	  }
+	  
+	  else
+	  {
+		  $created_by = 'Ninja';
+	  }
       $status = $res->visit_department_status;
       
       if($status == 0)
@@ -278,7 +292,7 @@ if(!isset($page_name))
                             $visit_charge_id = $key_items->visit_charge_id;
                             $visit_total = $visit_charge_amount * $units;
                             $personell_rs = $this->reception_model->get_personnel_details($created_by);
-                            $item_rs = $this->reception_model->get_service_charges_per_type($patient_type);
+                            $item_rs = $this->reception_model->get_service_charges_per_type($patient_type, $service_id);
                             if(empty($created_by))
                             {
                                 $created_by_name = " - ";

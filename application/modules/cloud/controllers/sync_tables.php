@@ -70,7 +70,7 @@ class Sync_tables extends MX_Controller
 			$order_method = 'DESC';
 		}
 		
-		$data['title'] = 'sync_tables';
+		$data['title'] = 'sync tables';
 		$v_data['title'] = $data['title'];
 		
 		$v_data['order'] = $order;

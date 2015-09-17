@@ -14,6 +14,7 @@
 					<tr>
 						<th>#</th>
 						<th><a href="'.site_url().'admin/visit_types/visit_type_name/'.$order_method.'/'.$page.'">Visit type</a></th>
+						<th>Insurance company</th>
 						<th><a href="'.site_url().'admin/visit_types/last_modified/'.$order_method.'/'.$page.'">Last modified</a></th>
 						<th><a href="'.site_url().'admin/visit_types/modified_by/'.$order_method.'/'.$page.'">Modified by</a></th>
 						<th><a href="'.site_url().'admin/visit_types/visit_type_status/'.$order_method.'/'.$page.'">Status</a></th>
@@ -40,6 +41,7 @@
 			{
 				$visit_type_id = $row->visit_type_id;
 				$visit_type_name = $row->visit_type_name;
+				$insurance_company_name = $row->insurance_company_name;
 				$visit_type_status = $row->visit_type_status;
 				$created_by = $row->created_by;
 				$modified_by = $row->modified_by;
@@ -87,6 +89,7 @@
 					<tr>
 						<td>'.$count.'</td>
 						<td>'.$visit_type_name.'</td>
+						<td>'.$insurance_company_name.'</td>
 						<td>'.$last_modified.'</td>
 						<td>'.$modified_by.'</td>
 						<td>'.$status.'</td>

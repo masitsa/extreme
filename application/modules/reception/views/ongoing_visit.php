@@ -403,8 +403,24 @@
 			$result .= "There are no patients";
 		}
 		
-		echo $result;
 ?>
+		<?php
+		$error = $this->session->userdata('error_message');
+		$success = $this->session->userdata('success_message');
+		
+		if(!empty($error))
+		{
+			echo '<div class="alert alert-danger">'.$error.'</div>';
+			$this->session->unset_userdata('error_message');
+		}
+		
+		if(!empty($success))
+		{
+			echo '<div class="alert alert-success">'.$success.'</div>';
+			$this->session->unset_userdata('success_message');
+		}
+		echo $result;
+		?>
           		</div>
           
 		        <div class="panel-footer">

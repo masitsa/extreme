@@ -207,7 +207,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
+                <!--<div class="form-group">
                     <label class="col-lg-4 control-label">Insurance : </label>
                     
                     <div class="col-lg-8">
@@ -237,7 +237,7 @@
                             ?>
                         </select>
                     </div>
-                </div>
+                </div>-->
                 
             </div>
         </div>

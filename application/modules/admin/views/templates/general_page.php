@@ -87,7 +87,7 @@
 		<script src="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/select2/select2.js"></script>
 		
 		<!-- Theme Base, Components and Settings -->
-		<script src="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/javascripts/theme.js"></script>
+		<script src="<?php echo base_url()."assets/themes/porto-admin/1.4.1/assets/javascripts/";?>theme.js"></script>
 		<script src="<?php echo base_url()."assets/themes/jasny/js/jasny-bootstrap.js";?>"></script>
 		
 		<!-- Theme Custom -->
@@ -98,5 +98,15 @@
 
 		<!-- Examples -->
 		<script src="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/javascripts/dashboard/examples.dashboard.js"></script>
+        
+        <!-- Full Google Calendar - Calendar -->
+		<script src="<?php echo base_url()."assets/bluish/"?>js/fullcalendar.min.js"></script> 
+        <!-- jQuery Flot -->
+        <script src="<?php echo base_url()."assets/bluish/"?>js/excanvas.min.js"></script>
+        <script src="<?php echo base_url()."assets/bluish/"?>js/jquery.flot.js"></script>
+        <script src="<?php echo base_url()."assets/bluish/"?>js/jquery.flot.resize.js"></script>
+        <script src="<?php echo base_url()."assets/bluish/"?>js/jquery.flot.axislabels.js"></script>
+        <script src="<?php echo base_url()."assets/bluish/"?>js/jquery.flot.pie.js"></script>
+        <script src="<?php echo base_url()."assets/bluish/"?>js/jquery.flot.stack.js"></script>
 	</body>
 </html>

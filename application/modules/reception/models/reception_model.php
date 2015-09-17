@@ -228,7 +228,7 @@ class Reception_model extends CI_Model
 			'modified_by'=>$this->session->userdata('personnel_id'),
 			'visit_type_id'=>2,
 			'dependant_id'=>$this->input->post('dependant_id'),
-			'insurance_company_id'=>$this->input->post('insurance_company_id'),
+			//'insurance_company_id'=>$this->input->post('insurance_company_id'),
 			'branch_code'=>$this->session->userdata('branch_code'),
 			'patient_kin_phonenumber1'=>$this->input->post('next_of_kin_contact')
 		);
@@ -531,15 +531,11 @@ class Reception_model extends CI_Model
 			$strath_no = $row->strath_no;
 			$created_by = $row->created_by;
 			$modified_by = $row->modified_by;
-			$visit_type_id = $row->visit_type_id;
 			$created = $row->patient_date;
 			$last_modified = $row->last_modified;
 			$last_visit = $row->last_visit;
 			
-			$patient_type = $this->reception_model->get_patient_type($visit_type_id);
-				
-				
-				
+			$patient_national_id = $row->patient_national_id;
 			$patient_othernames = $row->patient_othernames;
 			$patient_surname = $row->patient_surname;
 			$patient_date_of_birth = $row->patient_date_of_birth;
@@ -553,6 +549,26 @@ class Reception_model extends CI_Model
 			{
 				$gender = 'F';
 			}
+			if($visit_id == NULL)
+			{
+				$visit_type_id = '';
+				$visit_type_name = '';
+			}
+			
+			else
+			{
+				$visit_type_id = $row->visit_type;
+				$this->db->where('visit_type_id', $visit_type_id);
+				$this->db->select('visit_type_name');
+				$query = $this->db->get('visit_type');
+				$visit_type_name = '';
+				
+				if($query->num_rows() > 0)
+				{
+					$row2 = $query->row();
+					$visit_type_name = $row2->visit_type_name;
+				}
+			}
 		}
 		// calculate patient balance
 		$this->load->model('administration/administration_model');
@@ -560,8 +576,10 @@ class Reception_model extends CI_Model
 		// end of patient balance
 		$patient['patient_id'] = $patient_id;
 		$patient['account_balance'] = $account_balance;
+		$patient['patient_national_id'] = $patient_national_id;
 		$patient['visit_type'] = $visit_type_id;
-		$patient['patient_type'] = $patient_type;
+		$patient['visit_type_name'] = $visit_type_name;
+		$patient['patient_type'] = $visit_type_id;
 		$patient['visit_type_id'] = $visit_type_id;
 		$patient['patient_othernames'] = $patient_othernames;
 		$patient['patient_surname'] = $patient_surname;
@@ -774,7 +792,7 @@ class Reception_model extends CI_Model
 	public function get_patient_insurance($patient_id)
 	{
 		$table = "insurance_company";
-		$where = "insurance_company_id > 0";
+		$where = "insurance_company_status = 1";
 		$items = "*";
 		$order = "insurance_company_name";
 		
@@ -801,9 +819,32 @@ class Reception_model extends CI_Model
 		
 		return $result;
 	}
-	public function get_service_charges_per_type($patient_type){
+	public function get_services_per_department($department_id)
+	{
+		$table = "service";
+		$where = "department_id = $department_id AND service_status = 1";
+		$items = "*";
+		$order = "department_id";
+			//echo $sql;
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	public function get_service_charges_per_type($patient_type, $service_id)
+	{
 		$table = "service_charge";
-		$where = "visit_type_id = $patient_type and service_id = 1 and service_charge_status = 1";
+		$where = "visit_type_id = $patient_type and service_id = $service_id and service_charge_status = 1";
+		$items = "*";
+		$order = "visit_type_id";
+			//echo $sql;
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	public function get_service_charges_per_visit_type($patient_type)
+	{
+		$table = "service_charge";
+		$where = "visit_type_id = $patient_type and service_charge_status = 1";
 		$items = "*";
 		$order = "visit_type_id";
 			//echo $sql;
@@ -1782,6 +1823,16 @@ class Reception_model extends CI_Model
 		return $query;
 	}
 	
+	public function get_visit_types()
+	{
+		$this->db->from('visit_type');
+		$this->db->select('*');
+		$this->db->where('visit_type_status = 1');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	
 	/*
 	*	Create remove visit department
 	*
@@ -1867,15 +1918,15 @@ class Reception_model extends CI_Model
 		$this->db->update('patients', $patient_date);
 	}
 	
-	public function create_visit($visit_date, $patient_id, $doctor_id, $patient_insurance_id, $patient_insurance_number, $patient_type, $timepicker_start, $timepicker_end, $appointment_id, $close_card)
+	public function create_visit($visit_date, $patient_id, $doctor_id, $insurance_limit, $insurance_number, $visit_type_id, $timepicker_start, $timepicker_end, $appointment_id, $close_card)
 	{
 		$visit_data = array(
 			"visit_date" => $visit_date,
 			"patient_id" => $patient_id,
 			"personnel_id" => $doctor_id,
-			"patient_insurance_id" => $patient_insurance_id,
-			"patient_insurance_number" => $patient_insurance_number,
-			"visit_type" => $patient_type,
+			"insurance_limit" => $insurance_limit,
+			"patient_insurance_number" => $insurance_number,
+			"visit_type" => $visit_type_id,
 			"time_start"=>$timepicker_start,
 			"time_end"=>$timepicker_end,
 			"appointment_id"=>$appointment_id,
@@ -1928,11 +1979,12 @@ class Reception_model extends CI_Model
 	
 	public function get_visit_trail($visit_id)
 	{
-		$where = 'visit_department.visit_id = '.$visit_id.' AND visit_department.department_id = departments.department_id AND visit_department.created_by = personnel.personnel_id';
-		$this->db->select('departments.department_name, personnel.personnel_fname, visit_department.*');
+		$where = 'visit_department.visit_id = '.$visit_id.' AND visit_department.department_id = departments.department_id';
+		$this->db->select('departments.department_name, visit_department.*');
 		$this->db->where($where);
+		$this->db->join('personnel', 'visit_department.created_by = personnel.personnel_id', 'left');
 		$this->db->order_by('visit_department.created','ASC');
-		$query = $this->db->get('visit_department, departments, personnel');
+		$query = $this->db->get('visit_department, departments');
 		
 		return $query;
 	}
@@ -2100,6 +2152,200 @@ class Reception_model extends CI_Model
 		$query = $this->db->get();
 		
 		return $query;
+	}
+	/*
+	*	Import Template
+	*
+	*/
+	function import_template()
+	{
+		$this->load->library('Excel');
+		
+		$title = 'Oasis Patients Import Template';
+		$count=1;
+		$row_count=0;
+		
+		$report[$row_count][0] = 'Patient Number';
+		$report[$row_count][1] = 'Patient Surname';
+		$report[$row_count][2] = 'Patient Othernames';
+		$report[$row_count][3] = 'Title (i.e. Mr)';
+		$report[$row_count][4] = 'Date of Birth (i.e. YYYY/MM/DD)';
+		$report[$row_count][5] = 'Civil Status';
+		$report[$row_count][6] = 'Address';
+		$report[$row_count][7] = 'Postal Code';
+		$report[$row_count][8] = 'City';
+		$report[$row_count][9] = 'Phone Number';
+		$report[$row_count][10] = 'Alternate Phone';
+		$report[$row_count][11] = 'Email';
+		$report[$row_count][12] = 'National Id';
+		$report[$row_count][13] = 'Religion';
+		$report[$row_count][14] = 'Gender (i.e. M or F)';
+		$report[$row_count][15] = 'Next of Kin Othernames';
+		$report[$row_count][16] = 'Next of Kin Surname';
+		$report[$row_count][17] = 'N.O.K Phone';
+		$report[$row_count][18] = 'N.O.K Phone 2';
+		$report[$row_count][19] = 'Relationship';
+		
+		$row_count++;
+		
+		//create the excel document
+		$this->excel->addArray ( $report );
+		$this->excel->generateXML ($title);
+	}
+	public function import_csv_products($upload_path)
+	{
+		//load the file model
+		$this->load->model('admin/file_model');
+		/*
+			-----------------------------------------------------------------------------------------
+			Upload csv
+			-----------------------------------------------------------------------------------------
+		*/
+		$response = $this->file_model->upload_csv($upload_path, 'import_csv');
+		
+		if($response['check'])
+		{
+			$file_name = $response['file_name'];
+			
+			$array = $this->file_model->get_array_from_csv($upload_path.'/'.$file_name);
+			//var_dump($array); die();
+			$response2 = $this->sort_csv_data($array);
+		
+			if($this->file_model->delete_file($upload_path."\\".$file_name, $upload_path))
+			{
+			}
+			
+			return $response2;
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', $response['error']);
+			return FALSE;
+		}
+	}
+	public function sort_csv_data($array)
+	{
+		//count total rows
+		$total_rows = count($array);
+		$total_columns = count($array[0]);//var_dump($array);die();
+		
+		//if products exist in array
+		if(($total_rows > 0) && ($total_columns == 20))
+		{
+			$items['modified_by'] = $this->session->userdata('personnel_id');
+			$response = '
+				<table class="table table-hover table-bordered ">
+					  <thead>
+						<tr>
+						  <th>#</th>
+						  <th>Surname</th>
+						  <th>Other Names</th>
+						</tr>
+					  </thead>
+					  <tbody>
+			';
+			
+			//retrieve the data from array
+			for($r = 1; $r < $total_rows; $r++)
+			{
+				$current_patient_number = $array[$r][0];
+				$items['patient_surname'] = ucwords(strtolower($array[$r][1]));
+				$items['patient_othernames'] = $array[$r][2];
+				$title = $array[$r][3];
+				$items['patient_date_of_birth'] = $array[$r][4];
+				$civil_status_id = $array[$r][5];
+				$items['patient_address'] = $array[$r][6];
+				$items['patient_postalcode'] = $array[$r][7];
+				$items['patient_town'] = $array[$r][8];
+				$items['patient_phone1'] = $array[$r][9];
+				$items['patient_phone2'] = $array[$r][10];
+				$items['patient_email'] = $array[$r][11];
+				$items['patient_national_id'] = $array[$r][12];
+				$religion = $array[$r][13];
+				$gender = $array[$r][14];
+				$items['patient_kin_othernames'] = $array[$r][15];
+				$items['patient_kin_sname'] = $array[$r][16];
+				$items['patient_kin_phonenumber1'] = $array[$r][17];
+				$items['patient_kin_phonenumber2'] = $array[$r][18];
+				$relationship_id = $array[$r][19];
+				$items['patient_date'] = date('Y-m-d H:i:s');
+				$items['created_by'] = $this->session->userdata('personnel_id');
+				$items['branch_code'] = $this->session->userdata('branch_code');
+				$comment = '';
+				
+				if(isset($gender))
+				{
+					if($gender == 'M')
+					{
+						$items['gender_id'] = 1;
+					}
+					else if($gender == 'F')
+					{
+						$items['gender_id'] = 2;
+					}else
+					{
+						$gender_id = '';
+					}
+				}
+				$items['patient_number'] = $this->create_patient_number();
+				$items['current_patient_number'] = $current_patient_number;
+				if(!empty($current_patient_number))
+				{
+					// check if the number already exists
+					if($this->check_current_number_exisits($current_patient_number))
+					{
+					
+					}
+					else
+					{
+						// number does not exisit
+						//save product in the db
+						if($this->db->insert('patients', $items))
+						{
+							$comment .= '<br/>Patient successfully added to the database';
+							$class = 'success';
+						}
+						
+						else
+						{
+							$comment .= '<br/>Internal error. Could not add patient to the database. Please contact the site administrator. Product code '.$items['patient_surname'];
+							$class = 'warning';
+						}
+					}
+				}else
+				{
+					$comment .= '<br/>Not saved ensure you have a patient number entered'.$items['patient_surname'];
+						$class = 'danger';
+				}
+				
+				
+				$response .= '
+					
+						<tr class="'.$class.'">
+							<td>'.$r.'</td>
+							<td>'.$items['patient_number'].'</td>
+							<td>'.$items['patient_othernames'].'</td>
+							<td>'.$items['patient_surname'].'</td>
+							<td>'.$current_patient_number.'</td>
+						</tr> 
+				';
+			}
+			
+			$response .= '</table>';
+			
+			$return['response'] = $response;
+			$return['check'] = TRUE;
+		}
+		
+		//if no products exist
+		else
+		{
+			$return['response'] = 'Patient data not found';
+			$return['check'] = FALSE;
+		}
+		
+		return $return;
 	}
 }
 ?>

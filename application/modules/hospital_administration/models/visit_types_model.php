@@ -26,6 +26,7 @@ class Visit_types_model extends CI_Model
 		$this->db->from($table);
 		$this->db->select('*');
 		$this->db->where($where);
+		$this->db->join('insurance_company', 'insurance_company.insurance_company_id = visit_type.insurance_company_id', 'left');
 		$this->db->order_by($order, $order_method);
 		$query = $this->db->get('', $per_page, $page);
 		
@@ -40,6 +41,7 @@ class Visit_types_model extends CI_Model
 	public function add_visit_type()
 	{
 		$data = array(
+				'insurance_company_id'=>$this->input->post('insurance_company_id'),
 				'visit_type_name'=>$this->input->post('visit_type_name'),
 				'visit_type_status'=>$this->input->post('visit_type_status'),
 				'created'=>date('Y-m-d H:i:s'),
@@ -65,6 +67,7 @@ class Visit_types_model extends CI_Model
 	public function update_visit_type($visit_type_id)
 	{
 		$data = array(
+				'insurance_company_id'=>$this->input->post('insurance_company_id'),
 				'visit_type_name'=>$this->input->post('visit_type_name'),
 				'visit_type_status'=>$this->input->post('visit_type_status'),
 				'modified_by'=>$this->session->userdata('personnel_id')

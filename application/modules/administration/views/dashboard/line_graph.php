@@ -1,16 +1,15 @@
-<div class="widget boxed">
-                <div class="widget-head">
-                  <h4 class="pull-left"><i class="icon-reorder"></i>Total Visits for the last 7 days</h4>
-                  <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                  </div>
-                  <div class="clearfix"></div>
-                </div>
 
-                <div class="widget-content">
-                  <div class="padd">
-                    
+         <section class="panel">
+            <header class="panel-heading">
+                <h4 class="pull-left">Total visits for the last 7 days</h4>
+                <div class="widget-icons pull-right">
+                  <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                </div>
+                <div class="clearfix"></div>
+              </header>             
+
+          <!-- Widget content -->
+                <div class="panel-body">
                     <!-- Curve chart -->
 
                     <div id="curve-chart"></div>
@@ -23,9 +22,9 @@
 
                     <!-- Skil this line. <div class="uni"><input id="enableTooltip" type="checkbox">Enable tooltip</div> -->
 
-                  </div>
-                </div>
-              </div>
+        </div>
+    
+    </section>
 <script type="text/javascript">
 var config_url = $('#config_url').val();
 
@@ -45,7 +44,7 @@ var day = curr.getDate();
 var month = curr.getMonth()+1;
 var year = curr.getFullYear();
 var current_timestamp = get_date(year, month, day);
-var url = config_url+"/administration/charts/patient_type_totals/"+current_timestamp;
+var url = config_url+"administration/charts/patient_type_totals/"+current_timestamp;
 	
 //get data for the last 7 days
 for(r = 0; r < 8; r++)
@@ -67,7 +66,7 @@ for(r = 0; r < 8; r++)
 			other.push([current_timestamp, data.other]);
 			
 			current_timestamp = current_timestamp - 86400000;
-			url = config_url+"/administration/charts/patient_type_totals/"+current_timestamp;
+			url = config_url+"administration/charts/patient_type_totals/"+current_timestamp;
 		},
 		error: function(xhr, status, error) {
 			alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);

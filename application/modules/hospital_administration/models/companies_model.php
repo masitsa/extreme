@@ -8,44 +8,8 @@ class Companies_model extends CI_Model
 	*/
 	public function all_companies()
 	{
-		$this->db->where('company_status = 1');
-		$query = $this->db->get('company');
-		
-		return $query;
-	}
-	/*
-	*	Retrieve latest company
-	*
-	*/
-	public function latest_company()
-	{
-		$this->db->limit(1);
-		$this->db->order_by('created', 'DESC');
-		$query = $this->db->get('company');
-		
-		return $query;
-	}
-	/*
-	*	Retrieve all parent companies
-	*
-	*/
-	public function all_parent_companies()
-	{
-		$this->db->where('company_status = 1 AND company_parent = 0');
-		$this->db->order_by('company_name', 'ASC');
-		$query = $this->db->get('company');
-		
-		return $query;
-	}
-	/*
-	*	Retrieve all children companies
-	*
-	*/
-	public function all_child_companies()
-	{
-		$this->db->where('company_status = 1 AND company_parent > 0');
-		$this->db->order_by('company_name', 'ASC');
-		$query = $this->db->get('company');
+		$this->db->where('insurance_company_status = 1');
+		$query = $this->db->get('insurance_company');
 		
 		return $query;
 	}
@@ -56,7 +20,7 @@ class Companies_model extends CI_Model
 	* 	@param string $where
 	*
 	*/
-	public function get_all_companies($table, $where, $per_page, $page, $order = 'company_name', $order_method = 'ASC')
+	public function get_all_companies($table, $where, $per_page, $page, $order = 'insurance_company_name', $order_method = 'ASC')
 	{
 		//retrieve all users
 		$this->db->from($table);
@@ -73,20 +37,23 @@ class Companies_model extends CI_Model
 	*	@param string $image_name
 	*
 	*/
-	public function add_company($image_name)
+	public function add_company()
 	{
 		$data = array(
-				'company_name'=>ucwords(strtolower($this->input->post('company_name'))),
-				'company_parent'=>$this->input->post('company_parent'),
-				'company_preffix'=>strtoupper($this->input->post('company_preffix')),
-				'company_status'=>$this->input->post('company_status'),
+				'insurance_company_name'=>$this->input->post('insurance_company_name'),
+				'insurance_company_contact_person_name'=>$this->input->post('insurance_company_contact_person_name'),
+				'insurance_company_contact_person_phone1'=>$this->input->post('insurance_company_contact_person_phone1'),
+				'insurance_company_contact_person_phone2'=>$this->input->post('insurance_company_contact_person_phone2'),
+				'insurance_company_contact_person_email1'=>$this->input->post('insurance_company_contact_person_email1'),
+				'insurance_company_contact_person_email2'=>$this->input->post('insurance_company_contact_person_email2'),
+				'insurance_company_description'=>$this->input->post('insurance_company_description'),
+				'insurance_company_status'=>$this->input->post('insurance_company_status'),
 				'created'=>date('Y-m-d H:i:s'),
-				'created_by'=>$this->session->userdata('user_id'),
-				'modified_by'=>$this->session->userdata('user_id'),
-				'company_image_name'=>$image_name
+				'created_by'=>$this->session->userdata('personnel_id'),
+				'modified_by'=>$this->session->userdata('personnel_id')
 			);
 			
-		if($this->db->insert('company', $data))
+		if($this->db->insert('insurance_company', $data))
 		{
 			return TRUE;
 		}
@@ -101,41 +68,28 @@ class Companies_model extends CI_Model
 	*	@param int $company_id
 	*
 	*/
-	public function update_company($image_name, $company_id)
+	public function update_company($company_id)
 	{
 		$data = array(
-				'company_name'=>ucwords(strtolower($this->input->post('company_name'))),
-				'company_parent'=>$this->input->post('company_parent'),
-				'company_preffix'=>strtoupper($this->input->post('company_preffix')),
-				'company_status'=>$this->input->post('company_status'),
-				'modified_by'=>$this->session->userdata('user_id'),
-				'company_image_name'=>$image_name
+				'insurance_company_name'=>$this->input->post('insurance_company_name'),
+				'insurance_company_contact_person_name'=>$this->input->post('insurance_company_contact_person_name'),
+				'insurance_company_contact_person_phone1'=>$this->input->post('insurance_company_contact_person_phone1'),
+				'insurance_company_contact_person_phone2'=>$this->input->post('insurance_company_contact_person_phone2'),
+				'insurance_company_contact_person_email1'=>$this->input->post('insurance_company_contact_person_email1'),
+				'insurance_company_contact_person_email2'=>$this->input->post('insurance_company_contact_person_email2'),
+				'insurance_company_description'=>$this->input->post('insurance_company_description'),
+				'insurance_company_status'=>$this->input->post('insurance_company_status'),
+				'modified_by'=>$this->session->userdata('personnel_id')
 			);
 			
-		$this->db->where('company_id', $company_id);
-		if($this->db->update('company', $data))
+		$this->db->where('insurance_company_id', $company_id);
+		if($this->db->update('insurance_company', $data))
 		{
 			return TRUE;
 		}
 		else{
 			return FALSE;
 		}
-	}
-	
-	/*
-	*	get a single company's children
-	*	@param int $company_id
-	*
-	*/
-	public function get_sub_companies($company_id)
-	{
-		//retrieve all users
-		$this->db->from('company');
-		$this->db->select('*');
-		$this->db->where('company_parent = '.$company_id);
-		$query = $this->db->get();
-		
-		return $query;
 	}
 	
 	/*
@@ -146,9 +100,9 @@ class Companies_model extends CI_Model
 	public function get_company($company_id)
 	{
 		//retrieve all users
-		$this->db->from('company');
+		$this->db->from('insurance_company');
 		$this->db->select('*');
-		$this->db->where('company_id = '.$company_id);
+		$this->db->where('insurance_company_id = '.$company_id);
 		$query = $this->db->get();
 		
 		return $query;
@@ -161,7 +115,7 @@ class Companies_model extends CI_Model
 	*/
 	public function delete_company($company_id)
 	{
-		if($this->db->delete('company', array('company_id' => $company_id)))
+		if($this->db->delete('insurance_company', array('insurance_company_id' => $company_id)))
 		{
 			return TRUE;
 		}
@@ -178,11 +132,11 @@ class Companies_model extends CI_Model
 	public function activate_company($company_id)
 	{
 		$data = array(
-				'company_status' => 1
+				'insurance_company_status' => 1
 			);
-		$this->db->where('company_id', $company_id);
+		$this->db->where('insurance_company_id', $company_id);
 		
-		if($this->db->update('company', $data))
+		if($this->db->update('insurance_company', $data))
 		{
 			return TRUE;
 		}
@@ -199,11 +153,11 @@ class Companies_model extends CI_Model
 	public function deactivate_company($company_id)
 	{
 		$data = array(
-				'company_status' => 0
+				'insurance_company_status' => 0
 			);
-		$this->db->where('company_id', $company_id);
+		$this->db->where('insurance_company_id', $company_id);
 		
-		if($this->db->update('company', $data))
+		if($this->db->update('insurance_company', $data))
 		{
 			return TRUE;
 		}
