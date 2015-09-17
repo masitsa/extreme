@@ -1921,6 +1921,7 @@ class Reception_model extends CI_Model
 	public function create_visit($visit_date, $patient_id, $doctor_id, $insurance_limit, $insurance_number, $visit_type_id, $timepicker_start, $timepicker_end, $appointment_id, $close_card)
 	{
 		$visit_data = array(
+			"branch_code" => $this->session->userdata('branch_code'),
 			"visit_date" => $visit_date,
 			"patient_id" => $patient_id,
 			"personnel_id" => $doctor_id,

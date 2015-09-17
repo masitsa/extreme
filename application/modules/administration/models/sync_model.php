@@ -17,7 +17,7 @@ class Sync_model extends CI_Model
 
 				//The JSON data.
 				$data_string = json_encode($patient_details);
-				//var_dump($data_string);
+				//var_dump($data_string);die();
 				try{                                                                                                         
 
 					$ch = curl_init($url);                                                                      
@@ -31,8 +31,6 @@ class Sync_model extends CI_Model
 					                                                                                                                     
 					$result = curl_exec($ch);
 					curl_close($ch);
-
-					var_dump($result);
 				}
 				catch(Exception $e)
 				{
@@ -56,6 +54,7 @@ class Sync_model extends CI_Model
 
 		if($table_sync_array->num_rows() > 0)
 		{
+			$patients['branch_code'] = $this->session->userdata('branch_code');
 			// loop the tables
 			foreach ($table_sync_array->result() as $key) {
 
@@ -64,6 +63,7 @@ class Sync_model extends CI_Model
 				$sync_table_id = $key->sync_table_id;
 				$branch_code = $key->branch_code;
 				$table_key_name = $key->table_key_name;
+				
 				if($sync_table_name == 'patients')
 				{
 					$this->db->where('visit.patient_id = patients.patient_id AND visit.branch_code = "'.$this->session->userdata('branch_code').'" AND visit.visit_id = '.$visit_id);
@@ -100,7 +100,7 @@ class Sync_model extends CI_Model
 							# code...
 							// save item instruction to the sync table
 
-							$table_key = $key->table_key_name;
+							$table_key = $key->$table_key_name;
 
 							$date = date("Y-m-d H:i:s");
 							$sync_data = array('branch_code'=>$this->session->userdata('branch_code'),'sync_status'=>0,'sync_type'=>0,'sync_table_id'=>$sync_table_id,'sync_table_key'=>$table_key);

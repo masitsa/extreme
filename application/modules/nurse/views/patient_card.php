@@ -89,7 +89,7 @@
        <div class="clearfix"></div>
 
 			<div class="tabbable" style="margin-bottom: 18px;">
-              <ul class="nav nav-tabs">
+              <ul class="nav nav-tabs nav-justified">
                 <li class="active"><a href="#vitals-pane" data-toggle="tab">Vitals</a></li>
                 <li><a href="#lifestyle" data-toggle="tab">Lifestyle</a></li>
                 <?php if($mike == 1){
