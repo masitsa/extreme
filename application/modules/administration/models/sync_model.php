@@ -55,7 +55,7 @@ class Sync_model extends CI_Model
 				$table_key_name = $key->table_key_name;
 				if($sync_table_name == 'patients')
 				{
-					$this->db->where('visit.patient_id = patients.patient_id AND visit.branch_code = "KA" AND visit.visit_id = '.$visit_id);
+					$this->db->where('visit.patient_id = patients.patient_id AND visit.branch_code = "'.$this->session->userdata('branch_code').'" AND visit.visit_id = '.$visit_id);
 					$this->db->select('patients.*');
 					$query_patients = $this->db->get('patients,visit');
 
@@ -65,6 +65,11 @@ class Sync_model extends CI_Model
 					{
 						foreach ($query_patients->result() as $value) {
 							# code...
+							$table_key = $key->table_key_name;
+							
+							$date = date("Y-m-d H:i:s");
+							$sync_data = array('branch_code'=>$this->session->userdata('branch_code'),'sync_status'=>0,'sync_type'=>0,'sync_table_id'=>$sync_table_id,'sync_table_key'=>$table_key);
+							$this->db->insert('sync', $patient_data);
 						 	array_push($patients[$sync_table_name], $value);
 						}
 					}
@@ -84,13 +89,11 @@ class Sync_model extends CI_Model
 							# code...
 							// save item instruction to the sync table
 
-							// if($table_key_name == $key->sync_table_key)
-							// {
+							$table_key = $key->table_key_name;
 
-							// }
-							// $date = date("Y-m-d H:i:s");
-							// $sync_data = array('branch_code'=>'KA','sync_status'=>0,'sync_type'=>0,'sync_table_id'=>$sync_table_id,);
-							// $this->db->insert('sync', $patient_data);
+							$date = date("Y-m-d H:i:s");
+							$sync_data = array('branch_code'=>$this->session->userdata('branch_code'),'sync_status'=>0,'sync_type'=>0,'sync_table_id'=>$sync_table_id,'sync_table_key'=>$table_key);
+							$this->db->insert('sync', $patient_data);
 							array_push($patients[$sync_table_name], $key);
 						}
 						
@@ -111,10 +114,83 @@ class Sync_model extends CI_Model
 	}
 	public function get_all_tables_sync()
 	{
-		$this->db->where('branch_code ="KA"');
+		$this->db->where('branch_code ="'.$this->session->userdata('branch_code').'" AND sync_table_status = 1');
 		$query = $this->db->get('sync_table');
 
 		return $query;
+	}
+	public function ondemand_sync_up()
+	{
+		$patient_details = $this->cron_up_sync();
+		$test_url = 'http://159.203.78.242/cloud/test';
+		//Encode the array into JSON.
+
+		//The JSON data.
+		$data_string = json_encode($patient_details);
+		//var_dump($data_string);
+		try{                                                                                                         
+
+			$ch = curl_init($url);                                                                      
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+			    'Content-Type: application/json',                                                                                
+			    'Content-Length: ' . strlen($data_string))                                                                       
+			);                                                                                                                   
+			                                                                                                                     
+			$result = curl_exec($ch);
+			curl_close($ch);
+
+			var_dump($result);
+		}
+		catch(Exception $e)
+		{
+			return "something went wrong";
+				
+		}
+	}
+	public function cron_up_sync()
+	{
+		// get all the none synced data from 
+		$this->db->where('sync_table.sync_table_id = sync.sync_table_id AND sync.branch_code ="'.$this->session->userdata('branch_code').'" AND sync.sync_status = 0');
+		$query = $this->db->get('sync,sync_table');
+
+		if($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $key) {
+				# code...
+				$sync_table_name = $key->sync_table_name;
+				$sync_table_key = $key->sync_table_key;
+				$table_key_name = $key->table_key_name;
+
+				// use the table name to get the data of the table and array push it
+				$this->db->where($table_key_name,$sync_table_id);
+				$data_query = $this->db->get($sync_table_name);
+
+				// initialize an array to push 
+				if($data_query->num_rows() > 0)
+				{
+					$arrayCron[$sync_table_name] = array();
+
+					foreach ($data_query->result as $value) {
+						# code...
+						array_push($arrayCron[$sync_table_name], $value);
+					}
+				}
+				
+
+
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
+
+		return $arrayCron;
+
+
 	}
 
 
