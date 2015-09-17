@@ -105,7 +105,7 @@ class Sync_tables extends MX_Controller
 			}
 		}
 		
-		$data['title'] = 'Add sync_table';
+		$data['title'] = 'Add sync table';
 		$v_data['title'] = $data['title'];
 		$data['content'] = $this->load->view('sync_tables/add_sync_table', $v_data, true);
 		$this->load->view('admin/templates/general_page', $data);
@@ -137,7 +137,7 @@ class Sync_tables extends MX_Controller
 		}
 		
 		//open the add new sync_table
-		$data['title'] = 'Edit sync_table';
+		$data['title'] = 'Edit sync table';
 		$v_data['title'] = $data['title'];
 		
 		//select the sync_table from the database

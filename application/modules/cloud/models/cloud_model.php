@@ -6,36 +6,54 @@ class Cloud_model extends CI_Model
 		//decode the json data
 		$decoded = json_decode($json);
 
-		//initiate the response array
-		$response = array();
-
 		//get sync tables
 		$query = $this->get_sync_tables();
 		if($query->num_rows() > 0)
 		{
+			//initiate the response array
+			$response = array();
+			
 			foreach($query->result() as $res)
 			{
-				$field = $res->sync_table_name;
+				$row_response = array();
+				$sync_table_name = $res->sync_table_name;
+				$table_key_name = $res->table_key_name;
 				$function = $res->sync_table_cloud_save_function;
 				//patients data
-				$sync_data = $decoded->$field;
-			    $patient_data = $sync_data[0];
-				//insert data into the patients table
-				if($this->$function($patient_data))
+				if(isset($decoded->$sync_table_name))
 				{
-					$response[$field] = 'true';
+					$sync_data = $decoded->$sync_table_name;
+					$patient_data = $sync_data[0];
+					//insert data into the patients table
+					$table_key_value = $this->$function($patient_data);
+					if($table_key_value > 0)
+					{
+						$row_response[$sync_table_name]['response'] = 'true';
+						$row_response[$sync_table_name]['remote_pk'] = $table_key_value;
+						$row_response[$sync_table_name]['local_pk'] = $patient_data->$table_key_name;
+					}
+	
+					else
+					{
+						$row_response[$sync_table_name]['response'] = 'false';
+						$row_response[$sync_table_name]['local_pk'] = $patient_data->$table_key_name;
+					}
 				}
-
+				
 				else
 				{
-					$response[$field] = 'false';
+					$row_response[$sync_table_name]['response'] = 'false';
+					$row_response[$sync_table_name]['message'] = $table_key_name.' data does not exist';
 				}
+				
+				array_push($response, $row_response);
 			}
 		}
 
 		else
 		{
-			$response['sync_tables'] = 'no tables to be synced';
+			$response['response'] = 'false';
+			$response['message'] = 'No sync tables are set';
 		}
 
 		return $response;
@@ -58,7 +76,6 @@ class Cloud_model extends CI_Model
 		//check if patient number exists
 		$this->db->where('patient_number', $patient_number);
 		$query = $this->db->get('patients');
-
 
 		$data['patient_number'] = $patient_number;
 		$data['patient_date'] = $res->patient_date;
@@ -94,11 +111,13 @@ class Cloud_model extends CI_Model
 
 		if($query->num_rows() > 0)
 		{
+			$row = $query->row();
+			$patient_id = $row->patient_id;
 			//update patient
 			$this->db->where('patient_number', $patient_number);
 			if($this->db->update('patients', $data))
 			{
-				return TRUE;
+				return $patient_id;
 			}
 			else
 			{
@@ -111,7 +130,8 @@ class Cloud_model extends CI_Model
 		{
 			if($this->db->insert('patients', $data))
 			{
-				return TRUE;
+				$patient_id = $this->db->insert_id();
+				return $patient_id;
 			}
 			else
 			{
