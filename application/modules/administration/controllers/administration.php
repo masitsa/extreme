@@ -36,6 +36,10 @@ class Administration  extends MX_Controller
 	{
 		$this->sync_model->syn_up_on_closing_visit(1);
 	}
+	public function sync_down_request()
+	{
+		$this->sync_model->sync_data_down();	
+	}
 	public function services($page_name = NULL)
 	{
 		// this is it
