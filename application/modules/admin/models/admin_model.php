@@ -119,5 +119,14 @@ class Admin_model extends CI_Model
 			}
 		}
 	}
+	
+	public function create_preffix($yourString)
+	{
+		$vowels = array("a", "e", "i", "o", "u", "A", "E", "I", "O", "U", " ");
+		$yourString = str_replace($vowels, "", $yourString);
+		$trimed = substr($yourString, 0, 3);
+		$preffix = strtoupper($trimed);
+		return $preffix;
+	}
 }
 ?>

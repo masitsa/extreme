@@ -92,7 +92,7 @@ class Departments extends Hospital_administration
 		//if form has been submitted
 		if ($this->form_validation->run())
 		{
-			if($this->departments_model->add_department($file_name))
+			if($this->departments_model->add_department())
 			{
 				$this->session->set_userdata('success_message', 'Department added successfully');
 				redirect('hospital-administration/departments');

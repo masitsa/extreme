@@ -99,7 +99,7 @@ class Companies extends Hospital_administration
 		//if form has been submitted
 		if ($this->form_validation->run())
 		{
-			if($this->companies_model->add_company($file_name))
+			if($this->companies_model->add_company())
 			{
 				$this->session->set_userdata('success_message', 'Company added successfully');
 				redirect('hospital-administration/companies');
@@ -135,60 +135,8 @@ class Companies extends Hospital_administration
 		//if form has been submitted
 		if ($this->form_validation->run())
 		{
-			//upload product's gallery images
-			$resize['width'] = 600;
-			$resize['height'] = 800;
-			
-			if(is_uploaded_file($_FILES['company_image']['tmp_name']))
-			{
-				$companies_path = $this->companies_path;
-				
-				//delete original image
-				$this->file_model->delete_file($companies_path."\\".$this->input->post('current_image'));
-				
-				//delete original thumbnail
-				$this->file_model->delete_file($companies_path."\\thumbnail_".$this->input->post('current_image'));
-				/*
-				/*
-					-----------------------------------------------------------------------------------------
-					Upload image
-					-----------------------------------------------------------------------------------------
-				*/
-				$response = $this->file_model->upload_file($companies_path, 'company_image', $resize);
-				if($response['check'])
-				{
-					$file_name = $response['file_name'];
-					$thumb_name = $response['thumb_name'];
-				}
-			
-				else
-				{
-					$this->session->set_userdata('error_message', $response['error']);
-					
-					$data['title'] = 'Edit Company';
-					$query = $this->companies_model->get_company($company_id);
-					if ($query->num_rows() > 0)
-					{
-						$v_data['company'] = $query->result();
-						$v_data['all_companies'] = $this->companies_model->all_companies();
-						$data['content'] = $this->load->view('companies/edit_company', $v_data, true);
-					}
-					
-					else
-					{
-						$data['content'] = 'company does not exist';
-					}
-					
-					$this->load->view('admin/templates/general_page', $data);
-					break;
-				}
-			}
-			
-			else{
-				$file_name = $this->input->post('current_image');
-			}
 			//update company
-			if($this->companies_model->update_company($file_name, $company_id))
+			if($this->companies_model->update_company($company_id))
 			{
 				$this->session->set_userdata('success_message', 'Company updated successfully');
 				redirect('admin/companies');
