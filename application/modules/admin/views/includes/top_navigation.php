@@ -192,7 +192,7 @@
 							<ul class="list-unstyled">
 								<li class="divider"></li>
 								<li>
-									<a role="menuitem" tabindex="-1" href="<?php echo site_url()."admin-profile/".$this->session->userdata('user_id');?>"><i class="fa fa-user"></i> My Profile</a>
+									<a role="menuitem" tabindex="-1" href="<?php echo site_url()."dashboard";?>"><i class="fa fa-user"></i> My Profile</a>
 								</li>
 								<li>
 									<a role="menuitem" tabindex="-1" href="<?php echo site_url()."logout-admin";?>"><i class="fa fa-power-off"></i> Logout</a>
