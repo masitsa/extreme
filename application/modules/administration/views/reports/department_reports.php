@@ -2,22 +2,18 @@
 <?php echo $this->load->view('search/departments', '', TRUE);?>
 <div class="row">
     <div class="col-md-12">
+		<!-- Widget -->
+		<section class="panel">
 
-      <!-- Widget -->
-      <div class="widget boxed">
-        <!-- Widget head -->
-        <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-          </div>
-          <div class="clearfix"></div>
-        </div>             
 
-        <!-- Widget content -->
-        <div class="widget-content">
-          <div class="padd">
+			<!-- Widget head -->
+			<header class="panel-heading">
+				<h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
+				<div class="clearfix"></div>
+			</header>             
+
+			<!-- Widget content -->
+			<div class="panel-body">
           	<?php
 		
 			if($services_result->num_rows() > 0)
@@ -68,16 +64,15 @@
 				';
 			}
 			?>
-          </div>
           
-          <div class="widget-foot">
-            
-                <div class="clearfix"></div> 
-            
             </div>
-        </div>
-        <!-- Widget ends -->
-
-      </div>
-    </div>
-  </div>
+			<div class="widget-foot">
+								
+				<?php if(isset($links)){echo $links;}?>
+			
+				<div class="clearfix"></div> 
+			
+			</div>
+		</section>
+	</div>
+</div>

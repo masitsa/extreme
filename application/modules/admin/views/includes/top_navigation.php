@@ -179,9 +179,10 @@
 										echo 'Good evening, ';
 									}
 									echo $this->session->userdata('first_name');
+									
 									?>
                                 </span>
-								<span class="role">administrator</span>
+								<span class="role"><?php echo $this->session->userdata('branch_code');?></span>
 							</div>
 			
 							<i class="fa custom-caret"></i>
@@ -191,7 +192,7 @@
 							<ul class="list-unstyled">
 								<li class="divider"></li>
 								<li>
-									<a role="menuitem" tabindex="-1" href="<?php echo site_url()."admin-profile/".$this->session->userdata('user_id');?>"><i class="fa fa-user"></i> My Profile</a>
+									<a role="menuitem" tabindex="-1" href="<?php echo site_url()."dashboard";?>"><i class="fa fa-user"></i> My Profile</a>
 								</li>
 								<li>
 									<a role="menuitem" tabindex="-1" href="<?php echo site_url()."logout-admin";?>"><i class="fa fa-power-off"></i> Logout</a>

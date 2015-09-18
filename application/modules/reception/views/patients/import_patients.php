@@ -16,6 +16,22 @@
             
             <div class="row">
                 <div class="col-md-12">
+		<?php
+		$error = $this->session->userdata('error_message');
+		$success = $this->session->userdata('success_message');
+		
+		if(!empty($error))
+		{
+			echo '<div class="alert alert-danger">'.$error.'</div>';
+			$this->session->unset_userdata('error_message');
+		}
+		
+		if(!empty($success))
+		{
+			echo '<div class="alert alert-success">'.$success.'</div>';
+			$this->session->unset_userdata('success_message');
+		}
+		?>
             <?php
                 if(isset($import_response))
                 {

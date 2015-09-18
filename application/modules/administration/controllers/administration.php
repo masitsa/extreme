@@ -540,8 +540,6 @@ class Administration  extends MX_Controller
 		$v_data['type'] = $this->reception_model->get_types();
 		$data['content'] = $this->load->view('patients', $v_data, true);
 		
-		$data['sidebar'] = 'admin_sidebar';
-		
 		$this->load->view('admin/templates/general_page', $data);
 	}
 	public function search_patient_statement()
