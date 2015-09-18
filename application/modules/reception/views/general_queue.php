@@ -101,11 +101,17 @@
 				$strath_no = $row->strath_no;
 				$visit_type_id = $row->visit_type_id;
 				$visit_type = $row->visit_type;
+				$accounts = $row->accounts;
 				$visit_table_visit_type = $visit_type;
 				$patient_table_visit_type = $visit_type_id;
 				$coming_from = $this->reception_model->coming_from($visit_id);
 				$sent_to = $this->reception_model->going_to($visit_id);
 				
+				//cash paying patient sent to department but has to pass through the accounts
+				if($accounts == 0)
+				{
+					$sent_to = 'Accounts';
+				}
 				$patient = $this->reception_model->patient_names2($patient_id, $visit_id);
 				$visit_type = $patient['visit_type'];
 				$patient_type = $patient['patient_type'];

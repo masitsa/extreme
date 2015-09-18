@@ -583,19 +583,45 @@
                         <div class="center-align">
                           <!-- redirect to unclosed accounts queue -->
                           <?php
-                            if(isset($close_page))
-                          {
-                            ?>
-                            <a href= "<?php echo site_url();?>reception/end_visit/<?php echo $visit_id;?>/<?php echo $close_page;?>" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to end visit?\');">End Visit</a>
-                              <?php
-                          }
-                          
-                          else
-                          {
-                            ?>
-                            <a href= "<?php echo site_url();?>reception/end_visit/<?php echo $visit_id?>/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to end visit?\');">End Visit</a>
-                              <?php
-                          }
+						  
+						  if($going_to->num_rows() > 0)
+						  {
+							  $row = $going_to->row();
+							  
+							  $department_id = $row->department_id;
+							  $accounts = $row->accounts;
+							  $department_name = $row->department_name;
+							  
+							  if(($accounts == 0) && ($department_id != 6))
+							  {
+								?>
+                                <a href= "<?php echo site_url();?>accounts/send_to_department/<?php echo $visit_id;?>/1" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you want to end visit?\');">Send to <?php echo $department_name;?></a>
+                                <?php
+							  }
+							  
+							  else
+							  {
+								  if(($accounts == 0) && ($department_id == 6))
+								  {
+									?>
+									<a href= "<?php echo site_url();?>accounts/send_to_department/<?php echo $visit_id;?>/1" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you want to end visit?\');">Send to <?php echo $department_name;?></a>
+									<?php
+								  }
+								  if(isset($close_page))
+								  {
+									?>
+									<a href= "<?php echo site_url();?>reception/end_visit/<?php echo $visit_id;?>/<?php echo $close_page;?>" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to end visit?\');">End Visit</a>
+									  <?php
+								  }
+								  
+								  else
+								  {
+									?>
+									<a href= "<?php echo site_url();?>reception/end_visit/<?php echo $visit_id;?>/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to end visit?\');">End Visit</a>
+									<?php
+								  }
+							  }
+						  }
                          ?>
                         </div>
                     </div>

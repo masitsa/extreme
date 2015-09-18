@@ -45,7 +45,7 @@ class Nurse  extends MX_Controller
 	public function nurse_queue($page_name = NULL)
 	{
 		// this is it
-		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$patient_visit_search = $this->session->userdata('patient_visit_search');
 		
 		if(!empty($patient_visit_search))

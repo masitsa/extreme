@@ -294,7 +294,7 @@ class Reception  extends MX_Controller
 	{
 		$segment = 4;
 		
-			$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		
 		$table = 'visit_department, visit, patients';
 		
@@ -599,7 +599,7 @@ class Reception  extends MX_Controller
 					$this->reception_model->set_last_visit_date($patient_id, $visit_date);
 					
 					$department_id = $this->input->post('department_id');
-					if($this->reception_model->set_visit_department($visit_id, $department_id))
+					if($this->reception_model->set_visit_department($visit_id, $department_id, $visit_type_id))
 					{
 						if($appointment_id == 0)
 						{

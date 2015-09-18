@@ -50,7 +50,7 @@ class Reception_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from($table);
-		$this->db->select('visit.*, visit_department.created AS visit_created, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id');
+		$this->db->select('visit.*, visit_department.created AS visit_created, visit_department.accounts, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id');
 		$this->db->where($where);
 		$this->db->order_by('visit_department.created','ASC');
 		$query = $this->db->get('', $per_page, $page);
@@ -68,79 +68,6 @@ class Reception_model extends CI_Model
 		
 		return $query;
 	}
-	/*
-	*	Retrieve a single dependant
-	*	@param int $strath_no
-	*
-	*/
-	public function get_dependant($strath_no)
-	{
-		$this->db->from('staff_dependants');
-		$this->db->select('*');
-		$this->db->where('staff_dependants_id = \''.$strath_no.'\'');
-		$query = $this->db->get();
-		
-		return $query;
-	}
-	
-	/*
-	*	Retrieve a single staff
-	*	@param int $strath_no
-	*
-	*/
-	public function get_staff($strath_no)
-	{
-		$this->db->from('staff');
-		$this->db->select('*');
-		$this->db->where('Staff_Number = \''.$strath_no.'\'');
-		$query = $this->db->get();
-		
-		return $query;
-	}
-	
-	/*
-	*	Retrieve a single staff
-	*	@param int $strath_no
-	*
-	*/
-	public function get_patient_staff($strath_no)
-	{
-		$this->db->from('patients');
-		$this->db->select('*');
-		$this->db->where('patients.patient_delete = 0 AND strath_no = \''.$strath_no.'\'');
-		$query = $this->db->get();
-		
-		return $query;
-	}
-	/*
-	*	Retrieve a insert patient information
-	*	@param int $strath_no
-	*
-	*/
-	public function insert_into_patients($strath_no,$visit_type)
-	{
-		//  instert data into the patients table
-		$date = date("Y-m-d H:i:s");
-		$patient_data = array('patient_number'=>$this->create_patient_number(),'patient_date'=>$date,'visit_type_id'=>$visit_type,'strath_no'=>$strath_no,'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
-		$this->db->insert('patients', $patient_data);
-		return $this->db->insert_id();
-	}
-	/*
-	*	Retrieve a single student
-	*	@param int $strath_no
-	*
-	*/
-	public function get_student($strath_no)
-	{
-		$this->db->from('student');
-		$this->db->select('*');
-		$this->db->where('student_Number = \''.$strath_no.'\'');
-		$query = $this->db->get();
-		
-		return $query;
-	}
-	
-	
 	
 	/*
 	*	Retrieve gender
@@ -1855,11 +1782,44 @@ class Reception_model extends CI_Model
 		}
 	}
 	
+	public function visit_account_balance($visit_id)
+	{
+		//retrieve all users
+		$this->db->from('visit');
+		$this->db->select('*');
+		$this->db->where('visit_id = '.$visit_id);
+		$this->db->order_by('visit_date','desc');
+		$query = $this->db->get();
+		$total_invoiced_amount = 0;
+		$total_paid_amount = 0;
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+				$visit_id = $row->visit_id;
+				$visit_date = $row->visit_date;
+				$visit_date = $row->visit_date;
+				$total_invoice = $this->accounts_model->total_invoice($visit_id);
+				$total_payments = $this->accounts_model->total_payments($visit_id);
+				$total_paid_amount = $total_paid_amount + $total_payments;
+				$total_invoiced_amount = $total_invoiced_amount + $total_invoice;
+				
+				$invoice_number =  $visit_id;
+			}
+			$difference = $total_invoiced_amount -$total_paid_amount;
+		}
+		else
+		{
+			$difference = $total_invoiced_amount -$total_paid_amount;
+		}
+		return $difference;
+	}
+	
 	/*
 	*	Create visit department
 	*
 	*/
-	public function set_visit_department($visit_id, $department_id)
+	public function set_visit_department($visit_id, $department_id, $visit_type_id)
 	{
 		if($this->remove_visit_department($visit_id))
 		{
@@ -1870,6 +1830,19 @@ class Reception_model extends CI_Model
 				'created_by'=>$this->session->userdata('personnel_id'),
 				'modified_by'=>$this->session->userdata('personnel_id')
 			);
+			
+			$data['accounts'] = 1;
+			
+			if($visit_type_id == 1)
+			{
+				//check for balance > 0
+				$account_balance = $this->visit_account_balance($visit_id);
+				
+				if($account_balance > 0)
+				{
+					$data['accounts'] = 0;
+				}
+			}
 			
 			if($this->db->insert('visit_department', $data))
 			{

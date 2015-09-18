@@ -162,6 +162,7 @@ class Administration_model extends CI_Model
 		
 		return $query;
 	}
+	
 	public function patient_account_balance($patient_id)
 	{
 		//retrieve all users

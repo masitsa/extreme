@@ -866,5 +866,14 @@ class Accounts_model extends CI_Model
 			return FALSE;
 		}
 	}
+	
+	public function get_going_to($visit_id)
+	{
+		$this->db->select('departments.department_name, visit_department.accounts, departments.department_id');
+		$this->db->where('visit_department.department_id = departments.department_id AND visit_department.visit_department_status = 1 AND visit_department.visit_id = '.$visit_id);
+		$query = $this->db->get('visit_department, departments');
+		
+		return $query;
+	}
 }
 ?>

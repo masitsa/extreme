@@ -18,7 +18,6 @@
         	?>
           <div class="widget-icons pull-right">
             <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
           </div>
           <div class="clearfix"></div>
         </header>             
@@ -71,7 +70,7 @@
 			{
 				$result .= '
 					<div class="center-align">
-						<button type="submit" class="btn btn-lg btn-danger">End Visits</button>
+						<button type="submit" class="btn btn-sm btn-danger">End Visits</button>
 					</div>
 					<table class="table table-hover table-bordered ">
 					  <thead>
@@ -251,7 +250,7 @@
 				$result .= '
 				<br>
 				<div class="center-align">
-					<button type="submit" class="btn btn-lg btn-danger">End Visits</button>
+					<button type="submit" class="btn btn-sm btn-danger">End Visits</button>
 				</div>
 				'.form_close();
 			}
