@@ -453,8 +453,9 @@ class Personnel_model extends CI_Model
 	public function get_personnel_jobs($personnel_id)
 	{
 		//retrieve all users
+		$this->db->select('personnel_job.*, job_title.job_title_name, departments.department_name');
 		$this->db->from('personnel_job, job_title');
-		$this->db->select('personnel_job.*, job_title.job_title_name');
+		$this->db->join('departments', 'departments.department_id = personnel_job.department_id', 'LEFT');
 		$this->db->order_by('personnel_job.job_commencement_date', 'DESC');
 		$this->db->where('personnel_job.job_title_id = job_title.job_title_id AND personnel_job.personnel_id = '.$personnel_id);
 		$query = $this->db->get();
@@ -701,6 +702,7 @@ class Personnel_model extends CI_Model
 	{
 		$data = array(
 			
+			'department_id'=>$this->input->post('department_id'),
 			'job_title_id'=>$this->input->post('job_title_id'),
 			'job_commencement_date'=>$this->input->post('job_commencement_date'),
 			'personnel_id'=>$personnel_id,
@@ -869,6 +871,13 @@ class Personnel_model extends CI_Model
 		else{
 			return FALSE;
 		}
+	}
+	
+	public function get_departments()
+	{
+		$this->db->where('department_status = 1');
+		
+		return $this->db->get('departments');
 	}
 }
 ?>
