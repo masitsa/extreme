@@ -144,7 +144,7 @@ class Lab_charges_model extends CI_Model
 									"created_by"=>$this->session->userdata('personnel_id'),
 									"created"=>date('Y-m-d H:i:s'),
 									"service_charge_status"=>0,
-									"service_charge_amount"=>0,
+									"service_charge_amount"=>$price,
 									"service_charge_delete"=>0
 								);
 
