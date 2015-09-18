@@ -2323,5 +2323,22 @@ class Reception_model extends CI_Model
 		
 		return $return;
 	}
+	
+	public function check_current_number_exisits($patient_number)
+	{
+		$this->db->where('patient_number', $patient_number);
+		
+		$query = $this->db->get('patients');
+		
+		if($query->num_rows() > 0)
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
 }
 ?>
