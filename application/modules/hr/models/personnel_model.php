@@ -487,8 +487,6 @@ class Personnel_model extends CI_Model
 		return $result;
 	}
 	
-	
-	
 	/*
 	*	get a single personnel's roles
 	*	@param int $personnel_id

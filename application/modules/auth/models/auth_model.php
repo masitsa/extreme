@@ -22,16 +22,15 @@ class Auth_model extends CI_Model
 
 			$branch_details = $this->get_active_branch();
 
-
 			//create personnel's login session
 			$newdata = array(
                    'login_status'     => TRUE,
                    'first_name'     => $result[0]->personnel_fname,
                    'username'     => $result[0]->personnel_username,
                    'personnel_id'  => $result[0]->personnel_id,
-                   'branch_id'  		=> $branch_details[0]->branch_id,
-                   'branch_code'  		=> $branch_details[0]->branch_code,
-                   'branch_name'  		=> $branch_details[0]->branch_name,
+                   'branch_id'  		=> $branch_details->branch_id,
+                   'branch_code'  		=> $branch_details->branch_code,
+                   'branch_name'  		=> $branch_details->branch_name,
                );
 
 			$this->session->set_userdata($newdata);
@@ -56,7 +55,7 @@ class Auth_model extends CI_Model
 		
 		$result = $query->row();
 
-		return result;
+		return $result;
 	}
 	
 	/*

@@ -179,9 +179,10 @@
 										echo 'Good evening, ';
 									}
 									echo $this->session->userdata('first_name');
+									
 									?>
                                 </span>
-								<span class="role">administrator</span>
+								<span class="role"><?php echo $this->session->userdata('branch_code');?></span>
 							</div>
 			
 							<i class="fa custom-caret"></i>
