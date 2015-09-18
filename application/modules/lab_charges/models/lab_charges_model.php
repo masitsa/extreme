@@ -10,6 +10,7 @@ class Lab_charges_model extends CI_Model
 		$this->db->from($table);
 		$this->db->select('*');
 		$this->db->where($where);
+		$this->db->group_by('service_charge.lab_test_id');
 		$this->db->order_by('lab_test.lab_test_class_id','ASC');
 		$query = $this->db->get('', $per_page, $page);
 		
@@ -105,9 +106,7 @@ class Lab_charges_model extends CI_Model
 		}
 		else
 		{
-			//get the lab service id for the branch
 
-			$service_ = $this->get_laboratory_service_id();
 
 			$insert = array(
 					"lab_test_name" => $lab_test_name,
@@ -119,17 +118,96 @@ class Lab_charges_model extends CI_Model
 					"lab_test_femalelowerlimit" => $female_lower_limit,
 					"lab_test_femaleupperlimit" => $female_upper_limit
 				);
-			$this->database->insert_entry('lab_test', $insert);
+			$this->db->insert('lab_test', $insert);
+
+			$lab_test_id = $this->db->insert_id();
+
+			//get the lab service id for the branch
+
+			$service_id = $this->get_laboratory_service_id();
+
+			// get all the visit type
+
+			$visit_type_query = $this->get_all_visit_type();
+
+			if($visit_type_query->num_rows() > o)
+			{
+				foreach ($visit_type_query->result() as $key) {
+				
+					$visit_type_id = $key->visit_type_id;
+					// service charge entry
+					$service_charge_insert = array(
+									"service_charge_name" => $lab_test_name,
+									"service_id" => $service_id,
+									"visit_type_id" => $visit_type_id,
+									"lab_test_id"=>$lab_test_id,
+									"created_by"=>$this->session->userdata('personnel_id'),
+									"created"=>date('Y-m-d H:i:s'),
+									"service_charge_status"=>0,
+									"service_charge_amount"=>0,
+									"service_charge_delete"=>0
+								);
+
+					$this->database->insert_entry('service_charge', $service_charge_insert);
+				}
+			}
 
 			return TRUE;
 		}
 		// end of checking
 		
 	}
+	public function get_all_visit_type()
+	{
+		$this->db->select('*');
+		$query = $this->db->get('visit_type');
+		return $query;
+	}
+
 	public function get_laboratory_service_id()
 	{
 		$this->db->where('(service_name = "Lab" OR service_name = "lab" OR service_name = "Laboratory" OR service_name = "laboratory") AND branch_code = "'.$this->session->userdata('branch_code').'"');
-		$this->db->get('service');
+		$query = $this->db->get('service');
+
+		if($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $key) {
+				# code...
+				$service_id = $key->service_id;
+			}
+		}else
+		{
+			// get the department id from the department table called laboratory
+
+			// insert and return the service id 
+			$department_id = $this->get_department_id();
+
+			$data = array('service_name'=>'Laboratory','branch_code'=>$this->session->userdata('branch_code'),'service_status'=>1,'report_distinct'=>1,'service_status'=>1,'created'=>date('Y-m-d H:i:s'),'created_by'=>$this->session->userdata('personnel_id'));
+			$this->db->insert('service',$data);
+			$service_id = $this->db->insert_id();
+		}
+		return $service_id;
+
+	}
+	public function get_department_id()
+	{
+		$this->db->where('(department_name = "Lab" OR department_name = "lab" OR department_name = "Laboratory" OR department_name = "laboratory") AND branch_code = "'.$this->session->userdata('branch_code').'"');
+		$query = $this->db->get('departments');
+
+		if($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $key) {
+				# code...
+				$department_id = $key->department_id;
+			}
+		}else
+		{
+
+			$data = array('department_name'=>'Laboratory','branch_code'=>$this->session->userdata('branch_code'),'department_status'=>1,'created'=>date('Y-m-d H:i:s'),'created_by'=>$this->session->userdata('personnel_id'));
+			$this->db->insert('departments',$data);
+			$department_id = $this->db->insert_id();
+		}
+		return $department_id;
 	}
 	public function add_test_format($test_id)
 	{
