@@ -15,7 +15,7 @@ $contacts = $this->site_model->get_contacts();
 			<div class="col-md-6 col-lg-12 col-xl-6">
 				<div class="col-lg-3">
 						<div class="form-group">
-								 <div class="col-lg-12s">
+								 <div class="col-lg-12">
 								 		<img src="<?php echo base_url();?>assets/logo/<?php echo $logo;?>">
 								 </div>
 						</div>
