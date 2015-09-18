@@ -41,7 +41,7 @@
                 
                 </div>
             </div>
-            
+            <br>
             <div class="center-align">
             	<button type="submit" class="btn btn-info btn-sm">Search lab tests</button>
             </div>
