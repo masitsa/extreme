@@ -125,7 +125,7 @@
 									<div class="form-group mb-lg">
                                         <div class="clearfix">
                                             <label class="pull-left">Password</label>
-                                            <a href="#" class="pull-right"> Lost Password?</a>
+                                            <!-- <a href="#" class="pull-right"> Lost Password?</a> -->
                                         </div>
                                         <div class="input-group input-group-icon">
                                             <input name="personnel_password" type="password" class="form-control input-lg" value="<?php echo $personnel_password;?>" />
