@@ -43,7 +43,7 @@
                         <li>Download the import template <a href="<?php echo site_url().'reception/import-template';?>">here.</a></li>
                         
                         <li>Save your file as a <strong>csv</strong> file before importing</li>
-                        <li>After adding your products to the import template please import them using the button below</li>
+                        <li>After adding your patients to the import template please import them using the button below</li>
                     </ul>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                     echo form_input($data);*/
                     ?>
                     <div class="fileUpload btn btn-primary">
-                        <span>Import products</span>
+                        <span>Import patients</span>
                         <input type="file" class="upload" onChange="this.form.submit();" name="import_csv" />
                     </div>
                 </div>
