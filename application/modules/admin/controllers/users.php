@@ -282,5 +282,36 @@ class Users extends admin {
 		
 		$this->load->view('templates/tabs', $data);
 	}
+	public function change_password()
+	{
+		$this->form_validation->set_rules('current_password', 'Current Password', 'required|xss_clean');
+		$this->form_validation->set_rules('new_password', 'New Password', 'required|xss_clean');
+		$this->form_validation->set_rules('confirm_new_password', 'Confirm New Password', 'required|xss_clean');
+		
+		//if form has been submitted
+		if ($this->form_validation->run())
+		{
+			if($this->input->post('new_password') == $this->input->post('confirm_new_password'))
+			{
+				if($this->users_model->change_password())
+				{
+					$this->session->set_userdata('success_message', 'Your password has been changed successfully');
+				}
+				else
+				{
+					$this->session->set_userdata('error_message', 'Something went wrong, please try again');
+				}
+			}
+			else
+			{
+				$this->session->set_userdata('error_message', 'Ensure that the new password match with the confirm password');
+			}
+		}
+		else
+		{
+			$this->session->set_userdata('error_message', 'Please check that all the fields have values');
+		}
+		redirect('dashboard');
+	}
 }
 ?>

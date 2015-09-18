@@ -394,5 +394,22 @@ class Users_model extends CI_Model
 		
 		return $web_name;
 	}
+	public function change_password()
+	{
+		
+		$data = array(
+				'personnel_password' => md5($this->input->post('new_password'))
+			);
+		$this->db->where('personnel_password = "'.md5($this->input->post('current_password')).'" AND personnel_id ='.$this->session->userdata('personnel_id'));
+		
+		if($this->db->update('personnel', $data))
+		{
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
 }
 ?>
