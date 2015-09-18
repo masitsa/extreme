@@ -43,7 +43,7 @@
             </div>
             
             <div class="center-align">
-            	<button type="submit" class="btn btn-info btn-lg">Search lab tests</button>
+            	<button type="submit" class="btn btn-info btn-sm">Search lab tests</button>
             </div>
             
             <?php

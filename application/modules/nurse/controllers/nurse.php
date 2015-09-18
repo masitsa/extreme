@@ -518,7 +518,7 @@ class Nurse  extends MX_Controller
 		
 		$order = 'service_charge.service_charge_name';
 		
-		$where = 'service_charge.service_id = 15 ';
+		$where = 'service_charge.service_id = service.service_id AND (service.service_name = "vaccine" OR service.service_name = "Vaccine") AND service.branch_code = "'.$this->session->userdata('branch_code').'" AND service_charge.visit_type_id = visit_type.visit_type_id  AND service_charge.visit_type_id = '.$visit_t;
 		$vaccine_search = $this->session->userdata('vaccine_search');
 		
 		if(!empty($vaccine_search))
@@ -526,7 +526,7 @@ class Nurse  extends MX_Controller
 			$where .= $vaccine_search;
 		}
 		
-		$table = 'service_charge,visit_type';
+		$table = 'service_charge,visit_type,service';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/nurse/vaccines/'.$visit_id;
@@ -623,7 +623,7 @@ class Nurse  extends MX_Controller
 		
 		$order = 'service_charge.service_charge_name';
 		
-		$where = 'service_charge.service_id = 3 AND service_charge.visit_type_id = visit_type.visit_type_id  AND service_charge.visit_type_id = '.$visit_t;
+		$where = 'service_charge.service_id = service.service_id AND (service.service_name = "Procedure" OR service.service_name = "procedure" OR service.service_name = "procedures" OR service.service_name = "Procedures" ) AND service.branch_code = "'.$this->session->userdata('branch_code').'" AND service_charge.visit_type_id = visit_type.visit_type_id  AND service_charge.visit_type_id = '.$visit_t;
 		$procedure_search = $this->session->userdata('procedure_search');
 		
 		if(!empty($procedure_search))
@@ -631,7 +631,7 @@ class Nurse  extends MX_Controller
 			$where .= $procedure_search;
 		}
 		
-		$table = 'service_charge,visit_type';
+		$table = 'service_charge,visit_type,service';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/nurse/procedures/'.$visit_id;

@@ -119,7 +119,9 @@ class Services extends admin {
 					'service_description'=>$this->input->post("service_description"),
 					'service_status'=>1,
 					'service_image_name'=>$this->session->userdata('service_file_name'),
-					'department_id'=>$this->input->post("department_id")
+					'department_id'=>$this->input->post("department_id"),
+					'branch_code'=>$this->session->userdata('branch_code')
+
 				);
 				
 				$table = "service";

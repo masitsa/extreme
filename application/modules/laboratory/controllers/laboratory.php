@@ -197,7 +197,7 @@ class Laboratory  extends MX_Controller
 		$order = 'service_charge_name';
 		
 		$where = 'service_charge.service_charge_name = lab_test.lab_test_name
-		AND lab_test_class.lab_test_class_id = lab_test.lab_test_class_id  AND service_charge.service_id = 5  AND  service_charge.visit_type_id = '.$visit_t;
+		AND lab_test_class.lab_test_class_id = lab_test.lab_test_class_id  AND service_charge.service_id = service.service_id AND service.branch_code = "'.$this->session->userdata('branch_code').'" AND (service.service_name = "Lab" OR service.service_name = "lab" OR service.service_name = "Laboratory" OR service.service_name = "laboratory")  AND  service_charge.visit_type_id = '.$visit_t;
 		$test_search = $this->session->userdata('lab_test_search');
 		
 		if(!empty($test_search))
@@ -205,7 +205,7 @@ class Laboratory  extends MX_Controller
 			$where .= $test_search;
 		}
 		
-		$table = '`service_charge`, lab_test_class, lab_test';
+		$table = '`service_charge`, lab_test_class, lab_test, service';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/laboratory/laboratory_list/'.$lab.'/'.$visit_id;
