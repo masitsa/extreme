@@ -26,7 +26,7 @@ class Lab_charges extends MX_Controller
 	public function test_list($page_name = NULL)
 	{
 		// this is it
-		$where = 'lab_test_class.lab_test_class_id = lab_test.lab_test_class_id';
+		$where = 'lab_test_class.lab_test_class_id = lab_test.lab_test_class_id AND service.service_id = service_charge.service_id AND (service.service_name = "Lab" OR service.service_name = "lab" OR service.service_name = "laboratory" OR service.service_name = "Laboratory") AND service.branch_code = "'.$this->session->userdata('branch_code').'"';
 		$lab_tests = $this->session->userdata('lab_tests');
 		
 		if(!empty($lab_tests))
@@ -43,10 +43,10 @@ class Lab_charges extends MX_Controller
 		{
 			$segment = 4;
 		}
-		$table = 'lab_test,lab_test_class';
+		$table = 'lab_test,lab_test_class,service,service_charge';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/lab_charges/test_list/'.$page_name;
+		$config['base_url'] = base_url().'lab_charges/test_list/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 15;

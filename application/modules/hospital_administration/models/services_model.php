@@ -130,7 +130,10 @@ class Services_model extends CI_Model
 		'department_id'=>$department_id,
 		'created'=>date('Y-m-d H:i:s'),
 		'created_by'=>$this->session->userdata('personnel_id'),
-		'modified_by'=>$this->session->userdata('personnel_id'));
+		'modified_by'=>$this->session->userdata('personnel_id'),
+		'branch_code'=>$this->session->userdata('branch_code')
+
+		);
 		if($this->db->insert('service', $visit_data))
 		{
 			return TRUE;

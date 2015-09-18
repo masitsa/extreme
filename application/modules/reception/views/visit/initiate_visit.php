@@ -27,7 +27,7 @@
                                 </div>
                             </div>
                             
-                        	<div class="col-md-4">
+                        	<div class="col-md-3">
                             	<div class="row">
                                     <div class="col-md-6">
                                     	<strong>Other names:</strong>
@@ -38,12 +38,12 @@
                                 </div>
                             </div>
                             
-                        	<div class="col-md-3">
+                        	<div class="col-md-4">
                             	<div class="row">
-                                    <div class="col-md-8">
+                                    <div class="col-md-6">
                                     	<strong>Account balance:</strong>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                     	Kes <?php echo number_format($account_balance, 2);?>
                                     </div>
                                 </div>

@@ -218,13 +218,9 @@ class Pharmacy  extends MX_Controller
 		
 		$order = 'drugs.drugs_id';
 		
-		if(($visit_t =1) || ($visit_t = 2)){
-				$where = 'drugs.drugs_id = service_charge.drug_id AND drugs.generic_id = generic.generic_id AND drugs.brand_id = brand.brand_id AND class.class_id  = drugs.class_id AND service_charge.visit_type_id = 0';
-		}else if($visit_t == 4){
-				$where = 'drugs.drugs_id = service_charge.drug_id AND drugs.generic_id = generic.generic_id AND drugs.brand_id = brand.brand_id AND class.class_id  = drugs.class_id AND service_charge.visit_type_id = 4 ';
-		}else{
-				$where = 'drugs.drugs_id = service_charge.drug_id AND drugs.generic_id = generic.generic_id AND drugs.brand_id = brand.brand_id AND class.class_id  = drugs.class_id AND service_charge.visit_type_id = 0';
-		 }
+	
+		$where = 'drugs.drugs_id = service_charge.drug_id AND drugs.generic_id = generic.generic_id AND drugs.brand_id = brand.brand_id AND class.class_id  = drugs.class_id AND service_charge.service_id = service.service_id AND (service.service_name = "Pharmacy" OR service.service_name = "pharmacy") AND service_charge.visit_type_id = '.$visit_t;
+		 
 		
 		$drugs_search = $this->session->userdata('drugs_search');
 		
@@ -240,7 +236,7 @@ class Pharmacy  extends MX_Controller
 		{
 			$segment = 5;
 		}
-		$table = 'drugs, service_charge, generic, brand, class';
+		$table = 'drugs, service_charge, generic, brand, class, service';
 		//pagination
 		$this->load->library('pagination');
 		if($module != 1)

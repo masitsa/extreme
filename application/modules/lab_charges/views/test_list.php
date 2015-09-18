@@ -3,7 +3,7 @@
 <!-- end search -->
 <div class="row">
 	<div class="col-md-12">
-		<a href="<?php echo site_url();?>/lab_charges/add_lab_test" class="btn btn-success pull-right">Add a lab test</a>
+		<a href="<?php echo site_url();?>lab_charges/add_lab_test" class="btn btn-success btn-sm pull-right">Add a lab test</a>
 	</div>
 </div>
  <section class="panel">

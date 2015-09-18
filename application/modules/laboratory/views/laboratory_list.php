@@ -20,7 +20,7 @@
 									{
 										echo '<div class="alert alert-danger">'.$validation_error.'</div>';
 									}
-									echo form_open('laboratory/search_laboratory_tests/'.$visit_number, array('class'=>'form-inline'));
+									echo form_open('laboratory/search_laboratory_tests/'.$visit_id, array('class'=>'form-inline'));
 									?>
                                     <div class="form-group">
                                             <?php
@@ -28,7 +28,7 @@
                                             if(!empty($search))
 											{
 											?>
-                                            <a href="<?php echo site_url().'/laboratory/close_lab_test_search/'.$visit_number;?>" class="btn btn-warning pull-right">Close Search</a>
+                                            <a href="<?php echo site_url().'/laboratory/close_lab_test_search/'.$visit_id;?>" class="btn btn-warning pull-right">Close Search</a>
                                             <?php }?>
                                         	<input type="submit" class="btn btn-info pull-right" value="Search" name="search"/>
                                             
@@ -37,7 +37,7 @@
                                         </div>
                                     </div>
                                         
-                                        <input type="hidden" value="<?php echo $visit_number?>" name="visit_number">
+                                        <input type="hidden" value="<?php echo $visit_id?>" name="visit_id">
                                         
                                     <?php echo form_close();?>
                                 </div>
@@ -66,7 +66,7 @@
                                         
                                         ?>
                                         <tr>
-                                            <td><input type="checkbox" name="laboratory_id" value=""  onclick="lab(<?php echo $id?>,<?php echo $visit_number?>)"/></td>
+                                            <td><input type="checkbox" name="laboratory_id" value=""  onclick="lab(<?php echo $id?>,<?php echo $visit_id?>)"/></td>
                                             <td><?php echo $name?></td>
                                             <td><?php echo $class?></td>
                                             <td><?php echo $cost?></td>
@@ -118,9 +118,9 @@
 <script type="text/javascript">
 var config_url = '<?php echo site_url();?>';
     $(document).ready(function(){
-      get_lab_table(<?php echo $visit_number;?>);
+      get_lab_table(<?php echo $visit_id;?>);
     });
-    function get_lab_table(visit_number){
+    function get_lab_table(visit_id){
         var XMLHttpRequestObject = false;
             
         if (window.XMLHttpRequest) {
@@ -131,7 +131,7 @@ var config_url = '<?php echo site_url();?>';
         else if (window.ActiveXObject) {
             XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
         }
-        var url = "<?php echo site_url();?>laboratory/test_lab/"+visit_number;
+        var url = "<?php echo site_url();?>laboratory/test_lab/"+visit_id;
 		
         if(XMLHttpRequestObject) {
                     
@@ -148,7 +148,7 @@ var config_url = '<?php echo site_url();?>';
             XMLHttpRequestObject.send(null);
         }
     }
-   function lab(id, visit_number){
+   function lab(id, visit_id){
     
     var XMLHttpRequestObject = false;
         
@@ -160,7 +160,7 @@ var config_url = '<?php echo site_url();?>';
     else if (window.ActiveXObject) {
         XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
     }
-    var url = "<?php echo site_url();?>laboratory/test_lab/"+visit_number+"/"+id;
+    var url = "<?php echo site_url();?>laboratory/test_lab/"+visit_id+"/"+id;
     // window.alert(url);
     if(XMLHttpRequestObject) {
                 
@@ -171,7 +171,7 @@ var config_url = '<?php echo site_url();?>';
             if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
                 
                document.getElementById("lab_table").innerHTML = XMLHttpRequestObject.responseText;
-               //get_lab_table(visit_number);
+               //get_lab_table(visit_id);
             }
         }
         
@@ -179,14 +179,14 @@ var config_url = '<?php echo site_url();?>';
     }
 }
   
-function send_to_lab3(visit_number){
-    get_test_results(85, visit_number);
+function send_to_lab3(visit_id){
+    get_test_results(85, visit_id);
 }
 
-function send_to_lab2(visit_number){
-    get_test_results(75, visit_number);
+function send_to_lab2(visit_id){
+    get_test_results(75, visit_id);
 }
-function get_test_results(page, visit_number){
+function get_test_results(page, visit_id){
 
   var XMLHttpRequestObject = false;
     
@@ -201,11 +201,11 @@ function get_test_results(page, visit_number){
   var config_url = $('#config_url').val();
   if((page == 1) || (page == 65) || (page == 85)){
     
-    url = config_url+"laboratory/test/"+visit_number;
+    url = config_url+"laboratory/test/"+visit_id;
   }
   
   else if ((page == 75) || (page == 100)){
-    url = config_url+"laboratory/test1/"+visit_number;
+    url = config_url+"laboratory/test1/"+visit_id;
   }
   if(XMLHttpRequestObject) {
     if((page == 75) || (page == 85)){
@@ -231,7 +231,7 @@ function get_test_results(page, visit_number){
   }
 }
 
-function delete_cost(visit_charge_id, visit_number){
+function delete_cost(visit_charge_id, visit_id){
 	
 	var XMLHttpRequestObject = false;
 	
@@ -242,7 +242,7 @@ function delete_cost(visit_charge_id, visit_number){
 	else if (window.ActiveXObject) {
 		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	var url = config_url+"laboratory/delete_cost/"+visit_charge_id+"/"+visit_number;
+	var url = config_url+"laboratory/delete_cost/"+visit_charge_id+"/"+visit_id;
 	
 	if(XMLHttpRequestObject) {
 		var obj = document.getElementById("lab_table");
@@ -254,7 +254,7 @@ function delete_cost(visit_charge_id, visit_number){
 			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
 				
 				obj.innerHTML = XMLHttpRequestObject.responseText;
-				window.location.href = host+"data/doctor/laboratory.php?visit_number="+visit_number;
+				window.location.href = host+"data/doctor/laboratory.php?visit_id="+visit_id;
 			}
 		}
 		XMLHttpRequestObject.send(null);

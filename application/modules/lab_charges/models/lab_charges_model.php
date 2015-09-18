@@ -105,6 +105,9 @@ class Lab_charges_model extends CI_Model
 		}
 		else
 		{
+			//get the lab service id for the branch
+
+			$service_ = $this->get_laboratory_service_id();
 
 			$insert = array(
 					"lab_test_name" => $lab_test_name,
@@ -122,6 +125,11 @@ class Lab_charges_model extends CI_Model
 		}
 		// end of checking
 		
+	}
+	public function get_laboratory_service_id()
+	{
+		$this->db->where('(service_name = "Lab" OR service_name = "lab" OR service_name = "Laboratory" OR service_name = "laboratory") AND branch_code = "'.$this->session->userdata('branch_code').'"');
+		$this->db->get('service');
 	}
 	public function add_test_format($test_id)
 	{
