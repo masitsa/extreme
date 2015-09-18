@@ -33,11 +33,7 @@ $this->nurse_model->visit_charge_insert($visit_id,$procedure_id,$suck);
 
 // get all the procedures
 
-$visit__rs1 = $this->nurse_model->get_visit_procedure_charges($visit_id);
-
-
-
-
+$visit__rs1 = $this->nurse_model->get_visit_procedure_charges($visit_id, $procedure_id);
 echo "
 	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Procedure' onclick='myPopup3(".$visit_id.")'/></p></div>
 
@@ -57,19 +53,11 @@ echo "
 							$procedure_id = $key1->service_charge_id;
 							$visit_charge_amount = $key1->visit_charge_amount;
 							$units = $key1->visit_charge_units;
-	 
-							//  get service charge information
-
-								$service_charge_rs = $this->nurse_model->get_service_charge($procedure_id);
-								foreach($service_charge_rs as $key2):
-									$procedure_name = $key2->service_charge_name;
-									$service_id = $key2->service_id;
-								endforeach;	
-							// end of service charge information
-						
+							$procedure_name = $key1->service_charge_name;
+							$service_id = $key1->service_id;
+							
 							$total= $total +($units * $visit_charge_amount);
 							
-							if($service_id==3){
 								echo"
 										<tr> 
 											<td></td>
@@ -80,13 +68,12 @@ echo "
 											<td>
 												<div class='btn-toolbar'>
 													<div class='btn-group'>
-														<a class='btn' href='#' onclick='delete_procedure(".$v_procedure_id.", ".$visit_id.")'><i class='icon-remove'></i></a>
+														<a class='btn btn-sm btn-danger' href='#' onclick='delete_procedure(".$v_procedure_id.", ".$visit_id.")'><i class='fa fa-trash'></i></a>
 													</div>
 												</div>
 											</td>
 										</tr>	
 								";	
-							}
 								
 			endforeach;
 ?>

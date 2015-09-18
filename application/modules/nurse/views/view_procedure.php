@@ -14,10 +14,6 @@ if(count($rs) >0){
 	endforeach;
 
 	$rs2 = $this->nurse_model->visit_charge($visit_id);
-
-	
-
-
 }
 
 
@@ -51,7 +47,9 @@ echo "
 		
 						$procedure_name = $rs5->service_charge_name;
 						$service_id = $rs5->service_id;
-						if($service_id==3){
+						$service_name = $rs5->service_name;
+						if(($service_name == 'Procedures') || ($service_name == 'procedures') || ($service_name == 'Procedure') || ($service_name == 'procedure'))
+						{
 							$total= $total +($units * $visit_charge_amount);
 							echo"
 									<tr> 
@@ -62,7 +60,7 @@ echo "
 										<td>
 											<div class='btn-toolbar'>
 												<div class='btn-group'>
-													<a class='btn' href='#' onclick='delete_procedure(".$v_procedure_id.", ".$visit_id.")'><i class='icon-remove'></i></a>
+													<a class='btn btn-sm btn-danger' href='#' onclick='delete_procedure(".$v_procedure_id.", ".$visit_id.")'><i class='fa fa-trash'></i></a>
 												</div>
 											</div>
 										</td>

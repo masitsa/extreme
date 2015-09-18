@@ -44,6 +44,7 @@ class Departments_model extends CI_Model
 				'department_status'=>$this->input->post('department_status'),
 				'created'=>date('Y-m-d H:i:s'),
 				'created_by'=>$this->session->userdata('personnel_id'),
+				'branch_code'=>$this->session->userdata('branch_code'),
 				'modified_by'=>$this->session->userdata('personnel_id')
 			);
 			
@@ -67,6 +68,7 @@ class Departments_model extends CI_Model
 		$data = array(
 				'department_name'=>$this->input->post('department_name'),
 				'department_status'=>$this->input->post('department_status'),
+				'branch_code'=>$this->session->userdata('branch_code'),
 				'modified_by'=>$this->session->userdata('personnel_id')
 			);
 			

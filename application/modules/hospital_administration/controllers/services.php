@@ -16,7 +16,7 @@ class Services extends Hospital_administration
 	public function index($order = 'service_name', $order_method = 'ASC')
 	{
 		// this is it
-		$where = 'service_delete = 0 AND branch_code = "'.$this->session->userdata('branch_code').'"';
+		$where = 'service_delete = 0 AND service.branch_code = "'.$this->session->userdata('branch_code').'"';
 		$service_search = $this->session->userdata('service_search');
 		
 		if(!empty($service_search))

@@ -401,7 +401,7 @@ function plan(visit_id){
       if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
         obj.innerHTML = XMLHttpRequestObject.responseText;
          get_test_results(100, visit_id);
-         closeit(79, visit_id);
+         //closeit(79, visit_id);
          display_prescription(visit_id, 2);
       }
     }
@@ -592,7 +592,7 @@ function doctor_notes(visit_id){
       
       if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
         obj.innerHTML = XMLHttpRequestObject.responseText;
-        symptoms3(visit_id);
+        //symptoms3(visit_id);
         
       }
     }
@@ -720,7 +720,7 @@ function get_disease(visit_id){
       
   if(XMLHttpRequestObject) {
     var obj = document.getElementById("visit_diagnosis_original");
-    var obj2 = document.getElementById("visit_diagnosis");
+    //var obj2 = document.getElementById("visit_diagnosis");
         
     XMLHttpRequestObject.open("GET", url);
         
@@ -728,7 +728,7 @@ function get_disease(visit_id){
       
       if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
         obj.innerHTML = XMLHttpRequestObject.responseText;
-        obj2.innerHTML = XMLHttpRequestObject.responseText;
+        //obj2.innerHTML = XMLHttpRequestObject.responseText;
       }
     }
     

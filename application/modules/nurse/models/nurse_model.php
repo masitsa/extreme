@@ -274,10 +274,10 @@ class Nurse_model extends CI_Model
 		return $result;
 	}
 	function get_service_charge($procedure_id){
-		$table = "service_charge";
-		$where = "service_charge_id = '$procedure_id'";
-		$items = "*";
-		$order = "service_charge_id";
+		$table = "service_charge, service";
+		$where = "service_charge.service_id = service.service_id AND service_charge.service_charge_id = '$procedure_id'";
+		$items = "service_charge.*, service.service_name";
+		$order = "service_charge.service_charge_id";
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
@@ -320,7 +320,14 @@ class Nurse_model extends CI_Model
 
 
 	function submitvisitprocedure($procedure_id,$visit_id,$suck){
-		$visit_data = array('procedure_id'=>$procedure_id,'visit_id'=>$visit_id,'units'=>$suck);
+		$visit_data = array(
+			'procedure_id'=>$procedure_id,
+			'visit_id'=>$visit_id,
+			'units'=>$suck,
+			'created'=>date('Y-m-d H:i:s'),
+			'created_by'=>$this->session->userdata('personnel_id'),
+			'modified_by'=>$this->session->userdata('personnel_id')
+		);
 		$this->db->insert('visit_procedure', $visit_data);
 	}
 	function submitvisitvaccine($vaccine_id,$visit_id,$suck){
@@ -339,9 +346,8 @@ class Nurse_model extends CI_Model
 		return $result;
 	}
 
-	function visit_charge_insert($v_id,$procedure_id,$suck){
-
-
+	function visit_charge_insert($v_id,$procedure_id,$suck)
+	{
 		$service_charge_rs = $this->get_service_charge($procedure_id);
 
 		foreach ($service_charge_rs as $key) :
@@ -349,14 +355,21 @@ class Nurse_model extends CI_Model
 			$visit_charge_amount = $key->service_charge_amount;
 		endforeach;
 
-		$visit_data = array('service_charge_id'=>$procedure_id,'visit_id'=>$v_id,'visit_charge_amount'=>$visit_charge_amount,'visit_charge_units'=>$suck,'created_by'=>$this->session->userdata("personnel_id"),'date'=>date("Y-m-d"));
+		$visit_data = array(
+			'service_charge_id'=>$procedure_id,
+			'visit_id'=>$v_id,
+			'visit_charge_amount'=>$visit_charge_amount,
+			'visit_charge_units'=>$suck,
+			'created_by'=>$this->session->userdata("personnel_id"),
+			'date'=>date("Y-m-d")
+		);
 		$this->db->insert('visit_charge', $visit_data);
 	}
 
 
-	function get_visit_procedure_charges($v_id){
-		$table = "visit_charge";
-		$where = "visit_charge_delete = 0 AND visit_id = $v_id";
+	function get_visit_procedure_charges($v_id, $service_charge_id){
+		$table = "visit_charge, service_charge";
+		$where = "visit_charge.visit_charge_delete = 0 AND visit_charge.visit_id = $v_id AND visit_charge.service_charge_id = service_charge.service_charge_id AND service_charge.service_id = (SELECT service_id FROM service_charge WHERE service_charge_id = ".$service_charge_id.")";
 		$items = "*";
 		$order = "visit_id";
 
