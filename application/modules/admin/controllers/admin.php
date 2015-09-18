@@ -29,7 +29,8 @@ class Admin extends MX_Controller
 		$data['title'] = $this->site_model->display_page_title();
 		$v_data['title'] = $data['title'];
 		
-		$data['content'] = $this->load->view('dashboard', $v_data, true);
+		// $data['content'] = $this->load->view('dashboard', $v_data, true);
+		$data['content'] = $this->load->view('profile_page', $v_data, true);
 		
 		$this->load->view('templates/general_page', $data);
 	}

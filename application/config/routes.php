@@ -53,6 +53,7 @@ $route['logout-admin'] = 'auth/logout';
 *	Admin Routes
 */
 $route['dashboard'] = 'admin/dashboard';
+$route['change-password'] = 'admin/users/change_password';
 
 /*
 *	administration Routes
@@ -89,7 +90,7 @@ $route['administration/deactivate-branch/(:num)/(:num)'] = 'admin/branches/deact
 /*
 *	HR Routes
 */
-$route['human-resource/my-account'] = 'hr/my_account/account';
+$route['human-resource/my-account'] = 'admin/dashboard';
 $route['human-resource/my-account/edit-about/(:num)'] = 'hr/personnel/my_account/update_personnel_about_details/$1';
 $route['human-resource/edit-personnel-account/(:num)'] = 'hr/personnel/update_personnel_account_details/$1';
 $route['human-resource/configuration'] = 'hr/configuration';
