@@ -485,3 +485,7 @@ $route['cloud/edit-sync-table/(:num)'] = 'cloud/sync_tables/edit_sync_table/$1';
 $route['cloud/delete-sync-table/(:num)'] = 'cloud/sync_tables/delete_sync_table/$1';
 $route['cloud/activate-sync-table/(:num)'] = 'cloud/sync_tables/activate_sync_table/$1';
 $route['cloud/deactivate-sync-table/(:num)'] = 'cloud/sync_tables/deactivate_sync_table/$1';
+
+$route['pharmacy/validate-import'] = 'pharmacy/do_drugs_import';
+$route['pharmacy/import-template'] = 'pharmacy/import_template';
+$route['pharmacy/import-drugs'] = 'pharmacy/import_drugs';

@@ -2,6 +2,7 @@
 
 class Pharmacy  extends MX_Controller
 {	
+	var $csv_path;
 	function __construct()
 	{
 		parent:: __construct();
@@ -16,6 +17,8 @@ class Pharmacy  extends MX_Controller
 		$this->load->model('admin/admin_model');
 		$this->load->model('reception/database');
 		$this->load->model('administration/personnel_model');
+
+		$this->csv_path = realpath(APPPATH . '../assets/csv');
 	}
 	
 	public function index()
@@ -528,7 +531,7 @@ class Pharmacy  extends MX_Controller
 		$order = 'drugs.drugs_name';
 		//$where = 'drugs.brand_id = brand.brand_id AND class.class_id = drugs.class_id AND drugs.generic_id = generic.generic_id AND drugs.drug_type_id = drug_type.drug_type_id AND drugs.drug_administration_route_id = drug_administration_route.drug_administration_route_id AND drugs.drug_dose_unit_id = drug_dose_unit.drug_dose_unit_id AND drugs.drug_consumption_id = drug_consumption.drug_consumption_id';
 		
-		$where = 'drugs.brand_id = brand.brand_id AND class.class_id = drugs.class_id AND drugs.generic_id = generic.generic_id AND drugs.drug_type_id = drug_type.drug_type_id AND drugs.drug_administration_route_id = drug_administration_route.drug_administration_route_id AND drugs.drug_dose_unit_id = drug_dose_unit.drug_dose_unit_id AND drugs.drug_consumption_id = drug_consumption.drug_consumption_id';
+		$where = 'drugs.brand_id = brand.brand_id AND class.class_id = drugs.class_id AND drugs.generic_id = generic.generic_id AND drugs.drug_type_id = drug_type.drug_type_id AND drugs.drug_administration_route_id = drug_administration_route.drug_administration_route_id AND drugs.drug_dose_unit_id = drug_dose_unit.drug_dose_unit_id AND drugs.drug_consumption_id = drug_consumption.drug_consumption_id AND branch_code = "'.$this->session->userdata('branch_code').'"';
 		$drugs_inventory_search = $this->session->userdata('drugs_inventory_search');
 		
 		if(!empty($drugs_inventory_search))
@@ -540,7 +543,7 @@ class Pharmacy  extends MX_Controller
 		
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/pharmacy/inventory';
+		$config['base_url'] = site_url().'pharmacy/inventory';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -2090,6 +2093,64 @@ class Pharmacy  extends MX_Controller
 				$this->db->insert('service_charge', $service_data);
 			}
 		}
+	}
+	function import_template()
+	{
+		//export products template in excel 
+		 $this->pharmacy_model->import_template();
+	}
+	function import_drugs()
+	{
+		//open the add new product
+		$v_data['title'] = 'Import drugs';
+		$data['title'] = 'Import drugs';
+		$data['content'] = $this->load->view('drugs/import_drugs', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	
+	function do_drugs_import()
+	{
+		if(isset($_FILES['import_csv']))
+		{
+			if(is_uploaded_file($_FILES['import_csv']['tmp_name']))
+			{
+				//import products from excel 
+				$response = $this->pharmacy_model->import_csv_products($this->csv_path);
+				
+				if($response == FALSE)
+				{
+				}
+				
+				else
+				{
+					if($response['check'])
+					{
+						$v_data['import_response'] = $response['response'];
+					}
+					
+					else
+					{
+						$v_data['import_response_error'] = $response['response'];
+					}
+				}
+			}
+			
+			else
+			{
+				$v_data['import_response_error'] = 'Please select a file to import.';
+			}
+		}
+		
+		else
+		{
+			$v_data['import_response_error'] = 'Please select a file to import.';
+		}
+		
+		//open the add new product
+		$v_data['title'] = 'Import drugs';
+		$data['title'] = 'Import drugs';
+		$data['content'] = $this->load->view('drugs/import_drugs', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
 	}
 }
 ?>

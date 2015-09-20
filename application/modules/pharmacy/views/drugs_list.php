@@ -3,8 +3,8 @@
     <header class="panel-heading">
       <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
       <div class="widget-icons pull-right">
-        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-        <a href="#" class="wclose"><i class="icon-remove"></i></a>
+        <a href="<?php echo site_url().'pharmacy/add_drug';?>" class="btn btn-sm btn-success">Add Drug</a>
+         <a href="<?php echo site_url().'pharmacy/import-drugs';?>" class="btn btn-sm btn-success">Import Drugs</a>
       </div>
       <div class="clearfix"></div>
     </header>             
@@ -40,7 +40,7 @@
                   
                     <div class="row">
                         <div class="col-md-12">
-                        	<a href="<?php echo site_url().'/pharmacy/add_drug';?>" class="btn btn-sm btn-success">Add Drug</a>
+                        	
                         	<div class="table-responsive">
                                 <table border="0" class="table table-hover table-condensed">
                                     <thead> 
