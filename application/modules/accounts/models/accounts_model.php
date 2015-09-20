@@ -219,7 +219,7 @@ class Accounts_model extends CI_Model
 		$table = "payment_method";
 		$where = "payment_method_id > 0";
 		$items = "*";
-		$order = "payment_method_id";
+		$order = "payment_method";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
@@ -399,14 +399,18 @@ class Accounts_model extends CI_Model
 		$amount = $this->input->post('amount_paid');
 		$payment_method=$this->input->post('payment_method');
 		$type_payment=$this->input->post('type_payment');
-		if($type_payment == 2 || $type_payment == 3)
+		$payment_service_id=$this->input->post('payment_service_id');
+		
+		if($type_payment == 1)
 		{
-			$service_id = $this->input->post('service_id');
+			$payment_service_id=$this->input->post('service_id');
 		}
+		
 		else
 		{
-			$service_id = 0;
+			$payment_service_id=$this->input->post('payment_service_id');
 		}
+		
 		if($payment_method == 1)
 		{
 			// check for cheque number if inserted
@@ -428,7 +432,18 @@ class Accounts_model extends CI_Model
 			$transaction_code = '';
 		}
 		
-		$data = array('visit_id' => $visit_id,'payment_method_id'=>$payment_method,'amount_paid'=>$amount,'personnel_id'=>$this->session->userdata("personnel_id"),'payment_type'=>$type_payment,'transaction_code'=>$transaction_code,'payment_service_id'=>$service_id,'payment_created'=>date("Y-m-d"),'payment_created_by'=>$this->session->userdata("personnel_id"),'approved_by'=>$personnel_id,'date_approved'=>date('Y-m-d'));
+		$data = array(
+			'visit_id' => $visit_id,
+			'payment_method_id'=>$payment_method,
+			'amount_paid'=>$amount,
+			'personnel_id'=>$this->session->userdata("personnel_id"),
+			'payment_type'=>$type_payment,
+			'transaction_code'=>$transaction_code,
+			'payment_service_id'=>$payment_service_id,
+			'payment_created'=>date("Y-m-d"),
+			'payment_created_by'=>$this->session->userdata("personnel_id"),
+			'approved_by'=>$personnel_id,'date_approved'=>date('Y-m-d')
+		);
 		if($this->db->insert('payments', $data))
 		{
 			return $this->db->insert_id();
@@ -439,27 +454,36 @@ class Accounts_model extends CI_Model
 	}
 	public function check_admin_person($username,$password)
 	{
-		$password = md5($password);
-		$table = "personnel,personnel_department";
-		$where = "personnel.personnel_username = '$username' AND personnel.personnel_password = '$password'  AND personnel.personnel_id = personnel_department.personnel_id AND personnel_department.department_id = 3";
-		$items = "personnel.personnel_id";
-		$order = "personnel.personnel_id";
+		$authorize_invoice_changes = $this->session->userdata('authorize_invoice_changes');
 		
-		$result = $this->database->select_entries_where($table, $where, $items, $order);
-		
-		
-		if(count($result) > 0)
+		if($authorize_invoice_changes != 1)
 		{
-			foreach ($result as $row2):
-				$personnel_id = $row2->personnel_id;
-			endforeach;
-			return $personnel_id;	
-		}
-		else{
-			return FALSE;
+			$password = md5($password);
+			$table = "personnel,personnel_department";
+			$where = "personnel.personnel_username = '$username' AND personnel.personnel_password = '$password'  AND personnel.personnel_id = personnel_department.personnel_id AND personnel_department.department_id = 3";
+			$items = "personnel.personnel_id";
+			$order = "personnel.personnel_id";
+			
+			$result = $this->database->select_entries_where($table, $where, $items, $order);
+			
+			if(count($result) > 0)
+			{
+				foreach ($result as $row2):
+					$personnel_id = $row2->personnel_id;
+				endforeach;
+				return $personnel_id;	
+			}
+			else{
+				return FALSE;
+			}
 		}
 		
-		
+		else
+		{
+			$personnel_id = $this->session->userdata('personnel_id');
+			
+			return $personnel_id;
+		}
 	}
 	public function add_billing($visit_id)
 	{

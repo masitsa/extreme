@@ -1,6 +1,6 @@
  <section class="panel">
     <header class="panel-heading">
-          <h4 class="pull-left"><i class="icon-reorder"></i>Search appointments</h4>
+          <h4 class="pull-left"><i class="icon-reorder"></i>Search</h4>
           <div class="widget-icons pull-right">
             <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
           </div>
@@ -8,16 +8,16 @@
         </header>
       <div class="panel-body">
 			<?php
-            echo form_open("reception/search_visits/".$visit.'/'.$page_name, array("class" => "form-horizontal"));
+            echo form_open("reception/search_visits2/".$visit.'/'.$page_name, array("class" => "form-horizontal"));
             ?>
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Visit Type: </label>
+                        <label class="col-lg-4 control-label">Patient Type: </label>
                         
                         <div class="col-lg-8">
                             <select class="form-control" name="visit_type_id">
-                            	<option value="">---Select Visit Type---</option>
+                            	<option value="">---Select Patient Type---</option>
                                 <?php
                                     if(count($type) > 0){
                                         foreach($type as $row):
@@ -85,10 +85,10 @@
                     </div>
                     
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Surname: </label>
+                        <label class="col-lg-4 control-label">First name: </label>
                         
                         <div class="col-lg-8">
-                            <input type="text" class="form-control" name="surname" placeholder="Surname">
+                            <input type="text" class="form-control" name="surname" placeholder="First name">
                         </div>
                     </div>
                     

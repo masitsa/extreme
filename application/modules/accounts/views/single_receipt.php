@@ -7,6 +7,7 @@ $patient_othernames = $patient['patient_othernames'];
 $patient_surname = $patient['patient_surname'];
 $patient_surname = $patient['patient_surname'];
 $patient_number = $patient['patient_number'];
+$visit_id = $patient['visit_id'];
 $gender = $patient['gender'];
 
 $today = date('jS F Y H:i a',strtotime(date("Y:m:d h:i:s")));
@@ -122,22 +123,9 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
             </div>
         </div>
         
-    	<div class="row receipt_bottom_border">
-        	<div class="col-md-12 center-align">
-            	<strong>BILLED ITEMS</strong>
-            </div>
-        </div>
-        
     	<div class="row">
         	<div class="col-md-12">
             	<table class="table table-hover table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Service</th>
-                    <th>Charge</th>
-                  </tr>
-                  </thead>
                   <tbody>
                     <?php
 					$service_rs = $this->accounts_model->get_patient_visit_charge($visit_id);
@@ -182,33 +170,6 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
 								}
 							  endforeach;
 							}
-							
-							if($service_id == 4)
-							{
-								if($visit_total > 0)
-								{
-									$s++;
-									?>
-									  <tr >
-										<td><?php echo $s;?></td>
-										<td><?php echo $service_name;?></td>
-										<td><?php echo number_format($visit_total,2);?></td>
-									  </tr>
-									<?php
-								}
-							}
-							
-							else
-							{
-								$s++;
-								?>
-                                  <tr >
-                                    <td><?php echo $s;?></td>
-                                    <td><?php echo $service_name;?></td>
-                                    <td><?php echo number_format($visit_total,2);?></td>
-                                  </tr>
-                                <?php
-							}
                             
 							// end of the payments
 
@@ -223,6 +184,7 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
 							$x = $s;
 							foreach ($payments_rs as $key_items):
 								
+								$payment_id = $key_items->payment_id;
 								$payment_method = $key_items->payment_method;
 								$amount_paid = $key_items->amount_paid;
 								$time = $key_items->time;
@@ -238,50 +200,9 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
 								{
 									$service_associate = " ";
 								}
-
-								if($payment_type == 2)
-								{
-									$amount_paidd = $amount_paidd;
-									$x++;
-									?>
-									<tr>
-									<td><?php echo $x;?></td>
-									<td><?php echo $service_associate;?></td>
-
-									<td><?php echo $amount_paidd;?></td>
-									</tr>
-									<?php
-								}
-								else if($payment_type == 3)
-								{
-									$amount_paidd = $amount_paidd;
-									$x++;
-									?>
-									<tr>
-									<td><?php echo $x;?></td>
-									<td><?php echo $service_associate;?></td>
-
-									<td>(<?php echo $amount_paidd;?>)</td>
-									</tr>
-									<?php
-								}
 							endforeach;
 						}
                         $total_amount = ($total + $debit_note_amount) - $credit_note_amount;
-						?>
-						<tr>
-						  <td></td>
-						  <td>Total :</td>
-						  <td> <?php echo number_format($total_amount,2);?></td>
-						</tr>
-						<?php
-					}
-					else{
-					   ?>
-						<tr>
-						  <td colspan="3"> No Charges</td>
-						</tr>
-						<?php
 					}
 					$total_amount = ($total + $debit_note_amount) - $credit_note_amount;
 					$payments_rs = $this->accounts_model->payments($visit_id);
@@ -294,13 +215,60 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
     					foreach ($payments_rs as $key_items):
     						$x++;
                             $payment_type = $key_items->payment_type;
-                             $payment_status = $key_items->payment_status;
-                            if($payment_type == 1 && $payment_status == 1)
+                            $payment_status = $key_items->payment_status;
+                            
+							if($payment_type == 1 && $payment_status == 1)
                             {
-    							$payment_method = $key_items->payment_method;
-    							$amount_paid = $key_items->amount_paid;
-    							
-    							$total_payments = $total_payments + $amount_paid;
+								$payment_id = $key_items->payment_id;
+								$amount_paid = $key_items->amount_paid;
+							
+								$total_payments = $total_payments + $amount_paid;
+								
+								if($payment_id == $receipt_payment_id)
+								{
+									$payment_method = $key_items->payment_method;
+									$payment_service_id = $key_items->payment_service_id;
+									$service_name = '';
+									
+									if(count($service_rs) > 0)
+									{
+										foreach($service_rs as $serv)
+										{
+											$service_id = $serv->service_id;
+											if($payment_service_id == $service_id)
+											{
+												$service_name = $serv->service_name;
+												break;
+											}
+										}
+									}
+													
+									//display DN & CN services
+									if((count($payments_rs) > 0) && ($service_name == ''))
+									{
+										foreach ($payments_rs as $key_items):
+											$payment_type = $key_items->payment_type;
+											
+											if(($payment_type == 2) || ($payment_type == 3))
+											{
+												$payment_service_id2 = $key_items->payment_service_id;
+												
+												if($payment_service_id2 == $payment_service_id)
+												{
+													$service_name = $this->accounts_model->get_service_detail($payment_service_id);
+													break;
+												}
+											}
+											
+										endforeach;
+									}
+									?>
+									<tr>
+										<td colspan="2"><?php echo $service_name;?></td>
+										<td><?php echo number_format($amount_paid, 2);?></td>
+									</tr>
+									<?php
+								}
                             }
 
 
@@ -310,11 +278,7 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
 
                     ?>
                     <tr class="receipt_bottom_border">
-                    	<td colspan="2">Total Paid</td>
-                        <td><?php echo number_format($total_payments, 2);?></td>
-                    </tr>
-                    <tr class="receipt_bottom_border">
-                    	<td colspan="2">Balance</td>
+                    	<td colspan="2">Account balance</td>
                         <td><?php echo number_format($total_amount - $total_payments, 2);?></td>
                     </tr>
                       

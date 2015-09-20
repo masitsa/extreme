@@ -14,50 +14,52 @@
 		        <!-- Widget content -->
 		        <div class="panel-body">
                 	
-		          	<h5>
-                    	<div class="row">
-                        	<div class="col-md-3">
-                            	<div class="row">
-                                    <div class="col-md-6">
-                                    	<strong>Surname:</strong>
+                	<div class="well well-sm info">
+                        <h5 style="margin:0;">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>First name:</strong>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <?php echo $patient_surname;?>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                    	<?php echo $patient_surname;?>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>Other names:</strong>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <?php echo $patient_othernames;?>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>Account balance:</strong>
+                                        </div>
+                                        <div class="col-md-6">
+                                            Kes <?php echo number_format($account_balance, 2);?>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-2">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <a href="<?php echo site_url();?>administration/individual_statement/<?php echo $patient_id;?>/2" class="btn btn-sm btn-success pull-right" target="_blank" style="margin-top: 5px;">Patient Statement</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            
-                        	<div class="col-md-3">
-                            	<div class="row">
-                                    <div class="col-md-6">
-                                    	<strong>Other names:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                    	<?php echo $patient_othernames;?>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        	<div class="col-md-4">
-                            	<div class="row">
-                                    <div class="col-md-6">
-                                    	<strong>Account balance:</strong>
-                                    </div>
-                                    <div class="col-md-6">
-                                    	Kes <?php echo number_format($account_balance, 2);?>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        	<div class="col-md-2">
-                            	<div class="row">
-                                    <div class="col-md-12">
-                            			<a href="<?php echo site_url();?>administration/individual_statement/<?php echo $patient_id;?>/2" class="btn btn-sm btn-success pull-right" target="_blank" style="margin-top: 5px;">Patient Statement</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </h5>
+                        </h5>
+                    </div>
                     
 					<div class="tabs">
                         <ul class="nav nav-tabs nav-justified">

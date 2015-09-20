@@ -44,8 +44,9 @@ class Nurse  extends MX_Controller
 	
 	public function nurse_queue($page_name = NULL)
 	{
-		// this is it
-		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\'';
+		
+		$table = 'visit_department, visit, patients, visit_type';
 		$patient_visit_search = $this->session->userdata('patient_visit_search');
 		
 		if(!empty($patient_visit_search))
@@ -62,7 +63,6 @@ class Nurse  extends MX_Controller
 		{
 			$segment = 4;
 		}
-		$table = 'visit_department, visit, patients';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/nurse/nurse_queue/'.$page_name;
@@ -98,8 +98,6 @@ class Nurse  extends MX_Controller
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page, 'ASC');
-
-
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;

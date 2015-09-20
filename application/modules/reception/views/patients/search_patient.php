@@ -17,25 +17,25 @@
             ?>
             <div class="row">
                 <div class="col-md-6">
-                    <!--<div class="form-group">
-                        <label class="col-lg-4 control-label">Patient Type: </label>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Branch: </label>
                         
                         <div class="col-lg-8">
-                            <select class="form-control" name="visit_type_id">
-                            	<option value="">---Select Visit Type---</option>
+                            <select class="form-control" name="branch_code">
+                            	<option value="">---Select Branch---</option>
                                 <?php
-                                    if(count($type) > 0){
-                                        foreach($type as $row):
-                                            $type_name = $row->visit_type_name;
-                                            $type_id= $row->visit_type_id;
-                                                ?><option value="<?php echo $type_id; ?>" ><?php echo $type_name ?></option>
+                                    if($branches->num_rows() > 0){
+                                        foreach($branches->result() as $row):
+                                            $branch_name = $row->branch_name;
+                                            $branch_code= $row->branch_code;
+                                                ?><option value="<?php echo $branch_code; ?>" ><?php echo $branch_name; ?></option>
                                         <?php	
                                         endforeach;
                                     }
                                 ?>
                             </select>
                         </div>
-                    </div>-->
+                    </div>
                     
                     <div class="form-group">
                         <label class="col-lg-4 control-label">I.D. number: </label>
@@ -57,15 +57,15 @@
                 <div class="col-md-6">
                     
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Surname: </label>
+                        <label class="col-lg-4 control-label">First name: </label>
                         
                         <div class="col-lg-8">
-                            <input type="text" class="form-control" name="surname" placeholder="Surname">
+                            <input type="text" class="form-control" name="surname" placeholder="First name">
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Other Names: </label>
+                        <label class="col-lg-4 control-label">Other names: </label>
                         
                         <div class="col-lg-8">
                             <input type="text" class="form-control" name="othernames" placeholder="Other Names">

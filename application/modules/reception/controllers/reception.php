@@ -28,8 +28,9 @@ class Reception  extends MX_Controller
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit.visit_delete = 0 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
-		$table = 'visit, patients';
+		$where = 'visit.visit_delete = 0 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\'';
+		
+		$table = 'visit, patients, visit_type';
 		$query = $this->reception_model->get_all_ongoing_visits2($table, $where, 10, 0);
 		$v_data['query'] = $query;
 		$v_data['page'] = 0;
@@ -59,6 +60,11 @@ class Reception  extends MX_Controller
 		if(!empty($patient_search))
 		{
 			$where .= $patient_search;
+		}
+		
+		else
+		{
+			$where .= ' AND patients.branch_code = \''.$this->session->userdata('branch_code').'\'';
 		}
 		
 		$table = 'patients';
@@ -107,14 +113,24 @@ class Reception  extends MX_Controller
 		
 		else
 		{
-			$data['title'] = 'Patients';
-			$v_data['title'] = 'Patients';
+			$search_title = $this->session->userdata('patient_search_title');
+			
+			if(!empty($search_title))
+			{
+				$data['title'] = $v_data['title'] = 'Patients filtered by :'.$search_title;
+			}
+			
+			else
+			{
+				$data['title'] = 'Patients';
+				$v_data['title'] = 'Patients';
+			}
 		}
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
 		$v_data['delete'] = $delete;
-		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['branches'] = $this->reception_model->get_branches();
 		$data['content'] = $this->load->view('all_patients', $v_data, true);
 		
 		$data['sidebar'] = 'reception_sidebar';
@@ -156,7 +172,8 @@ class Reception  extends MX_Controller
 		// this is it
 		if($visits != 2)
 		{
-			$where = 'visit.visit_delete = '.$delete.' AND visit.patient_id = patients.patient_id';
+			$where = 'visit.visit_delete = '.$delete.' AND visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
+			
 			//terminated visits
 			if($visits == 1)
 			{
@@ -198,8 +215,10 @@ class Reception  extends MX_Controller
 		
 		else
 		{
-			$where = 'visit.visit_delete = '.$delete.' AND visit.patient_id = patients.patient_id';
+			$where = 'visit.visit_delete = '.$delete.' AND visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
 		}
+		$table = 'visit, patients, visit_type';
+		
 		$visit_search = $this->session->userdata('visit_search');
 		
 		if(!empty($visit_search))
@@ -207,7 +226,6 @@ class Reception  extends MX_Controller
 			$where .= $visit_search;
 		}
 		
-		$table = 'visit, patients';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'reception/visit_list/'.$visits.'/'.$page_name;
@@ -294,9 +312,9 @@ class Reception  extends MX_Controller
 	{
 		$segment = 4;
 		
-		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
 		
-		$table = 'visit_department, visit, patients';
+		$table = 'visit_department, visit, patients, visit_type';
 		
 		$visit_search = $this->session->userdata('general_queue_search');
 		
@@ -644,20 +662,31 @@ class Reception  extends MX_Controller
 	{
 		$patient_national_id = $this->input->post('patient_national_id');
 		$patient_number = $this->input->post('patient_number');
+		$branch_code = $this->input->post('branch_code');
+		$search_title = '';
 		
 		if(!empty($patient_number))
 		{
+			$search_title .= ' patient number <strong>'.$patient_number.'</strong>';
 			$patient_number = ' AND patients.patient_number LIKE \'%'.$patient_number.'%\'';
 		}
 		
 		if(!empty($patient_national_id))
 		{
+			$search_title .= ' I.D. number <strong>'.$patient_national_id.'</strong>';
 			$patient_national_id = ' AND patients.patient_national_id = \''.$patient_national_id.'\' ';
+		}
+		
+		if(!empty($branch_code))
+		{
+			$search_title .= ' branch code <strong>'.$branch_code.'</strong>';
+			$branch_code = ' AND patients.branch_code = \''.$branch_code.'\' ';
 		}
 		
 		//search surname
 		if(!empty($_POST['surname']))
 		{
+			$search_title .= ' first name <strong>'.$_POST['surname'].'</strong>';
 			$surnames = explode(" ",$_POST['surname']);
 			$total = count($surnames);
 			
@@ -687,6 +716,7 @@ class Reception  extends MX_Controller
 		//search other_names
 		if(!empty($_POST['othernames']))
 		{
+			$search_title .= ' other names <strong>'.$_POST['othernames'].'</strong>';
 			$other_names = explode(" ",$_POST['othernames']);
 			$total = count($other_names);
 			
@@ -713,8 +743,9 @@ class Reception  extends MX_Controller
 			$other_name = '';
 		}
 		
-		$search = $patient_national_id.$patient_number.$surname.$other_name;
+		$search = $patient_national_id.$patient_number.$surname.$other_name.$branch_code;
 		$this->session->set_userdata('patient_search', $search);
+		$this->session->set_userdata('patient_search_title', $search_title);
 		
 		$this->patients();
 	}
@@ -1068,8 +1099,9 @@ class Reception  extends MX_Controller
 	}
 	public function appointment_list()
 	{
-		// this is it
-		$where = 'visit.visit_delete = 0 AND patients.patient_delete = 0 AND visit.patient_id = patients.patient_id AND visit.appointment_id = 1 AND visit.close_card = 2';
+		$where = 'visit.visit_delete = 0 AND visit.patient_id = patients.patient_id AND visit.close_card = 2 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
+		
+		$table = 'visit, patients, visit_type';
 		$appointment_search = $this->session->userdata('visit_search');
 		
 		if(!empty($appointment_search))
@@ -1077,7 +1109,6 @@ class Reception  extends MX_Controller
 			$where .= $appointment_search;
 		}
 		
-		$table = 'visit, patients';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'reception/appointment_list';
@@ -1172,10 +1203,15 @@ class Reception  extends MX_Controller
 				$patient_id = $res->patient_id;
 				$dependant_id = $res->dependant_id;
 				$visit_type = $res->visit_type;
+				$patient_othernames = $res->patient_othernames;
+				$patient_surname = $res->patient_surname;
+				$personnel_fname = $res->personnel_fname;
+				$personnel_onames = $res->personnel_onames;
 				$visit_id = $res->visit_id;
 				$strath_no = $res->strath_no;
-				$patient_data = $this->reception_model->get_patient_details($appointments_result, $visit_type, $dependant_id, $strath_no);
-				$color = $this->reception_model->random_color();
+				$patient_data = $patient_surname.' '.$patient_othernames.' to see Dr. '.$personnel_onames;
+				//$color = $this->reception_model->random_color();
+				$color = '#0088CC';
 				
 				$data['title'][$r] = $patient_data;
 				$data['start'][$r] = $time_start;
@@ -2139,7 +2175,6 @@ class Reception  extends MX_Controller
 	public function search_general_queue($page_name)
 	{
 		$visit_type_id = $this->input->post('visit_type_id');
-		$strath_no = $this->input->post('strath_no');
 		$patient_national_id = $this->input->post('patient_national_id');
 		$patient_number = $this->input->post('patient_number');
 		
@@ -2155,7 +2190,7 @@ class Reception  extends MX_Controller
 		
 		if(!empty($visit_type_id))
 		{
-			$visit_type_id = ' AND patients.visit_type_id = '.$visit_type_id.' ';
+			$visit_type_id = ' AND visit.visit_type = '.$visit_type_id.' ';
 		}
 		
 		if(!empty($strath_no))

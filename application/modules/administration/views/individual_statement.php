@@ -1,26 +1,68 @@
 <!-- search -->
-<?php echo $this->load->view('search/search_patient', '', TRUE);?>
+<?php //echo $this->load->view('search/search_patient', '', TRUE);
+
+$res = $patient->row();
+$patient_id = $res->patient_id;
+$patient_surname = $res->patient_surname;
+$patient_othernames = $res->patient_othernames;
+$title_id = $res->title_id;
+$patient_date_of_birth = $res->patient_date_of_birth;
+$gender_id = $res->gender_id;
+$religion_id = $res->religion_id;
+$civil_status_id = $res->civil_status_id;
+$patient_email = $res->patient_email;
+$patient_address = $res->patient_address;
+$patient_postalcode = $res->patient_postalcode;
+$patient_town = $res->patient_town;
+$patient_phone1 = $res->patient_phone1;
+$patient_phone2 = $res->patient_phone2;
+$patient_kin_sname = $res->patient_kin_sname;
+$patient_kin_othernames = $res->patient_kin_othernames;
+$relationship_id = $res->relationship_id;
+$patient_national_id = $res->patient_national_id;
+$insurance_company_id = $res->insurance_company_id;
+$next_of_kin_contact = $res->patient_kin_phonenumber1;
+?>
 <!-- end search -->
 
 <div class="row">
     <div class="col-md-12">
 
-      <!-- Widget -->
-      <div class="widget boxed">
-        <!-- Widget head -->
-        <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-          </div>
-          <div class="clearfix"></div>
-        </div>             
-
-        <!-- Widget content -->
-        <div class="widget-content">
-          <div class="padd">
-<?php
+        <section class="panel">
+            <header class="panel-heading">
+                
+                <h2 class="panel-title"><?php echo $title;?></h2>
+            </header>
+            
+            <div class="panel-body">
+                <div class="well well-sm info">
+                    <h5 style="margin:0;">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>First name:</strong>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <?php echo $patient_surname;?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Other names:</strong>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <?php echo $patient_othernames;?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </h5>
+                </div>
+			<?php
 		$error = $this->session->userdata('error_message');
 		$success = $this->session->userdata('success_message');
 		
@@ -43,7 +85,7 @@
 		}
 		else
 		{
-			$result = '<a href="'.site_url().'/administration/patient_statement" class="btn btn-success">Back to Statements</a>';
+			$result = '<a href="'.site_url().'administration/patient_statement" class="btn btn-success">Back to Statements</a>';
 	
 		}
 		
@@ -161,18 +203,13 @@
 		
 		echo $result;
 ?>
-          </div>
+          	</div>
           
-          <div class="widget-foot">
+          	<div class="widget-foot">
                                 
 				<?php if(isset($links)){echo $links;}?>
             
-                <div class="clearfix"></div> 
-            
             </div>
-        </div>
-        <!-- Widget ends -->
-
-      </div>
+		</section>
     </div>
   </div>

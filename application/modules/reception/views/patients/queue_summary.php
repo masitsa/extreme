@@ -82,14 +82,15 @@
 				$visit_type = $row->visit_type;
 				$visit_table_visit_type = $visit_type;
 				$patient_table_visit_type = $visit_type_id;
-				
-				$patient = $this->reception_model->patient_names2($patient_id, $visit_id);
-				$visit_type = $patient['visit_type'];
-				$patient_type = $patient['patient_type'];
-				$patient_othernames = $patient['patient_othernames'];
-				$patient_surname = $patient['patient_surname'];
-				$patient_date_of_birth = $patient['patient_date_of_birth'];
-				$gender = $patient['gender'];
+				$coming_from = $this->reception_model->coming_from($visit_id);
+				$sent_to = $this->reception_model->going_to($visit_id);
+				$visit_type_name = $row->visit_type_name;
+				$patient_othernames = $row->patient_othernames;
+				$patient_surname = $row->patient_surname;
+				$patient_date_of_birth = $row->patient_date_of_birth;
+				$patient_national_id = $row->patient_national_id;
+				$time_start = $row->time_start;
+				$time_end = $row->time_end;
 				
 				//creators and editors
 				if($personnel_query->num_rows() > 0)
@@ -127,7 +128,7 @@
 						<tr>
 							<td>'.$count.'</td>
 							<td>'.$patient_surname.' '.$patient_othernames.'</td>
-							<td>'.$visit_type.'</td>
+							<td>'.$visit_type_name.'</td>
 							<td>'.$visit_time.'</td>
 							<td>'.$doctor.'</td>
 							<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'/0" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to end this visit?\');">End Visit</a></td>

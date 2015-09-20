@@ -106,22 +106,16 @@
 				$patient_table_visit_type = $visit_type_id;
 				$coming_from = $this->reception_model->coming_from($visit_id);
 				$sent_to = $this->reception_model->going_to($visit_id);
+				$visit_type_name = $row->visit_type_name;
+				$patient_othernames = $row->patient_othernames;
+				$patient_surname = $row->patient_surname;
+				$patient_date_of_birth = $row->patient_date_of_birth;
 				
 				//cash paying patient sent to department but has to pass through the accounts
 				if($accounts == 0)
 				{
 					$sent_to = 'Accounts';
 				}
-				$patient = $this->reception_model->patient_names2($patient_id, $visit_id);
-				$visit_type = $patient['visit_type'];
-				$patient_type = $patient['patient_type'];
-				$patient_othernames = $patient['patient_othernames'];
-				$patient_surname = $patient['patient_surname'];
-				$patient_date_of_birth = $patient['patient_date_of_birth'];
-				$gender = $patient['gender'];
-				 $visit_type_id = $patient['visit_type_id'];
-
-				
 				
 				//creators and editors
 				if($personnel_query->num_rows() > 0)
@@ -268,7 +262,7 @@
 						<tr>
 							<td>'.$count.'</td>
 							<td>'.$patient_surname.' '.$patient_othernames.'</td>
-							<td>'.$visit_type.'</td>
+							<td>'.$visit_type_name.'</td>
 							<td>'.$visit_time.'</td>
 							<td>'.$sent_to.'</td>
 							<td>'.$coming_from.'</td>

@@ -545,16 +545,16 @@ class Administration  extends MX_Controller
 	public function search_patient_statement()
 	{
 		$visit_type_id = $this->input->post('visit_type_id');
-		$strath_no = $this->input->post('strath_no');
+		$patient_national_id = $this->input->post('patient_national_id');
 		
 		if(!empty($visit_type_id))
 		{
 			$visit_type_id = ' AND patients.visit_type_id = '.$visit_type_id.' ';
 		}
 		
-		if(!empty($strath_no))
+		if(!empty($patient_national_id))
 		{
-			$strath_no = ' AND patients.strath_no  LIKE \'%'.$strath_no.'%\' ';
+			$visit_type_id = ' AND patients.patient_national_id = \''.$patient_national_id.'\'';
 		}
 		
 		//search surname
@@ -614,7 +614,7 @@ class Administration  extends MX_Controller
 				$other_name = '';
 			}
 		
-			$search = $visit_type_id.$strath_no.$surname.$other_name;
+			$search = $visit_type_id.$patient_national_id.$surname.$other_name;
 			$this->session->set_userdata('patient_statement_search', $search);
 			
 			$this->patient_statement();
@@ -697,19 +697,22 @@ class Administration  extends MX_Controller
 	}
 	public function individual_statement($patient_id,$module = NULL)
 	{
-		$segment = 3;
-		// $patient_statement_search = $this->session->unsetuserdata('patient_statement_search');
-		// $where = '(visit_type_id <> 2 OR visit_type_id <> 1) AND patient_delete = '.$delete;
+		if($module == NULL)
+		{
+			$segment = 3;
+			$config['base_url'] = site_url().'administration/patient_statement/'.$patient_id;
+		}
+		
+		else
+		{
+			$segment = 4;
+			$config['base_url'] = site_url().'administration/patient_statement/'.$patient_id.'/'.$module;
+		}
 		$where = 'visit.patient_id = '.$patient_id;
-		// if(!empty($patient_statement_search))
-		// {
-		// 	$where .= $patient_statement_search;
-		// }
 		
 		$table = 'visit';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/administration/patient_statement';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -752,6 +755,8 @@ class Administration  extends MX_Controller
 		$v_data['page'] = $page;
 		$v_data['delete'] = 1;
 		$v_data['module'] = $module;
+		$v_data['type'] = $this->administration_model->get_visit_types();
+		$v_data['patient'] = $this->administration_model->get_patient($patient_id);
 		$data['content'] = $this->load->view('individual_statement', $v_data, true);
 		if($module == NULL)
 		{

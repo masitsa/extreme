@@ -54,8 +54,9 @@ class Accounts extends MX_Controller
 	
 	public function accounts_queue()
 	{
-		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND (visit_department.department_id = 6 OR visit_department.accounts = 0) AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
-		$table = 'visit_department, visit, patients';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND (visit_department.department_id = 6 OR visit_department.accounts = 0) AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\'';
+		
+		$table = 'visit_department, visit, patients, visit_type';
 		
 		$visit_search = $this->session->userdata('visit_search');
 		
@@ -131,8 +132,6 @@ class Accounts extends MX_Controller
 			$visit_type_id = ' AND visit.visit_type = '.$visit_type_id.' ';
 		}
 		
-		
-		
 		if(!empty($personnel_id))
 		{
 			$personnel_id = ' AND visit.personnel_id = '.$personnel_id.' ';
@@ -189,19 +188,19 @@ class Accounts extends MX_Controller
 		$this->session->set_userdata('visit_accounts_search', $search);
 		if($pager == 1)
 		{
-			$this->accounts_queue();
+			redirect('accounts/accounts-queue');
 		}
 		else if($pager == 2)
 		{
-			$this->accounts_unclosed_queue();
+			redirect('accounts/un-closed-visits');
 		}
 		else if($pager == 3)
 		{
-			$this->accounts_closed_visits();
+			redirect('accounts/closed-visits');
 		}
 		else
 		{
-			$this->accounts_queue();
+			redirect('accounts/accounts-queue');
 		}
 		
 		
@@ -211,26 +210,27 @@ class Accounts extends MX_Controller
 		$this->session->unset_userdata('visit_accounts_search');
 		if($pager == 1)
 		{
-			$this->accounts_queue();
+			redirect('accounts/accounts-queue');
 		}
 		else if($pager == 2)
 		{
-			$this->accounts_unclosed_queue();
+			redirect('accounts/un-closed-visits');
 		}
 		else if($pager == 3)
 		{
-			$this->accounts_closed_visits();
+			redirect('accounts/closed-visits');
 		}
 		else
 		{
-			$this->accounts_queue();
+			redirect('accounts/accounts-queue');
 		}
 	}
 	public function accounts_unclosed_queue()
 	{
 		//$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 6 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0';
-		$where = 'visit.visit_delete = 0  AND visit.patient_id = patients.patient_id AND visit.close_card = 0 ';
-		$table = 'visit, patients';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
+		
+		$table = 'visit_department, visit, patients, visit_type';
 		
 		$visit_search = $this->session->userdata('visit_accounts_search');
 		$segment = 3;
@@ -297,9 +297,10 @@ class Accounts extends MX_Controller
 	}
 	public function accounts_closed_visits()
 	{
-		//$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 6 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 1';
 		$where = 'visit.visit_delete = 0  AND visit.patient_id = patients.patient_id AND visit.close_card = 1 ';
-		$table = 'visit, patients';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 1 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
+		
+		$table = 'visit_department, visit, patients, visit_type';
 		
 		$visit_search = $this->session->userdata('visit_accounts_search');
 		$segment = 3;
@@ -381,21 +382,20 @@ class Accounts extends MX_Controller
 	{
 		$v_data = array('visit_id'=>$visit_id);
 		
-		$v_data['billing_methods'] = $this->accounts_model->get_billing_methods();
-		$v_data['bill_to'] = $this->accounts_model->get_bill_to($visit_id);
 		$v_data['going_to'] = $this->accounts_model->get_going_to($visit_id);
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
-		$visit_type = $patient['visit_type'];
-		$patient_type = $patient['patient_type'];
-		$patient_othernames = $patient['patient_othernames'];
-		$patient_surname = $patient['patient_surname'];
-		$account_balance = $patient['account_balance'];
+		$v_data['patient_type'] = $patient['patient_type'];
+		$v_data['patient_othernames'] = $patient['patient_othernames'];
+		$v_data['patient_surname'] = $patient['patient_surname'];
+		$v_data['patient_type_id'] = $patient['visit_type_id'];
+		$v_data['account_balance'] = $patient['account_balance'];
+		$v_data['visit_type_name'] = $patient['visit_type_name'];
+		$v_data['patient_id'] = $patient['patient_id'];
 		$primary_key = $patient['patient_id'];
-		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span> Account Balance : <span style="font-weight: normal;">'.$account_balance.'</span> <a href="'.site_url().'/administration/individual_statement/'.$primary_key.'/3" class="btn btn-sm btn-primary" target="_blank" style="margin-top: 5px;">Patient Statement</a>';
 		$v_data['close_page'] = $close_page;
 		$data['content'] = $this->load->view('payments', $v_data, true);
 		
-		$data['title'] = 'Patient Card';
+		$data['title'] = 'Payments';
 		$data['sidebar'] = 'accounts_sidebar';
 		$this->load->view('admin/templates/general_page', $data);
 	}
@@ -412,6 +412,7 @@ class Accounts extends MX_Controller
 		// Normal
 		if($type_payment == 1)
 		{
+			$this->form_validation->set_rules('service_id', 'Service', 'required|xss_clean');
 			if(!empty($payment_method))
 			{
 				if($payment_method == 1)
@@ -422,7 +423,7 @@ class Accounts extends MX_Controller
 				else if($payment_method == 3)
 				{
 					// check for insuarance number if inserted
-					$this->form_validation->set_rules('insuarance_number', 'Insuarance Number', 'trim|required|xss_clean');
+					$this->form_validation->set_rules('insuarance_number', 'Insurance Number', 'trim|required|xss_clean');
 				}
 				else if($payment_method == 5)
 				{
@@ -434,15 +435,15 @@ class Accounts extends MX_Controller
 		else if($type_payment == 2)
 		{
 			// debit note
-			$this->form_validation->set_rules('service_id', 'Amount', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('payment_service_id', 'Service', 'required|xss_clean');
 		}
 		else if($type_payment == 3)
 		{
-			$this->form_validation->set_rules('service_id', 'Amount', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('payment_service_id', 'Service', 'required|xss_clean');
 		}
 		//if form conatins invalid data
 		if ($this->form_validation->run())
@@ -453,7 +454,7 @@ class Accounts extends MX_Controller
 				$username=$this->input->post('username');
 				$password=$this->input->post('password');
 				// check if the username and password is for an administrator
-				$checker_response = $this->accounts_model->check_admin_person($username,$password);
+				$checker_response = $this->accounts_model->check_admin_person($username, $password);
 				// end of checker function
 				if(($checker_response > 0))
 				{
@@ -530,6 +531,16 @@ class Accounts extends MX_Controller
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
 		$data['patient'] = $patient;
 		$this->load->view('receipt', $data);
+	}
+	public function print_single_receipt($payment_id)
+	{
+		$data = array('payment_id' => $payment_id);
+		$data['contacts'] = $this->site_model->get_contacts();
+		$data['receipt_payment_id'] = $payment_id;
+		
+		$patient = $this->reception_model->patient_names3($payment_id);
+		$data['patient'] = $patient;
+		$this->load->view('single_receipt', $data);
 	}
 	public function bulk_close_visits($page)
 	{

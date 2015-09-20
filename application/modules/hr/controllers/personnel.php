@@ -160,6 +160,7 @@ class Personnel extends hr
 		$v_data['leave'] = $this->personnel_model->get_personnel_leave($personnel_id);
 		$v_data['roles'] = $this->personnel_model->get_personnel_roles($personnel_id);
 		$v_data['leave_types'] = $this->personnel_model->get_leave_types();
+		$v_data['departments'] = $this->personnel_model->get_departments();
 		$v_data['parent_sections'] = $this->sections_model->all_parent_sections('section_position');
 		$data['content'] = $this->load->view('personnel/edit_personnel', $v_data, true);
 		
@@ -566,7 +567,9 @@ class Personnel extends hr
 	
 	public function add_personnel_job($personnel_id)
     {
+    	$this->form_validation->set_rules('department_id', 'Department', 'required|xss_clean');
     	$this->form_validation->set_rules('job_title_id', 'Job title', 'required|xss_clean');
+    	$this->form_validation->set_rules('department_id', 'Department', 'required|xss_clean');
     	$this->form_validation->set_rules('job_commencement_date', 'Start date', 'xss_clean');
 		
 		//if form conatins invalid data
@@ -732,6 +735,21 @@ class Personnel extends hr
 		else
 		{
 			$this->session->set_userdata("error_message","Could not delete role. Please try again");
+			redirect('human-resource/edit-personnel/'.$personnel_id);
+		}
+    }
+
+	public function edit_invoice_authorize($personnel_id)
+    {
+		if($this->personnel_model->edit_invoice_authorize($personnel_id))
+		{
+			$this->session->set_userdata("success_message", "Authorize updated successfully");
+			redirect('human-resource/edit-personnel/'.$personnel_id);
+		}
+		
+		else
+		{
+			$this->session->set_userdata("error_message","Unable to update. Please try again");
 			redirect('human-resource/edit-personnel/'.$personnel_id);
 		}
     }

@@ -33,7 +33,7 @@
                                         foreach($type as $row):
                                             $type_name = $row->visit_type_name;
                                             $type_id= $row->visit_type_id;
-                                                ?><option value="<?php echo $type_id; ?>" ><?php echo $type_name ?></option>
+                                            ?><option value="<?php echo $type_id; ?>" ><?php echo $type_name ?></option>
                                         <?php	
                                         endforeach;
                                     }
@@ -62,10 +62,10 @@
                 <div class="col-md-6">
                     
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Surname: </label>
+                        <label class="col-lg-4 control-label">First name: </label>
                         
                         <div class="col-lg-8">
-                            <input type="text" class="form-control" name="surname" placeholder="Surname">
+                            <input type="text" class="form-control" name="surname" placeholder="First name">
                         </div>
                     </div>
                     

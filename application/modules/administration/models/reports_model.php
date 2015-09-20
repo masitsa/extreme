@@ -107,6 +107,23 @@ class Reports_model extends CI_Model
 		return $result->visit_total;
 	}
 	
+	public function get_patient_type_total($patient_type_id, $date = NULL)
+	{
+		if($date == NULL)
+		{
+			$date = date('Y-m-d');
+		}
+		$where = 'visit_date = \''.$date.'\'';
+		
+		$this->db->select('COUNT(visit_id) AS visit_total');
+		$this->db->where($where);
+		$query = $this->db->get('visit');
+		
+		$result = $query->row();
+		
+		return $result->visit_total;
+	}
+	
 	public function get_all_service_types()
 	{
 		$this->db->select('*');
@@ -154,11 +171,11 @@ class Reports_model extends CI_Model
 		{
 			$date = date('Y-m-d');
 		}
-		$where = 'visit.visit_delete = 0 AND patients.patient_delete = 0 AND visit.visit_type = visit_type.visit_type_id AND visit.patient_id = patients.patient_id AND visit.appointment_id = 1 AND visit.close_card = 2 AND visit.visit_date >= \''.$date.'\'';
+		$where = 'visit.visit_delete = 0 AND patients.patient_delete = 0 AND visit.visit_type = visit_type.visit_type_id AND visit.patient_id = patients.patient_id AND visit.appointment_id = 1 AND visit.close_card = 2 AND visit.visit_date >= \''.$date.'\' AND visit.personnel_id = personnel.personnel_id';
 		
-		$this->db->select('visit.*, visit_type.visit_type_name, patients.*');
+		$this->db->select('visit.*, visit_type.visit_type_name, patients.*, personnel.*');
 		$this->db->where($where);
-		$query = $this->db->get('visit, visit_type, patients');
+		$query = $this->db->get('visit, visit_type, patients, personnel');
 		
 		return $query;
 	}

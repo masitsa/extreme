@@ -195,5 +195,17 @@ class Administration_model extends CI_Model
 		}
 		return $difference;
 	}
+	
+	public function get_visit_types()
+	{
+		$this->db->order_by('visit_type_name');
+		return $this->db->get('visit_type');
+	}
+	
+	public function get_patient($patient_id)
+	{
+		$this->db->where('patient_id', $patient_id);
+		return $this->db->get('patients');
+	}
 }
 ?>

@@ -12,6 +12,7 @@
 				<tr>
 					<th>#</th>
 					<th>Position</th>
+					<th>Department</th>
 					<th>Start date</th>
 					<th>Last editted</th>
 					<th colspan="3">Actions</th>
@@ -26,6 +27,7 @@
 			$personnel_job_id = $row->personnel_job_id;
 			$job = $row->job_title_name;
 			$personnel_job_status = $row->personnel_job_status;
+			$department_name = $row->department_name;
 			$job_commencement_date =  date('jS M Y ',strtotime($row->job_commencement_date));
 			$created = date('jS M Y H:i a',strtotime($row->created));
 			$last_modified = date('jS M Y H:i a',strtotime($row->last_modified));
@@ -49,6 +51,7 @@
 				<tr>
 					<td>'.$count.'</td>
 					<td>'.$job.'</td>
+					<td>'.$department_name.'</td>
 					<td>'.$job_commencement_date.'</td>
 					<td>'.$last_modified.'</td>
 					<td>'.$status.'</td>
@@ -77,12 +80,14 @@ $validation_error = validation_errors();
 if(!empty($validation_error))
 {
 	$job_title_id = set_value('job_title_id');
+	$dept_id = set_value('department_id');
 	$job_commencement_date = set_value('job_commencement_date');
 }
 
 else
 {
 	$job_title_id = '';
+	$dept_id = '';
 	$job_commencement_date = '';
 }
 ?>
@@ -110,7 +115,7 @@ else
             
             <?php echo form_open('human-resource/add-personnel-job/'.$personnel_id, array("class" => "form-horizontal", "role" => "form"));?>
 <div class="row">
-	<div class="col-md-5">
+	<div class="col-md-3">
         
         <div class="form-group">
             <label class="col-lg-3 control-label">Job title: </label>
@@ -144,8 +149,40 @@ else
             </div>
         </div>
    	</div>
+	<div class="col-md-3">
+        
+        <div class="form-group">
+            <label class="col-lg-3 control-label">Department: </label>
+            
+            <div class="col-lg-9">
+            	<select class="form-control" name="department_id">
+                	<option value="">--Select department--</option>
+                	<?php
+                    	if($departments->num_rows() > 0)
+						{	
+							foreach($departments->result() as $res)
+							{
+								$department_id = $res->department_id;
+								$department_name = $res->department_name;
+								
+								if($department_id == $dept_id)
+								{
+									echo '<option value="'.$department_id.'" selected>'.$department_name.'</option>';
+								}
+								
+								else
+								{
+									echo '<option value="'.$department_id.'">'.$department_name.'</option>';
+								}
+							}
+						}
+					?>
+                </select>
+            </div>
+        </div>
+   	</div>
     
-	<div class="col-md-5">
+	<div class="col-md-3">
         
         <div class="form-group">
             <label class="col-lg-3 control-label">Start date: </label>
@@ -161,7 +198,7 @@ else
         </div>
    	</div>
     
-	<div class="col-md-2">
+	<div class="col-md-3">
         
         <div class="form-group">
             <div class="col-md-12">

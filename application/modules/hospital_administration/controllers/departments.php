@@ -16,7 +16,7 @@ class Departments extends Hospital_administration
 	*/
 	public function index($order = 'department_name', $order_method = 'ASC') 
 	{
-		$where = 'department_id > 0';
+		$where = 'departments.branch_code = \''.$this->session->userdata('branch_code').'\'';
 		$table = 'departments';
 		//pagination
 		$segment = 5;
