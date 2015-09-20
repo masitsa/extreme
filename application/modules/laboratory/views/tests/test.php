@@ -1,16 +1,10 @@
- <section class="panel">
-    <header class="panel-heading">
-      <h4 class="pull-left"><i class="icon-reorder"></i>Tests for <?php echo $patient;?></h4>
-      <div class="widget-icons pull-right">
-        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-        <a href="#" class="wclose"><i class="icon-remove"></i></a>
-      </div>
-      <div class="clearfix"></div>
-    </header>             
 
-                <!-- Widget content -->
-     <div class="panel-body">
-        <div class="padd">
+    <section class="panel panel-featured panel-featured-info">
+        <header class="panel-heading">
+            <h2 class="panel-title">Tests for <?php echo $patient;?></h2>
+        </header>
+
+        <div class="panel-body">
             <div class="tabbable" style="margin-bottom: 18px;">
               <ul class="nav nav-tabs">
                 <li class="active"><a href="#tests-pane" data-toggle="tab">Tests</a></li>

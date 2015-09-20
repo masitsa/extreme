@@ -100,7 +100,7 @@ foreach ($rs as $key6):
 			<td>
 				<div class='btn-toolbar'>
 					<div class='btn-group'>
-						<a class='btn' href='#' onclick='delete_cost(".$service_charge_id.", ".$visit_id.")'><i class='icon-remove'></i></a>
+						<a class='btn btn-danger btn-sm' href='#' onclick='delete_cost(".$service_charge_id.", ".$visit_id.")'><i class='fa fa-trash'></i></a>
 					</div>
 				</div>
 			</td>
@@ -110,7 +110,7 @@ foreach ($rs as $key6):
 endforeach;
 $lab_visit = 0;
 echo "
-	<tr bgcolor='#0099FF'>
+	<tr bgcolor='#D9EDF7'>
 		<td></td>
 		<td></td>
 		<td></td>

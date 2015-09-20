@@ -1,4 +1,11 @@
-<?php
+
+		<section class="panel panel-featured panel-featured-info">
+			<header class="panel-heading">
+				<h2 class="panel-title"><?php echo $title;?></h2>
+			</header>
+
+			<div class="panel-body">
+			<?php
 $class_results = $this->lab_charges_model->get_class_details($class_id);
 if($class_results->num_rows() > 0)
 {
@@ -17,32 +24,14 @@ if($class_id > 0)
     ?>
       <div class="row">
         <div class="col-md-12">
-            <a href="<?php echo site_url();?>/lab_charges/classes" class="btn btn-success pull-warning">Back to classes</a>
+            <a href="<?php echo site_url();?>lab_charges/classes" class="btn btn-success btn-sm pull-right">Back to classes</a>
         </div>
     </div>
 
     <?php
 }
 
-?>
-<!-- Widget -->
-<div class="widget boxed">
-    <!-- Widget head -->
-    <div class="widget-head">
-        <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> </h4>
-        <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-        </div>
-    
-    	<div class="clearfix"></div>
-    
-    </div>             
-    
-    <!-- Widget content -->
-    <div class="widget-content">
-    	<div class="padd">
-			<?php
+
             $error = $this->session->userdata('error_message');
             $success = $this->session->userdata('success_message');
             
@@ -77,8 +66,8 @@ if($class_id > 0)
                     
                 </div>
                 
-                <div class="center-align">
-                    <button type="submit" class="btn btn-info btn-lg">Edit Class</button>
+                <div class="center-align" style="margin-top:10px;">
+                    <button type="submit" class="btn btn-info">Edit Class</button>
                 </div>
               
                 <?php
@@ -103,8 +92,8 @@ if($class_id > 0)
                 
             </div>
             
-            <div class="center-align">
-            	<button type="submit" class="btn btn-info btn-lg">Create a new Class</button>
+            <div class="center-align" style="margin-top:10px;">
+            	<button type="submit" class="btn btn-info">Create a new Class</button>
             </div>
           
             <?php
@@ -112,5 +101,4 @@ if($class_id > 0)
             }
             ?>
     	</div>
-    </div>
-</div>
+    </section>

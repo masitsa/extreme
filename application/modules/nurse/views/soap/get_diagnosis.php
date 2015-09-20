@@ -8,10 +8,12 @@ if($num_rows > 0){
 
 	echo
 	"
-	<div class='center-align'>
-			<h3>Diagnosis</h3>
-		</div>
+	<section class='panel panel-featured panel-featured-info'>
+		<header class='panel-heading'>
+			<h2 class='panel-title'>Diagnosis</h2>
+		</header>
 
+		<div class='panel-body'>
 			<table class='table table-striped table-hover table-condensed'>
 				<tr>
 					<th></th>
@@ -28,7 +30,7 @@ if($num_rows > 0){
 			<td>
 				<div class='btn-toolbar'>
 					<div class='btn-group'>
-						<a class='btn delete_diagnosis' href='".$diagnosis_id."' id='".$visit_id."'><i class='icon-remove'></i></a>
+						<a class='btn btn-danger btn-sm delete_diagnosis' href='".$diagnosis_id."' id='".$visit_id."'><i class='fa fa-trash'></i></a>
 					</div>
 				</div>
 			</td>
@@ -36,8 +38,10 @@ if($num_rows > 0){
 				<td>".$name."</td></tr>";
 	endforeach;
 }
-// echo"</table>
-// <table align='center'><tr align='center'><td><input type='button' class='btn btn-sm' onClick='closeit(1, ".$visit_id.")' value='Done'/></td></tr></table>";
+ echo"</table>
+ </div>
+ </section>
+ ";
 ?>
 <script type="text/javascript">
 	

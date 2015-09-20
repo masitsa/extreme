@@ -381,7 +381,7 @@ function display_prescription(visit_id, page){
           window.close(this);
         
         }
-        plan(visit_id);
+        //plan(visit_id);
       }
     }
     
@@ -551,7 +551,7 @@ function save_objective_findings(visit_id){
 	var data_url = config_url+"nurse/save_objective_findings/"+visit_id;
 	//window.alert(data_url);
 	var objective_findings = $('#visit_objective_findings').val();//document.getElementById("vital"+vital_id).value;
-	alert(objective_findings);
+	//alert(objective_findings);
 	$.ajax({
 		type:'POST',
 		url: data_url,

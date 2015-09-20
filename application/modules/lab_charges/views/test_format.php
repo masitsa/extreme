@@ -4,8 +4,8 @@
 <!-- end search -->
 <div class="row">
 	<div class="col-md-12">
-	<a href="<?php echo site_url();?>lab_charges/add_lab_test_format/<?php echo $test_iddd;?>" class="btn btn-success pull-left">Add lab test format</a>
-		<a href="<?php echo site_url();?>lab_charges/test_list" class="btn btn-danger pull-right">Back to lab tests</a>
+	<a href="<?php echo site_url();?>lab_charges/add_lab_test_format/<?php echo $test_iddd;?>" class="btn btn-primary pull-left">Add lab test format</a>
+		<a href="<?php echo site_url();?>lab_charges/test_list" class="btn btn-success pull-right">Back to lab tests</a>
 	</div>
 </div>
  <section class="panel">

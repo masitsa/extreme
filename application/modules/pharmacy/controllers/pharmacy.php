@@ -69,19 +69,23 @@ class Pharmacy  extends MX_Controller
 			
 		}
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
-		$visit_type = $patient['visit_type'];
-		$patient_type = $patient['patient_type'];
-		$patient_othernames = $patient['patient_othernames'];
-		$patient_surname = $patient['patient_surname'];
+		
+		$v_data = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'prescription_id'=>$prescription_id,'module'=>$module);
+		$v_data['patient_type'] = $patient['patient_type'];
+		$v_data['patient_othernames'] = $patient['patient_othernames'];
+		$v_data['patient_surname'] = $patient['patient_surname'];
+		$v_data['patient_type_id'] = $patient['visit_type_id'];
+		$v_data['account_balance'] = $patient['account_balance'];
+		$v_data['visit_type_name'] = $patient['visit_type_name'];
+		$v_data['patient_id'] = $patient['patient_id'];
 		$patient_date_of_birth = $patient['patient_date_of_birth'];
 		$age = $this->reception_model->calculate_age($patient_date_of_birth);
 		$visit_date = $this->reception_model->get_visit_date($visit_id);
 		$gender = $patient['gender'];
 		$visit_date = date('jS M Y',strtotime($visit_date));
-		
-		$patient_data = 'Visit Date: <span style="font-weight: normal;"> '.$visit_date.' </span> Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
-		
-		$v_data = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'prescription_id'=>$prescription_id,'module'=>$module,'patient'=>$patient_data);
+		$v_data['age'] = $age;
+		$v_data['visit_date'] = $visit_date;
+		$v_data['gender'] = $gender;
 		$data['content'] = $this->load->view('prescription', $v_data, true);
 		
 		if($module == 1){

@@ -37,7 +37,7 @@ if($num_rows > 0){
 		</div>
 		
 		<div class='col-md-6'>
-			<textarea class='form-control' rows='10 id='visit_objective_findings' onkeyup='save_objective_findings(".$visit_id.")'>".$visit_objective_findings."</textarea>
+			<textarea class='form-control' rows='10' id='visit_objective_findings' onkeyup='save_objective_findings(".$visit_id.")'>".$visit_objective_findings."</textarea>
 		</div>
 	</div>
 	";

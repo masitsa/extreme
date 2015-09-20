@@ -87,7 +87,6 @@ class Lab_charges extends MX_Controller
 		$v_data['title'] = 'Test List';
 		$v_data['module'] = 0;
 		
-		
 		$data['content'] = $this->load->view('test_list', $v_data, true);
 		
 		
@@ -101,7 +100,7 @@ class Lab_charges extends MX_Controller
 	public function test_format($primary_key,$page_name = NULL)
 	{
 		// this is it
-		$where = 'lab_test.lab_test_id = lab_test_format.lab_test_id AND lab_test_format.lab_test_id = '.$primary_key;
+		$where = 'service_charge.lab_test_id = lab_test.lab_test_id AND lab_test.lab_test_id = lab_test_format.lab_test_id AND lab_test_format.lab_test_id = '.$primary_key;
 		$visit_search = $this->session->userdata('visit_search');
 		
 		if(!empty($visit_search))
@@ -118,10 +117,10 @@ class Lab_charges extends MX_Controller
 		{
 			$segment = 5;
 		}
-		$table = 'lab_test,lab_test_format';
+		$table = 'lab_test,lab_test_format, service_charge';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/lab_charges/test_format/'.$primary_key.'/'.$page_name;
+		$config['base_url'] = site_url().'lab_charges/test_format/'.$primary_key.'/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 15;
@@ -197,7 +196,7 @@ class Lab_charges extends MX_Controller
 		$table = 'lab_test_class';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/lab_charges/test_format/'.$page_name;
+		$config['base_url'] = site_url().'lab_charges/test_format/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 15;
@@ -277,12 +276,10 @@ class Lab_charges extends MX_Controller
 				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
 				
 			}
-
 		}
 		
 		else
 		{
-			
 			$this->session->set_userdata("error_message","Please enter the class name then try again");
 			redirect('lab_charges/classes');
 			

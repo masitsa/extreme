@@ -46,11 +46,14 @@ if(!empty($coming_from)){
 	if($num_lab_visit > 0){
 		
 		echo"
-		<div class='row'>
-			<div class='col-md-12'>
-		<div class='center-align'>
-			<h3>Laboratory Tests</h3>
-		</div>
+<div class='row'>
+	<div class='col-md-12'>
+		<section class='panel panel-featured panel-featured-info'>
+        <header class='panel-heading'>
+            <h2 class='panel-title'>Laboratory tests</h2>
+        </header>
+
+        <div class='panel-body'>
 			<table class='table table-striped table-hover table-condensed'>
 				<tr>
 					<th>Test</th>
@@ -269,6 +272,9 @@ if(!empty($coming_from)){
 		
 	}
 }
+echo '
+	</div>
+</section>';
 ?>
 <script type="text/javascript">
 

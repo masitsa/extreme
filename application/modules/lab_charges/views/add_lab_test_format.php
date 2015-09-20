@@ -21,7 +21,7 @@ if($lab_test_details->num_rows() > 0)
  ?>
  <div class="row">
 	<div class="col-md-12">
-		<a href="<?php echo site_url();?>/lab_charges/test_format/<?php echo $test_id;?>" class="btn btn-danger pull-right">Back to <?php echo $lab_test_name;?> formats</a>
+		<a href="<?php echo site_url();?>lab_charges/test_format/<?php echo $test_id;?>" class="btn btn-success pull-right">Back to <?php echo $lab_test_name;?> formats</a>
 	</div>
 </div>
  <section class="panel">
@@ -133,8 +133,8 @@ if($lab_test_details->num_rows() > 0)
                 </div>
             </div>
             
-            <div class="center-align">
-            	<button type="submit" class="btn btn-info btn-lg">Update Lab Test format</button>
+            <div class="center-align" style="margin-top:10px;">
+            	<button type="submit" class="btn btn-info">Update Lab Test format</button>
             </div>
             
             <?php
@@ -199,8 +199,8 @@ if($lab_test_details->num_rows() > 0)
                 </div>
             </div>
             
-            <div class="center-align">
-            	<button type="submit" class="btn btn-info btn-lg">Create Lab Test format</button>
+            <div class="center-align" style="margin-top:10px;">
+            	<button type="submit" class="btn btn-info">Create Lab Test format</button>
             </div>
             
             <?php

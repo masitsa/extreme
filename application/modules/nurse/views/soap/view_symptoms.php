@@ -20,7 +20,7 @@ if($num_rows > 0){
 	"
 	<div class='row'>
 		<div class='col-md-6'>
-			<textarea class='form-control' class='form-control' id='visit_symptoms1' disabled='disabled'>"; 
+			<textarea class='form-control' class='form-control' rows='8' id='visit_symptoms1' disabled='disabled'>"; 
 			$z=0;
 			foreach ($rs2 as $key):	
 				$count=$z+1;
@@ -36,7 +36,7 @@ if($num_rows > 0){
 		</div>
 		
 		<div class='col-md-6'>
-			<textarea class='form-control' placeholder='Type Additional Symptoms Here' id='visit_symptoms' >".$visit_symptoms."</textarea>
+			<textarea class='form-control' rows='8' placeholder='Type Additional Symptoms Here' id='visit_symptoms' >".$visit_symptoms."</textarea>
 		</div>
 	</div>
 	";
@@ -56,7 +56,7 @@ else{
 	"
 	<div class='row'>
 		<div class='col-md-6'>
-			<textarea class='form-control' id='visit_symptoms1' disabled='disabled'>"; 
+			<textarea class='form-control' rows='8' id='visit_symptoms1' disabled='disabled'>"; 
 			$z=0;
 			foreach ($rs2 as $key):	
 				$count=$z+1;
@@ -72,7 +72,7 @@ else{
 		</div>
 		
 		<div class='col-md-6'>
-			<textarea class='form-control' placeholder='Type Additional Symptoms Here' id='visit_symptoms'></textarea>
+			<textarea class='form-control' rows='8' placeholder='Type Additional Symptoms Here' id='visit_symptoms'></textarea>
 		</div>
 	</div>
 	";

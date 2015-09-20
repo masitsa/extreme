@@ -9,20 +9,12 @@ if($class_id > 0)
 else
 {
 ?>
- <section class="panel">
-    <header class="panel-heading">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-          </div>
-          <div class="clearfix"></div>
-        </header>             
+		<section class="panel panel-featured panel-featured-info">
+			<header class="panel-heading">
+				<h2 class="panel-title"><?php echo $title;?></h2>
+			</header>
 
-          <!-- Widget content -->
-        <div class="panel-body">
-          <div class="padd">
-
+			<div class="panel-body">
           
 <?php
 		$error = $this->session->userdata('error_message');
@@ -117,11 +109,7 @@ else
                 <div class="clearfix"></div> 
             
             </div>
-        </div>
-        <!-- Widget ends -->
-
-      </div>
- </section>
+        </section>
   <?php
 }
   ?>

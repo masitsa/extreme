@@ -154,8 +154,8 @@
                 </div>
             </div>
             
-            <div class="center-align">
-            	<button type="submit" class="btn btn-info btn-lg">Update Lab Test</button>
+            <div class="center-align" style="margin-top:10px;">
+            	<button type="submit" class="btn btn-info">Update Lab Test</button>
             </div>
             
             <?php
@@ -252,8 +252,8 @@
                 </div>
             </div>
             
-            <div class="center-align">
-            	<button type="submit" class="btn btn-info btn-lg">Create Lab Test</button>
+            <div class="center-align" style="margin-top:10px;">
+            	<button type="submit" class="btn btn-info">Create Lab Test</button>
             </div>
             
             <?php

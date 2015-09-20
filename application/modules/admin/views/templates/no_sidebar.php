@@ -21,7 +21,7 @@
         <![endif]-->
     	<section class="body">
             <!-- Top Navigation -->
-            <?php echo $this->load->view('admin/includes/top_navigation', $data, TRUE); ?>
+            <?php //echo $this->load->view('admin/includes/top_navigation', $data, TRUE); ?>
             
             <div class="inner-wrapper">
             	<?php //echo $this->load->view('admin/includes/sidebar', '', TRUE); ?>

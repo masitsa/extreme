@@ -268,527 +268,542 @@ $p = 0;
 ?>
 </div>
 	<!-- end #header -->
- <section class="panel">
+<section class="panel">
     <header class="panel-heading">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $patient;?> </h4>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-          </div>
-          <div class="clearfix"></div>
-         </header>             
-    
-    <!-- Widget content -->
-     <div class="panel-body">
-          <div class="padd">
-<?php echo form_open($this->uri->uri_string, array("class" => "form-horizontal"));?>
-<div class="row col-md-12">
-	<div class="col-md-4">
-          <!-- Widget -->
-          <div class="widget boxed">
-                <!-- Widget head -->
-                <div class="widget-head">
-                  <h4 class="pull-left"><i class="icon-reorder"></i>Drugs</h4>
-                  <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                  </div>
-                  <div class="clearfix"></div>
-                </div>             
+        <h2 class="panel-title">Prescribe drugs</h2>
+    </header>
 
-            <!-- Widget content -->
-                <div class="widget-content">
-                    <div class="padd">
-				        <div class="form-group">
-				            <label class="col-lg-4 control-label">Medicine: </label>
-				            
-				            <div class="col-lg-8">
-				            		 <?php
-									if($module == 1)
-									{
-
-										?> 
-									<input type="text" name="passed_value" id="passed_value"  class="form-control" onClick="myPopup2(<?php echo $visit_id;?>,<?php echo $module;?>)" value="<?php echo $service_charge_name;?>"/>
-                                   
-                                    <a href="#" onClick="myPopup2(<?php echo $visit_id;?>,<?php echo $module;?>)">Get Drug</a>
-                                    	<?php
-									}
-									
-									else
-									{
-										?> 
-									<input type="text" name="passed_value" id="passed_value"  class="form-control" onClick="myPopup2_soap(<?php echo $visit_id;?>)" value="<?php echo $service_charge_name;?>"/>
-                                   
-                                    <a href="#" onClick="myPopup2_soap(<?php echo $visit_id;?>)">Get Drug</a>
-                                    	<?php
-									}
-									?>
-				            </div>
-				        </div>
-
-				        <div class="form-group">
-				            <label class="col-lg-4 control-label">Allow substitution: </label>
-				            
-				            <div class="col-lg-8">
-                            	<?php
-                                	if(set_value('substitution') == 'Yes')
-									{
-										echo '<input name="substitution" type="checkbox" value="Yes" checked="checked" />';
-									}
-                                	else
-									{
-										echo '<input name="substitution" type="checkbox" value="Yes"/>';
-									}
-								?>
-				            		
-				            </div>
-				        </div>
-				        <div class="form-group">
-				            <label class="col-lg-4 control-label">Dose: </label>
-				            
-				            <div class="col-lg-8">
-				            	<?php echo $drug_dose?>
-				            </div>
-				        </div>
-				        <div class="form-group">
-				            <label class="col-lg-4 control-label">Dose Unit: </label>
-				            
-				            <div class="col-lg-8">
-				            	<?php echo $dose_unit;?>
-				            </div>
-				        </div>
-
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- end of drugs -->
-		<!-- start of admission -->
-		<div class="col-md-4">
-          <!-- Widget -->
-          <div class="widget boxed">
-                <!-- Widget head -->
-                <div class="widget-head">
-                  <h4 class="pull-left"><i class="icon-reorder"></i>Admission</h4>
-                  <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                  </div>
-                  <div class="clearfix"></div>
-                </div>             
-
-            <!-- Widget content -->
-                <div class="widget-content">
-                    <div class="padd">
-				        <div class="form-group">
-				            <label class="col-lg-4 control-label">Form: </label>
-				            
-				            <div class="col-lg-8">
-				            	<?php echo $drug_type_name?>
-				            </div>
-				        </div>
-				        <div class="form-group">
-				            <label class="col-lg-4 control-label">Admin Route: </label>
-				            
-				            <div class="col-lg-8">
-				            	<?php echo $admin_route?>
-				            </div>
-				        </div>
-
-				        <div class="form-group">
-				            <label class="col-lg-4 control-label">Number of Days: </label>
-				            
-				            <div class="col-lg-8">
-				            	<input type="text" id="days" class='form-control' name="number_of_days"  autocomplete="off" value="<?php echo set_value('days');?>"/>
-				            </div>
-				        </div>
-				        <?php if($drug_size_type!=""){
-				         ?>
-					        <div class="form-group">
-					            <label class="col-lg-4 control-label">Amount contained in One Pack: </label>
-					            
-					            <div class="col-lg-8">
-					            	<?php echo $drug_size.'  '.$drug_size_type ?>
-					            </div>
-					        </div>
-					      <?php
-					      }
-					      ?>
-
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- end of admission -->
-		<!-- start of usage -->
-		<div class="col-md-4">
-          <!-- Widget -->
-          <div class="widget boxed">
-                <!-- Widget head -->
-                <div class="widget-head">
-                  <h4 class="pull-left"><i class="icon-reorder"></i>Usage</h4>
-                  <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                  </div>
-                  <div class="clearfix"></div>
-                </div>             
-
-            <!-- Widget content -->
-                <div class="widget-content">
-                    <div class="padd">
-				        <div class="form-group">
-				            <label class="col-lg-4 control-label">Method: </label>
-				            
-				            <div class="col-lg-8">
-				            	<?php echo $cons_list?>
-				            </div>
-				        </div>
-				        <div class="form-group">
-				            <label class="col-lg-4 control-label">Quantity: </label>
-				            
-				            <div class="col-lg-8">
-				            	<input type="text" name="quantity" class='form-control' autocomplete="off" value="<?php echo set_value('quantity');?>" /> <?php echo $drug_size_type?> <input name="service_charge_id" id="service_charge_id" value="<?php echo $service_charge_id;?>" type="hidden">
-				            </div>
-				        </div>
-				        <div class="form-group">
-				            <label class="col-lg-4 control-label">Times: </label>
-				            
-				            <div class="col-lg-8">
-				            	<?php echo $time_list;?>
-				            </div>
-				        </div>
-
-				        <div class="form-group">
-				            <label class="col-lg-4 control-label">Duration: </label>
-				            
-				            <div class="col-lg-8">
-				            	<?php echo $duration_list;?>
-				            </div>
-				        </div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- end of usage -->
+    <div class="panel-body">
 		
-
-	</div>
-		<!-- end of drugs tab -->
-	<div class="row col-md-12">
- 		<div class="center-align">
-			<input type="hidden" name="v_id" value="<?php echo $visit_id;?>"/>
-			<input name="submit" type="submit" class="btn btn-lg btn-info" value="Prescribe" />
+		<div class="well well-sm info">
+			<h5 style="margin:0;">
+				<div class="row">
+					<div class="col-md-2">
+						<div class="row">
+							<div class="col-md-8">
+								<strong>First name:</strong>
+							</div>
+							<div class="col-md-4">
+								<?php echo $patient_surname;?>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-md-2">
+						<div class="row">
+							<div class="col-md-8">
+								<strong>Other names:</strong>
+							</div>
+							<div class="col-md-4">
+								<?php echo $patient_othernames;?>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-md-2">
+						<div class="row">
+							<div class="col-md-6">
+								<strong>Gender:</strong>
+							</div>
+							<div class="col-md-6">
+								<?php echo $gender;?>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-md-2">
+						<div class="row">
+							<div class="col-md-6">
+								<strong>Age:</strong>
+							</div>
+							<div class="col-md-6">
+								<?php echo $age;?>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-md-4">
+						<div class="row">
+							<div class="col-md-6">
+								<strong>Account balance:</strong>
+							</div>
+							<div class="col-md-6">
+								Kes <?php echo number_format($account_balance, 2);?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</h5>
 		</div>
+        
+<?php echo form_open($this->uri->uri_string, array("class" => "form-horizontal"));?>
+<div class="row">
+	<div class="col-md-4">
+         
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">Drug details</h2>
+            </header>
+        
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Medicine: </label>
+                    
+                    <div class="col-lg-8">
+                             <?php
+                            if($module == 1)
+                            {
+
+                                ?> 
+                            <input type="text" name="passed_value" id="passed_value"  class="form-control" onClick="myPopup2(<?php echo $visit_id;?>,<?php echo $module;?>)" value="<?php echo $service_charge_name;?>"/>
+                           
+                            <a href="#" onClick="myPopup2(<?php echo $visit_id;?>,<?php echo $module;?>)">Get Drug</a>
+                                <?php
+                            }
+                            
+                            else
+                            {
+                                ?> 
+                            <input type="text" name="passed_value" id="passed_value"  class="form-control" onClick="myPopup2_soap(<?php echo $visit_id;?>)" value="<?php echo $service_charge_name;?>"/>
+                           
+                            <a href="#" onClick="myPopup2_soap(<?php echo $visit_id;?>)">Get Drug</a>
+                                <?php
+                            }
+                            ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Allow substitution: </label>
+                    
+                    <div class="col-lg-8">
+                        <?php
+                            if(set_value('substitution') == 'Yes')
+                            {
+                                echo '<input name="substitution" type="checkbox" value="Yes" checked="checked" />';
+                            }
+                            else
+                            {
+                                echo '<input name="substitution" type="checkbox" value="Yes"/>';
+                            }
+                        ?>
+                            
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Dose: </label>
+                    
+                    <div class="col-lg-8">
+                        <?php echo $drug_dose?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Dose Unit: </label>
+                    
+                    <div class="col-lg-8">
+                        <?php echo $dose_unit;?>
+                    </div>
+                </div>
+			</div>
+		</section>
 	</div>
+	<!-- end of drugs -->
+    
+    <!-- start of admission -->
+    <div class="col-md-4">
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">Admission</h2>
+            </header>
+            
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Form: </label>
+                    
+                    <div class="col-lg-8">
+                        <?php echo $drug_type_name?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Admin Route: </label>
+                    
+                    <div class="col-lg-8">
+                        <?php echo $admin_route?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Number of Days: </label>
+                    
+                    <div class="col-lg-8">
+                        <input type="text" id="days" class='form-control' name="number_of_days"  autocomplete="off" value="<?php echo set_value('days');?>"/>
+                    </div>
+                </div>
+                <?php if($drug_size_type!=""){
+                 ?>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Amount contained in One Pack: </label>
+                        
+                        <div class="col-lg-8">
+                            <?php echo $drug_size.'  '.$drug_size_type ?>
+                        </div>
+                    </div>
+                  <?php
+                  }
+                  ?>
+			</div>
+		</section>
+	</div>
+    <!-- end of admission -->
+    
+    <!-- start of usage -->
+    <div class="col-md-4">
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">Usage</h2>
+            </header>
+            
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Method: </label>
+                    
+                    <div class="col-lg-8">
+                        <?php echo $cons_list?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Quantity: </label>
+                    
+                    <div class="col-lg-8">
+                        <input type="text" name="quantity" class='form-control' autocomplete="off" value="<?php echo set_value('quantity');?>" /> <?php echo $drug_size_type?> <input name="service_charge_id" id="service_charge_id" value="<?php echo $service_charge_id;?>" type="hidden">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Times: </label>
+                    
+                    <div class="col-lg-8">
+                        <?php echo $time_list;?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Duration: </label>
+                    
+                    <div class="col-lg-8">
+                        <?php echo $duration_list;?>
+                    </div>
+                </div>
+			</div>
+		</section>
+	</div>
+	<!-- end of usage -->
+</div>
+<!-- end of drugs tab -->
+
+<div class="row col-md-12">
+    <div class="center-align">
+        <input type="hidden" name="v_id" value="<?php echo $visit_id;?>"/>
+        <input name="submit" type="submit" class="btn btn-info" value="Prescribe" />
+    </div>
+</div>
 
                          
 <?php echo form_close();?>
-<div class="row col-md-12">
+<div class="row">
 	<div class="col-md-12">
-		<!-- Widget -->
-          <div class="widget boxed">
-                <!-- Widget head -->
-                <div class="widget-head">
-                  <h4 class="pull-left"><i class="icon-reorder"></i>All Prescriptions</h4>
-                  <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                  </div>
-                  <div class="clearfix"></div>
-                </div>             
-
-            <!-- Widget content -->
-                <div class="widget-content">
-                    <div class="padd">
-                    	<table class='table table-striped table-hover table-condensed'>
-                             <tr>
-                                <th>No.</th>
-                                <th>Medicine:</th>
-                                <?php
-                                if($module == 1)
-                                {
-                                	?>
-                                	 <th>S. Units:</th>
-                                	 <th>Unit Price:</th>
-                                	  <th>Total:</th>
-                                	  <th>Units given:</th>
-                                	<?php
-                                }
-                                else
-                                {
-
-                                }
-                                ?>
-                                <th>Dose</th>
-                                <th>Dose Unit</th>
-                                <th>Method</th>
-                                <th>Quantity</th>
-                                <th>Times</th>
-                                <th>Duration</th>
-                                <th>Number of Days</th>
-                                 <th>Allow Substitution</th>
-                                <th>Delete </th>
-                               
-                                <th></th>
-                                 <th></th>
-                            </tr>
-                           <?php 
-                           $rs = $this->pharmacy_model->select_prescription($visit_id);
-
-                            $num_rows =count($rs);
-                            $s=0;
-                            if($num_rows > 0){
-                            foreach ($rs as $key_rs):
-                            	//var_dump($key_rs->prescription_substitution);
-                                $service_charge_id =$key_rs->drugs_id;
-                                $frequncy = $key_rs->drug_times_name;
-                                $id = $key_rs->prescription_id;
-                                $date1 = $key_rs->prescription_startdate;
-                                $date2 = $key_rs->prescription_finishdate;
-                                $sub = $key_rs->prescription_substitution;
-                                 $duration = $key_rs->drug_duration_name;
-                                $sub = $key_rs->prescription_substitution;
-                                $duration = $key_rs->drug_duration_name;
-                                $consumption = $key_rs->drug_consumption_name;
-                                $quantity = $key_rs->prescription_quantity;
-                                $medicine = $key_rs->drugs_name;
-                                $charge = $key_rs->drugs_charge;
-                                $visit_charge_id = $key_rs->visit_charge_id;
-                                $number_of_days = $key_rs->number_of_days;
-                                $units_given = $key_rs->units_given;
-                                $checker_id = $key_rs->checker_id;
-
-
-                                // checking for the stocks in drugs
-                                  $purchases = $this->pharmacy_model->item_purchases($checker_id);
-	                                $sales = $this->pharmacy_model->get_drug_units_sold($checker_id);
-	                                $deductions = $this->pharmacy_model->item_deductions($checker_id);
-	                                $in_stock = ($quantity + $purchases) - $sales - $deductions;
-                                // end of checking stocks
-                                
-                                $substitution = "<select name='substitution".$id."' class='form-control'>";
-                                if($sub == "No"){
-                                    $substitution = $substitution."<option selected>No</option><option>Yes</option>";
-                                }
-                                else{
-                                    $substitution = $substitution."<option>No</option><option selected>Yes</option>";
-                                }
-                                $substitution = $substitution."</select>";
-                                
-                                //$drugs = new prescription();
-                                //$medicine = $drugs->get_drugs_name($service_charge_id);
-                                
-                                $rs2 = $this->pharmacy_model->get_drug($service_charge_id);
-                                
-                                foreach ($rs2 as $key_rs2 ):
-                                $drug_type_id = $key_rs2->drug_type_id;
-                                $admin_route_id = $key_rs2->drug_administration_route_id;
-                                $dose = $key_rs2->drugs_dose;
-                                $dose_unit_id = $key_rs2->drug_dose_unit_id;
-                                
-                                endforeach;
-
-                                if(!empty($drug_type_id)){
-                                    $rs3 = $this->pharmacy_model->get_drug_type_name($drug_type_id);
-                                    $num_rows3 = count($rs3);
-                                    if($num_rows3 > 0){
-                                        foreach ($rs3 as $key_rs3):
-                                            $drug_type_name = $key_rs3->drug_type_name;
-                                        endforeach;
-                                    }
-                                }
-                                
-                                if(!empty($dose_unit_id)){
-
-                                    $rs3 = $this->pharmacy_model->get_dose_unit2($dose_unit_id);
-                                    $num_rows3 = count($rs3);
-                                    if($num_rows3 > 0){
-                                        foreach ($rs3 as $key_rs3):
-                                            $doseunit = $key_rs3->drug_dose_unit_name;
-                                        endforeach;
-                                    }
-                                }else
-                                {
-                                	$doseunit = '';
-                                }
-                                
-                                
-                                if(!empty($admin_route_id)){
-                                    $rs3 = $this->pharmacy_model->get_admin_route2($admin_route_id);
-                                    $num_rows3 = count($rs3);
-                                    if($num_rows3 > 0){
-                                        foreach ($rs3 as $key_rs3):
-                                            $admin_route = $key_rs3->drug_administration_route_name;
-                                        endforeach;
-                                    }
-                                }
-                                
-                                $time_list2 = "<select name = 'x".$id."' class='form-control'>";
-                                
-                                    foreach ($times_rs as $key_items):
-
-                                        $time = $key_items->drug_times_name;
-                                      	$drug_times_id = $key_items->drug_times_id;
-                                        if($time == $frequncy)
-										{
-											$time_list2 = $time_list2."<option value='".$drug_times_id."' selected>".$time."</option>";										
-										}
-										
-										else
-										{
-                                        	$time_list2 = $time_list2."<option value='".$drug_times_id."'>".$time."</option>";
-                                        }
-                                    endforeach;
-                                $time_list2 = $time_list2."</select>";
-                                
-                                $duration_list2 = "<select name = 'duration".$id."' class='form-control'>";
-                                
-                                foreach ($duration_rs as $key_duration):
-                                    $durations = $key_duration->drug_duration_name;
-                                    $drug_duration_id = $key_duration->drug_duration_id;
-                                    if($durations == $duration)
-									{
-                                    	$duration_list2 = $duration_list2."<option value='".$drug_duration_id."' selected>".$durations."</option>";
-									}
-									
-									else
-									{
-                                    	$duration_list2 = $duration_list2."<option value='".$drug_duration_id."'>".$durations."</option>";
-                                    }
-                                endforeach;
-                                $duration_list2 = $duration_list2."</select>";
-                                
-                                $cons_list2 = "<select name = 'consumption".$id."' class='form-control'>";
-                                
-                                foreach ($rs_cons as $key_cons):
-                                    $con = $key_cons->drug_consumption_name;
-                                    $drug_consumption_id = $key_cons->drug_consumption_id;
-                                    if($con == $consumption)
-									{
-                                    	$cons_list2 = $cons_list2."<option value='".$drug_consumption_id."' selected>".$con."</option>";
-									}
-									
-									else
-									{
-                                    	$cons_list2 = $cons_list2."<option value='".$drug_consumption_id."'>".$con."</option>";
-                                    }
-                                endforeach;
-                                $cons_list2 = $cons_list2."</select>";
-
-
-								$rsf = $this->pharmacy_model->select_invoice_drugs($visit_id,$service_charge_id);
-								$num_rowsf = count($rsf);
-								foreach ($rsf as $key_price):
-									$sum_units = $key_price->num_units;
-								endforeach;
-								
-											
-								$amoun=$charge* $sum_units ;
-									
-								$total_visit_charge_amount=$amoun+$temp_visit_charge_amount;
-								$temp_visit_charge_amount=$total_visit_charge_amount; 
-                                $s++;
-
-
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">Prescribed drugs</h2>
+            </header>
+            
+            <div class="panel-body">
+                <table class='table table-striped table-hover table-condensed'>
+                     <tr>
+                        <th>No.</th>
+                        <th>Medicine:</th>
+                        <?php
+                        if($module == 1)
+                        {
                             ?>
+                             <th>S. Units:</th>
+                             <th>Unit Price:</th>
+                              <th>Total:</th>
+                              <th>Units given:</th>
                             <?php
-                            	if($module == 1)
-                            	{
-                            		// pharmacy
-                            		 echo form_open('pharmacy/dispense_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id.'/'.$module, array("class" => "form-horizontal"));
-                            	}
-                            	else
-                            	{
-                            		 echo form_open('pharmacy/update_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id.'/'.$module, array("class" => "form-horizontal"));
-                            	}
-                            ?>
-                            <tr>
-                                <td><?php echo $s; ?></td>
-                                <td><?php echo $medicine;?></td>
-                               
-                                <?php
-                                if($module == 1)
+                        }
+                        else
+                        {
+
+                        }
+                        ?>
+                        <th>Dose</th>
+                        <th>Dose Unit</th>
+                        <th>Method</th>
+                        <th>Quantity</th>
+                        <th>Times</th>
+                        <th>Duration</th>
+                        <th>Number of Days</th>
+                         <th>Allow Substitution</th>
+                        <th>Delete </th>
+                       
+                        <th></th>
+                         <th></th>
+                    </tr>
+                   <?php 
+                   $rs = $this->pharmacy_model->select_prescription($visit_id);
+
+                    $num_rows =count($rs);
+                    $s=0;
+                    if($num_rows > 0){
+                    foreach ($rs as $key_rs):
+                        //var_dump($key_rs->prescription_substitution);
+                        $service_charge_id =$key_rs->drugs_id;
+                        $frequncy = $key_rs->drug_times_name;
+                        $id = $key_rs->prescription_id;
+                        $date1 = $key_rs->prescription_startdate;
+                        $date2 = $key_rs->prescription_finishdate;
+                        $sub = $key_rs->prescription_substitution;
+                         $duration = $key_rs->drug_duration_name;
+                        $sub = $key_rs->prescription_substitution;
+                        $duration = $key_rs->drug_duration_name;
+                        $consumption = $key_rs->drug_consumption_name;
+                        $quantity = $key_rs->prescription_quantity;
+                        $medicine = $key_rs->drugs_name;
+                        $charge = $key_rs->drugs_charge;
+                        $visit_charge_id = $key_rs->visit_charge_id;
+                        $number_of_days = $key_rs->number_of_days;
+                        $units_given = $key_rs->units_given;
+                        $checker_id = $key_rs->checker_id;
+
+
+                        // checking for the stocks in drugs
+                          $purchases = $this->pharmacy_model->item_purchases($checker_id);
+                            $sales = $this->pharmacy_model->get_drug_units_sold($checker_id);
+                            $deductions = $this->pharmacy_model->item_deductions($checker_id);
+                            $in_stock = ($quantity + $purchases) - $sales - $deductions;
+                        // end of checking stocks
+                        
+                        $substitution = "<select name='substitution".$id."' class='form-control'>";
+                        if($sub == "No"){
+                            $substitution = $substitution."<option selected>No</option><option>Yes</option>";
+                        }
+                        else{
+                            $substitution = $substitution."<option>No</option><option selected>Yes</option>";
+                        }
+                        $substitution = $substitution."</select>";
+                        
+                        //$drugs = new prescription();
+                        //$medicine = $drugs->get_drugs_name($service_charge_id);
+                        
+                        $rs2 = $this->pharmacy_model->get_drug($service_charge_id);
+                        
+                        foreach ($rs2 as $key_rs2 ):
+                        $drug_type_id = $key_rs2->drug_type_id;
+                        $admin_route_id = $key_rs2->drug_administration_route_id;
+                        $dose = $key_rs2->drugs_dose;
+                        $dose_unit_id = $key_rs2->drug_dose_unit_id;
+                        
+                        endforeach;
+
+                        if(!empty($drug_type_id)){
+                            $rs3 = $this->pharmacy_model->get_drug_type_name($drug_type_id);
+                            $num_rows3 = count($rs3);
+                            if($num_rows3 > 0){
+                                foreach ($rs3 as $key_rs3):
+                                    $drug_type_name = $key_rs3->drug_type_name;
+                                endforeach;
+                            }
+                        }
+                        
+                        if(!empty($dose_unit_id)){
+
+                            $rs3 = $this->pharmacy_model->get_dose_unit2($dose_unit_id);
+                            $num_rows3 = count($rs3);
+                            if($num_rows3 > 0){
+                                foreach ($rs3 as $key_rs3):
+                                    $doseunit = $key_rs3->drug_dose_unit_name;
+                                endforeach;
+                            }
+                        }else
+                        {
+                            $doseunit = '';
+                        }
+                        
+                        
+                        if(!empty($admin_route_id)){
+                            $rs3 = $this->pharmacy_model->get_admin_route2($admin_route_id);
+                            $num_rows3 = count($rs3);
+                            if($num_rows3 > 0){
+                                foreach ($rs3 as $key_rs3):
+                                    $admin_route = $key_rs3->drug_administration_route_name;
+                                endforeach;
+                            }
+                        }
+                        
+                        $time_list2 = "<select name = 'x".$id."' class='form-control'>";
+                        
+                            foreach ($times_rs as $key_items):
+
+                                $time = $key_items->drug_times_name;
+                                $drug_times_id = $key_items->drug_times_id;
+                                if($time == $frequncy)
                                 {
-                                	?>
-                                		<td><?php echo $in_stock;?></td>
-                                		<td><?php echo $charge;?></td>
-                                		<td><?php echo $amoun;?></td>
-                                		<td><input type="text" name="units_given<?php echo $id?>" class='form-control' id="units_given<?php echo $id?>" required="required" placeholder="units given" value="<?php echo $sum_units; ?>"  /></td>
-                                	<?php
+                                    $time_list2 = $time_list2."<option value='".$drug_times_id."' selected>".$time."</option>";										
                                 }
+                                
                                 else
                                 {
-
+                                    $time_list2 = $time_list2."<option value='".$drug_times_id."'>".$time."</option>";
                                 }
-                                ?>
-                                <td><?php echo $dose;?></td>
-                                <td><?php echo $doseunit;?></td>
-                                <td><?php echo $cons_list2; ?></td>
-                                <td><input type="text" name="quantity<?php echo $id?>" class='form-control' autocomplete="off" value="<?php echo $quantity?>" size="3"/></td>
-                                <td><?php echo $time_list2; ?></td>
-                                <td><?php echo $duration_list2; ?></td>
-                                <td><input type="text" id="datepicker3" name="days<?php echo $id?>" class='form-control' autocomplete="off" value="<?php echo  $number_of_days;?>" size="3"/></td>
-       
-                                <td><?php echo $substitution?></td>
-                                <td>
-                                    <div class='btn-toolbar'>
-                                        <div class='btn-group'>
-                                            <a class='btn btn-primary btn-sm' href='<?php echo site_url();?>/pharmacy/delete_prescription/<?php echo $id;?>/<?php echo $visit_id?>/<?php echo $visit_charge_id?>/<?php echo $module;?>' onclick="return confirm('Are you sure you want to remove this drug?');"><i class='icon-remove'></i></a>
-                                        </div>
-                                     </div>
-                                 </td>
-                                 <td>
-                                  <?php
-	                            	if($module == 1)
-	                            	{
-	                            		?>
-	                                    <input name="update" type="submit" value="Update & dispense" class="btn btn-sm btn-warning" />
-	                                    <?php
-                                	}
-                                	else
-                                	{
-                                		?>
-	                                    <input name="update" type="submit" value="Update" class="btn btn-sm btn-warning" />
-	                                    <?php
-                                	}
-                                    ?>
-                                    <input type="hidden" name="hidden_id" value="<?php echo $id?>" />
-                                    <input type="hidden" name="v_id" value="<?php echo $visit_id;?>"/>
-                                 </td>
-                            </tr>
-                            <?php echo form_close();?>
-                      <?php
-                      endforeach;
-	                    if($module == 1)
-	                    {
-	                    	?>
-	                    	<tr>
-	                    		<td></td>
-	                    		<td></td>
-	                    		<td>Grand Total</td>
-	                    		<td><?php echo $total_visit_charge_amount;?></td>
-	                    		<td></td>
-	                    		<td></td>
-	                    		<td></td>
-	                    		<td></td>
-	                    		<td></td>
-	                    		<td></td>
-	                    		<td></td>
-	                    		<td></td>
-	                    		<td></td>
-	                    		<td></td>
-	                    		<td></td>
-	                    	</tr>
-	                    	<?php
-	                    }
-                        }
+                            endforeach;
+                        $time_list2 = $time_list2."</select>";
+                        
+                        $duration_list2 = "<select name = 'duration".$id."' class='form-control'>";
+                        
+                        foreach ($duration_rs as $key_duration):
+                            $durations = $key_duration->drug_duration_name;
+                            $drug_duration_id = $key_duration->drug_duration_id;
+                            if($durations == $duration)
+                            {
+                                $duration_list2 = $duration_list2."<option value='".$drug_duration_id."' selected>".$durations."</option>";
+                            }
+                            
+                            else
+                            {
+                                $duration_list2 = $duration_list2."<option value='".$drug_duration_id."'>".$durations."</option>";
+                            }
+                        endforeach;
+                        $duration_list2 = $duration_list2."</select>";
+                        
+                        $cons_list2 = "<select name = 'consumption".$id."' class='form-control'>";
+                        
+                        foreach ($rs_cons as $key_cons):
+                            $con = $key_cons->drug_consumption_name;
+                            $drug_consumption_id = $key_cons->drug_consumption_id;
+                            if($con == $consumption)
+                            {
+                                $cons_list2 = $cons_list2."<option value='".$drug_consumption_id."' selected>".$con."</option>";
+                            }
+                            
+                            else
+                            {
+                                $cons_list2 = $cons_list2."<option value='".$drug_consumption_id."'>".$con."</option>";
+                            }
+                        endforeach;
+                        $cons_list2 = $cons_list2."</select>";
 
-                      ?>
-							</table>
-                    </div>
-                </div>
+
+                        $rsf = $this->pharmacy_model->select_invoice_drugs($visit_id,$service_charge_id);
+                        $num_rowsf = count($rsf);
+                        foreach ($rsf as $key_price):
+                            $sum_units = $key_price->num_units;
+                        endforeach;
+                        
+                                    
+                        $amoun=$charge* $sum_units ;
+                            
+                        $total_visit_charge_amount=$amoun+$temp_visit_charge_amount;
+                        $temp_visit_charge_amount=$total_visit_charge_amount; 
+                        $s++;
+
+
+                    ?>
+                    <?php
+                        if($module == 1)
+                        {
+                            // pharmacy
+                             echo form_open('pharmacy/dispense_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id.'/'.$module, array("class" => "form-horizontal"));
+                        }
+                        else
+                        {
+                             echo form_open('pharmacy/update_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id.'/'.$module, array("class" => "form-horizontal"));
+                        }
+                    ?>
+                    <tr>
+                        <td><?php echo $s; ?></td>
+                        <td><?php echo $medicine;?></td>
+                       
+                        <?php
+                        if($module == 1)
+                        {
+                            ?>
+                                <td><?php echo $in_stock;?></td>
+                                <td><?php echo $charge;?></td>
+                                <td><?php echo $amoun;?></td>
+                                <td><input type="text" name="units_given<?php echo $id?>" class='form-control' id="units_given<?php echo $id?>" required="required" placeholder="units given" value="<?php echo $sum_units; ?>"  /></td>
+                            <?php
+                        }
+                        else
+                        {
+
+                        }
+                        ?>
+                        <td><?php echo $dose;?></td>
+                        <td><?php echo $doseunit;?></td>
+                        <td><?php echo $cons_list2; ?></td>
+                        <td><input type="text" name="quantity<?php echo $id?>" class='form-control' autocomplete="off" value="<?php echo $quantity?>" size="3"/></td>
+                        <td><?php echo $time_list2; ?></td>
+                        <td><?php echo $duration_list2; ?></td>
+                        <td><input type="text" id="datepicker3" name="days<?php echo $id?>" class='form-control' autocomplete="off" value="<?php echo  $number_of_days;?>" size="3"/></td>
+
+                        <td><?php echo $substitution?></td>
+                        <td>
+                            <div class='btn-toolbar'>
+                                <div class='btn-group'>
+                                    <a class='btn btn-primary btn-sm' href='<?php echo site_url();?>/pharmacy/delete_prescription/<?php echo $id;?>/<?php echo $visit_id?>/<?php echo $visit_charge_id?>/<?php echo $module;?>' onclick="return confirm('Are you sure you want to remove this drug?');"><i class='fa fa-trash'></i></a>
+                                </div>
+                             </div>
+                         </td>
+                         <td>
+                          <?php
+                            if($module == 1)
+                            {
+                                ?>
+                                <input name="update" type="submit" value="Update & dispense" class="btn btn-sm btn-warning" />
+                                <?php
+                            }
+                            else
+                            {
+                                ?>
+                                <input name="update" type="submit" value="Update" class="btn btn-sm btn-warning" />
+                                <?php
+                            }
+                            ?>
+                            <input type="hidden" name="hidden_id" value="<?php echo $id?>" />
+                            <input type="hidden" name="v_id" value="<?php echo $visit_id;?>"/>
+                         </td>
+                    </tr>
+                    <?php echo form_close();?>
+              <?php
+              endforeach;
+                if($module == 1)
+                {
+                    ?>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>Grand Total</td>
+                        <td><?php echo $total_visit_charge_amount;?></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <?php
+                }
+                }
+
+              ?>
+              </table>
            </div>
+       </section>
 	</div>
 </div>
 

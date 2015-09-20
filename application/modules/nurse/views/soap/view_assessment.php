@@ -15,7 +15,7 @@ if($num_rows > 0){
 	"
 	<div class='row'>
 		<div class='col-md-12'>
-			<textarea class='form-control' id='visit_assessment' >".$visit_assessment."</textarea>
+			<textarea class='form-control' rows='8' id='visit_assessment' >".$visit_assessment."</textarea>
 		</div>
 	</div>
 	";
@@ -35,7 +35,7 @@ else{
 	"
 	<div class='row'>
 		<div class='col-md-12'>
-			<textarea class='form-control' id='visit_assessment' ></textarea>
+			<textarea class='form-control' rows='8' id='visit_assessment' ></textarea>
 		</div>
 	</div>
 	";

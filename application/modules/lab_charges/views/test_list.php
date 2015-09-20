@@ -122,7 +122,7 @@
 		
 		else
 		{
-			$result .= "There are no patients";
+			$result .= "There are no tests";
 		}
 		
 		echo $result;
