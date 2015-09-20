@@ -121,135 +121,120 @@ else
   }
 ?>
 <div class="row">
-  <div class="col-md-12">
-    <!-- Widget -->
-    <div class="widget">
-      <!-- Widget head -->
-      <div class="widget-head">
-        <h4 class="pull-left"><i class="icon-reorder"></i>Visit Trail</h4>
-        <div class="widget-icons pull-right">
-          <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-          <a href="#" class="wclose"><i class="icon-remove"></i></a>
-        </div>
-        <div class="clearfix"></div>
-      </div>             
-      
-      <!-- Widget content -->
-      <div class="widget-content">
-        <div class="padd">
-          <?php echo $trail;?>
-          
-        </div>
-      </div>
-    </div>
+	<div class="col-md-12">
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">Visit trail</h2>
+            </header>
+            
+            <div class="panel-body">
+                <?php echo $trail;?>
+           </div>
+       </section>
   </div>
 </div>
-  <div class="row" style= "margin-bottom:2em">
-      <div class="col-md-12">
-      <div class="widget-head">
-        <h4 class="pull-left"><i class="icon-reorder"></i>Debit / Credit Notes</h4>
-        <div class=" pull-right">
-        </div>
-        <div class="clearfix"></div>
-      </div> 
-      <table class="table table-hover table-bordered col-md-12">
-        <thead>
-        <tr>
-          <th>Time</th>
-          <th>Debit</th>
-          <th>Credit</th>
-        </tr>
-        </thead>
-        <tbody>
-         <?php
-          $payments_rs = $this->accounts_model->payments($visit_id);
-          $total_payments = 0;
-          $total_amount = ($total + $debit_note_amount) - $credit_note_amount;
-          if(count($payments_rs) > 0){
-            $x=0;
-            
-            foreach ($payments_rs as $key_items):
-              $x++;
-              $payment_method = $key_items->payment_method;
-              
-                $amount_paid = $key_items->amount_paid;
-              $time = $key_items->time;
-              $payment_type = $key_items->payment_type;
-              $amount_paidd = number_format($amount_paid,2);
-             
-              if($payment_type == 2)
-              {
-                  $type = "Debit Note";
-                  $amount_paidd = $amount_paidd;
-              
-                  ?>
-                  <tr>
-                    <td><?php echo $time;?></td>
-                    <td><?php echo $amount_paidd;?></td>
-                    <td></td>
-                  </tr>
-                  <?php
-              }
-              else if($payment_type == 3)
-              {
-                   $type = "Credit Note";
-                   $amount_paidd = "($amount_paidd)";
-              
-                  ?>
-                  <tr>
-                    <td><?php echo $time;?></td>
-                    <td></td>
-                    <td><?php echo $amount_paidd;?></td>
-                  </tr>
-                  <?php
-              }
-              
-            endforeach;
-               ?>
-                <tr>
-                  <td>Totals</td>
-                  <td><?php echo number_format($debit_note_amount,2);?></td>
-                  <td><?php echo number_format($credit_note_amount,2);?></td>
-                </tr>
-                <tr>
-                  <td colspan="2">Difference </td>
-                  <td><?php echo number_format($debit_note_amount - $credit_note_amount,2);?></td>
-                </tr>
-              <?php
-            }else{
-              ?>
-              <tr>
-                <td colspan="4"> No payments made yet</td>
-              </tr>
-              <?php
-            }
-            ?>
-        </tbody>
-      </table>
-     
-      </div>
 
+<div class="row" style= "margin-bottom:2em">
+	<div class="col-md-12">
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">Debit | Credit notes</h2>
+            </header>
+            
+            <div class="panel-body">
+                <table class="table table-hover table-bordered col-md-12">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+						<?php
+                        $payments_rs = $this->accounts_model->payments($visit_id);
+                        $total_payments = 0;
+                        $total_amount = ($total + $debit_note_amount) - $credit_note_amount;
+                        if(count($payments_rs) > 0)
+						{
+							$x=0;
+							
+							foreach ($payments_rs as $key_items):
+								$x++;
+								$payment_method = $key_items->payment_method;
+								
+								$amount_paid = $key_items->amount_paid;
+								$time = $key_items->time;
+								$payment_type = $key_items->payment_type;
+								$amount_paidd = number_format($amount_paid,2);
+								
+								if($payment_type == 2)
+								{
+									$type = "Debit Note";
+									$amount_paidd = $amount_paidd;
+                        
+									?>
+									<tr>
+                                        <td><?php echo $time;?></td>
+                                        <td><?php echo $amount_paidd;?></td>
+                                        <td></td>
+									</tr>
+									<?php
+								}
+								
+								else if($payment_type == 3)
+								{
+									$type = "Credit Note";
+									$amount_paidd = "($amount_paidd)";
+                        
+									?>
+									<tr>
+                                        <td><?php echo $time;?></td>
+                                        <td></td>
+                                        <td><?php echo $amount_paidd;?></td>
+									</tr>
+									<?php
+								}
+                        
+							endforeach;
+							?>
+							<tr>
+                                <td>Totals</td>
+                                <td><?php echo number_format($debit_note_amount,2);?></td>
+                                <td><?php echo number_format($credit_note_amount,2);?></td>
+							</tr>
+							<tr>
+                                <td colspan="2">Difference </td>
+                                <td><?php echo number_format($debit_note_amount - $credit_note_amount,2);?></td>
+							</tr>
+							<?php
+						}
+							
+						else{
+							?>
+							<tr>
+								<td colspan="4"> No payments made yet</td>
+							</tr>
+							<?php
+						}
+						?>
+						</tbody>
+                </table>
+            </div>
+        </section>
+  	</div>
 </div>
 
 <div class="row">
-  <div class="col-md-12">
-    <!-- Widget -->
-    <div class="widget">
-      <!-- Widget head -->
-      <div class="widget-head">
-        <h4 class="pull-left"><i class="icon-reorder"></i>Visit Charges</h4>
-        <div class="widget-icons pull-right">
-          <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-          <a href="#" class="wclose"><i class="icon-remove"></i></a>
-        </div>
-        <div class="clearfix"></div>
-      </div>             
-      
-      <!-- Widget content -->
-      <div class="widget-content">
-        <div class="padd">
-
-        <table class="table table-hover table-bordered col-md-12">
+  	<div class="col-md-12">
+   
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">Invoice charges</h2>
+            </header>
+            
+            <div class="panel-body">
+        		<table class="table table-hover table-bordered col-md-12">
                       <thead>
                       <tr>
                         <th>#</th>
@@ -434,23 +419,20 @@ else
                         
                       </tbody>
                     </table>
-                
-        </div>
-      </div>
-    </div>
-  </div>
+            </div>
+        </section>
+  	</div>
 </div>
 
- <div class="row" style= "margin-top:2em">
-  <div class="col-md-12">
-  <div class="widget-head">
-    <h4 class="pull-left"><i class="icon-reorder"></i>Receipts</h4>
-    <div class=" pull-right">
-    <!-- <a href="<?php echo site_url();?>/accounts/print_receipt/<?php echo $visit_id;?>" target="_blank" class="btn btn-sm btn-primary pull-right" >Print Receipt A5</a> -->
-    <!-- <a href="<?php echo site_url();?>/accounts/print_receipt_new/<?php echo $visit_id;?>" target="_blank" style="margin-top:5px; margin-right:4px;" class="btn btn-sm btn-primary pull-right" style="margin-right:10px;" >Print Receipt</a> -->
-    </div>
-    <div class="clearfix"></div>
-  </div> 
+<div class="row" style= "margin-top:2em">
+  	<div class="col-md-12">
+   
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">Receipts</h2>
+            </header>
+            
+            <div class="panel-body">
   <table class="table table-hover table-bordered col-md-12">
     <thead>
     <tr>
@@ -562,9 +544,9 @@ else
         ?>
     </tbody>
   </table>
- 
-  </div>
-
+            </div>
+        </section>
+  	</div>
 </div>
 
 <script type="text/javascript">
