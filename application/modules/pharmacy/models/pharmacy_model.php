@@ -772,14 +772,6 @@ class Pharmacy_model extends CI_Model
 			);
 			$this->db->insert('service_charge', $service_data);
 			
-			/*$service_data['visit_type_id'] = 2;
-			$this->db->insert('service_charge', $service_data);
-			
-			$service_data['visit_type_id'] = 3;
-			$this->db->insert('service_charge', $service_data);
-			
-			$service_data['visit_type_id'] = 4;
-			$this->db->insert('service_charge', $service_data);*/
 			return TRUE;
 		}
 		else{
@@ -1216,6 +1208,297 @@ class Pharmacy_model extends CI_Model
 		$this->db->update('container_type', $insert);
 
 		return TRUE;
+	}
+
+
+	/*
+	*	Import Template
+	*
+	*/
+	function import_template()
+	{
+		$this->load->library('Excel');
+		
+		$title = 'Oasis Drugs Import Template';
+		$count=1;
+		$row_count=0;
+		
+		$report[$row_count][0] = 'Drug Code';
+		$report[$row_count][1] = 'Drug Name';
+		$report[$row_count][2] = 'Drug Type (i.e Tablet)';
+		$report[$row_count][3] = 'Unit Cost';
+		$report[$row_count][4] = 'System quantity';
+		$report[$row_count][5] = 'Re order levels';
+		$report[$row_count][6] = 'Packed Quantity';
+		
+		$row_count++;
+		
+		//create the excel document
+		$this->excel->addArray ( $report );
+		$this->excel->generateXML ($title);
+	}
+	public function import_csv_products($upload_path)
+	{
+		//load the file model
+		$this->load->model('admin/file_model');
+		/*
+			-----------------------------------------------------------------------------------------
+			Upload csv
+			-----------------------------------------------------------------------------------------
+		*/
+		$response = $this->file_model->upload_csv($upload_path, 'import_csv');
+		
+		if($response['check'])
+		{
+			$file_name = $response['file_name'];
+			
+			$array = $this->file_model->get_array_from_csv($upload_path.'/'.$file_name);
+			//var_dump($array); die();
+			$response2 = $this->sort_csv_data($array);
+		
+			if($this->file_model->delete_file($upload_path."\\".$file_name, $upload_path))
+			{
+			}
+			
+			return $response2;
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', $response['error']);
+			return FALSE;
+		}
+	}
+	public function check_if_code_exisits($code)
+	{
+		$this->db->where('branch_code = "'.$this->session->userdata('branch_code').'" AND drug_code = "'.$code.'"');
+		
+		$query = $this->db->get('drugs');
+		
+		if($query->num_rows() > 0)
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+
+	}
+	public function sort_csv_data($array)
+	{
+		//count total rows
+		$total_rows = count($array);
+		$total_columns = count($array[0]);//var_dump($array);die();
+		
+		//if products exist in array
+		if(($total_rows > 0) && ($total_columns == 7))
+		{
+			$response = '
+				<table class="table table-hover table-bordered ">
+					  <thead>
+						<tr>
+						  <th>#</th>
+						  <th>Surname</th>
+						  <th>Other Names</th>
+						</tr>
+					  </thead>
+					  <tbody>
+			';
+			
+			//retrieve the data from array
+			for($r = 1; $r < $total_rows; $r++)
+			{
+
+				
+
+
+				$items['drug_code'] = $array[$r][0];
+				$items['drugs_name'] = ucwords(strtolower($array[$r][1]));
+				$drug_type_name = $array[$r][2];
+				$items['drugs_unitprice'] = $array[$r][3];
+				$items['quantity'] = $array[$r][4];
+				$items['reorder_level'] = $array[$r][5];
+				$items['drugs_packsize'] = $array[$r][6];
+				$items['drug_size_type'] = 1;
+				$items['batch_no'] = 0;
+				$items['brand_id'] = 20;
+				$items['generic_id'] = 10;
+				$items['class_id'] = 2;
+				$items['drugs_dose'] = 1; 
+				$items['branch_code'] = $this->session->userdata('branch_code');
+
+				// check drug type if exist
+
+				$items['drug_type_id'] = $this->get_drug_type_id($drug_type_name);
+				$comment = '';
+				
+				
+				if(!empty($items['drugs_name']))
+				{
+					// check if the number already exists
+					if($this->check_if_code_exisits($items['drug_code']))
+					{
+						//number exists
+						$comment .= '<br/>Not saved ensure you have a different drug code entered'.$items['drugs_name'];
+						$class = 'danger';
+					}
+					else
+					{
+						// number does not exisit
+						//save product in the db
+						if($this->db->insert('drugs', $items))
+						{
+							//calculate the price of the drug
+							$drug_id = $this->db->insert_id();
+							
+							$markup = round(($items['drugs_unitprice'] * 1.33), 0);
+							$markdown = $markup;//round(($markup * 0.9), 0);
+							
+
+							//get the lab service id for the branch
+
+							$service_id = $this->get_pharmacy_service_id();
+
+							// get all the visit type
+
+							$visit_type_query = $this->get_all_visit_type();
+
+							if($visit_type_query->num_rows() > 0)
+							{
+								foreach ($visit_type_query->result() as $key) {
+								
+									$visit_type_id = $key->visit_type_id;
+									// service charge entry
+									$service_charge_insert = array(
+													"service_charge_name" => $items['drugs_name'],
+													"service_id" => $service_id,
+													"visit_type_id" => $visit_type_id,
+													"drug_id"=>$drug_id,
+													"created_by"=>$this->session->userdata('personnel_id'),
+													"created"=>date('Y-m-d H:i:s'),
+													"service_charge_status"=>1,
+													"service_charge_amount"=>$markdown,
+													"service_charge_delete"=>0
+												);
+
+									$this->database->insert_entry('service_charge', $service_charge_insert);
+								}
+							}
+							$comment .= '<br/>Patient successfully added to the database';
+							$class = 'success';
+						}
+						
+						else
+						{
+							$comment .= '<br/>Internal error. Could not add patient to the database. Please contact the site administrator. Product code '.$items['drugs_name'];
+							$class = 'warning';
+						}
+					}
+				}else
+				{
+					$comment .= '<br/>Not saved ensure you have a patient number entered'.$items['drugs_name'];
+						$class = 'danger';
+				}
+				
+				
+				$response .= '
+					
+						<tr class="'.$class.'">
+							<td>'.$r.'</td>
+							<td>'.$items['drug_code'].'</td>
+							<td>'.$items['drugs_name'].'</td>
+						</tr> 
+				';
+			}
+			
+			$response .= '</table>';
+			
+			$return['response'] = $response;
+			$return['check'] = TRUE;
+		}
+		
+		//if no products exist
+		else
+		{
+			$return['response'] = 'Drugs data not found';
+			$return['check'] = FALSE;
+		}
+		
+		return $return;
+	}
+	public function get_pharmacy_service_id()
+	{
+		$this->db->where('(service_name = "Pharmacy" OR service_name = "pharmacy") AND branch_code = "'.$this->session->userdata('branch_code').'"');
+		$query = $this->db->get('service');
+
+		if($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $key) {
+				# code...
+				$service_id = $key->service_id;
+			}
+		}else
+		{
+			// get the department id from the department table called laboratory
+
+			// insert and return the service id 
+			$department_id = $this->get_department_id();
+
+			$data = array('service_name'=>'Pharmacy','branch_code'=>$this->session->userdata('branch_code'),'service_status'=>1,'report_distinct'=>1,'service_status'=>1,'created'=>date('Y-m-d H:i:s'),'created_by'=>$this->session->userdata('personnel_id'));
+			$this->db->insert('service',$data);
+			$service_id = $this->db->insert_id();
+		}
+		return $service_id;
+
+	}
+	public function get_department_id()
+	{
+		$this->db->where('(department_name = "Pharmacy" OR department_name = "pharmacy") AND branch_code = "'.$this->session->userdata('branch_code').'"');
+		$query = $this->db->get('departments');
+
+		if($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $key) {
+				# code...
+				$department_id = $key->department_id;
+			}
+		}else
+		{
+
+			$data = array('department_name'=>'Pharmacy','branch_code'=>$this->session->userdata('branch_code'),'department_status'=>1,'created'=>date('Y-m-d H:i:s'),'created_by'=>$this->session->userdata('personnel_id'));
+			$this->db->insert('departments',$data);
+			$department_id = $this->db->insert_id();
+		}
+		return $department_id;
+	}
+
+	public function get_drug_type_id($drug_type_name)
+	{
+		$this->db->where('(drug_type_name LIKE "'.$drug_type_name.'") ');
+		$query = $this->db->get('drug_type');
+
+		if($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $key) {
+				# code...
+				$drug_type_id = $key->drug_type_id;
+			}
+		}else
+		{
+
+			$data = array('drug_type_name'=>$drug_type_name,'created_on'=>date('Y-m-d H:i:s'),'created_by'=>$this->session->userdata('personnel_id'));
+			$this->db->insert('drug_type',$data);
+			$drug_type_id = $this->db->insert_id();
+		}
+		return $drug_type_id;
+	}
+	public function get_all_visit_type()
+	{
+		$this->db->select('*');
+		$query = $this->db->get('visit_type');
+		return $query;
 	}
 }
 ?>

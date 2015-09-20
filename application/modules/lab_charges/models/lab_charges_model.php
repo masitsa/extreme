@@ -130,7 +130,7 @@ class Lab_charges_model extends CI_Model
 
 			$visit_type_query = $this->get_all_visit_type();
 
-			if($visit_type_query->num_rows() > o)
+			if($visit_type_query->num_rows() > 0)
 			{
 				foreach ($visit_type_query->result() as $key) {
 				

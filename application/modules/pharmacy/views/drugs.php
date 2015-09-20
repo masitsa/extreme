@@ -40,7 +40,7 @@
                 if(!empty($search))
                 {
                 ?>
-                <a href="<?php echo site_url().'/pharmacy/close_drugs_search/'.$visit_id;?>" class="btn btn-warning">Close Search</a>
+                <a href="<?php echo site_url().'pharmacy/close_drugs_search/'.$visit_id;?>" class="btn btn-warning">Close Search</a>
                 <?php }?>
                 <input type="submit" class="btn btn-info" value="Search" name="search"/>
             </div>
