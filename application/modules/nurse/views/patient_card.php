@@ -196,13 +196,13 @@
 
                  <div class="tab-pane" id="medical-checkup">
                   
-                  <?php //echo $this->load->view("patients/medical_checkup", '', TRUE);?>
+                  <?php echo $this->load->view("patients/medical_checkup", '', TRUE);?>
                   
                 </div>
 
                  <div class="tab-pane" id="visit_trail">
                   
-                  <?php //echo $this->load->view("patients/visit_trail", '', TRUE);?>
+                  <?php echo $this->load->view("patients/visit_trail", '', TRUE);?>
                   
                 </div>
                 

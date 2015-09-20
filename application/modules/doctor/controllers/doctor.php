@@ -18,6 +18,7 @@ class Doctor  extends MX_Controller
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
 		$this->load->model('reception/database');
+		$this->load->model('site/site_model');
 		$this->load->model('administration/personnel_model');
 	}
 	
@@ -183,7 +184,9 @@ class Doctor  extends MX_Controller
 		$data = array('visit_id'=>$visit_id);
 		
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$data['contacts'] = $this->site_model->get_contacts();
 		$data['patient'] = $patient;
+		$data['title'] = 'Medical Checkup';
 		$this->load->view('medical_checkup', $data);
 	}
 	public function search_visit_patients($module = NULL)
