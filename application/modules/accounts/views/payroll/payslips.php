@@ -34,8 +34,8 @@ $created_by = $this->session->userdata('first_name');
         <!-- IE Support -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <!-- Bootstrap -->
-        <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/bootstrap/css/bootstrap.css" media="all"/>
-        <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/stylesheets/theme-custom.css" media="all"/>
+        <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/bootstrap/css/bootstrap.css" />
+        <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/stylesheets/theme-custom.css">
     </head>
     <body class="receipt_spacing">
     	<div class="row">

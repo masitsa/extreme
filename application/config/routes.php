@@ -224,6 +224,8 @@ $route['hospital-administration/deactivate-insurance-company/(:num)'] = 'hospita
 /*
 *	Accounts Routes
 */
+$route['accounts/closed-visits'] = 'accounts/payroll/accounts_closed_visits';
+$route['accounts/un-closed-visits'] = 'accounts/payroll/accounts_unclosed_queue';
 $route['accounts/change-branch'] = 'accounts/payroll/change_branch';
 $route['accounts/print-payroll/(:num)'] = 'accounts/payroll/print_payroll/$1';
 $route['accounts/export-payroll/(:num)'] = 'accounts/payroll/export_payroll/$1';

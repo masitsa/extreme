@@ -50,7 +50,7 @@ class Reception_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from($table);
-		$this->db->select('visit.*, visit_department.created AS visit_created, visit_department.accounts, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id');
+		$this->db->select('visit.*, visit_department.created AS visit_created, visit_department.accounts, patients.*, visit_type.visit_type_name');
 		$this->db->where($where);
 		$this->db->order_by('visit_department.created','ASC');
 		$query = $this->db->get('', $per_page, $page);
@@ -61,7 +61,7 @@ class Reception_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from($table);
-		$this->db->select('visit.*, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id');
+		$this->db->select('visit.*, patients.*, visit_type.visit_type_name');
 		$this->db->where($where);
 		$this->db->order_by('visit.visit_date','ASC');
 		$query = $this->db->get('', $per_page, $page);
@@ -518,6 +518,86 @@ class Reception_model extends CI_Model
 		return $patient;
 	}
 	
+	public function patient_names3($payment_id)
+	{
+		$table = "patients, visit, payments";
+		$where = "patients.patient_id = visit.patient_id AND visit.visit_id = payments.visit_id AND payments.payment_id = ".$payment_id;
+		$items = "patients.*, visit.visit_type, visit.visit_id";
+		$order = "patient_surname";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		foreach ($result as $row)
+		{
+			$visit_id = $row->visit_id;
+			$patient_id = $row->patient_id;
+			$dependant_id = $row->dependant_id;
+			$patient_number = $row->patient_number;
+			$dependant_id = $row->dependant_id;
+			$strath_no = $row->strath_no;
+			$created_by = $row->created_by;
+			$modified_by = $row->modified_by;
+			$created = $row->patient_date;
+			$last_modified = $row->last_modified;
+			$last_visit = $row->last_visit;
+			
+			$patient_national_id = $row->patient_national_id;
+			$patient_othernames = $row->patient_othernames;
+			$patient_surname = $row->patient_surname;
+			$patient_date_of_birth = $row->patient_date_of_birth;
+			$gender_id = $row->gender_id;
+			$faculty ='';
+			if($gender_id == 1)
+			{
+				$gender = 'M';
+			}
+			else
+			{
+				$gender = 'F';
+			}
+			if($visit_id == NULL)
+			{
+				$visit_type_id = '';
+				$visit_type_name = '';
+			}
+			
+			else
+			{
+				$visit_type_id = $row->visit_type;
+				$this->db->where('visit_type_id', $visit_type_id);
+				$this->db->select('visit_type_name');
+				$query = $this->db->get('visit_type');
+				$visit_type_name = '';
+				
+				if($query->num_rows() > 0)
+				{
+					$row2 = $query->row();
+					$visit_type_name = $row2->visit_type_name;
+				}
+			}
+		}
+		// calculate patient balance
+		$this->load->model('administration/administration_model');
+		$account_balance = $this->administration_model->patient_account_balance($patient_id);
+		// end of patient balance
+		$patient['patient_id'] = $patient_id;
+		$patient['account_balance'] = $account_balance;
+		$patient['patient_national_id'] = $patient_national_id;
+		$patient['visit_type'] = $visit_type_id;
+		$patient['visit_type_name'] = $visit_type_name;
+		$patient['patient_type'] = $visit_type_id;
+		$patient['visit_type_id'] = $visit_type_id;
+		$patient['patient_othernames'] = $patient_othernames;
+		$patient['patient_surname'] = $patient_surname;
+		$patient['patient_date_of_birth'] = $patient_date_of_birth;
+		$patient['gender'] = $gender;
+		$patient['patient_number'] = $patient_number;
+		$patient['faculty'] = $faculty;
+		$patient['staff_dependant_no'] = $dependant_id;
+		$patient['visit_id'] = $visit_id;
+		return $patient;
+	}
+	
 	public function get_strath_patient_data($check_id, $visit_id, $strath_no, $row, $dependant_id, $visit_type_id, $patient_id)
 	{
 		//staff & dependant
@@ -823,45 +903,6 @@ class Reception_model extends CI_Model
 		return $row->patient_id;
 	}
 	
-	public function get_patient_type($visit_type_id, $dependant_id = NULL)
-	{
-		if($visit_type_id == 1)
-		{
-			return 'Student';
-		}
-		
-		else if(($visit_type_id == 2) && ($dependant_id > 0))
-		{
-			return 'Dependant';
-		}
-		
-		else if(($visit_type_id == 2) && ($dependant_id <= 0))
-		{
-			return 'Staff';
-		}
-		
-		else if(($visit_type_id == 3))
-		{
-			return 'Other';
-		}
-		
-		else if(($visit_type_id == 4))
-		{
-			return 'Insurance';
-		}
-		
-		else if(($visit_type_id == 5))
-		{
-			return 'General';
-		}
-		
-		else
-		{
-			return 'N/A';
-		}
-		
-	}
-	
 	/*
 	*	Retrieve a single patient's details
 	*	@param int $patient_id
@@ -872,49 +913,6 @@ class Reception_model extends CI_Model
 		$this->db->from('patients');
 		$this->db->select('*');
 		$this->db->where('patient_id = '.$patient_id);
-		$query = $this->db->get();
-		
-		return $query;
-	}
-	/*
-	*	Retrieve a single patient's details
-	*	@param int $patient_id
-	*
-	*/
-	public function get_patient_staff_data($patient_id)
-	{
-		$this->db->from('patients,staff');
-		$this->db->select('*');
-		$this->db->where('patients.strath_no = staff.Staff_Number AND patient_id = '.$patient_id);
-		$query = $this->db->get();
-		
-		return $query;
-	}
-	/*
-	*	Retrieve a single patient's details
-	*	@param int $patient_id
-	*
-	*/
-	public function get_patient_student_data($patient_id)
-	{
-		$this->db->from('patients,student');
-		$this->db->select('*');
-		$this->db->where('patients.strath_no = student.student_Number AND patient_id = '.$patient_id);
-		$query = $this->db->get();
-		
-		return $query;
-	}
-	
-	/*
-	*	Retrieve all staff dependants
-	*	@param int $strath_no
-	*
-	*/
-	public function get_all_staff_dependant($strath_no)
-	{
-		$this->db->from('staff_dependants');
-		$this->db->select('*');
-		$this->db->where('staff_dependants_id = \''.$strath_no.'\'');
 		$query = $this->db->get();
 		
 		return $query;
@@ -930,42 +928,6 @@ class Reception_model extends CI_Model
 		$this->db->from('patients');
 		$this->db->select('*');
 		$this->db->where('dependant_id = \''.$patient_id.'\'');
-		$query = $this->db->get();
-		
-		return $query;
-	}
-	
-	/*
-	*	Retrieve all patient dependants
-	*	@param int $strath_no
-	*
-	*/
-	public function get_all_staff_dependants($patient_id)
-	{
-		$this->db->from('patients, staff_dependants, staff');
-		$this->db->select('staff_dependants.*, staff.Staff_Number');
-		$this->db->where('patients.strath_no = staff.Staff_Number AND staff.staff_system_id = staff_dependants.staff_id AND patients.patient_id = \''.$patient_id.'\'');
-		$query = $this->db->get();
-		
-		return $query;
-	}
-	public function check_student_exist($patient_id,$visit_date)
-	{
-		$table = "visit";
-		$where = "patient_id = ". $patient_id ." AND visit_date = ".$visit_date;
-		$items = "*";
-		$order = "visit_id";
-			//echo $sql;
-		$result = $this->database->select_entries_where($table, $where, $items, $order);
-		
-		return $result;
-	}
-	
-	public function get_staff_dependant_patient($staff_dependant_id, $staff_no)
-	{
-		$this->db->from('patients');
-		$this->db->select('patients.*');
-		$this->db->where('patients.strath_no = \''.$staff_dependant_id.'\' AND patients.dependant_id = \''.$staff_no.'\'');
 		$query = $this->db->get();
 		
 		return $query;
@@ -2225,7 +2187,7 @@ class Reception_model extends CI_Model
 			{
 				$current_patient_number = $array[$r][0];
 				$items['patient_surname'] = ucwords(strtolower($array[$r][1]));
-				$items['patient_othernames'] = $array[$r][2];
+				$items['patient_othernames'] = ucwords(strtolower($array[$r][2]));
 				$title = $array[$r][3];
 				$items['patient_date_of_birth'] = $array[$r][4];
 				$civil_status_id = $array[$r][5];
@@ -2339,6 +2301,13 @@ class Reception_model extends CI_Model
 		{
 			return FALSE;
 		}
+	}
+	
+	public function get_branches()
+	{
+		$this->db->where('branch_status = 1');
+		$this->db->order_by('branch_name', 'ASC');
+		return $this->db->get('branch');
 	}
 }
 ?>

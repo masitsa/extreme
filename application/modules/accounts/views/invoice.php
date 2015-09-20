@@ -194,8 +194,7 @@ if($all_notes->num_rows() > 0)
             	<div class="row">
                 	<div class="col-md-12">
                     	<div class="title-item">Invoice Number:</div>
-                        
-                    	<?php echo 'INV/00'.$visit_id; ?>
+                    	<?php echo $this->session->userdata('branch_code').'-INV-00'.$visit_id; ?>
                     </div>
                 </div>
             	

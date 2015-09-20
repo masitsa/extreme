@@ -738,5 +738,20 @@ class Personnel extends hr
 			redirect('human-resource/edit-personnel/'.$personnel_id);
 		}
     }
+
+	public function edit_invoice_authorize($personnel_id)
+    {
+		if($this->personnel_model->edit_invoice_authorize($personnel_id))
+		{
+			$this->session->set_userdata("success_message", "Authorize updated successfully");
+			redirect('human-resource/edit-personnel/'.$personnel_id);
+		}
+		
+		else
+		{
+			$this->session->set_userdata("error_message","Unable to update. Please try again");
+			redirect('human-resource/edit-personnel/'.$personnel_id);
+		}
+    }
 }
 ?>

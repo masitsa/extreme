@@ -57,29 +57,28 @@
                             </select>
                         </div>
                     </div>
-                </div>
-                
-                <div class="col-md-6">
                     
                     <div class="form-group">
                         <label class="col-lg-4 control-label">Visit Date: </label>
                         
                         <div class="col-lg-8">
-                            <div id="datetimepicker1" class="input-append">
-                                <input data-format="yyyy-MM-dd" class="form-control" type="text" name="visit_date" placeholder="Visit Date">
-                                <span class="add-on" style="cursor:pointer;">
-                                    &nbsp;<i data-time-icon="icon-time" data-date-icon="icon-calendar">
-                                    </i>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
                                 </span>
+                                <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="visit_date" placeholder="Visit Date">
                             </div>
                         </div>
                     </div>
+                </div>
+                
+                <div class="col-md-6">
                     
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Surname: </label>
+                        <label class="col-lg-4 control-label">First name: </label>
                         
                         <div class="col-lg-8">
-                            <input type="text" class="form-control" name="surname" placeholder="Surname">
+                            <input type="text" class="form-control" name="surname" placeholder="First name">
                         </div>
                     </div>
                     

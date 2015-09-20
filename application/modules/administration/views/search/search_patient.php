@@ -1,16 +1,11 @@
 
-		<!-- Widget -->
-		<section class="panel">
-
-
-			<!-- Widget head -->
-			<header class="panel-heading">
-				<h4 class="pull-left"><i class="icon-reorder"></i>Search <?php echo $title;?></h4>
-				<div class="clearfix"></div>
-			</header>             
-
-			<!-- Widget content -->
-			<div class="panel-body">
+        <section class="panel">
+            <header class="panel-heading">
+                
+                <h2 class="panel-title">Search patient statement</h2>
+            </header>
+            
+            <div class="panel-body">
 			<?php
 			
 			
@@ -27,8 +22,8 @@
                             <select class="form-control" name="visit_type_id">
                             	<option value="">---Select Visit Type---</option>
                                 <?php
-                                    if(count($type) > 0){
-                                        foreach($type as $row):
+                                    if($type->num_rows() > 0){
+                                        foreach($type->result() as $row):
                                             $type_name = $row->visit_type_name;
                                             $type_id= $row->visit_type_id;
                                                 ?><option value="<?php echo $type_id; ?>" ><?php echo $type_name ?></option>
@@ -41,10 +36,10 @@
                     </div>
                     
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Staff/ Student ID: </label>
+                        <label class="col-lg-4 control-label">ID Number: </label>
                         
                         <div class="col-lg-8">
-                            <input type="text" class="form-control" name="strath_no" placeholder="Staff/ Student ID">
+                            <input type="text" class="form-control" name="patient_national_id" placeholder="ID Number">
                         </div>
                     </div>
                 </div>

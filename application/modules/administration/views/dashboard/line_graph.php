@@ -35,15 +35,13 @@ function get_date(year, month, day) {
 /* Patients chart starts */
 //required variables
 var highest_bar;
-var staff = [], student = [], insurance = [], other = [];
+var inpatients = [], outpatients = [];
 var current_date;
 
 //get the current day
-var curr = new Date();
-var day = curr.getDate();
-var month = curr.getMonth()+1;
-var year = curr.getFullYear();
-var current_timestamp = get_date(year, month, day);
+var d = new Date();
+var current_timestamp = d.getTime();
+//var current_timestamp = get_date(year, month, day);
 var url = config_url+"administration/charts/patient_type_totals/"+current_timestamp;
 	
 //get data for the last 7 days
@@ -60,10 +58,8 @@ for(r = 0; r < 8; r++)
 		success:function(data){
 			
 			//add the data to the array
-			staff.push([current_timestamp, data.staff]);
-			student.push([current_timestamp, data.student]);
-			insurance.push([current_timestamp, data.insurance]);
-			other.push([current_timestamp, data.other]);
+			inpatients.push([current_timestamp, data.inpatients]);
+			outpatients.push([current_timestamp, data.outpatients]);
 			
 			current_timestamp = current_timestamp - 86400000;
 			url = config_url+"administration/charts/patient_type_totals/"+current_timestamp;
@@ -80,20 +76,12 @@ $(function () {
 	var plot = $.plot($("#curve-chart"), 
 		[
 			{
-				data: staff,
-				label: "Staff"
+				data: outpatients,
+				label: "Outpatients"
 			},
 			{
-				data: student, 
-				label: "Students"
-			} ,
-			{
-				data: insurance, 
-				label: "Insurance"
-			}  ,
-			{
-				data: other, 
-				label: "Other"
+				data: inpatients, 
+				label: "Inpatients"
 			}
 		],
 		

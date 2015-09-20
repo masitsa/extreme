@@ -49,10 +49,15 @@
 				$other_deductions = $this->payroll_model->other_deductions_view($personnel_id);
 				$savings = $this->payroll_model->savings_view($personnel_id);
 				$loan_schemes = $this->payroll_model->scheme_view($personnel_id);
+                $monthly_relief = $this->payroll_model->get_monthly_relief();
+				$insurance_res = $this->payroll_model->get_insurance_relief($personnel_id);
+				$insurance_relief = $insurance_res['relief'];
+				$insurance_amount = $insurance_res['amount'];
 				
 				$taxable = $payments + $benefits + $allowances;
 				$gross = ($payments + $allowances);
 				$paye = $this->payroll_model->calculate_paye($taxable);
+				$paye = $paye - ($insurance_relief + $monthly_relief);
 				$nssf = $this->payroll_model->nssf_view($gross);
 				$nhif = $this->payroll_model->nhif_view($gross);
 				$total_deductions = $nssf + $nhif + $deductions + $other_deductions + $paye + $savings + $loan_schemes;

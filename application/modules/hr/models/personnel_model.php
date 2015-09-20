@@ -876,8 +876,31 @@ class Personnel_model extends CI_Model
 	public function get_departments()
 	{
 		$this->db->where('department_status = 1');
+		$this->db->order_by('department_name', 'ASC');
 		
 		return $this->db->get('departments');
+	}
+	
+	/*
+	*	Activate a deactivated personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function edit_invoice_authorize($personnel_id)
+	{
+		$data = array(
+				'authorize_invoice_changes' => $this->input->post('authorize_invoice_changes')
+			);
+		$this->db->where('personnel_id', $personnel_id);
+		
+
+		if($this->db->update('personnel', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
 	}
 }
 ?>

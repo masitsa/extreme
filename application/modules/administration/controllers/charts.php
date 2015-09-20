@@ -155,6 +155,29 @@ class Charts extends auth
 	{
 		$date = gmdate("Y-m-d", ($timestamp/1000));
 		
+		//initialize required variables
+		$highest_bar = 0;
+		
+		//get outpatient total
+		$total = $this->reports_model->get_patient_type_total(1, $date);
+		//mark the highest bar
+		if($total > $highest_bar)
+		{
+			$highest_bar = $total;
+		}
+		
+		//prep data for the particular visit type
+		$result[strtolower('outpatients')] = $total;
+		$result[strtolower('inpatients')] = 0;
+		
+		$result['highest_bar'] = $highest_bar;//var_dump($result['bars']);
+		echo json_encode($result);
+	}
+	
+	function patient_type_totals3($timestamp)
+	{
+		$date = gmdate("Y-m-d", ($timestamp/1000));
+		
 		//get all patient types
 		$visits_result = $this->reports_model->get_all_visit_types();
 		

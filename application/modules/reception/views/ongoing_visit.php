@@ -62,7 +62,6 @@
 						  <th>Visit Date</th>
 						  <th>Patient</th>
 						  <th>Patient Type</th>
-						  <th>Visit Type</th>
 						  <th>Time In</th>
 						  <th>Doctor</th>
 						  <th>Date Deleted</th>
@@ -86,7 +85,6 @@
 							  <th>Visit Date</th>
 							  <th>Patient</th>
 							  <th>Patient Type</th>
-							  <th>Visit Type</th>
 							  <th>Time In</th>
 							  <th>Doctor</th>
 							  <th colspan="5">Actions</th>
@@ -130,7 +128,6 @@
 								  <th>Visit Date</th>
 								  <th>Patient</th>
 								  <th>Patient Type</th>
-								  <th>Visit Type</th>
 								  <th>Time In</th>
 								  <th>Time Out</th>
 								  <th>Doctor</th>
@@ -166,15 +163,12 @@
 				$visit_type = $row->visit_type;
 				$visit_table_visit_type = $visit_type;
 				$patient_table_visit_type = $visit_type_id;
-				$patient_national_id = $row->patient_national_id;
-				
-				$patient = $this->reception_model->patient_names2($patient_id, $visit_id);
-				$visit_type = $patient['visit_type'];
-				$patient_type = $patient['patient_type'];
-				$patient_othernames = $patient['patient_othernames'];
-				$patient_surname = $patient['patient_surname'];
-				$patient_date_of_birth = $patient['patient_date_of_birth'];
-				$gender = $patient['gender'];
+				$coming_from = $this->reception_model->coming_from($visit_id);
+				$sent_to = $this->reception_model->going_to($visit_id);
+				$visit_type_name = $row->visit_type_name;
+				$patient_othernames = $row->patient_othernames;
+				$patient_surname = $row->patient_surname;
+				$patient_date_of_birth = $row->patient_date_of_birth;
 				
 				//creators and editors
 				if($personnel_query->num_rows() > 0)
@@ -303,8 +297,7 @@
 								<td>'.$count.'</td>
 								<td>'.$visit_date.'</td>
 								<td>'.$patient_surname.' '.$patient_othernames.'</td>
-								<td>'.$patient_type.'</td>
-								<td>'.$visit_type.'</td>
+								<td>'.$visit_type_name.'</td>
 								<td>'.$visit_time.'</td>
 								<td>'.$doctor.'</td>
 								'.$button.'
@@ -323,7 +316,7 @@
 									<td>'.$count.'</td>
 									<td>'.$visit_date.'</td>
 									<td>'.$patient_surname.' '.$patient_othernames.'</td>
-									<td>'.$patient_type.'</td>
+									<td>'.$visit_type_name.'</td>
 									<td>'.$visit_time.'</td>
 									<td>'.$visit_time_out.'</td>
 									<td>'.$doctor.'</td>
@@ -339,8 +332,7 @@
 									<td>'.$count.'</td>
 									<td>'.$visit_date.'</td>
 									<td>'.$patient_surname.' '.$patient_othernames.'</td>
-									<td>'.$patient_type.'</td>
-									<td>'.$visit_type.'</td>
+									<td>'.$visit_type_name.'</td>
 									<td>'.$visit_time.'</td>
 									<td>'.$visit_time_out.'</td>
 									<td>'.$doctor.'</td>
@@ -380,8 +372,7 @@
 							<td>'.$count.'</td>
 							<td>'.$visit_date.'</td>
 							<td>'.$patient_surname.' '.$patient_othernames.'</td>
-							<td>'.$patient_type.'</td>
-							<td>'.$visit_type.'</td>
+							<td>'.$visit_type_name.'</td>
 							<td>'.$visit_time.'</td>
 							<td>'.$doctor.'</td>
 							<td>'.date('jS M Y H:i a',strtotime($deleted)).'</td>

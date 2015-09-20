@@ -68,7 +68,7 @@
 						  <th>#</th>
 						  <th>Patient Number</th>
 						  <th>Card Number</th>
-						  <th>Surname</th>
+						  <th>First name</th>
 						  <th>Other Names</th>
 						  <th>Contact details</th>
 						  <th>Last Visit</th>

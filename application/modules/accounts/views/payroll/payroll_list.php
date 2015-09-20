@@ -157,10 +157,7 @@
 						<td>'.number_format($nhif, 2).'</td>
 						<td>'.number_format($deductions, 2).'</td>
 						<td>'.number_format($net, 2).'</td>
-						<td><a href="'.site_url().'accounts/payroll-payslips/'.$payroll_id.'" class="btn btn-sm btn-warning" title="Payslips for '.$payroll_name.'"><i class="fa fa-plus"></i></a></td>
-						<td><a href="'.site_url().'accounts/print-payroll-pdf/'.$payroll_id.'" class="btn btn-sm btn-danger" title="Download '.$payroll_name.'" target="_blank"><i class="fa fa-file-pdf-o"></i></a></td>
-						<td><a href="'.site_url().'accounts/print-payroll/'.$payroll_id.'" class="btn btn-sm btn-info" title="Print '.$payroll_name.'" target="_blank"><i class="fa fa-print"></i></a></td>
-						<td><a href="'.site_url().'accounts/export-payroll/'.$payroll_id.'" class="btn btn-sm btn-success" title="Export '.$payroll_name.'" target="_blank"><i class="fa fa-file-excel-o"></i></a></td>
+						<td><a href="'.site_url().'accounts/print-payroll/'.$payroll_id.'" class="btn btn-sm btn-success" title="Print '.$payroll_name.'" target="_blank"><i class="fa fa-print"></i></a></td>
 						<td>'.$button.'</td>
 					</tr> 
 				';
@@ -353,6 +350,7 @@
 								?>
                             	<div class="row" style="margin-bottom:20px;">
                                     <div class="col-sm-4 col-sm-offset-8">
+                                       <!-- <a href="<?php echo site_url();?>accounts/export-payroll" class="btn btn-sm btn-success">Export</a>-->
                                         <a href="<?php echo site_url();?>accounts/salary-data" class="btn btn-sm btn-info">Edit personnel payment data</a>
                                         <?php
 										$search = $this->session->userdata('payroll_search');
