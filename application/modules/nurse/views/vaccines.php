@@ -33,16 +33,13 @@ $this->nurse_model->visit_charge_insert($visit_id,$vaccine_id,$suck);
 
 // get all the procedures
 
-$visit__rs1 = $this->nurse_model->get_visit_procedure_charges($visit_id);
-
-
-
+$visit__rs1 = $this->nurse_model->get_visit_vaccine_charges($visit_id, $vaccine_id);
 
 echo "
 	<table align='center' class='table table-striped table-hover table-condensed'>
 	<tr>
 		<th></th>
-		<th>Procedure</th>
+		<th>Vaccine</th>
 		<th>Units</th>
 		<th>Unit Cost</th>
 		<th>Total</th>
@@ -67,7 +64,6 @@ echo "
 						
 							$total= $total +($units * $visit_charge_amount);
 							
-							if($service_id==15){
 								echo"
 										<tr> 
 											<td></td>
@@ -84,7 +80,6 @@ echo "
 											</td>
 										</tr>	
 								";	
-							}
 								
 			endforeach;
 ?>

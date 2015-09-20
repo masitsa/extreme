@@ -57,7 +57,7 @@ class Laboratory  extends MX_Controller
 		
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/laboratory/lab_queue/'.$page_name;
+		$config['base_url'] = site_url().'laboratory/lab_queue/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -209,7 +209,7 @@ class Laboratory  extends MX_Controller
 		$table = '`service_charge`, lab_test_class, lab_test, service';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/laboratory/laboratory_list/'.$lab.'/'.$visit_id;
+		$config['base_url'] = site_url().'laboratory/laboratory_list/'.$lab.'/'.$visit_id;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 5;
 		$config['per_page'] = 15;
@@ -351,7 +351,7 @@ class Laboratory  extends MX_Controller
 		$table = 'visit_department,visit, patients';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/laboratory/test_history/'.$page_name;
+		$config['base_url'] = site_url().'laboratory/test_history/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;

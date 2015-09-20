@@ -28,7 +28,7 @@
                                             if(!empty($search))
 											{
 											?>
-                                            <a href="<?php echo site_url().'/laboratory/close_lab_test_search/'.$visit_id;?>" class="btn btn-warning pull-right">Close Search</a>
+                                            <a href="<?php echo site_url().'laboratory/close_lab_test_search/'.$visit_id;?>" class="btn btn-warning pull-right">Close Search</a>
                                             <?php }?>
                                         	<input type="submit" class="btn btn-info pull-right" value="Search" name="search"/>
                                             

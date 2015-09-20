@@ -157,17 +157,22 @@ class Nurse  extends MX_Controller
 	public function patient_card($visit_id, $mike = NULL, $module = NULL,$opener = NULL)
 	{
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
-		$visit_type = $patient['visit_type'];
-		$patient_type = $patient['patient_type'];
-		$patient_othernames = $patient['patient_othernames'];
-		$patient_surname = $patient['patient_surname'];
+		$v_data['patient_type'] = $patient['patient_type'];
+		$v_data['patient_othernames'] = $patient['patient_othernames'];
+		$v_data['patient_surname'] = $patient['patient_surname'];
+		$v_data['patient_type_id'] = $patient['visit_type_id'];
+		$v_data['account_balance'] = $patient['account_balance'];
+		$v_data['visit_type_name'] = $patient['visit_type_name'];
+		$v_data['patient_id'] = $patient['patient_id'];
 		$patient_date_of_birth = $patient['patient_date_of_birth'];
 		$age = $this->reception_model->calculate_age($patient_date_of_birth);
 		$visit_date = $this->reception_model->get_visit_date($visit_id);
 		$gender = $patient['gender'];
 		$visit_date = date('jS M Y',strtotime($visit_date));
+		$v_data['age'] = $age;
+		$v_data['visit_date'] = $visit_date;
+		$v_data['gender'] = $gender;
 		
-		$v_data['patient'] = 'Visit Date: <span style="font-weight: normal;"> '.$visit_date.' </span> Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
 		$v_data['module'] = $module;
 		$v_data['mike'] = $mike;
 		$v_data['visit_id'] = $visit_id;
@@ -488,7 +493,6 @@ class Nurse  extends MX_Controller
 		$this->load->view('view_vaccine',$data);
 	}
 	
-	
 	public function search_vaccines($visit_id)
 	{
 		$this->form_validation->set_rules('search_item', 'Search', 'trim|required|xss_clean');
@@ -500,7 +504,14 @@ class Nurse  extends MX_Controller
 			$this->session->set_userdata('vaccine_search', $search);
 		}
 		
-		$this->procedures($visit_id);
+		redirect('nurse/vaccines_list/'.$visit_id);
+	}
+	
+	public function close_vaccine_search($visit_id)
+	{
+		$this->session->unset_userdata('vaccine_search');
+		
+		redirect('nurse/vaccines_list/'.$visit_id);
 	}
 
 	function vaccines_list($visit_id)
@@ -516,7 +527,7 @@ class Nurse  extends MX_Controller
 		
 		$order = 'service_charge.service_charge_name';
 		
-		$where = 'service_charge.service_id = service.service_id AND (service.service_name = "vaccine" OR service.service_name = "Vaccine") AND service.branch_code = "'.$this->session->userdata('branch_code').'" AND service_charge.visit_type_id = visit_type.visit_type_id  AND service_charge.visit_type_id = '.$visit_t;
+		$where = 'service_charge.service_id = service.service_id AND (service.service_name = "vaccine" OR service.service_name = "Vaccination") AND service.branch_code = "'.$this->session->userdata('branch_code').'" AND service_charge.visit_type_id = visit_type.visit_type_id  AND service_charge.visit_type_id = '.$visit_t;
 		$vaccine_search = $this->session->userdata('vaccine_search');
 		
 		if(!empty($vaccine_search))
@@ -574,9 +585,27 @@ class Nurse  extends MX_Controller
 		$this->load->view('admin/templates/no_sidebar', $data);	
 	}
 
-	function vaccines($vaccine_id,$visit_id,$suck){
+	function vaccines($vaccine_id,$visit_id,$suck)
+	{
 		$data = array('vaccine_id'=>$vaccine_id,'visit_id'=>$visit_id,'suck'=>$suck);
-		$this->load->view('vaccines',$data);	
+		$this->nurse_model->submitvisitvaccine($vaccine_id,$visit_id,$suck);
+
+		$visit_type_rs = $this->nurse_model->get_visit_type($visit_id);
+		
+		if(count($visit_type_rs) >0){
+			foreach ($visit_type_rs as $rs1 ) :
+				# code...
+				$visit_t = $rs1->visit_type;
+		
+			endforeach;
+		}
+		$this->nurse_model->visit_charge_insert($visit_id,$vaccine_id,$suck);
+		$this->visit_vaccines($visit_id);	
+	}
+
+	function visit_vaccines($visit_id){
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('visit_vaccines/vaccines_assigned',$data);	
 	}
 	public function search_diseases($visit_id)
 	{
@@ -596,11 +625,6 @@ class Nurse  extends MX_Controller
 	{
 		$this->session->unset_userdata('procedure_search');
 		$this->procedures($visit_id);
-	}
-	public function close_vaccine_search($visit_id)
-	{
-		$this->session->unset_userdata('vaccine_search');
-		$this->vaccines($visit_id);
 	}
 
 	public function close_disease_search($visit_id)
@@ -679,9 +703,12 @@ class Nurse  extends MX_Controller
 		$this->load->view('admin/templates/no_sidebar', $data);	
 	}
 
-	function procedure($procedure_id,$visit_id,$suck){
-		$data = array('procedure_id'=>$procedure_id,'visit_id'=>$visit_id,'suck'=>$suck);
-		$this->load->view('procedure',$data);	
+	function procedure($procedure_id,$visit_id,$suck)
+	{
+		$this->nurse_model->submitvisitprocedure($procedure_id,$visit_id,$suck);
+		$this->nurse_model->visit_charge_insert($visit_id,$procedure_id,$suck);
+		
+		$this->view_procedure($visit_id);	
 	}
 	function delete_procedure($procedure_id)
 	{
@@ -858,12 +885,38 @@ class Nurse  extends MX_Controller
 		$v_data['visit_id'] = $visit_id;
 		$data['content'] = $this->load->view('soap/objective_finding', $v_data, true);
 		
-		$data['title'] = 'Symptoms List';
+		$data['title'] = 'Objective findings';
 		$this->load->view('admin/templates/no_sidebar', $data);
 	}
-	function add_objective_findings($objective_finding_id,$visit_id,$status,$description=NULL){
-		$data = array('objective_finding_id'=>$objective_finding_id,'visit_id'=>$visit_id,'update_id'=>$status,'description'=>$description);
-		$this->load->view('soap/add_objective_findings',$data);
+	
+	function add_objective_findings($objective_finding_id, $visit_id, $status)
+	{
+		if($status == 1)
+		{
+			$this->nurse_model->delete_objective_finding($objective_finding_id, $visit_id);
+		}
+		
+		else
+		{
+			$this->nurse_model->save_objective_finding($objective_finding_id, $visit_id);
+		}
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('soap/add_objective_findings', $data);
+	}
+	
+	function update_objective_findings($objective_finding_id, $visit_id, $status, $description = NULL)
+	{
+		if($this->nurse_model->update_objective_finding($objective_finding_id, $visit_id, $description))
+		{
+			$data = array('visit_id'=>$visit_id,'description'=>$description);
+			$this->load->view('soap/add_objective_findings', $data);
+		}
+	}
+	
+	function get_visit_objective_findings($visit_id)
+	{
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('soap/add_objective_findings', $data);
 	}
 
 	function save_assessment($visit_id){
@@ -872,6 +925,7 @@ class Nurse  extends MX_Controller
 		$this->db->where(array("visit_id"=>$visit_id));
 		$this->db->update('visit', $visit_data);
 	}
+	
 	function save_plan($visit_id){
 		$plan = $this->input->post('notes');
 		$visit_data = array('visit_plan'=>$plan);

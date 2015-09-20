@@ -100,7 +100,7 @@
         XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
     }
 	
-    var url = "<?php echo site_url();?>nurse/procedure/"+id+"/"+v_id+"/"+suck;alert(url);
+    var url = "<?php echo site_url();?>nurse/procedure/"+id+"/"+v_id+"/"+suck;
    
     if(XMLHttpRequestObject) {
                 

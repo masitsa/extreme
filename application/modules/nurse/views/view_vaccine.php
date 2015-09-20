@@ -23,7 +23,7 @@ if(count($rs) >0){
 
 
 echo "
-	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Vaccine' onclick='myPopup4(".$visit_id.")'/></p></div>
+	
 <table align='center' class='table table-striped table-hover table-condensed'>
 	<tr>
 		
@@ -75,7 +75,7 @@ echo "
 
 		}
 echo"
-<tr bgcolor='#59B3D5'>
+<tr bgcolor='#D9EDF7'>
 <td></td>
 <td></td>
 <td></td>

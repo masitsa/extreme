@@ -48,9 +48,9 @@ if($num_rows > 0){
 		        </div>
             </div>
       </div>
-	
-	<div class='align-center'>
-		<input type='button' class='btn btn-large' value='Update' onclick='save_medication(".$visit_id.")' />
+	<br>
+	<div class='center-align'>
+		<input type='button' class='btn btn-primary btn-sm' value='Update' onclick='save_medication(".$visit_id.")' />
 		
     </div>
 ";
@@ -95,9 +95,9 @@ echo
             </div>
             </div>
       </div>
-	
-	<div class='align-center'>
-		<input type='button' class='btn btn-large' value='Save' onclick='save_medication(".$visit_id.")' />
+	c
+	<div class='center-align'>
+		<input type='button' class='btn btn-primary btn-sm' value='Save' onclick='save_medication(".$visit_id.")' />
 		
     </div>
 ";

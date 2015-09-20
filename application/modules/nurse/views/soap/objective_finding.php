@@ -1,103 +1,183 @@
 <?php
-
-
-$get_objective_rs = $this->medical_admin_model->objective_findings();
-$num_rows = count($get_objective_rs);
-
-$function = $this->medical_admin_model->visit_objective($visit_id);
-$num_function = count($function);
-
-if($num_function > 0){
-	foreach ($function as $key):
-		$function_name = $key->visit_objective_findings;
-	endforeach;
+	$get_objective_rs = $this->medical_admin_model->objective_findings();
+	$num_rows = count($get_objective_rs);
 	
-}
-
-
+	$rs2 = $this->nurse_model->get_visit_objective_findings($visit_id);
+	$num_rows2 = count($rs2);
 ?>
 
 <?php echo form_open("reception/register-other-patient", array("class" => "form-horizontal"));?>
 
 <div class="row">
 	<div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
+		
+		<section class="panel">
+			<header class="panel-heading">
+				<h2 class="panel-title">Objective findings</h2>
+			</header>
 
-              <!-- Widget -->
-              <div class="widget boxed">
-                    <!-- Widget head -->
-                    <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Objective Findings</h4>
-                      <div class="widget-icons pull-right">
-                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                      </div>
-                      <div class="clearfix"></div>
-                    </div>             
-
-                <!-- Widget content -->
-                    <div class="widget-content">
-                        <div class="padd">
-                       <?php
-                       $count = 0;
-                       $prev_name = '';
-						foreach ($get_objective_rs as $key2):
-							$s = $count;
-						$objective_name = $key2->objective_findings_name;
-						$class_name = $key2->objective_findings_class_name;
-						$objective_id = $key2->objective_findings_id;
-						
-						
-						if (($count == 0)){           
-							?>
-
-					    	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><?php echo $class_name;?></p>
-					    	<?php 
-						} 
-						
-						else if($class_name != $prev_name){         
-							?>
-					        </div>
-					    	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><?php echo $prev_name;?></p>
-					    	<?php 
-						}
-
-						$prev_name = $class_name;
-						?>
-
-					    <div class="col-md-3"><input name="<?php echo $objective_name?>" type="checkbox" onClick="add_objective_findings(<?php echo $objective_id;?>, <?php echo $visit_id?>, 0);toggleField('myTF<?php echo $objective_id;  ?>');"/><?php echo $objective_name?><input name="myTF<?php echo $objective_id;?>" id="myTF<?php echo $objective_id;  ?>" type="text" style="display:none;" onKeyUp="update_visit_obj(<?php echo $objective_id;?>, <?php echo $visit_id?>, <?php echo 1;?>);"/> 
-					  </div> 
-						<?php 
-						$count++;
-						endforeach;
-						 ?>
-					    </div>
-					    <?php echo "
-						<table border='0' align='center'>
-							<tr align='center'>
-								<td><input name='close' type='button' value='Close' class='btn btn-large' onclick='close_objective_findings(".$visit_id.")' /></td>
-							</tr>
-						</table>";?>
-                        </div>
-
-                     </div>
+			<div class="panel-body">
+            	<?php echo "
+				<div class='center-align'>
+					<input name='close' type='button' value='Close' class='btn btn-primary' onclick='close_objective_findings(".$visit_id.")' />
+				</div>";
+				?>
+				<?php
+                $count = 0;
+                $prev_name = '';
                 
-                </div>
+				foreach ($get_objective_rs as $key2):
+                    $s = $count;
+					$objective_name = $key2->objective_findings_name;
+					$class_name = $key2->objective_findings_class_name;
+					$objective_id = $key2->objective_findings_id;
+					$status = 0;
+					$description= '';
+					
+					if($num_rows2 > 0)
+					{
+						foreach ($rs2 as $key)
+						{
+							$objective_findings_id = $key->objective_findings_id;
+							
+							if($objective_findings_id == $objective_id)
+							{
+								$status = 1;
+								$objective_findings_name = $key->objective_findings_name;
+								$visit_objective_findings_id = $key->visit_objective_findings_id;
+								$objective_findings_class_name = $key->objective_findings_class_name;
+								$description= $key->description;
+								break;
+							}
+						}
+					}
+					
+					if (($count == 0))
+					{           
+						?>
+						<section class="panel panel-featured panel-featured-info">
+							<header class="panel-heading">
+								<h2 class="panel-title"><?php echo $class_name;?></h2>
+							</header>
+					
+							<div class="panel-body">
+						<?php 
+					} 
+                
+					else if($class_name != $prev_name)
+					{         
+						?>
+							</div>
+						</section>
+						
+						<section class="panel panel-featured panel-featured-info">
+							<header class="panel-heading">
+								<h2 class="panel-title"><?php echo $prev_name;?></h2>
+							</header>
+					
+							<div class="panel-body">
+						<?php 
+					}
+                
+                	$prev_name = $class_name;
+                	?>
+                
+                    <div class="col-md-3">
+                    	<div class="checkbox">
+                            <label>
+                            	<?php 
+									if($status == 1)
+									{
+										?>
+										<input name="<?php echo $objective_name?>" type="checkbox" onClick="add_objective_findings(<?php echo $objective_id;?>, <?php echo $visit_id?>, <?php echo $status;?>);toggleField('myTF<?php echo $objective_id;  ?>');" checked="checked" id="objective_check">
+                                <?php
+									}
+									
+									else
+									{
+										?>
+										<input name="<?php echo $objective_name?>" type="checkbox" onClick="add_objective_findings(<?php echo $objective_id;?>, <?php echo $visit_id?>, <?php echo $status;?>);toggleField('myTF<?php echo $objective_id;  ?>');" id="objective_check">
+                                <?php
+									}
+								?>
+                                
+								<?php echo $objective_name?>
+                            </label>
+                        </div>
+                        
+						<?php 
+                            if($status == 1)
+                            {
+                                ?>
+                                <input name="myTF<?php echo $objective_id;?>" id="myTF<?php echo $objective_id;  ?>" type="text" style="display:block;" onKeyUp="update_visit_obj(<?php echo $objective_id;?>, <?php echo $visit_id?>, <?php echo 1;?>);" value="<?php echo $description;?>"/>
+                        <?php
+                            }
+                            
+                            else
+                            {
+                                ?>
+                                <input name="myTF<?php echo $objective_id;?>" id="myTF<?php echo $objective_id;  ?>" type="text" style="display:none;" onKeyUp="update_visit_obj(<?php echo $objective_id;?>, <?php echo $visit_id?>, <?php echo 1;?>);" value="<?php echo $description;?>"/>
+                        <?php
+                            }
+                        ?>
+                        
+                    </div> 
+					<?php 
+                    $count++;
+                endforeach;
+                ?>
+					    
             </div>
-        </div>
+        </section>
+		<?php echo "
+        <div class='center-align'>
+            <input name='close' type='button' value='Close' class='btn btn-primary' onclick='close_objective_findings(".$visit_id.")' />
+        </div>";
+		?>
     </div>
-   
 </div>
 <?php echo form_close();?>
 
 <script type="text/javascript">
 	
-	function close_objective_findings(visit_id){
-  window.close(this);
-}
+	function close_objective_findings(visit_id)
+	{
+		var XMLHttpRequestObject = false;
+    
+		if (window.XMLHttpRequest) 
+		{
+			XMLHttpRequestObject = new XMLHttpRequest();
+		} 
+		
+		else if (window.ActiveXObject) 
+		{
+			XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var config_url = $('#config_url').val();
+		var url = config_url+"nurse/get_visit_objective_findings/"+visit_id;
+		
+		if(XMLHttpRequestObject) 
+		{
+			var obj3 = window.opener.document.getElementById("objective_findings");
+			XMLHttpRequestObject.open("GET", url);
+			
+			XMLHttpRequestObject.onreadystatechange = function()
+			{
+			
+				if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) 
+				{
+					obj3.innerHTML = XMLHttpRequestObject.responseText;
+					window.close(this);
+				}
+			}
+			
+			XMLHttpRequestObject.send(null);
+		}
+	}
 
-function add_objective_findings(objective_findings_id, visit_id,status){
+function add_objective_findings(objective_findings_id, visit_id, status)
+{
+	
   var XMLHttpRequestObject = false;
     
   if (window.XMLHttpRequest) {
@@ -117,10 +197,20 @@ function add_objective_findings(objective_findings_id, visit_id,status){
         
     XMLHttpRequestObject.onreadystatechange = function(){
       
-      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-        
-        obj3.innerHTML = XMLHttpRequestObject.responseText;
-        
+      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) 
+	  {
+		  	var myTarget = document.getElementById('objective_check');
+			
+			if(status == '1')
+			{
+				myTarget.value = '0';
+			}
+			
+			else
+			{
+				myTarget.value = '1';
+			}
+        	obj3.innerHTML = XMLHttpRequestObject.responseText;
       }
     }
         
@@ -128,15 +218,19 @@ function add_objective_findings(objective_findings_id, visit_id,status){
   }
 }
 
-function toggleField(objective_findings) {
-var myTarget = document.getElementById(objective_findings);
+function toggleField(objective_findings) 
+{
+	var myTarget = document.getElementById(objective_findings);
 
-if(myTarget.style.display == 'none'){
-  myTarget.style.display = 'block';
-    } else {
-  myTarget.style.display = 'none';
-  myTarget.value = '';
-}}
+	if(myTarget.style.display == 'none'){
+  		myTarget.style.display = 'block';
+    } 
+	
+	else {
+	  myTarget.style.display = 'none';
+	  myTarget.value = '';
+	}
+}
 
 
 function update_visit_obj(objective_findings_id,visit_id,update_id){
@@ -154,7 +248,7 @@ function update_visit_obj(objective_findings_id,visit_id,update_id){
 	var id= "myTF".concat(objective_findings_id);
 	var description = document.getElementById(id).value;
 	var config_url = $('#config_url').val();
-  	var url = config_url+"nurse/add_objective_findings/"+objective_findings_id+"/"+visit_id+"/"+update_id+"/"+description;
+  	var url = config_url+"nurse/update_objective_findings/"+objective_findings_id+"/"+visit_id+"/"+update_id+"/"+description;
 		if(XMLHttpRequestObject) {
 				
 		XMLHttpRequestObject.open("GET", url);

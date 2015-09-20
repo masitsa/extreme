@@ -53,6 +53,68 @@
 	<!-- Widget content -->
 	
 	<div class="panel-body">
+		
+		<div class="well well-sm info">
+			<h5 style="margin:0;">
+				<div class="row">
+					<div class="col-md-2">
+						<div class="row">
+							<div class="col-md-8">
+								<strong>First name:</strong>
+							</div>
+							<div class="col-md-4">
+								<?php echo $patient_surname;?>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-md-2">
+						<div class="row">
+							<div class="col-md-8">
+								<strong>Other names:</strong>
+							</div>
+							<div class="col-md-4">
+								<?php echo $patient_othernames;?>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-md-2">
+						<div class="row">
+							<div class="col-md-6">
+								<strong>Gender:</strong>
+							</div>
+							<div class="col-md-6">
+								<?php echo $gender;?>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-md-2">
+						<div class="row">
+							<div class="col-md-6">
+								<strong>Age:</strong>
+							</div>
+							<div class="col-md-6">
+								<?php echo $age;?>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-md-4">
+						<div class="row">
+							<div class="col-md-6">
+								<strong>Account balance:</strong>
+							</div>
+							<div class="col-md-6">
+								Kes <?php echo number_format($account_balance, 2);?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</h5>
+		</div>
+        
           <div class="center-align">
           	<?php
               	$error = $this->session->userdata('error_message');
@@ -134,13 +196,13 @@
 
                  <div class="tab-pane" id="medical-checkup">
                   
-                  <?php echo $this->load->view("patients/medical_checkup", '', TRUE);?>
+                  <?php //echo $this->load->view("patients/medical_checkup", '', TRUE);?>
                   
                 </div>
 
                  <div class="tab-pane" id="visit_trail">
                   
-                  <?php echo $this->load->view("patients/visit_trail", '', TRUE);?>
+                  <?php //echo $this->load->view("patients/visit_trail", '', TRUE);?>
                   
                 </div>
                 

@@ -49,7 +49,7 @@ if($family_disease_query->num_rows() > 0)
 						$checked = "";
 						if($family_id==70)
 						{
-							$history =  $history."<td  style='background:red;  opacity:0.8;'><input type='checkbox' id='checkbox".$fd_id.$family_id."' onclick='save_condition1(".$fd_id.",".$family_id.", ".$patient_id.")' ".$checked."></td>  ";
+							$history =  $history."<td  style='background:#F2DEDE;  opacity:0.8;'><input type='checkbox' id='checkbox".$fd_id.$family_id."' onclick='save_condition1(".$fd_id.",".$family_id.", ".$patient_id.")' ".$checked."></td>  ";
 						}
 						
 						else 
@@ -62,7 +62,7 @@ if($family_disease_query->num_rows() > 0)
 						//$fh_id = mysql_result($rs_history, 0, "family_history_id");
 						$checked = "checked='checked'";
 						
-						$history =  $history."<td  style='background:blue; opacity:0.8;'><input type='checkbox' id='checkbox".$fd_id.$family_id."' onclick='delete_condition(".$fd_id.",".$family_id.", ".$patient_id.")' ".$checked."></td>  ";
+						$history =  $history."<td  style='background:#5BC0DE; opacity:0.8;'><input type='checkbox' id='checkbox".$fd_id.$family_id."' onclick='delete_condition(".$fd_id.",".$family_id.", ".$patient_id.")' ".$checked."></td>  ";
 					}
 				}
 				$count_family++;

@@ -30,12 +30,8 @@ if(count($rs) > 0){
 	if(($waist != NULL) && ($hip != NULL))
 	{
 		$hwr = $hip / $waist;
-	
-		echo "<table style='width: 200px;'>
-						<tr class='info'>
-							<td>H / W: ".$hwr."</td>
-						</tr>
-					</table>";
+		
+		echo "<div class='alert alert-info'><strong>H | W:</strong> ".number_format($hwr, 2)."</div>";
 	}
 }
 ?>

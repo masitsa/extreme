@@ -4,290 +4,148 @@
 	<div class="col-md-6">
         <div class="row">
             <div class="col-md-12">
-
-              <!-- Widget -->
-              <div class="widget boxed">
-                    <!-- Widget head -->
-                    <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Vitals</h4>
-                      <div class="widget-icons pull-right">
-                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                      </div>
-                      <div class="clearfix"></div>
-                    </div>             
-
-                <!-- Widget content -->
-                    <div class="widget-content">
-                        <div class="padd">
-                              <!-- vitals from java script -->
-                                <div id="vitals"></div>
-
-
-                                <!-- end of vitals data -->
-                        </div>
-
-                     </div>
-                
-                </div>
+                <section class="panel panel-featured panel-featured-info">
+                    <header class="panel-heading">
+                        <h2 class="panel-title">Vitals</h2>
+                    </header>
+                    <div class="panel-body">
+                        <!-- vitals from java script -->
+                        <div id="vitals"></div>
+                        <!-- end of vitals data -->
+                    </div>
+                 </section>
             </div>
         </div>
     </div>
     <div class="col-md-6">
-       <div class="row">
-        <div class="col-md-12">
-
-          <!-- Widget -->
-          <div class="widget boxed">
-                <!-- Widget head -->
-                <div class="widget-head">
-                  <h4 class="pull-left"><i class="icon-reorder"></i>Procedures</h4>
-                  <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                  </div>
-                  <div class="clearfix"></div>
-                </div>             
-
-            <!-- Widget content -->
-                <div class="widget-content">
-                    <div class="padd">
-                            <!-- visit Procedures from java script -->
-                                <div id="procedures"></div>
-                             <!-- end of visit procedures -->
-                    </div>
-                </div>
-            </div>
-
-             <div class="widget boxed">
-                <!-- Widget head -->
-                <div class="widget-head">
-                  <h4 class="pull-left"><i class="icon-reorder"></i>Vaccines</h4>
-                  <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                  </div>
-                  <div class="clearfix"></div>
-                </div>             
-
-            <!-- Widget content -->
-                <div class="widget-content">
-                    <div class="padd">
-                              <!-- visit Procedures from java script -->
-                                <div id="vaccines_to_patients"></div>
-                             <!-- end of visit procedures -->
-                    </div>
-                </div>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-md-12">
+				<section class="panel panel-featured panel-featured-info">
+					<header class="panel-heading">
+						<h2 class="panel-title">Procedures</h2>
+					</header>
+					<div class="panel-body">
+                    	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Procedure' onclick='myPopup3(<?php echo $visit_id; ?>)'/></p></div>
+						<!-- visit Procedures from java script -->
+						<div id="procedures"></div>
+						<!-- end of visit procedures -->
+					</div>
+				 </section>
+			</div>
+			
+			<div class="col-md-12">
+				<section class="panel panel-featured panel-featured-info">
+					<header class="panel-heading">
+						<h2 class="panel-title">Vaccines</h2>
+					</header>
+					<div class="panel-body">
+                    	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Vaccine' onclick='myPopup4(<?php echo $visit_id; ?>)'/></p></div>
+						<!-- visit Procedures from java script -->
+						<div id="vaccines_to_patients"></div>
+						<!-- end of visit procedures -->
+					</div>
+				 </section>
+			</div>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
-
-              <!-- Widget -->
-              <div class="widget boxed">
-                    <!-- Widget head -->
-                    <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Visit Vitals</h4>
-                      <div class="widget-icons pull-right">
-                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                      </div>
-                      <div class="clearfix"></div>
-                    </div>             
-
-                <!-- Widget content -->
-                    <div class="widget-content">
-                        <div class="padd">
-                             <div id="previous_vitals"></div>
-
-                        </div>
-                    </div>
-            </div>
-        </div>
+        <section class="panel panel-featured panel-featured-info">
+			<header class="panel-heading">
+				<h2 class="panel-title">Visit vitals</h2>
+			</header>
+			<div class="panel-body">
+				<div id="previous_vitals"></div>
+			</div>
+		</section>
     </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
-
-              <!-- Widget -->
-              <div class="widget boxed">
-                    <!-- Widget head -->
-                    <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Allergies</h4>
-                      <div class="widget-icons pull-right">
-                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                      </div>
-                      <div class="clearfix"></div>
-                    </div>             
-
-                <!-- Widget content -->
-                    <div class="widget-content">
-                        <div class="padd">
-                              <!-- vitals from java script -->
-                                <div id="medication"></div>
-                                <!-- end of vitals data -->
-                        </div>
-
-                     </div>
-                
-                </div>
-            </div>
-        </div>
-    </div>
-    
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
-
-              <!-- Widget -->
-              <div class="widget boxed">
-                    <!-- Widget head -->
-                    <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Surgeries</h4>
-                      <div class="widget-icons pull-right">
-                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                      </div>
-                      <div class="clearfix"></div>
-                    </div>             
-
-                <!-- Widget content -->
-                    <div class="widget-content">
-                        <div class="padd">
-                              <!-- vitals from java script -->
-                                <div id="surgeries"></div>
-                                <!-- end of vitals data -->
-                        </div>
-
-                     </div>
-                
-                </div>
-            </div>
-        </div>
-    </div>
-    
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
-
-              <!-- Widget -->
-              <div class="widget boxed">
-                    <!-- Widget head -->
-                    <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Vaccines</h4>
-                      <div class="widget-icons pull-right">
-                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                      </div>
-                      <div class="clearfix"></div>
-                    </div>             
-
-                <!-- Widget content -->
-                    <div class="widget-content">
-                        <div class="padd">
-                              <!-- vitals from java script -->
-                                <div id="patient_vaccine"></div>
-                                <!-- end of vitals data -->
-                        </div>
-
-                     </div>
-                
-                </div>
-            </div>
-        </div>
-    </div>
-    
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
-
-              <!-- Widget -->
-              <div class="widget boxed">
-                    <!-- Widget head -->
-                    <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Family History</h4>
-                      <div class="widget-icons pull-right">
-                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                      </div>
-                      <div class="clearfix"></div>
-                    </div>             
-
-                <!-- Widget content -->
-                    <div class="widget-content">
-                        <div class="padd">
-                                <?php
-                                    $v_data['patient_id'] = $this->reception_model->get_patient_id_from_visit($visit_id);
-                                    $v_data['patient'] = $this->reception_model->patient_names2(NULL, $visit_id);
-                                    $v_data['family_disease_query'] = $this->nurse_model->get_family_disease();
-                                    $v_data['family_query'] = $this->nurse_model->get_family();
-                                ?>
-                              <!-- vitals from java script -->
-                               <?php echo $this->load->view("patients/family_history", $v_data, TRUE); ?>
-                                <!-- end of vitals data -->
-                        </div>
-
-                     </div>
-                
-                </div>
-            </div>
-        </div>
+        <section class="panel panel-featured panel-featured-info">
+			<header class="panel-heading">
+				<h2 class="panel-title">Allergies</h2>
+			</header>
+			<div class="panel-body">
+				<!-- vitals from java script -->
+				<div id="medication"></div>
+				<!-- end of vitals data -->
+			</div>
+		</section>
     </div>
-    
 </div>
+
 <div class="row">
     <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
-
-              <!-- Widget -->
-              <div class="widget boxed">
-                    <!-- Widget head -->
-                    <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Nurse Notes</h4>
-                      <div class="widget-icons pull-right">
-                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                      </div>
-                      <div class="clearfix"></div>
-                    </div>             
-
-                <!-- Widget content -->
-                    <div class="widget-content">
-                        <div class="padd">
-                              <!-- vitals from java script -->
-                                <?php
-                                    $visit_data1['visit_id'] = $visit_id;
-                                ?>
-                                <?php echo $this->load->view('soap/nurse_notes',$visit_data1, TRUE); ?>
-                                <!-- end of vitals data -->
-                        </div>
-
-                     </div>
-                
-                </div>
-            </div>
-        </div>
+		<section class="panel panel-featured panel-featured-info">
+			<header class="panel-heading">
+				<h2 class="panel-title">Surgeries</h2>
+			</header>
+			<div class="panel-body">
+				<!-- vitals from java script -->
+				<div id="surgeries"></div>
+				<!-- end of vitals data -->
+			</div>
+		</section>
     </div>
-    
 </div>
 
+<div class="row">
+    <div class="col-md-12">
+		<section class="panel panel-featured panel-featured-info">
+			<header class="panel-heading">
+				<h2 class="panel-title">Patient vaccine history</h2>
+			</header>
+			<div class="panel-body">
+				<!-- vitals from java script -->
+				<div id="patient_vaccine"></div>
+				<!-- end of vitals data -->
+			</div>
+		</section>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+		<section class="panel panel-featured panel-featured-info">
+			<header class="panel-heading">
+				<h2 class="panel-title">Family history</h2>
+			</header>
+			<div class="panel-body">
+				<?php
+					$v_data['patient_id'] = $this->reception_model->get_patient_id_from_visit($visit_id);
+					$v_data['patient'] = $this->reception_model->patient_names2(NULL, $visit_id);
+					$v_data['family_disease_query'] = $this->nurse_model->get_family_disease();
+					$v_data['family_query'] = $this->nurse_model->get_family();
+				?>
+				<!-- vitals from java script -->
+				<?php echo $this->load->view("patients/family_history", $v_data, TRUE); ?>
+				<!-- end of vitals data -->
+			</div>
+		</section>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+		<section class="panel panel-featured panel-featured-info">
+			<header class="panel-heading">
+				<h2 class="panel-title">Nurse notes</h2>
+			</header>
+
+			<div class="panel-body">
+				<!-- vitals from java script -->
+				<?php
+				$visit_data1['visit_id'] = $visit_id;
+				?>
+				<?php echo $this->load->view('soap/nurse_notes',$visit_data1, TRUE); ?>
+				<!-- end of vitals data -->
+			</div>
+		</section>
+    </div>
+</div>
 
 <?php echo form_close();?>
 
@@ -331,13 +189,15 @@ $(document).ready(function(){
                 }
                  previous_vitals(visit_id);
                 // get_family_history(visit_id);
-                 display_procedure(visit_id);
-                 get_medication(visit_id);
-                 get_surgeries(visit_id);
-                 get_vaccines(visit_id);
-                display_vaccines(visit_id);
                 // nurse_notes(visit_id);
                 // patient_details(visit_id);
+				
+				display_procedure(visit_id);
+				get_medication(visit_id);
+				get_surgeries(visit_id);
+				get_vaccines(visit_id);
+				display_vaccines(visit_id);
+				display_visit_vaccines(visit_id);
             }
         }
                 
@@ -363,7 +223,7 @@ function load_vitals(vitals_id, visit_id){
   
     if(XMLHttpRequestObject) {
         
-        var obj = document.getElementById("display"+vitals_id);
+        var obj = document.getElementById("vital"+vitals_id);
                 
         XMLHttpRequestObject.open("GET", url);
                 
@@ -441,10 +301,9 @@ function getXMLHTTP() {
             
         return xmlhttp;
     }
-    function save_vital(visit_id){
-        
-      
-
+	
+    function save_vital(visit_id)
+	{
         var config_url = document.getElementById("config_url").value;
         var data_url = config_url+"nurse/save_vitals/"+visit_id;
        
@@ -465,7 +324,9 @@ function getXMLHTTP() {
         url: data_url,
         data:{systolic: vital5_systolic, diastolic : vital6_diastolic, weight: vital8_weight, height : vital9_height,hip : vital4_hip,waist : vital3_waist, temperature : vital1_temperature,pulse : vital7_pulse,respiration: vital2_respiration,oxygen: vital11_oxygen, pain: vital10_pain},
         dataType: 'text',
-        success:function(data){
+        success:function(data)
+		{
+			//calculate_bmi(visit_id);
          //get_medication(visit_id);
          alert("You have successfully entered the vitals");
           previous_vitals(visit_id);
@@ -493,7 +354,7 @@ function getXMLHTTP() {
             XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
         }
         var config_url = document.getElementById("config_url").value;
-        var url = config_url+"nurse/calculate_bmi/"+visit_id;window.alert(url);
+        var url = config_url+"nurse/calculate_bmi/"+visit_id;
 
         if(XMLHttpRequestObject) {
             
@@ -505,7 +366,7 @@ function getXMLHTTP() {
                 
                 if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
 
-                    obj.innerHTML = XMLHttpRequestObject.responseText;
+                    //obj.innerHTML = XMLHttpRequestObject.responseText;
                 }
             }
                     
@@ -538,7 +399,7 @@ function calculate_hwr(vitals_id, visit_id){
             
             if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
 
-                obj.innerHTML = XMLHttpRequestObject.responseText;
+                //obj.innerHTML = XMLHttpRequestObject.responseText;
             }
         }
                 
@@ -583,15 +444,47 @@ function myPopup3(visit_id) {
     window.open( config_url+"nurse/procedures/"+visit_id, "myWindow", "status = 1, height = auto, width = 600, resizable = 0" )
 }
 
-function calculatevaccinetotal(amount, id, procedure_id, v_id){
-       
+function calculatevaccinetotal(amount, id, procedure_id, v_id)
+{
     var units = document.getElementById('units'+id).value;  
 
-    grand_vaccine_total(id, units, amount);
-    display_vaccine(v_id);
+    grand_vaccine_total(id, units, amount, v_id);
 }
 
-function grand_vaccine_total(vaccine_id, units, amount){
+function display_visit_vaccines(visit_id)
+{
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    var url = config_url+"nurse/visit_vaccines/"+visit_id;
+    
+    if(XMLHttpRequestObject) {
+                
+        var obj = document.getElementById("vaccines_to_patients");
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) 
+			{
+                obj.innerHTML = XMLHttpRequestObject.responseText;
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
+
+function grand_vaccine_total(vaccine_id, units, amount, v_id){
     var XMLHttpRequestObject = false;
         
     if (window.XMLHttpRequest) {
@@ -612,7 +505,7 @@ function grand_vaccine_total(vaccine_id, units, amount){
         XMLHttpRequestObject.onreadystatechange = function(){
             
             if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-                
+                display_visit_vaccines(v_id);
             }
         }
                 
@@ -620,15 +513,15 @@ function grand_vaccine_total(vaccine_id, units, amount){
     }
 }
 
+//Calculate procedure total
 function calculatetotal(amount, id, procedure_id, v_id){
        
     var units = document.getElementById('units'+id).value;  
 
-    grand_total(id, units, amount);
-    display_procedure(v_id);
+    grand_total(id, units, amount, v_id);
 }
 
-function grand_total(procedure_id, units, amount){
+function grand_total(procedure_id, units, amount, v_id){
     var XMLHttpRequestObject = false;
         
     if (window.XMLHttpRequest) {
@@ -648,8 +541,9 @@ function grand_total(procedure_id, units, amount){
                 
         XMLHttpRequestObject.onreadystatechange = function(){
             
-            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-                
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) 
+			{
+    			display_procedure(v_id);
             }
         }
                 
@@ -708,7 +602,7 @@ function delete_vaccine(id, visit_id){
             
             if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
 
-                display_vaccines(visit_id);
+                display_visit_vaccines(visit_id);
             }
         }
                 
@@ -755,7 +649,7 @@ function display_vaccines(visit_id){
 
 function myPopup4(visit_id) {
     var config_url = document.getElementById("config_url").value;
-    window.open( config_url+"nurse/vaccines_list/"+visit_id, "myWindow", "status = 1, height = auto, width = 900, resizable = 0" )
+    window.open( config_url+"nurse/vaccines_list/"+visit_id, "myWindow", "status = 1, height = auto, width = 600, resizable = 0" )
 }
 // end of vaccine
 function save_medication(visit_id){
@@ -785,8 +679,6 @@ function save_medication(visit_id){
 
        
 }
-
-
 
 function get_medication(visit_id){
     
@@ -936,6 +828,7 @@ function get_vaccines(visit_id){
         var obj = document.getElementById("patient_vaccine");
                 
         XMLHttpRequestObject.open("GET", url);
+
                 
         XMLHttpRequestObject.onreadystatechange = function(){
             
@@ -1005,6 +898,7 @@ function save_vaccine(vaccine_id, value, visit_id){
         
         XMLHttpRequestObject.send(null);
     }
+	
 }
 
 </script>

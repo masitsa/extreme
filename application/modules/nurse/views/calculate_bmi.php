@@ -8,10 +8,10 @@ if(count($rs) > 0){
 		$vital_id = $rs1->vital_id;
 		
 		if($vital_id == 8){
-			echo $weight = $rs1->visit_vital_value;
+			$weight = $rs1->visit_vital_value;
 		}
 		if($vital_id == 9){
-			echo $height = $rs1->visit_vital_value;
+			$height = $rs1->visit_vital_value;
 		}
 	endforeach;
 	
@@ -29,11 +29,7 @@ if(count($rs) > 0){
 	{
 		$bmi = $weight / ($height * $height);
 	
-		echo "<table style='width: 200px;'>
-				<tr class='info'>
-					<td>BMI: ".$bmi."</td>
-				</tr>
-			</table>";
+		echo "<div class='alert alert-info'><strong>BMI:</strong> ".number_format($bmi, 2)."</div>";
 	}
 }
 ?>

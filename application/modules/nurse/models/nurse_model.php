@@ -361,15 +361,26 @@ class Nurse_model extends CI_Model
 			'visit_charge_amount'=>$visit_charge_amount,
 			'visit_charge_units'=>$suck,
 			'created_by'=>$this->session->userdata("personnel_id"),
-			'date'=>date("Y-m-d")
-		);
+			'date'=>date("Y-m-d H:i:s")
+		);//print_r($visit_data); die();
 		$this->db->insert('visit_charge', $visit_data);
 	}
 
+	function get_visit_procedure_charges($v_id)
+	{
+		$table = "visit_charge, service_charge, service";
+		$where = "visit_charge.visit_charge_delete = 0 AND visit_charge.visit_id = $v_id AND visit_charge.service_charge_id = service_charge.service_charge_id AND service.service_id = service_charge.service_id AND service.service_name = 'Procedures'";
+		$items = "*";
+		$order = "visit_id";
 
-	function get_visit_procedure_charges($v_id, $service_charge_id){
-		$table = "visit_charge, service_charge";
-		$where = "visit_charge.visit_charge_delete = 0 AND visit_charge.visit_id = $v_id AND visit_charge.service_charge_id = service_charge.service_charge_id AND service_charge.service_id = (SELECT service_id FROM service_charge WHERE service_charge_id = ".$service_charge_id.")";
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		return $result;
+	}
+
+	function get_visit_vaccine_charges($v_id)
+	{
+		$table = "visit_charge, service_charge, service";
+		$where = "visit_charge.visit_charge_delete = 0 AND visit_charge.visit_id = $v_id AND visit_charge.service_charge_id = service_charge.service_charge_id AND service.service_id = service_charge.service_id AND service.service_name = 'Vaccination'";
 		$items = "*";
 		$order = "visit_id";
 
@@ -701,18 +712,48 @@ class Nurse_model extends CI_Model
 		$this->db->insert('visit_symptoms', $visit_data);
 	}
 
-	function update_objective_finding($objective_finding_id, $visit_id, $description){
-		
+	function update_objective_finding($objective_finding_id, $visit_id, $description)
+	{
 		$description = str_replace('%20', ' ',$description);
 		$visit_data = array('description'=>$description);
 
 		$this->db->where(array("objective_findings_id"=>$objective_finding_id,"visit_id"=>$visit_id));
-		$this->db->update('visit_objective_findings', $visit_data);
+		if($this->db->update('visit_objective_findings', $visit_data))
+		{
+			return TRUE;
+		}
 		
+		else
+		{
+			return FALSE;
+		}
 	}
-	function save_objective_finding($objective_finding_id, $visit_id){
-		$visit_data = array('visit_id'=>$visit_id,'objective_findings_id'=>$objective_finding_id);
+	
+	function save_objective_finding($objective_finding_id, $visit_id)
+	{
+		$visit_data = array(
+			'visit_id'=>$visit_id,
+			'objective_findings_id'=>$objective_finding_id
+		);
 		$this->db->insert('visit_objective_findings', $visit_data);
+	}
+	
+	function delete_objective_finding($objective_finding_id, $visit_id)
+	{
+		$visit_data = array(
+			'visit_id'=>$visit_id,
+			'objective_findings_id'=>$objective_finding_id
+		);
+		$this->db->where($visit_data);
+		if($this->db->delete('visit_objective_findings'))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
 	}
 
 	public function get_diseases($table, $where, $per_page, $page, $order)

@@ -63,8 +63,7 @@ else{
 
 echo "
 
-<div id='test_results'></div>
-<div id='prescription'></div>";
+<div id='test_results'></div>";
 
 
 ?>

@@ -3,63 +3,60 @@
         <div class="col-lg-6">
           
             <div class="form-group">
-                <label class="col-lg-4 control-label">Systolic: </label>
+                <label class="col-lg-8 control-label">Systolic: </label>
                 
-                <div class="col-lg-8">
+                <div class="col-lg-4">
                 	<input type="text" id="vital5"  class="form-control"/>
               
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-lg-4 control-label">Diastolic: </label>
+                <label class="col-lg-8 control-label">Diastolic: </label>
                 
-                <div class="col-lg-8">
+                <div class="col-lg-4">
                 	<input type="text" id="vital6"  class="form-control"/>
                
                 </div>
             </div>
 
-
-
             <!-- Body mass index  -->
 
             <div class="form-group">
-                <label class="col-lg-4 control-label">Weight (kg): </label>
+                <label class="col-lg-8 control-label">Weight (kg): </label>
                 
-                <div class="col-lg-8">
+                <div class="col-lg-4">
                 	<input type="text" id="vital8"  class="form-control"/>
                 	
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-lg-4 control-label">Height (m) : </label>
+                <label class="col-lg-8 control-label">Height (m) : </label>
                 
-                <div class="col-lg-8">
+                <div class="col-lg-4">
                 	<input type="text" id="vital9"  class="form-control"/>
-                	
-                	
                 </div>
             </div>
-
+			<div id="bmi_out"></div>
             <!-- hip/ Weist -->
 
             <div class="form-group">
-                <label class="col-lg-4 control-label">Hip : </label>
+                <label class="col-lg-8 control-label">Hip : </label>
                 
-                <div class="col-lg-8">
+                <div class="col-lg-4">
                 	<input type="text" id="vital4"  class="form-control"/>
 
                 </div>
 
             </div>
             <div class="form-group">
-                <label class="col-lg-4 control-label">Waist : </label>
+                <label class="col-lg-8 control-label">Waist : </label>
                 
-                <div class="col-lg-8">
+                <div class="col-lg-4">
                 	<input type="text" id="vital3" class="form-control"/>
                 	
                 </div>
             </div>
+			<div id="hwr_out"></div>
 
         </div>
 
@@ -68,44 +65,44 @@
             <!-- temparature -->
 
             <div class="form-group">
-                <label class="col-lg-4 control-label">Temp: </label>
+                <label class="col-lg-8 control-label">Temp: </label>
                 
-                <div class="col-lg-8">
+                <div class="col-lg-4">
                 	<input type="text" id="vital1"  class="form-control"/>
                   
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-lg-4 control-label">Pulse: </label>
+                <label class="col-lg-8 control-label">Pulse: </label>
                 
-                <div class="col-lg-8">
+                <div class="col-lg-4">
                 	<input type="text" id="vital7" class="form-control"/>
                   
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label">Respiration: </label>
+                <label class="col-lg-8 control-label">Respiration: </label>
                 
-                <div class="col-lg-8">
+                <div class="col-lg-4">
                 	<input type="text" id="vital2" class="form-control"/>
                     
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label">Oxygen Saturation : </label>
+                <label class="col-lg-8 control-label">Oxygen Saturation : </label>
                 
-                <div class="col-lg-8">
+                <div class="col-lg-4">
                 	<input type="text" id="vital11"  class="form-control"/>
                 	
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label">Pain : </label>
+                <label class="col-lg-8 control-label">Pain : </label>
                 
-                <div class="col-lg-8">
+                <div class="col-lg-4">
                 	<input type="text" id="vital10"  class="form-control"/>
                 	
                 </div>

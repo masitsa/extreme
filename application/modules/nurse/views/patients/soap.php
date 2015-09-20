@@ -8,227 +8,114 @@ else{
 ?>
 <div class="row">
 	<div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
+		<section class="panel panel-featured panel-featured-info">
+			<header class="panel-heading">
+				<h2 class="panel-title">Symptoms</h2>
+			</header>
 
-              <!-- Widget -->
-              <div class="widget boxed">
-                    <!-- Widget head -->
-                    <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Symptoms</h4>
-                      <div class="widget-icons pull-right">
-                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                      </div>
-                      <div class="clearfix"></div>
-                    </div>             
-
-                <!-- Widget content -->
-                    <div class="widget-content">
-                        <div class="padd">
-                              <!-- vitals from java script -->
-                                <div id="symptoms"></div>
-                                <!-- end of vitals data -->
-                        </div>
-
-                     </div>
-                
-                </div>
+			<div class="panel-body">
+                <!-- vitals from java script -->
+                <div id="symptoms"></div>
+                <!-- end of vitals data -->
             </div>
-        </div>
-    </div>
-   
-</div>
-<div class="row">
- <div class="col-md-12">
-       <div class="row">
-        <div class="col-md-12">
-
-          <!-- Widget -->
-          <div class="widget boxed">
-                <!-- Widget head -->
-                <div class="widget-head">
-                  <h4 class="pull-left"><i class="icon-reorder"></i>Objective Findings</h4>
-                  <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                  </div>
-                  <div class="clearfix"></div>
-                </div>             
-
-            <!-- Widget content -->
-                <div class="widget-content">
-                    <div class="padd">
-                            <!-- visit Procedures from java script -->
-                                <div id="objective_findings"></div>
-                             <!-- end of visit procedures -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
+		</section>
     </div>
 </div>
 
 <div class="row">
- <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
+ 	<div class="col-md-12">
+		<section class="panel panel-featured panel-featured-info">
+			<header class="panel-heading">
+				<h2 class="panel-title">Objective findings</h2>
+			</header>
 
-              <!-- Widget -->
-              <div class="widget boxed">
-                    <!-- Widget head -->
-                    <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Assessment</h4>
-                      <div class="widget-icons pull-right">
-                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                      </div>
-                      <div class="clearfix"></div>
-                    </div>             
-
-                <!-- Widget content -->
-                    <div class="widget-content">
-                        <div class="padd">
-                              <!-- vitals from java script -->
-                                <div id="assessment"></div>
-                                <!-- end of vitals data -->
-                        </div>
-
-                     </div>
-                
-                </div>
+			<div class="panel-body">
+                <!-- visit Procedures from java script -->
+                <div id="objective_findings"></div>
+                <!-- end of visit procedures -->
             </div>
-        </div>
+		</section>
+    </div>
+</div>
+
+<div class="row">
+ 	<div class="col-md-12">
+		<section class="panel panel-featured panel-featured-info">
+			<header class="panel-heading">
+				<h2 class="panel-title">Assesment</h2>
+			</header>
+
+			<div class="panel-body">
+                <!-- vitals from java script -->
+                <div id="assessment"></div>
+                <!-- end of vitals data -->
+            </div>
+		</section>
     </div>
 </div>
 <?php
 }
 ?>
 <div class="row">
- 
-    <div class="col-md-12">
-       <div class="row">
-        <div class="col-md-12">
+ 	<div class="col-md-12">
+		<section class="panel panel-featured panel-featured-info">
+			<header class="panel-heading">
+				<h2 class="panel-title">Plan</h2>
+			</header>
 
-          <!-- Widget -->
-          <div class="widget boxed">
-                <!-- Widget head -->
-                <div class="widget-head">
-                  <h4 class="pull-left"><i class="icon-reorder"></i>Plan</h4>
-                  <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                  </div>
-                  <div class="clearfix"></div>
-                </div>             
-
-            <!-- Widget content -->
-                <div class="widget-content">
-                    <div class="padd">
-                            <!-- visit Procedures from java script -->
-                             <div id="plan"></div>
-                             <!-- end of visit procedures -->
-                             <div id='visit_diagnosis_original'></div>
-                    </div>
-                </div>
+			<div class="panel-body">
+                <!-- visit Procedures from java script -->
+                <div id="plan"></div>
+                <!-- end of visit procedures -->
+                <div id='visit_diagnosis_original'></div>
             </div>
-        </div>
-        </div>
+		</section>
     </div>
 </div>
+
 <div class="row">
-  <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
+ 	<div class="col-md-12">
+		<section class="panel panel-featured panel-featured-info">
+			<header class="panel-heading">
+				<h2 class="panel-title">Prescription</h2>
+			</header>
 
-              <!-- Widget -->
-              <div class="widget boxed">
-                    <!-- Widget head -->
-                    <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Prescription</h4>
-                      <div class="widget-icons pull-right">
-                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                      </div>
-                      <div class="clearfix"></div>
-                    </div>             
-
-                <!-- Widget content -->
-                    <div class="widget-content">
-                        <div class="padd">
-                              <!-- vitals from java script -->
-                                <div id="prescription"></div>
-                                <!-- end of vitals data -->
-                        </div>
-
-                     </div>
-                
-                </div>
+			<div class="panel-body">
+                <!-- vitals from java script -->
+                <div id="prescription"></div>
+                <!-- end of vitals data -->
             </div>
-        </div>
+		</section>
+    </div>
+</div>
+
+<div class="row">
+ 	<div class="col-md-6">
+		<section class="panel panel-featured panel-featured-info">
+			<header class="panel-heading">
+				<h2 class="panel-title">Doctor's notes</h2>
+			</header>
+
+			<div class="panel-body">
+                <!-- vitals from java script -->
+                <div id="doctor_notes"></div>
+                <!-- end of vitals data -->
+            </div>
+		</section>
     </div>
     
-</div>
-
-<div class="row">
-  <div class="col-md-6">
-        <div class="row">
-            <div class="col-md-12">
-
-              <!-- Widget -->
-              <div class="widget boxed">
-                    <!-- Widget head -->
-                    <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Doctor's Notes</h4>
-                      <div class="widget-icons pull-right">
-                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                      </div>
-                      <div class="clearfix"></div>
-                    </div>             
-
-                <!-- Widget content -->
-                    <div class="widget-content">
-                        <div class="padd">
-                              <!-- vitals from java script -->
-                                <div id="doctor_notes"></div>
-                                <!-- end of vitals data -->
-                        </div>
-
-                     </div>
-                
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="col-md-6">
-       <div class="row">
-        <div class="col-md-12">
+		<section class="panel panel-featured panel-featured-info">
+			<header class="panel-heading">
+				<h2 class="panel-title">Nurse notes</h2>
+			</header>
 
-          <!-- Widget -->
-          <div class="widget boxed">
-                <!-- Widget head -->
-                <div class="widget-head">
-                  <h4 class="pull-left"><i class="icon-reorder"></i>Nurse Notes</h4>
-                  <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                  </div>
-                  <div class="clearfix"></div>
-                </div>             
-
-            <!-- Widget content -->
-                <div class="widget-content">
-                    <div class="padd">
-                            <!-- visit Procedures from java script -->
-                                <div id="nurse_notes"></div>
-                             <!-- end of visit procedures -->
-                    </div>
-                </div>
+			<div class="panel-body">
+                <!-- visit Procedures from java script -->
+                <div id="nurse_notes"></div>
+                <!-- end of visit procedures -->
             </div>
-        </div>
-        </div>
+		</section>
     </div>
 </div>
 <?php echo form_close();?>
@@ -503,8 +390,9 @@ function display_prescription(visit_id, page){
 }
 
 function open_window_lab(test, visit_id){
+	
   var config_url = $('#config_url').val();
-  window.open(config_url+"laboratory/laboratory_list/"+test+"/"+visit_id,"Popup","height=1200, width=800, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
+  window.open(config_url+"laboratory/laboratory_list/"+test+"/"+visit_id,"Popup","height=1200, width=600, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
 }
 
 function open_symptoms(visit_id){
@@ -646,7 +534,7 @@ function save_symptoms(visit_id){
   data:{notes: symptoms},
   dataType: 'text',
   success:function(data){
-    window.alert("You have successfully updated the symptoms");
+    //window.alert("You have successfully updated the symptoms");
   //obj.innerHTML = XMLHttpRequestObject.responseText;
   },
   error: function(xhr, status, error) {
@@ -659,25 +547,25 @@ function save_symptoms(visit_id){
 
 function save_objective_findings(visit_id){
  
-  var config_url = $('#config_url').val();
-  var data_url = config_url+"nurse/save_objective_findings/"+visit_id;
-  //window.alert(data_url);
-   var objective_findings = $('#visit_objective_findings').val();//document.getElementById("vital"+vital_id).value;
-  $.ajax({
-  type:'POST',
-  url: data_url,
-  data:{notes: objective_findings},
-  dataType: 'text',
-  success:function(data){
-    window.alert("You have successfully updated the objective findings");
-  //obj.innerHTML = XMLHttpRequestObject.responseText;
-  },
-  error: function(xhr, status, error) {
-  //alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
-  alert(error);
-  }
-
-  });
+	var config_url = $('#config_url').val();
+	var data_url = config_url+"nurse/save_objective_findings/"+visit_id;
+	//window.alert(data_url);
+	var objective_findings = $('#visit_objective_findings').val();//document.getElementById("vital"+vital_id).value;
+	alert(objective_findings);
+	$.ajax({
+		type:'POST',
+		url: data_url,
+		data:{notes: objective_findings},
+		dataType: 'text',
+		success:function(data){
+			//window.alert("You have successfully updated the objective findings");
+			//obj.innerHTML = XMLHttpRequestObject.responseText;
+		},
+		error: function(xhr, status, error) {
+			//alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+			alert(error);
+		}
+	});
 }
 function save_plan(visit_id){
  

@@ -318,7 +318,7 @@ if($patient_lifestyle->num_rows() > 0)
 </br>
 <div class="row">
 	<div class="center-align ">
-		<button class="btn btn-info btn-lg" type="submit" name="save_lifestyle">Save Patient Lifestyle</button>
+		<button class="btn btn-info btn-sm" type="submit" name="save_lifestyle">Save Patient Lifestyle</button>
 	</div>
 </div>
 <?php echo form_close();?>

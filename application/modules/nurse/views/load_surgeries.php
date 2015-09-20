@@ -60,7 +60,7 @@ echo
 			</select>
 		</td>
         <td><textarea id='surgery_description' class='form-control'></textarea></td>
-        <td><input type='button' class='btn' value='Save' onclick='save_surgery(".$visit_id.")' /></td>
+        <td><input type='button' class='btn btn-sm btn-success' value='Save' onclick='save_surgery(".$visit_id.")' /></td>
     </tr>
  </table>
 ";

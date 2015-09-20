@@ -9,17 +9,6 @@
 //  end of this function to enter
 
 
-// get the visit type 
-
-$visit_type_rs = $this->nurse_model->get_visit_type($visit_id);
-
-if(count($visit_type_rs) >0){
-	foreach ($visit_type_rs as $rs1 ) :
-		# code...
-		$visit_t = $rs1->visit_type;
-
-	endforeach;
-}
 //  end of getting the visit type
 
 
@@ -35,7 +24,6 @@ $this->nurse_model->visit_charge_insert($visit_id,$procedure_id,$suck);
 
 $visit__rs1 = $this->nurse_model->get_visit_procedure_charges($visit_id, $procedure_id);
 echo "
-	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Procedure' onclick='myPopup3(".$visit_id.")'/></p></div>
 
 	<table align='center' class='table table-striped table-hover table-condensed'>
 	<tr>
@@ -44,7 +32,8 @@ echo "
 		<th>Units</th>
 		<th>Unit Cost</th>
 		<th>Total</th>
-	
+		<th></th>
+		<th></th>
 	</tr>
 ";                       $total= 0;  
 						
@@ -66,11 +55,10 @@ echo "
 											<td align='center'>".$visit_charge_amount."</td>
 											<td align='center'><input type='text' readonly='readonly' size='5' value='".$units * $visit_charge_amount."' id='total".$v_procedure_id."'></div></td>
 											<td>
-												<div class='btn-toolbar'>
-													<div class='btn-group'>
-														<a class='btn btn-sm btn-danger' href='#' onclick='delete_procedure(".$v_procedure_id.", ".$visit_id.")'><i class='fa fa-trash'></i></a>
-													</div>
-												</div>
+												<a class='btn btn-sm btn-primary' href='#' onclick='calculatetotal(".$visit_charge_amount.",".$v_procedure_id.", ".$procedure_id.",".$visit_id.")'><i class='fa fa-pencil'></i></a>
+											</td>
+											<td>
+												<a class='btn btn-sm btn-danger' href='#' onclick='delete_procedure(".$v_procedure_id.", ".$visit_id.")'><i class='fa fa-trash'></i></a>
 											</td>
 										</tr>	
 								";	
