@@ -1454,7 +1454,7 @@ class Nurse  extends MX_Controller
 			$other_name = '';
 		}
 		
-		$search = $visit_type_id.$strath_no.$surname.$other_name;
+		$search = $visit_type_id.$patient_number.$surname.$other_name;
 		$this->session->set_userdata('patient_visit_search', $search);
 		
 		$this->nurse_queue();
