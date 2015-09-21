@@ -23,10 +23,15 @@ class Lab_charges extends MX_Controller
 	{
 		echo "no patient id";
 	}
-	public function test_list($page_name = NULL)
+	public function test_list($order = 'lab_test_name', $order_method = 'ASC', $page_name = '__')
 	{
 		// this is it
-		$where = 'lab_test_class.lab_test_class_id = lab_test.lab_test_class_id AND service_charge.lab_test_id = lab_test.lab_test_id AND service.service_id = service_charge.service_id AND (service.service_name = "Lab" OR service.service_name = "lab" OR service.service_name = "laboratory" OR service.service_name = "Laboratory") AND service.branch_code = "'.$this->session->userdata('branch_code').'"';
+		/*$where = 'lab_test_class.lab_test_class_id = lab_test.lab_test_class_id AND service_charge.lab_test_id = lab_test.lab_test_id AND service.service_id = service_charge.service_id AND (service.service_name = "Lab" OR service.service_name = "lab" OR service.service_name = "laboratory" OR service.service_name = "Laboratory") AND service.branch_code = "'.$this->session->userdata('branch_code').'"';
+		$table = 'lab_test,lab_test_class,service,service_charge';*/
+		
+		$where = 'lab_test_class.lab_test_class_id = lab_test.lab_test_class_id';
+		$table = 'lab_test,lab_test_class';
+		
 		$lab_tests = $this->session->userdata('lab_tests');
 		
 		if(!empty($lab_tests))
@@ -34,19 +39,10 @@ class Lab_charges extends MX_Controller
 			$where .= $lab_tests;
 		}
 		
-		if($page_name == NULL)
-		{
-			$segment = 3;
-		}
-		
-		else
-		{
-			$segment = 4;
-		}
-		$table = 'lab_test,lab_test_class,service,service_charge';
+		$segment = 6;
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = base_url().'lab_charges/test_list/'.$page_name;
+		$config['base_url'] = base_url().'laboratory-setup/tests/'.$order.'/'.$order_method.'/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 15;
@@ -78,7 +74,21 @@ class Lab_charges extends MX_Controller
 		
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
-		$query = $this->lab_charges_model->get_all_test_list($table, $where, $config["per_page"], $page, 'ASC');
+		$query = $this->lab_charges_model->get_all_test_list($table, $where, $config["per_page"], $page, $order, $order_method);
+		
+		//change of order method 
+		if($order_method == 'DESC')
+		{
+			$order_method = 'ASC';
+		}
+		
+		else
+		{
+			$order_method = 'DESC';
+		}
+		
+		$v_data['order'] = $order;
+		$v_data['order_method'] = $order_method;
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
@@ -510,7 +520,7 @@ class Lab_charges extends MX_Controller
 			redirect('lab_charges/classes/'.$class_id);			
 		}
     }
-    function activation($type,$page,$id)
+    function activation($type, $page, $id)
     {
     	// the pages are test format, tests, classes
     	$date = date("Y-m-d");

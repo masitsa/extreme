@@ -143,6 +143,7 @@ class Services extends Hospital_administration
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
 		$query = $this->services_model->get_all_service_charges($table, $where, $config["per_page"], $page, $order, $order_method);
+		$v_data["department_id"] = $this->services_model->get_department_id($service_id);
 		
 		//change of order method 
 		if($order_method == 'DESC')
@@ -177,15 +178,14 @@ class Services extends Hospital_administration
 	
 	public function add_service()
 	{
-		$this->form_validation->set_rules('service_name', 'Service name', 'trim|required|is_unique[service.service_name]|xss_clean');
-		$this->form_validation->set_message("is_unique", "A unique name is requred.");
+		$this->form_validation->set_rules('service_name', 'Service name', 'trim|required|xss_clean');
 
 		if ($this->form_validation->run())
 		{
 			$result = $this->services_model->submit_service();
 			if($result == FALSE)
 			{
-				$this->session->set_userdata("error_message", "Unable to add this service . Please try again");
+				$this->session->set_userdata("error_message", "Unable to add this service. Please try again");
 			}
 			else
 			{
@@ -444,6 +444,32 @@ class Services extends Hospital_administration
 	{
 		$this->services_model->deactivate_service_charge($service_charge_id);
 		$this->session->set_userdata('success_message', 'Charge disabled successfully');
+		redirect('hospital-administration/service-charges/'.$service_id);
+	}
+	
+	public function import_lab_charges($service_id)
+	{
+		if($this->services_model->import_lab_charges($service_id))
+		{
+		}
+		
+		else
+		{
+		}
+		
+		redirect('hospital-administration/service-charges/'.$service_id);
+	}
+	
+	public function import_pharmacy_charges($service_id)
+	{
+		if($this->services_model->import_pharmacy_charges($service_id))
+		{
+		}
+		
+		else
+		{
+		}
+		
 		redirect('hospital-administration/service-charges/'.$service_id);
 	}
 }

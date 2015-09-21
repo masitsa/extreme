@@ -294,9 +294,9 @@
                 </div>
             </div>
             
-            <div class="center-align">
-            	<a href="<?php echo site_url().'/pharmacy/inventory';?>" class="btn btn-lg btn-default">Back</a>
-                <button class="btn btn-info btn-lg" type="submit">Add Drug</button>
+            <div class="center-align" style="margin-top:10px;">
+            	<a href="<?php echo site_url().'pharmacy/inventory';?>" class="btn btn-success btn-sm">Back</a>
+                <button class="btn btn-info btn-sm" type="submit">Add Drug</button>
             </div>
             <?php echo form_close();?>
             

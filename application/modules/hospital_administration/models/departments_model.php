@@ -8,7 +8,8 @@ class Departments_model extends CI_Model
 	*/
 	public function all_departments()
 	{
-		$this->db->where('department_status = 1');
+		$this->db->where(array('department_status' => 1, 'branch_code' => $this->session->userdata('branch_code')));
+		$this->db->order_by('department_name');
 		$query = $this->db->get('departments');
 		
 		return $query;

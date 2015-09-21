@@ -21,7 +21,7 @@ class Services_model extends CI_Model
 		$this->db->from($table);
 		$this->db->select('*');
 		$this->db->where($where);
-		$this->db->order_by('service.service_name, service_charge.service_charge_name','ASC');
+		$this->db->order_by($order, $order_method);
 		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
@@ -321,6 +321,189 @@ class Services_model extends CI_Model
 			return TRUE;
 		}
 		else{
+			return FALSE;
+		}
+	}
+	
+	public function get_department_id($service_id)
+	{
+		$table = "service";
+		$where = "service_id = ".$service_id;
+		
+		$this->db->where($where);
+		$result = $this->db->get($table);
+		$department_id = 0;
+		
+		if($result->num_rows() > 0)
+		{
+			$row = $result->row();
+			$department_id = $row->department_id;
+		}
+
+		return $department_id;
+	}
+	
+	public function import_lab_charges($service_id)
+	{
+		//get lab tests
+		$this->db->where('lab_test_delete', 0);
+		$tests = $this->db->get('lab_test');
+		
+		if($tests->num_rows() > 0)
+		{
+			foreach($tests->result() as $res)
+			{
+				$lab_test_id = $res->lab_test_id;
+				$lab_test_name = $res->lab_test_name;
+				$price = $res->lab_test_price;
+	
+				// get all the visit type
+				$this->db->where('visit_type_status', 1);
+				$visit_type_query = $this->db->get('visit_type');
+	
+				if($visit_type_query->num_rows() > 0)
+				{
+					foreach ($visit_type_query->result() as $key) {
+					
+						$visit_type_id = $key->visit_type_id;
+						// service charge entry
+						$service_charge_insert = array(
+										"service_charge_name" => $lab_test_name,
+										"service_id" => $service_id,
+										"visit_type_id" => $visit_type_id,
+										"lab_test_id" => $lab_test_id,
+										"service_charge_amount" => $price,
+										'service_charge_status' => 1,
+									);
+						
+						if($this->service_charge_exists($lab_test_name, $visit_type_id))
+						{
+							$this->db->where(array('service_charge_name' => $lab_test_name, 'visit_type_id' => $visit_type_id));
+							if($this->db->update('service_charge', $service_charge_insert))
+							{
+							}
+							
+							else
+							{
+							}
+						}
+						
+						else
+						{
+							$service_charge_insert['created'] = date('Y-m-d H:i:s');
+							$service_charge_insert['created_by'] = $this->session->userdata('personnel_id');
+							$service_charge_insert['modified_by'] = $this->session->userdata('personnel_id');
+							
+							if($this->db->insert('service_charge', $service_charge_insert))
+							{
+							}
+							
+							else
+							{
+							}
+						}
+					}
+				}
+			}
+			
+			$this->session->set_userdata('success_message', 'Charges created successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'There are no lab tests.');
+		}
+		
+		return TRUE;
+	}
+	
+	public function import_pharmacy_charges($service_id)
+	{
+		//get lab tests
+		$this->db->where('drugs_deleted', 0);
+		$tests = $this->db->get('drugs');
+		
+		if($tests->num_rows() > 0)
+		{
+			foreach($tests->result() as $res)
+			{
+				$drugs_id = $res->drugs_id;
+				$drugs_name = $res->drugs_name;
+				$drugs_unitprice = $res->drugs_unitprice;
+				$markup = round(($drugs_unitprice * 1.33), 0);
+	
+				// get all the visit type
+				$this->db->where('visit_type_status', 1);
+				$visit_type_query = $this->db->get('visit_type');
+	
+				if($visit_type_query->num_rows() > 0)
+				{
+					foreach ($visit_type_query->result() as $key) {
+					
+						$visit_type_id = $key->visit_type_id;
+						// service charge entry
+						$service_charge_insert = array(
+										"service_charge_name" => $drugs_name,
+										"service_id" => $service_id,
+										"visit_type_id" => $visit_type_id,
+										"drug_id" => $drugs_id,
+										"service_charge_amount" => $markup,
+										'service_charge_status' => 1,
+									);
+						
+						if($this->service_charge_exists($drugs_name, $visit_type_id))
+						{
+							$this->db->where(array('service_charge_name' => $drugs_name, 'visit_type_id' => $visit_type_id));
+							if($this->db->update('service_charge', $service_charge_insert))
+							{
+							}
+							
+							else
+							{
+							}
+						}
+						
+						else
+						{
+							$service_charge_insert['created'] = date('Y-m-d H:i:s');
+							$service_charge_insert['created_by'] = $this->session->userdata('personnel_id');
+							$service_charge_insert['modified_by'] = $this->session->userdata('personnel_id');
+							
+							if($this->db->insert('service_charge', $service_charge_insert))
+							{
+							}
+							
+							else
+							{
+							}
+						}
+					}
+				}
+			}
+			
+			$this->session->set_userdata('success_message', 'Charges created successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'There are no lab tests.');
+		}
+		
+		return TRUE;
+	}
+	
+	public function service_charge_exists($service_charge_name, $visit_type_id)
+	{
+		$this->db->where(array('service_charge_name' => $service_charge_name, 'visit_type_id' => $visit_type_id, 'service_charge_delete' => 0));
+		$query = $this->db->get('service_charge');
+		
+		if($query->num_rows() > 0)
+		{
+			return TRUE;
+		}
+		
+		else
+		{
 			return FALSE;
 		}
 	}

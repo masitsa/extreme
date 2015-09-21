@@ -13,15 +13,15 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th><a href="'.site_url().'admin/departments/department_name/'.$order_method.'/'.$page.'">Department</a></th>
-						<th><a href="'.site_url().'admin/departments/last_modified/'.$order_method.'/'.$page.'">Last modified</a></th>
-						<th><a href="'.site_url().'admin/departments/modified_by/'.$order_method.'/'.$page.'">Modified by</a></th>
-						<th><a href="'.site_url().'admin/departments/department_status/'.$order_method.'/'.$page.'">Status</a></th>
+						<th><a href="'.site_url().'hospital-administration/departments/department_name/'.$order_method.'/'.$page.'">Department</a></th>
+						<th><a href="'.site_url().'hospital-administration/departments/last_modified/'.$order_method.'/'.$page.'">Last modified</a></th>
+						<th><a href="'.site_url().'hospital-administration/departments/modified_by/'.$order_method.'/'.$page.'">Modified by</a></th>
+						<th><a href="'.site_url().'hospital-administration/departments/department_status/'.$order_method.'/'.$page.'">Status</a></th>
 						<th colspan="5">Actions</th>
 					</tr>
 				</thead>
-				  <tbody>
-				  
+				
+				<tbody>
 			';
 			
 			//get all administrators

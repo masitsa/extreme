@@ -14,8 +14,31 @@
         </div>
         
 		<div class="pull-right">
-		 <a href="<?php echo site_url()?>hospital-administration/services" class="btn btn-sm btn-primary"><i class="fa fa-angle-left"></i> Back to services </a>
-		 <a href="<?php echo site_url()?>hospital-administration/add-service-charge/<?php echo $service_id;?>" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> Add <?php echo strtolower($service_name);?> charge </a>
+        	<?php
+			
+            if($department_id == 18)
+			{
+				?>
+					<a href="<?php echo site_url()?>hospital-administration/import-lab-charges/<?php echo $service_id;?>" class="btn btn-sm btn-warning"><i class="fa fa-sign-out"></i> Import from department </a>
+				<?php 
+			}
+			
+            else if($department_id == 5)
+			{
+				?>
+					<a href="<?php echo site_url()?>hospital-administration/import-pharmacy-charges/<?php echo $service_id;?>" class="btn btn-sm btn-warning"><i class="fa fa-sign-out"></i> Import from department </a>
+				<?php 
+			}
+			
+			else
+			{
+				?>
+					<a href="<?php echo site_url()?>hospital-administration/add-service-charge/<?php echo $service_id;?>" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> Add <?php echo strtolower($service_name);?> charge </a>
+				<?php 
+			}
+			?>
+			<a href="<?php echo site_url()?>hospital-administration/services" class="btn btn-sm btn-primary"><i class="fa fa-angle-left"></i> Back to services </a>
+			
 		</div>
 	</div>
 </div>
@@ -67,8 +90,8 @@
 					  <thead>
 						<tr>
 						  <th>#</th>
-						  <th>Patient type</th>
-						  <th>Charge name</th>
+						  <th><a href="'.site_url().'hospital-administration/service-charges/'.$service_id.'/visit_type_id/'.$order_method.'/'.$page.'">Patient type</a></th>
+						  <th><a href="'.site_url().'hospital-administration/service-charges/'.$service_id.'/service_charge_name/'.$order_method.'/'.$page.'">Charge name</a></th>
 						  <th>Amount</th>
 						  <th colspan="3">Actions</th>
 						</tr>
@@ -139,7 +162,7 @@
 							<td>'.$count.'</td>
 							<td>'.$visit_type_name.'</td>
 							<td>'.$service_charge_name.'</td>
-							<td>'.$service_charge_amount.'</td>
+							<td>'.number_format($service_charge_amount, 2).'</td>
 							<td><a href="'.site_url().'hospital-administration/edit-service-charge/'.$service_id.'/'.$service_charge_id.'" class="btn btn-sm btn-info"><i class="fa fa-pencil"></i> Edit</a></td>
 							<td>'.$button.'</td>
 							<td><a href="'.site_url().'hospital-administration/delete-service-charge/'.$service_id.'/'.$service_charge_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this charge?\')"><i class="fa fa-trash"></i> Delete </a></td>

@@ -145,6 +145,8 @@ $route['human-resource/delete-personnel-role/(:num)/(:num)'] = 'hr/personnel/del
 /*
 *	Hospital administration
 */
+$route['hospital-administration/import-pharmacy-charges/(:num)'] = 'hospital_administration/services/import_pharmacy_charges/$1';
+$route['hospital-administration/import-lab-charges/(:num)'] = 'hospital_administration/services/import_lab_charges/$1';
 $route['hospital-administration/dashboard'] = 'administration/index';
 $route['hospital-administration/services'] = 'hospital_administration/services/index';
 $route['hospital-administration/services/(:any)/(:any)/(:num)'] = 'hospital_administration/services/index/$1/$2/$3';
@@ -160,8 +162,8 @@ $route['hospital-administration/deactivate-service/(:num)'] = 'hospital_administ
 $route['hospital-administration/deactivate-service/(:num)/(:num)'] = 'hospital_administration/services/deactivate_service/$1/$2';
 
 $route['hospital-administration/service-charges/(:num)'] = 'hospital_administration/services/service_charges/$1';
-$route['hospital-administration/services-charges/(:num)/(:any)/(:any)/(:num)'] = 'hospital_administration/services/service_charges/$1/$2/$3/$4';
-$route['hospital-administration/services-charges/(:num)/(:any)/(:any)'] = 'hospital_administration/services/service_charges/$1/$2/$3';
+$route['hospital-administration/service-charges/(:num)/(:any)/(:any)/(:num)'] = 'hospital_administration/services/service_charges/$1/$2/$3/$4';
+$route['hospital-administration/service-charges/(:num)/(:any)/(:any)'] = 'hospital_administration/services/service_charges/$1/$2/$3';
 $route['hospital-administration/add-service-charge/(:num)'] = 'hospital_administration/services/add_service_charge/$1';
 $route['hospital-administration/edit-service-charge/(:num)/(:num)'] = 'hospital_administration/services/edit_service_charge/$1/$2';
 $route['hospital-administration/delete-service-charge/(:num)/(:num)'] = 'hospital_administration/services/delete_service_charge/$1/$2';
@@ -443,6 +445,9 @@ $route['laboratory/general-queue'] = 'reception/general_queue/laboratory';
 */
 $route['laboratory-setup/classes'] = 'lab_charges/classes';
 $route['laboratory-setup/tests'] = 'lab_charges/test_list';
+$route['laboratory-setup/tests/(:num)'] = 'lab_charges/test_list/lab_test_name/ASC/__/$1';
+$route['laboratory-setup/tests/(:any)/(:any)/(:any)/(:num)'] = 'lab_charges/test_list/$1/$2/$3/$4';
+$route['laboratory-setup/tests/(:any)/(:any)'] = 'lab_charges/test_list/$1/$2';
 
 
 

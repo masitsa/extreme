@@ -54,20 +54,19 @@
 					  <thead>
 						<tr>
 						  <th>#</th>
-						  <th>Class</th>
-						  <th>Test</th>
-						  <th>Units</th>
-						  <th>Price</th>
-						  <th>Male Lower Limit</th>
-						  <th>Male Upper Limit</th>
-						  <th>Female Lower Limit</th>
-						  <th>Female Upper Limit</th>
+						  <th><a href="'.site_url().'laboratory-setup/tests/lab_test_class.lab_test_class_name/'.$order_method.'/'.$page.'">Class</a></th>
+						  <th><a href="'.site_url().'laboratory-setup/tests/lab_test.lab_test_name/'.$order_method.'/'.$page.'">Test</a></th>
+						  <th><a href="'.site_url().'laboratory-setup/tests/lab_test.lab_test_units/'.$order_method.'/'.$page.'">Units</a></th>
+						  <th><a href="'.site_url().'laboratory-setup/tests/lab_test.lab_test_price/'.$order_method.'/'.$page.'">Price</a></th>
+						  <th><a href="'.site_url().'laboratory-setup/tests/lab_test.lab_test_malelowerlimit/'.$order_method.'/'.$page.'">Male Lower</a></th>
+						  <th><a href="'.site_url().'laboratory-setup/tests/lab_test.lab_test_malelupperlimit/'.$order_method.'/'.$page.'">Male Upper</a></th>
+						  <th><a href="'.site_url().'laboratory-setup/tests/lab_test.lab_test_femalelowerlimit/'.$order_method.'/'.$page.'">Female Lower</a></th>
+						  <th><a href="'.site_url().'laboratory-setup/tests/lab_test.lab_test_femaleupperlimit/'.$order_method.'/'.$page.'">Female Upper</a></th>
 						  <th colspan="4">Actions</th>
 						</tr>
 					  </thead>
 					  <tbody>
 				';
-			$count = 0;
 			
 			foreach ($query->result() as $row)
 			{

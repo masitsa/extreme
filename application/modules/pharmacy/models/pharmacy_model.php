@@ -760,7 +760,7 @@ class Pharmacy_model extends CI_Model
 			//calculate the price of the drug
 			$drug_id = $this->db->insert_id();
 			
-			$markup = round(($items['drugs_unitprice'] * 1.33), 0);
+			/*$markup = round(($items['drugs_unitprice'] * 1.33), 0);
 			$markdown = $items['drugs_unitprice']; //$markup;//round(($markup * 0.9), 0);
 			
 
@@ -792,7 +792,7 @@ class Pharmacy_model extends CI_Model
 
 					$this->database->insert_entry('service_charge', $service_charge_insert);
 				}
-			}
+			}*/
 			$comment .= '<br/>Patient successfully added to the database';
 			$class = 'success';
 			return TRUE;
@@ -830,7 +830,7 @@ class Pharmacy_model extends CI_Model
 			//edit service charge
 			$drug_id = $drugs_id;
 			
-			$markup = round(($this->input->post('drugs_unitprice') * 1.33), 0);
+			/*$markup = round(($this->input->post('drugs_unitprice') * 1.33), 0);
 			$markdown = $markup;//round(($markup * 0.9), 0);
 			
 			$service_data = array(
@@ -858,7 +858,7 @@ class Pharmacy_model extends CI_Model
 			else
 			{
 				$this->db->insert('service_charge', $service_data);
-			}
+			}*/
 			
 			$purchases_array = array(
 			'expiry_date'=>$this->input->post('expiry_date')

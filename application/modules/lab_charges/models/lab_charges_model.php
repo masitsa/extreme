@@ -4,14 +4,14 @@ class Lab_charges_model extends CI_Model
 {
 
 
-	public function get_all_test_list($table, $where, $per_page, $page, $order = NULL)
+	public function get_all_test_list($table, $where, $per_page, $page, $order = 'lab_test_name', $order_method = 'ASC')
 	{
 		//retrieve all users
 		$this->db->from($table);
 		$this->db->select('*');
 		$this->db->where($where);
-		$this->db->group_by('service_charge.lab_test_id');
-		$this->db->order_by('lab_test.lab_test_class_id','ASC');
+		//$this->db->group_by('service_charge.lab_test_id');
+		$this->db->order_by($order, $order_method);
 		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
@@ -106,8 +106,6 @@ class Lab_charges_model extends CI_Model
 		}
 		else
 		{
-
-
 			$insert = array(
 					"lab_test_name" => $lab_test_name,
 					"lab_test_class_id" => $lab_test_class_id,
@@ -119,38 +117,6 @@ class Lab_charges_model extends CI_Model
 					"lab_test_femaleupperlimit" => $female_upper_limit
 				);
 			$this->db->insert('lab_test', $insert);
-
-			$lab_test_id = $this->db->insert_id();
-
-			//get the lab service id for the branch
-
-			$service_id = $this->get_laboratory_service_id();
-
-			// get all the visit type
-
-			$visit_type_query = $this->get_all_visit_type();
-
-			if($visit_type_query->num_rows() > 0)
-			{
-				foreach ($visit_type_query->result() as $key) {
-				
-					$visit_type_id = $key->visit_type_id;
-					// service charge entry
-					$service_charge_insert = array(
-									"service_charge_name" => $lab_test_name,
-									"service_id" => $service_id,
-									"visit_type_id" => $visit_type_id,
-									"lab_test_id"=>$lab_test_id,
-									"created_by"=>$this->session->userdata('personnel_id'),
-									"created"=>date('Y-m-d H:i:s'),
-									"service_charge_status"=>0,
-									"service_charge_amount"=>$price,
-									"service_charge_delete"=>0
-								);
-
-					$this->database->insert_entry('service_charge', $service_charge_insert);
-				}
-			}
 
 			return TRUE;
 		}
