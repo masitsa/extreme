@@ -145,6 +145,7 @@ $route['human-resource/delete-personnel-role/(:num)/(:num)'] = 'hr/personnel/del
 /*
 *	Hospital administration
 */
+$route['hospital-administration/dashboard'] = 'administration/index';
 $route['hospital-administration/services'] = 'hospital_administration/services/index';
 $route['hospital-administration/services/(:any)/(:any)/(:num)'] = 'hospital_administration/services/index/$1/$2/$3';
 $route['hospital-administration/services/(:any)/(:any)'] = 'hospital_administration/services/index/$1/$2';

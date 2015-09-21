@@ -14,6 +14,7 @@ class Hospital_administration extends MX_Controller
 		$this->load->model('reception/database');
 		$this->load->model('hr/personnel_model');
 		$this->load->model('administration/administration_model');
+		$this->load->model('administration/reports_model');
 		$this->load->model('companies_model');
 		$this->load->model('visit_types_model');
 		$this->load->model('departments_model');
@@ -25,6 +26,16 @@ class Hospital_administration extends MX_Controller
 		{
 			redirect('login');
 		}
+	}
+	
+	public function index()
+	{
+		$this->session->unset_userdata('all_transactions_search');
+		
+		$data['content'] = $this->load->view('administration/dashboard', '', TRUE);
+		
+		$data['title'] = 'Dashboard';
+		$this->load->view('admin/templates/general_page', $data);
 	}
 }
 ?>

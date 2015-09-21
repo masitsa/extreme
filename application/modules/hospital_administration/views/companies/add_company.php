@@ -35,7 +35,7 @@
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Company Name</label>
                                 <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="insurance_company_name" placeholder="Company Name" value="<?php echo set_value('insurance_company_name');?>" required>
+                                    <input type="text" class="form-control" name="insurance_company_name" placeholder="Company Name" value="<?php echo set_value('insurance_company_name');?>">
                                 </div>
                             </div>
                             
@@ -43,7 +43,7 @@
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Concact Person Name</label>
                                 <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="insurance_company_contact_person_name" placeholder="Concact Person Name" value="<?php echo set_value('insurance_company_contact_person_name');?>" required>
+                                    <input type="text" class="form-control" name="insurance_company_contact_person_name" placeholder="Concact Person Name" value="<?php echo set_value('insurance_company_contact_person_name');?>">
                                 </div>
                             </div>
                             
@@ -51,7 +51,7 @@
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Contact Person Phone 1</label>
                                 <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="insurance_company_contact_person_phone1" placeholder="Contact Person Phone 1" value="<?php echo set_value('insurance_company_contact_person_phone1');?>" required>
+                                    <input type="text" class="form-control" name="insurance_company_contact_person_phone1" placeholder="Contact Person Phone 1" value="<?php echo set_value('insurance_company_contact_person_phone1');?>">
                                 </div>
                             </div>
                             
@@ -59,7 +59,7 @@
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Contact Person Phone 2</label>
                                 <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="insurance_company_contact_person_phone2" placeholder="Contact Person Phone 2" value="<?php echo set_value('insurance_company_contact_person_phone2');?>" required>
+                                    <input type="text" class="form-control" name="insurance_company_contact_person_phone2" placeholder="Contact Person Phone 2" value="<?php echo set_value('insurance_company_contact_person_phone2');?>">
                                 </div>
                             </div>
                         </div>
@@ -70,7 +70,7 @@
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Contact Person email 1</label>
                                 <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="insurance_company_contact_person_email1" placeholder="Contact Person email 1" value="<?php echo set_value('insurance_company_contact_person_email1');?>" required>
+                                    <input type="text" class="form-control" name="insurance_company_contact_person_email1" placeholder="Contact Person email 1" value="<?php echo set_value('insurance_company_contact_person_email1');?>">
                                 </div>
                             </div>
                             
@@ -78,7 +78,7 @@
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Contact Person email 2</label>
                                 <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="insurance_company_contact_person_email2" placeholder="Contact Person email 2" value="<?php echo set_value('insurance_company_contact_person_email2');?>" required>
+                                    <input type="text" class="form-control" name="insurance_company_contact_person_email2" placeholder="Contact Person email 2" value="<?php echo set_value('insurance_company_contact_person_email2');?>">
                                 </div>
                             </div>
                             

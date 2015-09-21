@@ -88,13 +88,13 @@ class Companies extends Hospital_administration
 	{
 		//form validation rules
 		$this->form_validation->set_rules('insurance_company_name', 'Company Name', 'required|xss_clean');
-		$this->form_validation->set_rules('insurance_company_contact_person_name', 'Contact name', 'required|xss_clean');
-		$this->form_validation->set_rules('insurance_company_contact_person_phone1', 'Contact phone 1', 'required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_name', 'Contact name', 'xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_phone1', 'Contact phone 1', 'xss_clean');
 		$this->form_validation->set_rules('insurance_company_contact_person_phone2', 'Contact phone 2', 'xss_clean');
-		$this->form_validation->set_rules('insurance_company_contact_person_email1', 'Contact email 1', 'valid_email|required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_email1', 'Contact email 1', 'valid_email|xss_clean');
 		$this->form_validation->set_rules('insurance_company_contact_person_email2', 'Contact email 2', 'valid_email|xss_clean');
 		$this->form_validation->set_rules('insurance_company_description', 'Company description', 'xss_clean');
-		$this->form_validation->set_rules('insurance_company_status', 'Company Status', 'required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_status', 'Company Status', 'xss_clean');
 		
 		//if form has been submitted
 		if ($this->form_validation->run())
@@ -127,13 +127,13 @@ class Companies extends Hospital_administration
 	{
 		//form validation rules
 		$this->form_validation->set_rules('insurance_company_name', 'Company Name', 'required|xss_clean');
-		$this->form_validation->set_rules('insurance_company_contact_person_name', 'Contact name', 'required|xss_clean');
-		$this->form_validation->set_rules('insurance_company_contact_person_phone1', 'Contact phone 1', 'required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_name', 'Contact name', 'xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_phone1', 'Contact phone 1', 'xss_clean');
 		$this->form_validation->set_rules('insurance_company_contact_person_phone2', 'Contact phone 2', 'xss_clean');
-		$this->form_validation->set_rules('insurance_company_contact_person_email1', 'Contact email 1', 'valid_email|required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_contact_person_email1', 'Contact email 1', 'valid_email|xss_clean');
 		$this->form_validation->set_rules('insurance_company_contact_person_email2', 'Contact email 2', 'valid_email|xss_clean');
 		$this->form_validation->set_rules('insurance_company_description', 'Company description', 'xss_clean');
-		$this->form_validation->set_rules('insurance_company_status', 'Company Status', 'required|xss_clean');
+		$this->form_validation->set_rules('insurance_company_status', 'Company Status', 'xss_clean');
 		
 		//if form has been submitted
 		if ($this->form_validation->run())

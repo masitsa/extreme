@@ -759,7 +759,7 @@ class Pharmacy_model extends CI_Model
 			//calculate the price of the drug
 			$drug_id = $this->db->insert_id();
 			
-			$markup = round(($this->input->post('drugs_unitprice') * 1.33), 0);
+			//$markup = round(($this->input->post('drugs_unitprice') * 1.33), 0);
 			$markdown = $markup;//round(($markup * 0.9), 0);
 			
 			$service_data = array(
@@ -1354,7 +1354,7 @@ class Pharmacy_model extends CI_Model
 							$drug_id = $this->db->insert_id();
 							
 							$markup = round(($items['drugs_unitprice'] * 1.33), 0);
-							$markdown = $markup;//round(($markup * 0.9), 0);
+							$markdown = $items['drugs_unitprice']; //$markup;//round(($markup * 0.9), 0);
 							
 
 							//get the lab service id for the branch
