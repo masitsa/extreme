@@ -754,27 +754,54 @@ class Pharmacy_model extends CI_Model
 			'drug_consumption_id'=>$this->input->post('drug_consumption_id'),
 			'class_id'=>$this->input->post('class_id')
 		);
+		//save product in the db
 		if($this->db->insert('drugs', $array))
 		{
 			//calculate the price of the drug
 			$drug_id = $this->db->insert_id();
 			
-			//$markup = round(($this->input->post('drugs_unitprice') * 1.33), 0);
-			$markdown = $markup;//round(($markup * 0.9), 0);
+			$markup = round(($items['drugs_unitprice'] * 1.33), 0);
+			$markdown = $items['drugs_unitprice']; //$markup;//round(($markup * 0.9), 0);
 			
-			$service_data = array(
-				'drug_id'=>$drug_id,
-				'service_charge_amount'=>$markdown,
-				'service_id'=>4,
-				'visit_type_id'=>0,
-				'service_charge_status'=>1,
-				'service_charge_name'=>$this->input->post('drugs_name')
-			);
-			$this->db->insert('service_charge', $service_data);
-			
+
+			//get the lab service id for the branch
+
+			$service_id = $this->get_pharmacy_service_id();
+
+			// get all the visit type
+
+			$visit_type_query = $this->get_all_visit_type();
+
+			if($visit_type_query->num_rows() > 0)
+			{
+				foreach ($visit_type_query->result() as $key) {
+				
+					$visit_type_id = $key->visit_type_id;
+					// service charge entry
+					$service_charge_insert = array(
+									"service_charge_name" => $items['drugs_name'],
+									"service_id" => $service_id,
+									"visit_type_id" => $visit_type_id,
+									"drug_id"=>$drug_id,
+									"created_by"=>$this->session->userdata('personnel_id'),
+									"created"=>date('Y-m-d H:i:s'),
+									"service_charge_status"=>1,
+									"service_charge_amount"=>$markdown,
+									"service_charge_delete"=>0
+								);
+
+					$this->database->insert_entry('service_charge', $service_charge_insert);
+				}
+			}
+			$comment .= '<br/>Patient successfully added to the database';
+			$class = 'success';
 			return TRUE;
 		}
-		else{
+		
+		else
+		{
+			$comment .= '<br/>Internal error. Could not add patient to the database. Please contact the site administrator. Product code '.$items['drugs_name'];
+			$class = 'warning';
 			return FALSE;
 		}
 	}
