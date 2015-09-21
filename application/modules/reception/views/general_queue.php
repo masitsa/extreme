@@ -58,7 +58,7 @@
 				
 				else
 				{
-					$actions = 4;
+					$actions = 5;
 				}
 			
 			$result .= 
@@ -250,6 +250,7 @@
 						<a  class="btn btn-sm btn-success" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
 						<a  class="btn btn-sm btn-success" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
 					</td>
+					<td><a href="'.site_url().'reception/print-invoice/'.$visit_id.'/reception" target="_blank" class="btn btn-sm btn-warning fa fa-print"> Print Invoice </a></td>
 					<td><a href="'.site_url().'reception/end_visit/'.$visit_id.'" class="btn btn-sm btn-info" onclick="return confirm(\'Do you really want to end this visit ?\');">End Visit</a></td>
 					<td><a href="'.site_url().'reception/delete_visit/'.$visit_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this visit?\');">Delete Visit</a></td>';
 					$buttons .= '<td></td>';
