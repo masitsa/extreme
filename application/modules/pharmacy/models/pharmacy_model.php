@@ -1351,9 +1351,13 @@ class Pharmacy_model extends CI_Model
 				$items['drug_size_type'] = 1;
 				$items['batch_no'] = 0;
 				$items['brand_id'] = 20;
-				$items['generic_id'] = 10;
+				$items['generic_id'] = 9;
 				$items['class_id'] = 2;
-				$items['drugs_dose'] = 1; 
+				$items['drugs_dose'] = 1;
+				$items['drug_type_id'] = 4;
+				$items['drug_administration_route_id'] = 3;
+				$items['drug_dose_unit_id'] = 2;
+				$items['drug_consumption_id'] = 2; 
 				$items['branch_code'] = $this->session->userdata('branch_code');
 
 				// check drug type if exist

@@ -1,0 +1,651 @@
+Drug Code,Drug Name,Drug Type (i.e Tablet),Unit Cost,System quantity,Re order levels,Packed Quantity
+23, Cifex (Cefixime) 100mg/5ml susp 37.5 ml,Tablet,0,0,0,1
+24, Hydrocorttisone  Sodium 100mg (Medicort),Tablet,0,0,0,1
+25, Ondansetron 2mg inj,Tablet,0,0,0,1
+26, Rabeprazole 20mg (Robort-20) tabs,Tablet,0,0,0,1
+27, Vazkor 5mg (Amlodipine),Tablet,0,0,0,1
+28,Aceclofanac 200mg tabs (intas),Tablet,0,0,0,1
+29,Acetazolamide 250mg,Tablet,0,0,0,1
+30,Acyclovir 400mg,Tablet,0,0,0,1
+31,Acyclovir 800mg,Tablet,0,0,0,1
+32,Adiflam gel ,Tablet,0,0,0,1
+33,Adrenaline  inj,Tablet,0,0,0,1
+34,Adrenaline  inj ,Tablet,0,0,0,1
+35,Aerius syrup 60ml,Tablet,0,0,0,1
+36,Aerocort inhaler ,Tablet,0,0,0,1
+37,Alben 400mg,Tablet,0,0,0,1
+38,Alben susp,Tablet,0,0,0,1
+39,Albendazole tabs,Tablet,0,0,0,1
+40,Aldactone 100mg tabs,Tablet,0,0,0,1
+41,Aldactone 25mg tabs,Tablet,0,0,0,1
+42,Aldactone generic 25mg,Tablet,0,0,0,1
+43,alprazolam 0.25mg(Atrest) ,Tablet,0,0,0,1
+44,Alprazolam 0.5mg(Atrest) ,Tablet,0,0,0,1
+45,Amaryl 2mg ,Tablet,0,0,0,1
+46,Aminophylline inj 250mg,Tablet,0,0,0,1
+47,Amitriptyllin 25mg,Tablet,0,0,0,1
+48,Amlong (amlodipine) 5mg,Tablet,0,0,0,1
+49,Amloozar Tabs,Tablet,0,0,0,1
+50,Amlozaar tabs,Tablet,0,0,0,1
+51,Amoklavin 1000mg ,Tablet,0,0,0,1
+52,Amoklavin 228mg/5ml,Tablet,0,0,0,1
+53,Amoklavin 457mg/5ml susp,Tablet,0,0,0,1
+54,Amoklavin 625mg tabs,Tablet,0,0,0,1
+55,amoxicillin 500mg (generic),Tablet,0,0,0,1
+56,Amoxil Forte 250mg 100ml,Tablet,0,0,0,1
+57,Amoxil (Amoxicillin 500mg,Tablet,0,0,0,1
+58,Amoxil 125mg/5ml 100ml,Tablet,0,0,0,1
+59,Amphoteracin B Iv,Tablet,0,0,0,1
+60,Ampiclox 250 mg susp,Tablet,0,0,0,1
+61,Ampiclox caps,Tablet,0,0,0,1
+62,Ampiclox inj,Tablet,0,0,0,1
+63,Ampiclox syrup Original,Tablet,0,0,0,1
+64,Anafortan (Fortan P),Tablet,0,0,0,1
+65,Annomex supp,Tablet,0,0,0,1
+66,Annusol oint,Tablet,0,0,0,1
+67,Appevite 200Ml,Tablet,0,0,0,1
+68,Arcalion 200mg,Tablet,0,0,0,1
+69,Artane (Benzhexol) 5mg,Tablet,0,0,0,1
+70,Artefan 100ml,Tablet,0,0,0,1
+71,Artemether 80mg/ml,Tablet,0,0,0,1
+72,Artequick tabs,Tablet,0,0,0,1
+73,Artesunate 120mg inj,Tablet,0,0,0,1
+74,Artesunate 30mg inj,Tablet,0,0,0,1
+75,Artesunate 60mg inj,Tablet,0,0,0,1
+76,Ascard 75mg ,Tablet,0,0,0,1
+77,Ascoril 100ml,Tablet,0,0,0,1
+78,Ascoril 200ml,Tablet,0,0,0,1
+79,Ascoril D Syrup ,Tablet,0,0,0,1
+80,Asomex -D (amlodipine+HCTZ),Tablet,0,0,0,1
+81,Aspegic inj,Tablet,0,0,0,1
+82,Astymin Sn infusion ,Tablet,0,0,0,1
+83,Astymin syrup,Tablet,0,0,0,1
+84,Atenolol 25mg,Tablet,0,0,0,1
+85,Atenolol 50mg,Tablet,0,0,0,1
+86,ATM (Azithromycin) 250mg ,Tablet,0,0,0,1
+87,ATM 500mg,Tablet,0,0,0,1
+88,Atorvasttin 10mg,Tablet,0,0,0,1
+89,Atracurium 25mg/2.5ml (Tracrium) inj,Tablet,0,0,0,1
+90,Atropine 0.6mg/ml inj,Tablet,0,0,0,1
+91,Atropine 1mg/ml ,Tablet,0,0,0,1
+92,Augementin 228/5ml susp 70ml ,Tablet,0,0,0,1
+93,Augumentin 1.2mg inj,Tablet,0,0,0,1
+94,Augumentin 1g,Tablet,0,0,0,1
+95,Augumentin 457mg/5ml susp,Tablet,0,0,0,1
+96,Augumentin 625mg tabs,Tablet,0,0,0,1
+97,Aurosol tears,Tablet,0,0,0,1
+98,Aurotaz P 4.5mg,Tablet,0,0,0,1
+99,Avodart 0.5mg,Tablet,0,0,0,1
+100,Azithromycin susp generic 15ml,Tablet,0,0,0,1
+101,Azitro 500mg ,Tablet,0,0,0,1
+102,Aztor 20mg (atorvastatin),Tablet,0,0,0,1
+103,Baclofen 10mg tabs,Tablet,0,0,0,1
+104,Bacoactin 200ml,Tablet,0,0,0,1
+105,Beclomin oint,Tablet,0,0,0,1
+106,Benylin original 100ml,Tablet,0,0,0,1
+107,Benzathine 2.4 mu ,Tablet,0,0,0,1
+108,Benzit tabs,Tablet,0,0,0,1
+109,Benzyl penicilllin 1m.u,Tablet,0,0,0,1
+110,Betadine Dry powder spray 55mg,Tablet,0,0,0,1
+111,Betadine M/w soln,Tablet,0,0,0,1
+112,Betapyn tabs,Tablet,0,0,0,1
+113,Betaserc 8mg,Tablet,0,0,0,1
+114,BG Glutamin plus,Tablet,0,0,0,1
+115,Bonjela cream,Tablet,0,0,0,1
+116,Bralix tabs,Tablet,0,0,0,1
+117,Bronchowin 400mg tabs,Tablet,0,0,0,1
+118,Brufen 200mg tabs,Tablet,0,0,0,1
+119,Brufen 400mg,Tablet,0,0,0,1
+120,Brufen susp 100ml,Tablet,0,0,0,1
+121,Brustan susp 100ml,Tablet,0,0,0,1
+122,Brustan tabs,Tablet,0,0,0,1
+123,Budacort 200mcg/dose inhaler,Tablet,0,0,0,1
+124,Bupivacain 5mg/ml,Tablet,0,0,0,1
+125,Buscopan 10mg tabs,Tablet,0,0,0,1
+126,Buscopan 20mg inj,Tablet,0,0,0,1
+127,Buscopan Plus inj,Tablet,0,0,0,1
+128,Buscopan Plus tabs,Tablet,0,0,0,1
+129,Cabalin 25mg,Tablet,0,0,0,1
+130,Cachet syrup,Tablet,0,0,0,1
+131,Cadronate 150mg,Tablet,0,0,0,1
+132,Calamine lotion ,Tablet,0,0,0,1
+133,Calcigard 20mg (nifedipine),Tablet,0,0,0,1
+134,Calcium gluconate 1g/10ml,Tablet,0,0,0,1
+135,Calpol 100ml,Tablet,0,0,0,1
+136,Calpol 60ml,Tablet,0,0,0,1
+137,candid B cream,Tablet,0,0,0,1
+138,Candid -V3 pess. 3's,Tablet,0,0,0,1
+139,Canditral 100mg,Tablet,0,0,0,1
+140,Cannular Blue,Tablet,0,0,0,1
+141,cannular Green ,Tablet,0,0,0,1
+142,Cannular pink,Tablet,0,0,0,1
+143,Canon -O 200mg tabs,Tablet,0,0,0,1
+144,Carbamazepine 200mg(Neurotral),Tablet,0,0,0,1
+145,carbimazole 5mg,Tablet,0,0,0,1
+146,Cardisprin 75mg,Tablet,0,0,0,1
+147,Carefenac (diclofenac 75mg/3ml) inj,Tablet,0,0,0,1
+148,cartiflex forte tabs,Tablet,0,0,0,1
+149,Cartil  Omega,Tablet,0,0,0,1
+150,Cartil Super forte,Tablet,0,0,0,1
+151,Carvedilol 12.5mg,Tablet,0,0,0,1
+152,Carvedilol 25mg,Tablet,0,0,0,1
+153,Cefaks 500mg (cefuroxime),Tablet,0,0,0,1
+154,Cefipime 1g inj (micropime),Tablet,0,0,0,1
+155,Cefixime 200mg tabs(cefix),Tablet,0,0,0,1
+156,Cefotil (cefuroxime) 125mg,Tablet,0,0,0,1
+157,Cefpodoxime 200mg( Auropodox),Tablet,0,0,0,1
+158,Ceftriaxone 1g,Tablet,0,0,0,1
+159,Cefuroxime 250mg tabs 10's,Tablet,0,0,0,1
+160,Cefuroxime 500mg (Cefuaxit),Tablet,0,0,0,1
+161,Cefuroxime 500mg (Ceurox),Tablet,0,0,0,1
+162,Centrum select ,Tablet,0,0,0,1
+163,Centrum tabs,Tablet,0,0,0,1
+164,Cetin 10mg,Tablet,0,0,0,1
+165,Cetirizine 5mg,Tablet,0,0,0,1
+166,Chloramphenical 1g(Caf),Tablet,0,0,0,1
+167,Chlorphaniramine 4mg,Tablet,0,0,0,1
+168,Chlorpheniramine 10mg inj,Tablet,0,0,0,1
+169,Ciflosin 500mg (ciprofloxacin),Tablet,0,0,0,1
+170,Ciprofloxacin 500mg,Tablet,0,0,0,1
+171,Cital Syrup 100ml,Tablet,0,0,0,1
+172,Clarithromycin 500mg,Tablet,0,0,0,1
+173,clavulin 457mg/5ml susp 70ml,Tablet,0,0,0,1
+174,Clindamycin 300mg inj,Tablet,0,0,0,1
+175,Clopidogrel 75mg(Frelet),Tablet,0,0,0,1
+176,Clotrimazole cream,Tablet,0,0,0,1
+177,Co-Amoxiclav 1.2g,Tablet,0,0,0,1
+178,Co-Arinate FDC tabs,Tablet,0,0,0,1
+179,Coartem 12's,Tablet,0,0,0,1
+180,Coartem 18's,Tablet,0,0,0,1
+181,Coartem 6's ,Tablet,0,0,0,1
+182,Coartem DS,Tablet,0,0,0,1
+183,Codimex CT 10mg,Tablet,0,0,0,1
+184,Colastin-L 20mg (atorvastatin),Tablet,0,0,0,1
+185,Contiflo OD (tamsulosin) 0.4mg,Tablet,0,0,0,1
+186,Co-trimaxazole 100ml susp,Tablet,0,0,0,1
+187,CPZ 25 mg tabs,Tablet,0,0,0,1
+188,CpZ 25mg/ml,Tablet,0,0,0,1
+189,Cyclopam 30ml,Tablet,0,0,0,1
+190,Cyclopam tabs,Tablet,0,0,0,1
+191,Cypon syrup 100ml,Tablet,0,0,0,1
+192,Cypon syrup 200ml,Tablet,0,0,0,1
+193,Cypro B plus 200ml,Tablet,0,0,0,1
+194,Cytotec 200mcg ,Tablet,0,0,0,1
+195,Daboral (amonosidine) 60ml syrp,Tablet,0,0,0,1
+196,Daboral 250mg tabs,Tablet,0,0,0,1
+197,Daktarin   ovules 3's,Tablet,0,0,0,1
+198,Daktarin cream,Tablet,0,0,0,1
+199,Dalacin C 300mg,Tablet,0,0,0,1
+200,Darrows soln 500ml,Tablet,0,0,0,1
+201,Dawa-flox susp 100ml,Tablet,0,0,0,1
+202,Deanxit tabs,Tablet,0,0,0,1
+203,Decomit 100HFA inhaler,Tablet,0,0,0,1
+204,Delased Chest 100ml,Tablet,0,0,0,1
+205,Delased Dry 100ml,Tablet,0,0,0,1
+206,Depo Medrol 80mg/ml 2ml,Tablet,0,0,0,1
+207,Dermovate oint,Tablet,0,0,0,1
+208,Desefin 1G(Ceftriaxone) inj,Tablet,0,0,0,1
+209,Devit-3 i.m/Oral (vit D3),Tablet,0,0,0,1
+210,Dexamethasone inj,Tablet,0,0,0,1
+211,Dextrose 50%,Tablet,0,0,0,1
+212,DF 118 mg,Tablet,0,0,0,1
+213,Diazepam inj,Tablet,0,0,0,1
+214,Diazepam tabs 5mg,Tablet,0,0,0,1
+215,Diclo-denk 50mg,Tablet,0,0,0,1
+216,Diclofenac 50mg tabs,Tablet,0,0,0,1
+217,Diclofenac 75mg/3ml inj,Tablet,0,0,0,1
+218,Diclomol 100mg,Tablet,0,0,0,1
+219,Diclomol gel 20g,Tablet,0,0,0,1
+220,Digoxin 0.125mg,Tablet,0,0,0,1
+221,Digoxin 0.25mg,Tablet,0,0,0,1
+222,Disflatyl tabs,Tablet,0,0,0,1
+223,Disposible syringes 20cc ,Tablet,0,0,0,1
+224,Doloact MR tabs,Tablet,0,0,0,1
+225,Doloact Plus tabs,Tablet,0,0,0,1
+226,Domadol  50mg/2ml,Tablet,0,0,0,1
+227,Doxycline 100mg,Tablet,0,0,0,1
+228,Duiuride 10mg tabs,Tablet,0,0,0,1
+229,Dulcolax 5mg(Bisacodyl),Tablet,0,0,0,1
+230,Duo-cotexin tabs,Tablet,0,0,0,1
+231,Duodart caps,Tablet,0,0,0,1
+232,Duovent Inhaler,Tablet,0,0,0,1
+233,Duphulac 100ml,Tablet,0,0,0,1
+234,Ebastine (ebastel) 1mg/ml syp 120ml,Tablet,0,0,0,1
+235,Emanzen Forte 10mg ,Tablet,0,0,0,1
+236,Emitino 4mg inj,Tablet,0,0,0,1
+237,Emitino 4mg tabs,Tablet,0,0,0,1
+238,Enalapril 10mg,Tablet,0,0,0,1
+239,Enalapril 5mg (intas),Tablet,0,0,0,1
+240,Enaril 5mg (enalapril) ,Tablet,0,0,0,1
+241,Encorate chrono 500mg,Tablet,0,0,0,1
+242,Enril 5mg (enalapril),Tablet,0,0,0,1
+243,Entamizole 30's,Tablet,0,0,0,1
+244,Entamizole Ds,Tablet,0,0,0,1
+245,Enzoflam tabs,Tablet,0,0,0,1
+246,Ephedrin inj,Tablet,0,0,0,1
+247,epimax cream 500g,Tablet,0,0,0,1
+248,Esocip 40mg tabs,Tablet,0,0,0,1
+249,Esose 20mg tabs,Tablet,0,0,0,1
+250,Esose 40mg ,Tablet,0,0,0,1
+251,F.P Inj,Tablet,0,0,0,1
+252,Fastum gel 50g,Tablet,0,0,0,1
+253,FeFolTabs,Tablet,0,0,0,1
+254,Fentyl 10 mg inj,Tablet,0,0,0,1
+255,Flagyl 400mg(MTZ) tabs,Tablet,0,0,0,1
+256,Flamox 100 ml,Tablet,0,0,0,1
+257,Flexilor 8mg,Tablet,0,0,0,1
+258,Floranorm satchets,Tablet,0,0,0,1
+259,Floxapen (flucloxacillin) 125mg/5ml susp 100ml,Tablet,0,0,0,1
+260,Flucloxacillin 250mg inj ,Tablet,0,0,0,1
+261,Flucloxacillin 500mg caps (Rivaflux),Tablet,0,0,0,1
+262,Flucloxacillin 500mg inj ,Tablet,0,0,0,1
+263,Flucloxacillin 500mg inj ,Tablet,0,0,0,1
+264,Flucloxacillin -dawa 500mg,Tablet,0,0,0,1
+265,Fluconazole 150mg,Tablet,0,0,0,1
+266,Fluconazole 200mg/ml inj,Tablet,0,0,0,1
+267,Fluconazole 35ml susp,Tablet,0,0,0,1
+268,Flugone Caps 10's,Tablet,0,0,0,1
+269,Fluoxetine 20mg tabs,Tablet,0,0,0,1
+270,Folic acid 5mg,Tablet,0,0,0,1
+271,Foracort 100mcg/dose,Tablet,0,0,0,1
+272,Foracort 200mcg/dose  inhaler,Tablet,0,0,0,1
+273,Foracort 400mcg/dose,Tablet,0,0,0,1
+274,FP,Tablet,0,0,0,1
+275,Furosemide 10mg/ml,Tablet,0,0,0,1
+276,Furosemide 40mg tabs,Tablet,0,0,0,1
+277,Fustum gel 30g,Tablet,0,0,0,1
+278,Fybogel satchets ,Tablet,0,0,0,1
+279,Gabbroral 250mg,Tablet,0,0,0,1
+280,Gabica(pragabaline) 50mg caps,Tablet,0,0,0,1
+281,Gabica(pragabaline) 75mg caps,Tablet,0,0,0,1
+282,Gacet 250mg,Tablet,0,0,0,1
+283,Galvus Met 50/850,Tablet,0,0,0,1
+284,Gastrokit tabs,Tablet,0,0,0,1
+285,Gaviscon 200ml susp,Tablet,0,0,0,1
+286,Gentamycin 80mg,Tablet,0,0,0,1
+287,Gentamycin Drops ,Tablet,0,0,0,1
+288,Glevonix 500mg,Tablet,0,0,0,1
+289,Glevonix 500mg inj,Tablet,0,0,0,1
+290,Glucomet 500mg ,Tablet,0,0,0,1
+291,Glucomet 850mg tabs,Tablet,0,0,0,1
+292,Glucophage (metformin) 500mg ,Tablet,0,0,0,1
+293,Glucose 5% 500ml,Tablet,0,0,0,1
+294,Glyceryl Trinitrate spray,Tablet,0,0,0,1
+295,Griseofulvin 125mg tabs,Tablet,0,0,0,1
+296,Griseofulvin 250 mg tabs,Tablet,0,0,0,1
+297,Griseofulvin 500mg,Tablet,0,0,0,1
+298,Haloperidol 5mg tabs,Tablet,0,0,0,1
+299,Halothane inhalation 250ml,Tablet,0,0,0,1
+300,HCTZ 50mg,Tablet,0,0,0,1
+301,Heparin 25000i.u 5ml,Tablet,0,0,0,1
+302,Hidrasec 10mg,Tablet,0,0,0,1
+303,Hidrasec 30mg satchets,Tablet,0,0,0,1
+304,Hilac 120ml,Tablet,0,0,0,1
+305,Hovite 100ml syrup,Tablet,0,0,0,1
+306,Hovite caps,Tablet,0,0,0,1
+307,Hydrocortisone (lycortin) 100mg ,Tablet,0,0,0,1
+308,Hydrocortisone cream,Tablet,0,0,0,1
+309,Hydroxyurea,Tablet,0,0,0,1
+310,Hypertonic NaCl (saline),Tablet,0,0,0,1
+311,I.V Ciprofloxacin 200mg/100ml,Tablet,0,0,0,1
+312,Ibidroxil (cefadroxil) 125mg/5ml susp 60ml,Tablet,0,0,0,1
+313,Ibumex 100ml,Tablet,0,0,0,1
+314,Ilaprozole 10mg,Tablet,0,0,0,1
+315,IM phenobarbitone 200mg/ml,Tablet,0,0,0,1
+316,Imodium 2mg 6'S,Tablet,0,0,0,1
+317,Inhaler Spacers,Tablet,0,0,0,1
+318,Insulin soluble 10ml,Tablet,0,0,0,1
+319,Iodine soln,Tablet,0,0,0,1
+320,Isoflav CR,Tablet,0,0,0,1
+321,Isofluthane Inhalation 250ml ,Tablet,0,0,0,1
+322,IV Floxapen 500mg,Tablet,0,0,0,1
+323,Kefrox 250mg susp,Tablet,0,0,0,1
+324,Ketamine 10ml inj,Tablet,0,0,0,1
+325,Keto plus shampoo,Tablet,0,0,0,1
+326,Knac 50mg,Tablet,0,0,0,1
+327,K-Y jelly ,Tablet,0,0,0,1
+328,Lactulose 100ml,Tablet,0,0,0,1
+329,Lasix 20mg inj,Tablet,0,0,0,1
+330,Lasix 40mg(frusimide),Tablet,0,0,0,1
+331,Levobact 750mg,Tablet,0,0,0,1
+332,Levoflo 500mg,Tablet,0,0,0,1
+333,Levofloxacin 500mg (Leflox),Tablet,0,0,0,1
+334,Levothyroxine 50mcg (Roxine) tabs,Tablet,0,0,0,1
+335,Levotop 500mg,Tablet,0,0,0,1
+336,Lexotanil 1.5mg,Tablet,0,0,0,1
+337,Lidocaine + adrenaline inj,Tablet,0,0,0,1
+338,Liquid paraffin 100ml,Tablet,0,0,0,1
+339,Locaine (lignocain) 30ml,Tablet,0,0,0,1
+340,Lonart Ds 6's,Tablet,0,0,0,1
+341,Lonart susp 100ml,Tablet,0,0,0,1
+342,Losartan 50mg(intas),Tablet,0,0,0,1
+343,Losartas HT tabs,Tablet,0,0,0,1
+344,Lozart H tabs,Tablet,0,0,0,1
+345,Luxat 10mg (montelukast),Tablet,0,0,0,1
+346,Lyser-D tabs,Tablet,0,0,0,1
+347,M/vitamin 100ml,Tablet,0,0,0,1
+348,Maalox plus susp,Tablet,0,0,0,1
+349,Magnesium sulphate 50%,Tablet,0,0,0,1
+350,Mask inhaler (paed),Tablet,0,0,0,1
+351,Medistop susp,Tablet,0,0,0,1
+352,Med-keel lozenges,Tablet,0,0,0,1
+353,Medrol 4mg,Tablet,0,0,0,1
+354,Melcam 15mg,Tablet,0,0,0,1
+355,Melmet SR 1g,Tablet,0,0,0,1
+356,Meropenem 1g (canem),Tablet,0,0,0,1
+357,Methotrexate 2.5mg,Tablet,0,0,0,1
+358,Methyl Dopa ,Tablet,0,0,0,1
+359,Methyl Prednisolone (depo medro) 40mg,Tablet,0,0,0,1
+360,metochlopramide 10mg/2ml,Tablet,0,0,0,1
+361,Metoz 2.5mg,Tablet,0,0,0,1
+362,Metronidazole 200mg tabs,Tablet,0,0,0,1
+363,Metronidazole Inj 100ml,Tablet,0,0,0,1
+364,Microenema (Enema) 10ml,Tablet,0,0,0,1
+365,Microgynon tats 21's,Tablet,0,0,0,1
+366,Midozolam 1mg/3ml (Dormicum),Tablet,0,0,0,1
+367,Mixtard insulin,Tablet,0,0,0,1
+368,Mobic 15mg,Tablet,0,0,0,1
+369,Mobic 7.5mg,Tablet,0,0,0,1
+370,Mofic 15mg,Tablet,0,0,0,1
+371,Mofic 7.5mg,Tablet,0,0,0,1
+372,Momecort cream(mometasone),Tablet,0,0,0,1
+373,Monotrate 20mg,Tablet,0,0,0,1
+374,Morphine Sulphate 10mg/ml,Tablet,0,0,0,1
+375,Motilium 10mg,Tablet,0,0,0,1
+376,Mucosolvan 100ml,Tablet,0,0,0,1
+377,Mucosolvan 30mg,Tablet,0,0,0,1
+378,Multi Vitamins (Synervit),Tablet,0,0,0,1
+379,Muvera 15mg,Tablet,0,0,0,1
+380,Muvera 7.5mg,Tablet,0,0,0,1
+381,Myolgin Caps,Tablet,0,0,0,1
+382,Myospaz   Tabs,Tablet,0,0,0,1
+383,Nasi-saline drops,Tablet,0,0,0,1
+384,Natural tears (alcon),Tablet,0,0,0,1
+385,Nebilet 5mg tabs,Tablet,0,0,0,1
+386,Nebilong 5mg,Tablet,0,0,0,1
+387,Neopeptide caps,Tablet,0,0,0,1
+388,Neopeptine drops,Tablet,0,0,0,1
+389,Neorolax A tabs,Tablet,0,0,0,1
+390,Neostimine 2.5 mg/ml,Tablet,0,0,0,1
+391,Nepro 40mg tabs,Tablet,0,0,0,1
+392,Netazox susp 30ml(Nitazoxanide ),Tablet,0,0,0,1
+393,Neuro forte,Tablet,0,0,0,1
+394,Neuroba 300mg,Tablet,0,0,0,1
+395,Neurocare plus tabs ,Tablet,0,0,0,1
+396,Neurocare tabs,Tablet,0,0,0,1
+397,Neurodenk tabs,Tablet,0,0,0,1
+398,Neurorubine forte tabs,Tablet,0,0,0,1
+399,Nexium 20mg,Tablet,0,0,0,1
+400,Nexpro 40mg inj,Tablet,0,0,0,1
+401,Nexpro 40mg tabs,Tablet,0,0,0,1
+402,Nifedipine 20mg (Nepin) tabs,Tablet,0,0,0,1
+403,Nifelat 20mg,Tablet,0,0,0,1
+404,Nitrofurantoin 100mg,Tablet,0,0,0,1
+405,Nogluc 5mg,Tablet,0,0,0,1
+406,Norash cream,Tablet,0,0,0,1
+407,Normal Saline 500ml,Tablet,0,0,0,1
+408,Nosic tabs,Tablet,0,0,0,1
+409,NoSpalgin tabs ,Tablet,0,0,0,1
+410,Nystatin oral drops 15ml,Tablet,0,0,0,1
+411,Nystatin oral drops 30ml,Tablet,0,0,0,1
+412,Olfen SR 75mg,Tablet,0,0,0,1
+413,Omez 20mg,Tablet,0,0,0,1
+414,Ondansetron 30ml soln,Tablet,0,0,0,1
+415,Ondansetron 8mg sublingual,Tablet,0,0,0,1
+416,Ondastron 4mg,Tablet,0,0,0,1
+417,Ondastron inj,Tablet,0,0,0,1
+418,Ornidazole 500mg,Tablet,0,0,0,1
+419,ORS satchets,Tablet,0,0,0,1
+420,Osteocare tabs,Tablet,0,0,0,1
+421,Osteocerine tabs,Tablet,0,0,0,1
+422,Osteosafe -k2,Tablet,0,0,0,1
+423,Oxybral 30mg,Tablet,0,0,0,1
+424,Oxybutynin 5mg,Tablet,0,0,0,1
+425,Oxytocin (cyntocinon) 10i.u/ml,Tablet,0,0,0,1
+426,P-Alaxin 100ml susp,Tablet,0,0,0,1
+427,P-Alaxin 9's tabs,Tablet,0,0,0,1
+428,Panadol advance,Tablet,0,0,0,1
+429,Pancuronium inj 4mg/ml,Tablet,0,0,0,1
+430,Pandev 40mg (Pantoprazole),Tablet,0,0,0,1
+431,Paracetamol 150mg inj,Tablet,0,0,0,1
+432,Paracetamol 500mg tabs ,Tablet,0,0,0,1
+433,PCM(Gacet) supp 125mg,Tablet,0,0,0,1
+434,PDL 5mg  (cosmos),Tablet,0,0,0,1
+435,PDL 5mg  Loose,Tablet,0,0,0,1
+436,Perfalgan 1g,Tablet,0,0,0,1
+437,Pethadine  inj,Tablet,0,0,0,1
+438,Pethidine 100mg/2ml inj,Tablet,0,0,0,1
+439,Pethidine 50mg /ml inj,Tablet,0,0,0,1
+440,Phenobarbitone 30mg,Tablet,0,0,0,1
+441,Phyntoin 250mg/ml,Tablet,0,0,0,1
+442,Pioday 15mg,Tablet,0,0,0,1
+443,Piriton 100ml syrup,Tablet,0,0,0,1
+444,Plasil 10mg (metcos),Tablet,0,0,0,1
+445,Ponstan forte 500mg,Tablet,0,0,0,1
+446,Potassium Chloride 15%,Tablet,0,0,0,1
+447,Powergesic gel ,Tablet,0,0,0,1
+448,Pozineg 1g,Tablet,0,0,0,1
+449,Predsol forte syrup,Tablet,0,0,0,1
+450,Predsol syrup 50ml,Tablet,0,0,0,1
+451,Pregabalin 75mg (Epibalin),Tablet,0,0,0,1
+452,Pregnasafe caps,Tablet,0,0,0,1
+453,Pregnicare tabs,Tablet,0,0,0,1
+454,Pregnidoxine tabs,Tablet,0,0,0,1
+455,Presartan -H(Losartan +HTCZ),Tablet,0,0,0,1
+456,Proguanil 100mg (paludrine),Tablet,0,0,0,1
+457,Proloc D tabs,Tablet,0,0,0,1
+458,Promethazine 60ml,Tablet,0,0,0,1
+459,Promethazine inj 25mg/ml,Tablet,0,0,0,1
+460,Promolut-N tabs,Tablet,0,0,0,1
+461,Propofol inj (Troypofol) 40mg/ml,Tablet,0,0,0,1
+462,propronolol 40mg,Tablet,0,0,0,1
+463,Purecal tabs,Tablet,0,0,0,1
+464,Pyridoxine 50mg ,Tablet,0,0,0,1
+465,Quinine 300mg tabs,Tablet,0,0,0,1
+466,Quinine inj,Tablet,0,0,0,1
+467,Ranferon -12 syrup 200ml,Tablet,0,0,0,1
+468,Ranferon caps,Tablet,0,0,0,1
+469,Ranitidine 50mg  inj,Tablet,0,0,0,1
+470,Relcer gel,Tablet,0,0,0,1
+471,relif MR Tabs,Tablet,0,0,0,1
+472,Relif Plus tabs,Tablet,0,0,0,1
+473,Repace H tabs,Tablet,0,0,0,1
+474,Rhinathiol  with promethazine,Tablet,0,0,0,1
+475,Rhinithiol Adult 100mlExpect,Tablet,0,0,0,1
+476,Rhinithiol Infants 100mlExpect,Tablet,0,0,0,1
+477,rhinocort nasal Spray,Tablet,0,0,0,1
+478,Rhizine 60ml syrup,Tablet,0,0,0,1
+479,Rifampicin 300mg ,Tablet,0,0,0,1
+480,Ringers Lactate 500ml,Tablet,0,0,0,1
+481,Rivaxime 200mg 5's,Tablet,0,0,0,1
+482,Rivaxime 400mg 5's,Tablet,0,0,0,1
+483,Rivotril 0.5mg,Tablet,0,0,0,1
+484,Rocephin 1g,Tablet,0,0,0,1
+485,Rosuvastatin 10mg (Crestor),Tablet,0,0,0,1
+486,Saferon plus tabs,Tablet,0,0,0,1
+487,Saferon syrup,Tablet,0,0,0,1
+488,Salbutamol 4mg,Tablet,0,0,0,1
+489,Saline naline drops,Tablet,0,0,0,1
+490,Satrogyl 300mg,Tablet,0,0,0,1
+491,Senna (senokot),Tablet,0,0,0,1
+492,Seprin Susp 100ml,Tablet,0,0,0,1
+493,Septrin 480mg Iv,Tablet,0,0,0,1
+494,Septrin DS tabs ,Tablet,0,0,0,1
+495,seritide evohaler 25/250,Tablet,0,0,0,1
+496,Sevenseas cod  100ml,Tablet,0,0,0,1
+497,Sinemet (levodopa/carbidopa) 110mg,Tablet,0,0,0,1
+498,Sitagliptin 50 mg,Tablet,0,0,0,1
+499,Spinolactone 25mg generic,Tablet,0,0,0,1
+500,Spiriva caps,Tablet,0,0,0,1
+501,Spiriva caps with Handihaler,Tablet,0,0,0,1
+502,Sterile Syringe 5cc,Tablet,0,0,0,1
+503,Stugeron 25mg tabs,Tablet,0,0,0,1
+504,Subsyde CR,Tablet,0,0,0,1
+505,Subsyde gel 15g,Tablet,0,0,0,1
+506,Sucrafil O gel 100ml,Tablet,0,0,0,1
+507,supramox caps(flucloxacillin+ amoxicillin),Tablet,0,0,0,1
+508,Susten 200mg Caps,Tablet,0,0,0,1
+509,Suxamethonium Hcl 50mg/2ml,Tablet,0,0,0,1
+510,Sylate 125mg inj,Tablet,0,0,0,1
+511,Sylate 500mg ,Tablet,0,0,0,1
+512,Symbicort 160/4.5ug,Tablet,0,0,0,1
+513,Symbicort 320/4.5ug,Tablet,0,0,0,1
+514,Symbicort 80/4.5ug,Tablet,0,0,0,1
+515,Syngab (pregabalin) 100mg,Tablet,0,0,0,1
+516,Syngab (pregabalin) 50mg,Tablet,0,0,0,1
+517,Syringes 3cc,Tablet,0,0,0,1
+518,T.E.O,Tablet,0,0,0,1
+519,Takol CR,Tablet,0,0,0,1
+520,Tegera forte 1g (secnidazole) tabs,Tablet,0,0,0,1
+521,Tegretol 200mg tabs,Tablet,0,0,0,1
+522,Telmi 80mg,Tablet,0,0,0,1
+523,Telmisartan-40 (arbitel-H) H,Tablet,0,0,0,1
+524,Terbasil 250mg (terbenafine),Tablet,0,0,0,1
+525,terbasil cream (terbenafine),Tablet,0,0,0,1
+526,Terbex 250 mg,Tablet,0,0,0,1
+527,Thiopental inj,Tablet,0,0,0,1
+528,Tramacetal,Tablet,0,0,0,1
+529,Tramadol 100/2ml,Tablet,0,0,0,1
+530,Tramadol 50mg tabs,Tablet,0,0,0,1
+531,Tramadol 50mg/ml,Tablet,0,0,0,1
+532,Tranexamic acid +mefenamic acid (TXMF),Tablet,0,0,0,1
+533,Tranexamic acid 500mg INJ,Tablet,0,0,0,1
+534,Tres-orix 100ml,Tablet,0,0,0,1
+535,Tres-orix 250ml,Tablet,0,0,0,1
+536,triamcinolone (Trinocort)40mg/ml,Tablet,0,0,0,1
+537,Trimetazine 35mg(vastarel MR),Tablet,0,0,0,1
+538,Triqkit,Tablet,0,0,0,1
+539,TT,Tablet,0,0,0,1
+540,Tuspel plain 100ml,Tablet,0,0,0,1
+541,Uniactin 4mg,Tablet,0,0,0,1
+542,Unisten HC cream,Tablet,0,0,0,1
+543,Uriflow 100ml,Tablet,0,0,0,1
+544,Vazkor 10mg(Amlodipine),Tablet,0,0,0,1
+545,Venofer 100mg,Tablet,0,0,0,1
+546,ventolin inhaler ,Tablet,0,0,0,1
+547,Ventolin nebulizer,Tablet,0,0,0,1
+548,Ventolin syrup,Tablet,0,0,0,1
+549,Virux 400mg,Tablet,0,0,0,1
+550,Vitamin K 10mg inj,Tablet,0,0,0,1
+551,Vitamin K 2mg inj,Tablet,0,0,0,1
+552,Volini gel 30g,Tablet,0,0,0,1
+553,Vomitin 10mg supp,Tablet,0,0,0,1
+554,Vomitin 30mg suusp,Tablet,0,0,0,1
+555,warfarin 5mg,Tablet,0,0,0,1
+556,Water for Inj 10ml,Tablet,0,0,0,1
+557,Wokadine m/w,Tablet,0,0,0,1
+558,Xatral 10mg,Tablet,0,0,0,1
+559,Xtraderm cream,Tablet,0,0,0,1
+560,Yasmin tabs ,Tablet,0,0,0,1
+561,Yescort 6mg,Tablet,0,0,0,1
+562,Zagole 100ml,Tablet,0,0,0,1
+563,Zedcal OP Tabs,Tablet,0,0,0,1
+564,Zedcal tabs,Tablet,0,0,0,1
+565,Zentel (albendazole 400mg) tabs,Tablet,0,0,0,1
+566,Zentel (albendazole) susp 10ml,Tablet,0,0,0,1
+567,Zerodol CR tabs 200mg(aceclofenac) ,Tablet,0,0,0,1
+568,Zinc Oxide oint,Tablet,0,0,0,1
+569,Zinc sulphate 20mg,Tablet,0,0,0,1
+570,Zincat-OD,Tablet,0,0,0,1
+571,Zinnat 125mg susp 100ml,Tablet,0,0,0,1
+572,Zinnat 125mg susp 50ml,Tablet,0,0,0,1
+573,Zinnat 250mg susp 50ml,Tablet,0,0,0,1
+574,Zinnat 500mg ,Tablet,0,0,0,1
+575,Zithromax 30ml,Tablet,0,0,0,1
+576,Zithromax 500mg(Azithromycin) tabs,Tablet,0,0,0,1
+577,Zithromax susp (azitromycin) 15ml,Tablet,0,0,0,1
+578,Zolocan 200mg,Tablet,0,0,0,1
+579,Zyrtec 10mg tabs,Tablet,0,0,0,1
+580,Zyrtec Syrup,Tablet,0,0,0,1
+581,Coscof C syrup,Tablet,0,0,0,1
+582,Cetrizet 10mg,Tablet,0,0,0,1
+583,Rexidine M/W,Tablet,0,0,0,1
+584,Rivaxime syrup 100ml,Tablet,0,0,0,1
+585,Terbex cream,Tablet,0,0,0,1
+586,Imdur 60mg,Tablet,0,0,0,1
+587,Carvedilol 3.125mg,Tablet,0,0,0,1
+588,Silver sulphadiazine cream,Tablet,0,0,0,1
+589,Bupivacain 20mg generic,Tablet,0,0,0,1
+590,Estovon softlets,Tablet,0,0,0,1
+591,Xforge tabs,Tablet,0,0,0,1
+592,tinidazole 500mg,Tablet,0,0,0,1
+593,Albasol susp,Tablet,0,0,0,1
+594,Aprazole plus-20,Tablet,0,0,0,1
+595,Risedronate 35mg,Tablet,0,0,0,1
+596,Rostat 10mg (Rusuvastatin),Tablet,0,0,0,1
+597,Celecoxib 200mg (cox-B),Tablet,0,0,0,1
+598,Mebevarin 200mg,Tablet,0,0,0,1
+599,Candid B cream 30g,Tablet,0,0,0,1
+600,Refresh Tears,Tablet,0,0,0,1
+601,Maxtrol drops,Tablet,0,0,0,1
+602,Tobrex drops,Tablet,0,0,0,1
+603,ketolac eye drops,Tablet,0,0,0,1
+604,Grabacin 10g powder,Tablet,0,0,0,1
+605,Pharmasal ointment ,Tablet,0,0,0,1
+606,Deep heat 35g,Tablet,0,0,0,1
+607,Deep heat 15g,Tablet,0,0,0,1
+608,Grabacin-3 ointment,Tablet,0,0,0,1
+609,Ivysine eye drops,Tablet,0,0,0,1
+610,Probeta-N drops,Tablet,0,0,0,1
+611,ceprolen drops,Tablet,0,0,0,1
+612,Cusicrom 4% drops,Tablet,0,0,0,1
+613,Acyclo-Denk oint,Tablet,0,0,0,1
+614,Deep heat spray ,Tablet,0,0,0,1
+615,Tuspel Plus 100ml,Tablet,0,0,0,1
+616,mucodil syrup,Tablet,0,0,0,1
+617,Betadine pess,Tablet,0,0,0,1
+618,Flucloxacillin 25omg,Tablet,0,0,0,1
+619,Duphastone 10mg,Tablet,0,0,0,1
+620,Vedrox 500mg,Tablet,0,0,0,1
+621,Fluphanazine 25mg,Tablet,0,0,0,1
+622,Konakion 10mg( vit k),Tablet,0,0,0,1
+623,Normal saline nasal drops,Tablet,0,0,0,1
+624,Gacet 500mg,Tablet,0,0,0,1
+625,Regenovex caps,Tablet,0,0,0,1
+626,Doloact gel,Tablet,0,0,0,1
+627,Augupen 625mg,Tablet,0,0,0,1
+628,Glucored forte tabs 5/500,Tablet,0,0,0,1
+629,postinor -2 tabs,Tablet,0,0,0,1
+630,Gabanerve tabs,Tablet,0,0,0,1
+631,Amaryl 1mg,Tablet,0,0,0,1
+632,Amaryl 4mg,Tablet,0,0,0,1
+633,Bromocriptine 2.5mg,Tablet,0,0,0,1
+634,Otrivine nasal drops,Tablet,0,0,0,1
+635,Cabalin 75mg,Tablet,0,0,0,1
+636,Clopress(clopidigrel),Tablet,0,0,0,1
+637,Cefpodox 500mg(cefpodoxime),Tablet,0,0,0,1
+638,Sinemet 250mg,Tablet,0,0,0,1
+639,Supracal tats,Tablet,0,0,0,1
+640,Febrex Syrup 60ml,Tablet,0,0,0,1
+641,Anusol oint,Tablet,0,0,0,1
+642,ATM Susp,Tablet,0,0,0,1
+643,Diclucan 150mg,Tablet,0,0,0,1
+644,Suprapen 500mg caps,Tablet,0,0,0,1
+645,Ojen-OZ tabs,Tablet,0,0,0,1
+646,Klacid 500mg,Tablet,0,0,0,1
+647,Buscopan syrup 60ml,Tablet,0,0,0,1
+648,Entamizole Susp 100ml,Tablet,0,0,0,1
+649,Clindamycin 300mg caps,Tablet,0,0,0,1
+650,Phyteral Shampoo,Tablet,0,0,0,1
+651,Benylin Paed 100ml,Tablet,0,0,0,1
+652,Vedrox 125mg Susp,Tablet,0,0,0,1
+653,Fexofenadine 120mg,Tablet,0,0,0,1
+654,Zedcal syrup,Tablet,0,0,0,1
+655,Medimol,Tablet,0,0,0,1
+656,Exevate Mf,Tablet,0,0,0,1
+657,Erostin 60ml syrup,Tablet,0,0,0,1
+658,Glucose 10% 500ml,Tablet,0,0,0,1
+659,Castor Oil 100ml,Tablet,0,0,0,1
+660,Xyzal (levocetirizine) 5mg,Tablet,0,0,0,1
+661,Floxapen 500mg caps,Tablet,0,0,0,1
+662,Olfen SR 100mg,Tablet,0,0,0,1
+663,Tofen 1mg,Tablet,0,0,0,1
+664,xatral 5mg,Tablet,0,0,0,1
+665,Co-Artesian 120ml Susp,Tablet,0,0,0,1
+666,Remidin M/w 100ml,Tablet,0,0,0,1
+667,Valium 5mg ( D iazepam),Tablet,0,0,0,1
+668,Meftal forte tabs,Tablet,0,0,0,1
+669,Metoz 5mg,Tablet,0,0,0,1
+670,Medical Charcoal ,Tablet,0,0,0,1
+671,Anti Rabies Vaccine,Tablet,0,0,0,1
+672,Cebactum 1.5g,Tablet,0,0,0,1
