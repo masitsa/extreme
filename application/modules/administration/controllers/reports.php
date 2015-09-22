@@ -521,5 +521,68 @@ class Reports extends administration
 		
 		$this->all_time_reports();
 	}
+	public function doctor_reports($date_from = NULL, $date_to = NULL)
+	{
+		$_SESSION['all_transactions_search'] = NULL;
+		$_SESSION['all_transactions_tables'] = NULL;
+		
+		//get all service types
+		$v_data['doctor_results'] = $this->reports_model->get_all_doctors();
+		
+		if(!empty($date_from) && !empty($date_to))
+		{
+			$title = 'Doctors report from '.date('jS M Y',strtotime($date_from)).' to '.date('jS M Y',strtotime($date_to));
+		}
+		
+		else if(empty($date_from) && !empty($date_to))
+		{
+			$title = 'Doctors report for '.date('jS M Y',strtotime($date_to));
+		}
+		
+		else if(!empty($date_from) && empty($date_to))
+		{
+			$title = 'Doctors report for '.date('jS M Y',strtotime($date_from));
+		}
+		
+		else
+		{
+			$date_from = date('Y-m-d');
+			$title = 'Doctors report for '.date('jS M Y',strtotime($date_from));
+		}
+		
+		$v_data['date_from'] = $date_from;
+		$v_data['date_to'] = $date_to;
+		
+		$v_data['title'] = $title;
+		$data['title'] = 'Doctor Reports';
+		
+		$data['content'] = $this->load->view('reports/doctor_reports', $v_data, true);
+		
+		
+		$data['sidebar'] = 'admin_sidebar';
+		
+		
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	public function search_doctors()
+	{
+		$visit_date_from = $this->input->post('visit_date_from');
+		$visit_date_to = $this->input->post('visit_date_to');
+		
+		redirect('administration/reports/doctor_reports/'.$visit_date_from.'/'.$visit_date_to);
+	}
+	
+	public function doctor_reports_export($date_from = NULL, $date_to = NULL)
+	{
+		$this->reports_model->doctor_reports_export($date_from, $date_to);
+	}
+	
+	public function doctor_patients_export($personnel_id, $date_from = NULL, $date_to = NULL)
+	{
+		$_SESSION['all_transactions_search'] = NULL;
+		$_SESSION['all_transactions_tables'] = NULL;
+		
+		$this->reports_model->doctor_patients_export($personnel_id, $date_from, $date_to);
+	}
 }
 ?>

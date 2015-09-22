@@ -826,4 +826,348 @@ class Reports_model extends CI_Model
 		
 		return $query;
 	}
+
+
+	public function get_insurance_company()
+	{
+		//invoiced
+		$this->db->from('insurance_company');
+		$this->db->select('*');
+		$this->db->order_by('insurance_company_name');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	
+	/*
+	*	Retrieve debtors_invoices
+	*	@param string $table
+	* 	@param string $where
+	*	@param int $per_page
+	* 	@param int $page
+	*
+	*/
+	public function get_all_debtors_invoices($table, $where, $per_page, $page, $order, $order_method)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by($order, $order_method);
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+	
+	public function add_debtor_invoice($insurance_company_id)
+	{
+		$data = array(
+			'debtor_invoice_created'=>date('Y-m-d H:i:s'),
+			'debtor_invoice_created_by'=>$this->session->userdata('personnel_id'),
+			'batch_no'=>$this->create_batch_number(),
+			'insurance_company_id'=>$insurance_company_id,
+			'debtor_invoice_modified_by'=>$this->session->userdata('personnel_id'),
+			'date_from' => $this->input->post('invoice_date_from'),
+			'date_to' => $this->input->post('invoice_date_to')
+		);
+		
+		if($this->db->insert('debtor_invoice', $data))
+		{
+			$debtor_invoice_id = $this->db->insert_id();
+			
+			if($debtor_invoice_id > 0)
+			{
+				//get all invoices within the selected dates
+				$this->db->where(
+					array(
+						'insurance_company_id' => $insurance_company_id,
+						'visit_date >= ' => $this->input->post('invoice_date_from'),
+						'visit_date <= ' => $this->input->post('invoice_date_to')
+					)
+				);
+				$this->db->select('visit_id');
+				$query = $this->db->get('visit');
+				
+				if($query->num_rows() > 0)
+				{
+					$invoice_data['debtor_invoice_id'] = $debtor_invoice_id;
+					
+					foreach($query->result() as $res)
+					{
+						$visit_id = $res->visit_id;
+						
+						$invoice_data['visit_id'] = $visit_id;
+						
+						if($this->db->insert('debtor_invoice_item', $invoice_data))
+						{
+						}
+						
+						else
+						{
+							$this->session->set_userdata('error_message', 'Unable to add details for visit ID '.$visit_id);
+						}
+					}
+					$this->session->set_userdata('success_message', 'Batch added successfully');
+					return TRUE;
+				}
+				
+				else
+				{
+					$this->session->set_userdata('error_message', 'The selected date range does not contain any invoices');
+					return FALSE;
+				}
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'The selected date range does not contain any invoices');
+				return FALSE;
+			}
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Create batch number
+	*
+	*/
+	public function create_batch_number()
+	{
+		//select product code
+		$this->db->from('debtor_invoice');
+		$this->db->where("batch_no LIKE 'BAT".date('y')."/%'");
+		$this->db->select('MAX(batch_no) AS number');
+		$query = $this->db->get();
+		$preffix = "BAT".date('y').'/';
+		
+		if($query->num_rows() > 0)
+		{
+			$result = $query->result();
+			$number =  $result[0]->number;
+			$real_number = str_replace($preffix, "", $number);
+			$real_number++;//go to the next number
+			$number = $preffix.sprintf('%06d', $real_number);
+		}
+		else{//start generating receipt numbers
+			$number = $preffix.sprintf('%06d', 1);
+		}
+		
+		return $number;
+	}
+	
+	public function calculate_debt_total($debtor_invoice_id, $where, $table)
+	{
+		$where .= ' AND debtor_invoice.debtor_invoice_id = '.$debtor_invoice_id;
+		
+		$total_services_revenue = $this->reports_model->get_total_services_revenue($where, $table);
+		
+		$where2 = $where.' AND payments.payment_type = 1';
+		$total_cash_collection = $this->reports_model->get_total_cash_collection($where2, $table);
+		
+		return $total_services_revenue - $total_cash_collection;
+	}
+	
+	public function get_debtor_invoice($where, $table)
+	{
+		$this->db->where($where);
+		$query = $this->db->get($table);
+		
+		return $query;
+	}
+
+
+	public function get_all_doctors()
+	{
+		$this->db->select('personnel.*');
+		$this->db->where('(job_title.job_title_name LIKE "Doctor" OR job_title.job_title_name = "doctor") AND personnel.personnel_id = personnel_job.personnel_id AND job_title.job_title_id =  personnel_job.job_title_id');
+		$query = $this->db->get('personnel,job_title,personnel_job');
+		
+		return $query;
+	}
+
+	public function get_total_collected($doctor_id, $date_from = NULL, $date_to = NULL)
+	{
+		$table = 'visit_charge, visit';
+		
+		$where = 'visit_charge.visit_id = visit.visit_id AND visit.personnel_id = '.$doctor_id;
+		
+		$visit_search = $this->session->userdata('all_doctors_search');
+		if(!empty($visit_search))
+		{
+			$where = 'visit_charge.visit_id = visit.visit_id AND visit.personnel_id = '.$doctor_id.' '. $visit_search;
+		}
+		
+		if(!empty($date_from) && !empty($date_to))
+		{
+			$where .= ' AND (date >= \''.$date_from.'\' AND date <= \''.$date_to.'\') ';
+		}
+		
+		else if(empty($date_from) && !empty($date_to))
+		{
+			$where .= ' AND date LIKE \''.$date_to.'\'';
+		}
+		
+		else if(!empty($date_from) && empty($date_to))
+		{
+			$where .= ' AND date LIKE \''.$date_from.'\'';
+		}
+		
+		$this->db->select('SUM(visit_charge_units*visit_charge_amount) AS service_total');
+		$this->db->where($where);
+		$query = $this->db->get($table);
+		
+		// $result = $query->row();
+		// $total = $result[0]->service_total;
+		
+		if($query->num_rows() > 0)
+		{
+
+			foreach ($query->result() as $key):
+				# code...
+				$total = $key->service_total;
+
+				if(!is_numeric($total))
+				{
+					return 0;
+				}
+				else
+				{
+					return $total;
+				}
+			endforeach;
+		}
+		else
+		{
+			return 0;
+		}
+		
+	}
+
+	public function get_total_patients($doctor_id, $date_from = NULL, $date_to = NULL)
+	{
+		$table = 'visit';
+		
+		$where = 'visit.personnel_id = '.$doctor_id;
+		
+		if(!empty($date_from) && !empty($date_to))
+		{
+			$where .= ' AND (visit_date >= \''.$date_from.'\' AND visit_date <= \''.$date_to.'\') ';
+		}
+		
+		else if(empty($date_from) && !empty($date_to))
+		{
+			$where .= ' AND visit_date = \''.$date_to.'\'';
+		}
+		
+		else if(!empty($date_from) && empty($date_to))
+		{
+			$where .= ' AND visit_date = \''.$date_from.'\'';
+		}
+		
+		$this->db->where($where);
+		$total = $this->db->count_all_results('visit');
+		
+		return $total;
+	}
+
+	/*
+	*	Export Time report
+	*
+	*/
+	function doctor_reports_export($date_from = NULL, $date_to = NULL)
+	{
+		$this->load->library('excel');
+		$report = array();
+		
+		//export title
+		if(!empty($date_from) && !empty($date_to))
+		{
+			$title = 'Doctors report from '.date('jS M Y',strtotime($date_from)).' to '.date('jS M Y',strtotime($date_to));
+		}
+		
+		else if(empty($date_from) && !empty($date_to))
+		{
+			$title = 'Doctors report for '.date('jS M Y',strtotime($date_to));
+		}
+		
+		else if(!empty($date_from) && empty($date_to))
+		{
+			$title = 'Doctors report for '.date('jS M Y',strtotime($date_from));
+		}
+		
+		else
+		{
+			$date_from = date('Y-m-d');
+			$title = 'Doctors report for '.date('jS M Y',strtotime($date_from));
+		}
+		
+		//document ehader
+		$row_count = 0;
+		$report[$row_count][0] = '#';
+		$report[$row_count][1] = 'Doctor\'s name';
+		$report[$row_count][2] = 'Total collection';
+		$report[$row_count][3] = 'Patients seen';
+		
+		//get all doctors
+		$doctor_results = $this->reports_model->get_all_doctors();
+		$result = $doctor_results->result();
+		$grand_total = 0;
+		$patients_total = 0;
+		$count = 0;
+		
+		foreach($result as $res)
+		{
+			$personnel_id = $res->personnel_id;
+			$personnel_onames = $res->personnel_onames;
+			$personnel_fname = $res->personnel_fname;
+			$count++;
+			$row_count++;
+			
+			//get service total
+			$total = $this->reports_model->get_total_collected($personnel_id, $date_from, $date_to);
+			$patients = $this->reports_model->get_total_patients($personnel_id, $date_from, $date_to);
+			$grand_total += $total;
+			$patients_total += $patients;
+			
+			$report[$row_count][0] = $count;
+			$report[$row_count][1] = $personnel_fname.' '.$personnel_onames;
+			$report[$row_count][2] = number_format($total, 0);
+			$report[$row_count][3] = $patients;
+		}
+		$row_count++;
+		
+		$report[$row_count][0] = '';
+		$report[$row_count][1] = '';
+		$report[$row_count][2] = number_format($grand_total, 0);
+		$report[$row_count][3] = $patients_total;
+		
+		//create the excel document
+		$this->excel->addArray ( $report );
+		$this->excel->generateXML ($title);
+	}
+	
+	function doctor_patients_export($personnel_id, $date_from = NULL, $date_to = NULL)
+	{
+		$where = ' AND visit.personnel_id = '.$personnel_id;
+		
+		if(!empty($date_from) && !empty($date_to))
+		{
+			$where .= ' AND (visit_date >= \''.$date_from.'\' AND visit_date <= \''.$date_to.'\') ';
+		}
+		
+		else if(empty($date_from) && !empty($date_to))
+		{
+			$where .= ' AND visit_date = \''.$date_to.'\'';
+		}
+		
+		else if(!empty($date_from) && empty($date_to))
+		{
+			$where .= ' AND visit_date = \''.$date_from.'\'';
+		}
+		$_SESSION['all_transactions_search'] = $where;
+		
+		$this->export_transactions();
+	}
 }

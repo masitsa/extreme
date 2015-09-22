@@ -429,7 +429,7 @@ $route['hospital-reports/all-transactions'] = 'administration/reports/all_transa
 $route['hospital-reports/cash-report'] = 'administration/reports/all_transactions/admin';
 $route['hospital-reports/debtors-report'] = 'administration/reports/debtors_report_data/0';
 $route['hospital-reports/department-report'] = 'administration/reports/department_reports';
-$route['hospital-reports/doctor-reports'] = 'administration/reports/doctor_reports';
+$route['hospital-reports/doctors-report'] = 'administration/reports/doctor_reports';
 
 
 /*
