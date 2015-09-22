@@ -507,5 +507,197 @@ class Services_model extends CI_Model
 			return FALSE;
 		}
 	}
+	
+	/*
+	*	Import Template
+	*
+	*/
+	function import_charges_template()
+	{
+		$this->load->library('Excel');
+		
+		$title = 'Oasis Service Charges Import Template';
+		$count=1;
+		$row_count=0;
+		
+		$report[$row_count][0] = 'Charge name';
+		$report[$row_count][1] = 'Cash paying rate';
+		$report[$row_count][2] = 'Insurance rate';
+		
+		$row_count++;
+		
+		//create the excel document
+		$this->excel->addArray ( $report );
+		$this->excel->generateXML ($title);
+	}
+	
+	public function import_csv_charges($upload_path, $service_id)
+	{
+		//load the file model
+		$this->load->model('admin/file_model');
+		/*
+			-----------------------------------------------------------------------------------------
+			Upload csv
+			-----------------------------------------------------------------------------------------
+		*/
+		$response = $this->file_model->upload_csv($upload_path, 'import_csv');
+		
+		if($response['check'])
+		{
+			$file_name = $response['file_name'];
+			
+			$array = $this->file_model->get_array_from_csv($upload_path.'/'.$file_name);
+			//var_dump($array); die();
+			$response2 = $this->sort_csv_charges_data($array, $service_id);
+		
+			if($this->file_model->delete_file($upload_path."\\".$file_name, $upload_path))
+			{
+			}
+			
+			return $response2;
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', $response['error']);
+			return FALSE;
+		}
+	}
+	public function sort_csv_charges_data($array, $service_id)
+	{
+		//count total rows
+		$total_rows = count($array);
+		$total_columns = count($array[0]);//var_dump($array);die();
+		
+		//if products exist in array
+		if(($total_rows > 0) && ($total_columns == 3))
+		{
+			$count = 0;
+			$comment = '';
+			$items['modified_by'] = $this->session->userdata('personnel_id');
+			$response = '
+				<table class="table table-hover table-bordered ">
+					  <thead>
+						<tr>
+						  <th>#</th>
+						  <th>Patient type</th>
+						  <th>Charge name</th>
+						  <th>Amount</th>
+						</tr>
+					  </thead>
+					  <tbody>
+			';
+			
+			//retrieve the data from array
+			for($r = 1; $r < $total_rows; $r++)
+			{
+				$service_charge_name = $array[$r][0];
+				$cash_paying_rate = ucwords(strtolower($array[$r][1]));
+				$insurance_rate = ucwords(strtolower($array[$r][2]));
+				
+				// get all the visit type
+				$this->db->where('visit_type_status', 1);
+				$visit_type_query = $this->db->get('visit_type');
+	
+				if($visit_type_query->num_rows() > 0)
+				{
+					foreach ($visit_type_query->result() as $key) 
+					{
+						$count++;
+						$visit_type_id = $key->visit_type_id;
+						$visit_type_name = $key->visit_type_name;
+						
+						//cash paying
+						if($visit_type_id == 1)
+						{
+							$service_charge_amount = $cash_paying_rate;
+						}
+						
+						else
+						{
+							$service_charge_amount = $insurance_rate;
+						}
+						
+						// service charge entry
+						$service_charge_insert = array(
+										"service_charge_name" => $service_charge_name,
+										"service_id" => $service_id,
+										"visit_type_id" => $visit_type_id,
+										"service_charge_amount" => $service_charge_amount,
+										'service_charge_status' => 1,
+									);
+						
+						if($this->service_charge_exists($service_charge_name, $visit_type_id))
+						{
+							$this->db->where(array('service_charge_name' => $service_charge_name, 'visit_type_id' => $visit_type_id));
+							if($this->db->update('service_charge', $service_charge_insert))
+							{
+								//number exists
+								$comment .= '<br/>Charge exists. It has been updated';
+								$class = 'warning';
+							}
+							
+							else
+							{
+								$comment .= '<br/>Not saved internal error';
+								$class = 'danger';
+							}
+						}
+						
+						else
+						{
+							$service_charge_insert['created'] = date('Y-m-d H:i:s');
+							$service_charge_insert['created_by'] = $this->session->userdata('personnel_id');
+							$service_charge_insert['modified_by'] = $this->session->userdata('personnel_id');
+							
+							if($this->db->insert('service_charge', $service_charge_insert))
+							{
+								$comment .= '<br/>Charge successfully added to the database';
+								$class = 'success';
+							}
+							
+							else
+							{
+								$comment .= '<br/>Not saved internal error';
+								$class = 'danger';
+							}
+						}
+				
+						$response .= '
+								<tr class="'.$class.'">
+									<td>'.$count.'</td>
+									<td>'.$visit_type_name.'</td>
+									<td>'.$service_charge_name.'</td>
+									<td>'.$service_charge_amount.'</td>
+								</tr> 
+						';
+					}
+				}
+			}
+			
+			$response .= '</table>';
+			
+			$return['response'] = $response;
+			$return['check'] = TRUE;
+		}
+		
+		//if no products exist
+		else
+		{
+			$return['response'] = 'Charges data not found';
+			$return['check'] = FALSE;
+		}
+		
+		return $return;
+	}
+	
+	public function get_visit_types()
+	{
+		$data['visit_type_status'] = 1;
+		$this->db->where($data);
+		$this->db->order_by('visit_type_name');
+		
+		return $this->db->get('visit_type');
+	}
 }
 ?>

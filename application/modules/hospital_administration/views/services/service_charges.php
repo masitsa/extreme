@@ -90,8 +90,8 @@
 					  <thead>
 						<tr>
 						  <th>#</th>
-						  <th><a href="'.site_url().'hospital-administration/service-charges/'.$service_id.'/visit_type_id/'.$order_method.'/'.$page.'">Patient type</a></th>
-						  <th><a href="'.site_url().'hospital-administration/service-charges/'.$service_id.'/service_charge_name/'.$order_method.'/'.$page.'">Charge name</a></th>
+						  <th><a href="'.site_url().'hospital-administration/service-charges/'.$service_id.'/service_charge.visit_type_id/'.$order_method.'/'.$page.'">Patient type</a></th>
+						  <th><a href="'.site_url().'hospital-administration/service-charges/'.$service_id.'/service_charge.service_charge_name/'.$order_method.'/'.$page.'">Charge name</a></th>
 						  <th>Amount</th>
 						  <th colspan="3">Actions</th>
 						</tr>
