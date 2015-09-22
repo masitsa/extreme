@@ -4,6 +4,7 @@ require_once "./application/modules/hospital_administration/controllers/hospital
 
 class Services extends Hospital_administration 
 {
+	var $csv_path;
 	function __construct()
 	{
 		parent:: __construct();
@@ -11,6 +12,8 @@ class Services extends Hospital_administration
 		$this->load->model('reception/reception_model');
 		
 		$this->load->model('services_model');
+		
+		$this->csv_path = realpath(APPPATH . '../assets/csv');
 	}
 
 	public function index($order = 'service_name', $order_method = 'ASC')
@@ -163,11 +166,11 @@ class Services extends Hospital_administration
 		$v_data['page'] = $page;
 		$service_name = $this->services_model->get_service_names($service_id);
 		$data['title'] = $v_data['title'] = $service_name.' charges';
+		$v_data['visit_types'] = $this->services_model->get_visit_types();
 		
 		$v_data['service_id'] = $service_id;
 		$v_data['service_name'] = $service_name;
 		$data['content'] = $this->load->view('services/service_charges', $v_data, true);
-		
 		
 		$data['sidebar'] = 'admin_sidebar';
 		
@@ -342,6 +345,7 @@ class Services extends Hospital_administration
 	public function service_charge_search($service_id)
 	{
 		$service_charge_name = $this->input->post('service_charge_name');
+		$visit_type_id = $this->input->post('visit_type_id');
 		
 		if(!empty($service_charge_name))
 		{
@@ -352,7 +356,16 @@ class Services extends Hospital_administration
 			$service_charge_name = '';
 		}
 		
-		$search = $service_charge_name;
+		if(!empty($visit_type_id))
+		{
+			$visit_type_id = ' AND service_charge.visit_type_id = '.$visit_type_id.' ';
+		}
+		else
+		{
+			$visit_type_id = '';
+		}
+		
+		$search = $service_charge_name.$visit_type_id;
 		$this->session->set_userdata('service_charge_search', $search);
 		
 		redirect('hospital-administration/service-charges/'.$service_id);
@@ -471,6 +484,68 @@ class Services extends Hospital_administration
 		}
 		
 		redirect('hospital-administration/service-charges/'.$service_id);
+	}
+	
+	function import_charges_template()
+	{
+		//export products template in excel 
+		 $this->services_model->import_charges_template();
+	}
+	
+	function import_charges($service_id)
+	{
+		//open the add new product
+		$v_data['service_id'] = $service_id;
+		$v_data['title'] = 'Import Charges';
+		$data['title'] = 'Import Charges';
+		$data['content'] = $this->load->view('services/import_charges', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	
+	function do_charges_import($service_id)
+	{
+		if(isset($_FILES['import_csv']))
+		{
+			if(is_uploaded_file($_FILES['import_csv']['tmp_name']))
+			{
+				//import products from excel 
+				$response = $this->services_model->import_csv_charges($this->csv_path, $service_id);
+				
+				if($response == FALSE)
+				{
+				}
+				
+				else
+				{
+					if($response['check'])
+					{
+						$v_data['import_response'] = $response['response'];
+					}
+					
+					else
+					{
+						$v_data['import_response_error'] = $response['response'];
+					}
+				}
+			}
+			
+			else
+			{
+				$v_data['import_response_error'] = 'Please select a file to import.';
+			}
+		}
+		
+		else
+		{
+			$v_data['import_response_error'] = 'Please select a file to import.';
+		}
+		
+		//open the add new product
+		$v_data['service_id'] = $service_id;
+		$v_data['title'] = 'Import Charges';
+		$data['title'] = 'Import Charges';
+		$data['content'] = $this->load->view('services/import_charges', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
 	}
 }
 

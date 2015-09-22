@@ -9,6 +9,7 @@ class Companies_model extends CI_Model
 	public function all_companies()
 	{
 		$this->db->where('insurance_company_status = 1');
+		$this->db->order_by('insurance_company_name');
 		$query = $this->db->get('insurance_company');
 		
 		return $query;

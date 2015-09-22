@@ -13,7 +13,7 @@
           
 			<?php echo form_open("hospital_administration/services/service_charge_search/".$service_id, array("class" => "form-horizontal"));?>
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label class="col-lg-4 control-label">Service charge name: </label>
                         
@@ -22,6 +22,38 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="col-md-4">
+                	<div class="form-group">
+                        <label class="col-lg-4 control-label">Patient type: </label>
+                        
+                        <div class="col-lg-8">
+                            <select class="form-control" name="visit_type_id">
+                                <?php
+                                    if($visit_types->num_rows() > 0)
+                                    {
+                                        foreach($visit_types->result() as $res)
+                                        {
+                                            $visit_type_id = $res->visit_type_id;
+                                            $visit_type_name = $res->visit_type_name;
+                                            
+                                            if($visit_type_id == set_value("visit_type_id"))
+                                            {
+                                                echo '<option value="'.$visit_type_id.'" selected>'.$visit_type_name.'</option>';
+                                            }
+                                            
+                                            else
+                                            {
+                                                echo '<option value="'.$visit_type_id.'">'.$visit_type_name.'</option>';
+                                            }
+                                        }
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="col-md-4">
                     <div class="center-align">
                         <button type="submit" class="btn btn-info"><i class="fa fa-search"></i> Search</button>

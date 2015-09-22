@@ -160,6 +160,9 @@ $route['hospital-administration/activate-service/(:num)'] = 'hospital_administra
 $route['hospital-administration/activate-service/(:num)/(:num)'] = 'hospital_administration/services/activate_service/$1/$2';
 $route['hospital-administration/deactivate-service/(:num)'] = 'hospital_administration/services/deactivate_service/$1';
 $route['hospital-administration/deactivate-service/(:num)/(:num)'] = 'hospital_administration/services/deactivate_service/$1/$2';
+$route['hospital-administration/import-services-template'] = 'hospital_administration/services/import_charges_template';
+$route['hospital-administration/import-services/(:num)'] = 'hospital_administration/services/do_charges_import/$1';
+$route['hospital-administration/import-charges/(:num)'] = 'hospital_administration/services/import_charges/$1';
 
 $route['hospital-administration/service-charges/(:num)'] = 'hospital_administration/services/service_charges/$1';
 $route['hospital-administration/service-charges/(:num)/(:any)/(:any)/(:num)'] = 'hospital_administration/services/service_charges/$1/$2/$3/$4';

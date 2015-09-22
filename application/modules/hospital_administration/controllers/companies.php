@@ -101,7 +101,7 @@ class Companies extends Hospital_administration
 		{
 			if($this->companies_model->add_company())
 			{
-				$this->session->set_userdata('success_message', 'Insurance ompany added successfully');
+				$this->session->set_userdata('success_message', 'Insurance company added successfully');
 				redirect('hospital-administration/insurance-companies');
 			}
 			

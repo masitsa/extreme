@@ -2089,6 +2089,7 @@ class Reception_model extends CI_Model
 		
 		return $query;
 	}
+	
 	/*
 	*	Import Template
 	*
