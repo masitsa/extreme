@@ -52,10 +52,56 @@
                     {
                         $nssf_id = $row2->nssf_id;
                         $amount = $row2->amount;
+                        $percentage = $row2->percentage;
                         ?>
                         <form action="<?php echo site_url("accounts/payroll/edit-nssf/".$nssf_id);?>" method="post">
                         <tr>
                             <td><input type='text' name='amount' value='<?php echo $amount;?>' class="form-control"></td>
+                            
+                            <?php
+                            if($percentage == 1)
+							{
+							?>
+                            <td>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="percentage" id="optionsRadios1" value="1" checked="checked">
+                                        Percentage
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="percentage" id="optionsRadios2" value="0">
+                                        Fixed amount
+                                    </label>
+                                </div>
+                            </td>
+                            <?php
+							}
+							else
+							{
+							?>
+                            <td>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="percentage" id="optionsRadios1" value="1">
+                                        Percentage
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="percentage" id="optionsRadios2" value="0" checked="checked">
+                                        Fixed amount
+                                    </label>
+                                </div>
+                            </td>
+                            <?php
+							}
+							?>
                             <td><button class='btn btn-success btn-xs' type='submit'><i class='fa fa-pencil'></i> Edit</button></td>
                         </tr>
                         </form>

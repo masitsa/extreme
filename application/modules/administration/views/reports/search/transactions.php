@@ -1,11 +1,7 @@
- <section class="panel">
-    <header class="panel-heading">
-                <h4 class="pull-left"><i class="icon-reorder"></i>Search <?php echo $title;?></h4>
-                <div class="widget-icons pull-right">
-                  <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                </div>
-                <div class="clearfix"></div>
-              </header>             
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+            	<h2 class="panel-title">Search</h2>
+            </header>             
 
           <!-- Widget content -->
                 <div class="panel-body">

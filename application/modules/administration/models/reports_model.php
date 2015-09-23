@@ -223,7 +223,7 @@ class Reports_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from($table);
-		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id');
+		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*, visit_type.visit_type_name');
 		$this->db->where($where);
 		$this->db->order_by('visit.visit_date, visit.visit_time','DESC');
 		$this->db->group_by('visit.visit_id');
@@ -319,7 +319,7 @@ class Reports_model extends CI_Model
 		//retrieve all users
 		$this->db->from('payments');
 		$this->db->select('SUM(amount_paid) AS total_paid');
-		$this->db->where('visit_id = '.$visit_id.' AND payment_method_id = '.$payment_method_id.'');
+		$this->db->where('visit_id = '.$visit_id.' AND payment_method_id = '.$payment_method_id.' AND payment_type = 1');
 		$query = $this->db->get();
 		
 		$cash = $query->row();
@@ -438,8 +438,8 @@ class Reports_model extends CI_Model
 		$this->load->library('excel');
 		
 		//get all transactions
-		$where = 'visit.patient_id = patients.patient_id  ';
-		$table = 'visit, patients';
+		$where = 'visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type';
+		$table = 'visit, patients, visit_type';
 		$visit_search = $this->session->userdata('all_transactions_search');
 		$table_search = $this->session->userdata('all_transactions_tables');
 		
@@ -455,11 +455,12 @@ class Reports_model extends CI_Model
 		
 		$this->db->where($where);
 		$this->db->order_by('visit_date', 'ASC');
-		$this->db->select('visit.*, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id,patients.dependant_id');
+		$this->db->select('visit.*, patients.visit_type_id, patients.*, visit_type.visit_type_name');
 		$this->db->group_by('visit_id');
 		$visits_query = $this->db->get($table);
 		
-		$title = 'Transactions Export';
+		$title = 'Transactions Export '.date('jS M Y H:i a',strtotime(date('Y-m-d H:i:s')));
+		$col_count = 0;
 		
 		if($visits_query->num_rows() > 0)
 		{
@@ -470,12 +471,19 @@ class Reports_model extends CI_Model
 				-----------------------------------------------------------------------------------------
 			*/
 			$row_count = 0;
-			$report[$row_count][0] = '#';
-			$report[$row_count][1] = 'Visit Date';
-			$report[$row_count][2] = 'Patient';
-			$report[$row_count][3] = 'Category';
-			$report[$row_count][4] = 'Doctor';
-			$current_column = 7 ;
+			$report[$row_count][$col_count] = '#';
+			$col_count++;
+			$report[$row_count][$col_count] = 'Visit Date';
+			$col_count++;
+			$report[$row_count][$col_count] = 'Name';
+			$col_count++;
+			$report[$row_count][$col_count] = 'Patient number';
+			$col_count++;
+			$report[$row_count][$col_count] = 'Category';
+			$col_count++;
+			$report[$row_count][$col_count] = 'Doctor';
+			$col_count++;
+			$current_column = $col_count ;
 			
 			
 			//get & display all services
@@ -521,21 +529,21 @@ class Reports_model extends CI_Model
 					$visit_time_out = '-';
 				}
 				$visit_id = $row->visit_id;
+				$patient_number = $row->patient_number;
 				$patient_id = $row->patient_id;
 				$personnel_id = $row->personnel_id;
 				$dependant_id = $row->dependant_id;
 				$strath_no = $row->strath_no;
 				$visit_type_id = $row->visit_type_id;
 				$visit_type = $row->visit_type;
-				$visit_type = $row->visit_type;
-				if($row->dependant_id != 0)
-				{
-					$strath_no = $row->dependant_id;
-				}
-				else
-				{
-					$strath_no = $strath_no;
-				}
+				$visit_table_visit_type = $visit_type;
+				$patient_table_visit_type = $visit_type_id;
+				$coming_from = $this->reception_model->coming_from($visit_id);
+				$sent_to = $this->reception_model->going_to($visit_id);
+				$visit_type_name = $row->visit_type_name;
+				$patient_othernames = $row->patient_othernames;
+				$patient_surname = $row->patient_surname;
+				$patient_date_of_birth = $row->patient_date_of_birth;
 
 				// this is to check for any credit note or debit notes
 				$payments_value = $this->accounts_model->total_payments($visit_id);
@@ -553,17 +561,6 @@ class Reports_model extends CI_Model
 				// get all the payment methods used in payments
 				//$payment_type = $this->accounts_model->get_visit_payment_method($visit_id);
 				// end of all payments details
-
-
-				$patient = $this->reception_model->patient_names2($patient_id, $visit_id);
-
-				$visit_type = $patient['visit_type'];
-				$patient_type = $patient['patient_type'];
-				$patient_othernames = $patient['patient_othernames'];
-				$patient_surname = $patient['patient_surname'];
-				$patient_date_of_birth = $patient['patient_date_of_birth'];
-				$gender = $patient['gender'];
-				$faculty = $patient['faculty'];
 				
 				//creators and editors
 				$personnel_query = $this->personnel_model->get_all_personnel();
@@ -610,16 +607,21 @@ class Reports_model extends CI_Model
 				// if($debtors == 'true' && (($cash - $total_invoiced2) > 0))
 				if($debtors == 'true' && ($balance > 0))
 				{
+					$col_count = 0;
 					//display the patient data
-					$report[$row_count][0] = $count;
-					$report[$row_count][1] = $visit_date;
-					$report[$row_count][2] = $patient_surname.' '.$patient_othernames;
-					$report[$row_count][3] = $visit_type;
-					$report[$row_count][4] = $doctor;
-					$report[$row_count][5] = $faculty;
-					$report[$row_count][6] = $strath_no;
-					$current_column = 7;
-
+					$report[$row_count][$col_count] = $count;
+					$col_count++;
+					$report[$row_count][$col_count] = $visit_date;
+					$col_count++;
+					$report[$row_count][$col_count] = $patient_surname.' '.$patient_othernames;
+					$col_count++;
+					$report[$row_count][$col_count] = $patient_number;
+					$col_count++;
+					$report[$row_count][$col_count] = $visit_type_name;
+					$col_count++;
+					$report[$row_count][$col_count] = $doctor;
+					$col_count++;
+					$current_column = $col_count;
 					
 					//display services charged to patient
 					foreach($services_query->result() as $service)
@@ -657,12 +659,19 @@ class Reports_model extends CI_Model
 				else
 				{
 					//display the patient data
-					$report[$row_count][0] = $count;
-					$report[$row_count][1] = $visit_date;
-					$report[$row_count][2] = $patient_surname.' '.$patient_othernames;
-					$report[$row_count][3] = $visit_type;
-					$report[$row_count][4] = $doctor;
-					$current_column= 7;
+					$report[$row_count][$col_count] = $count;
+					$col_count++;
+					$report[$row_count][$col_count] = $visit_date;
+					$col_count++;
+					$report[$row_count][$col_count] = $patient_surname.' '.$patient_othernames;
+					$col_count++;
+					$report[$row_count][$col_count] = $patient_number;
+					$col_count++;
+					$report[$row_count][$col_count] = $visit_type_name;
+					$col_count++;
+					$report[$row_count][$col_count] = $doctor;
+					$col_count++;
+					$current_column = $col_count;
 
 					//display services charged to patient
 					foreach($services_query->result() as $service)
@@ -674,9 +683,9 @@ class Reports_model extends CI_Model
 						$report[$row_count][$current_column] = $visit_charge;
 						$current_column++;
 					}
-					$report[$row_count][$current_column] = $credit_note_amount;
-					$current_column++;
 					$report[$row_count][$current_column] = $debit_note_amount;
+					$current_column++;
+					$report[$row_count][$current_column] = $credit_note_amount;
 					$current_column++;
 					$report[$row_count][$current_column] = $invoice_total;
 					$current_column++;

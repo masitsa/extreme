@@ -220,18 +220,20 @@ $created_by = $this->session->userdata('first_name');
 							}
                         }
                     }
-                    $monthly_relief = $this->payroll_model->get_monthly_relief();
-					$insurance_res = $this->payroll_model->get_insurance_relief($personnel_id);
-					$insurance_relief = $insurance_res['relief'];
-					$insurance_amount = $insurance_res['amount'];
 					
                     /*********** Taxable ***********/
 					$gross = ($total_payments + $total_allowances);
-        			$gross_taxable = $gross + $total_benefits;
-                    
-                    /*********** NSSF ***********/
-					$nssf_query = $this->payroll_model->get_nssf();
+					$gross_taxable = $gross + $total_benefits;
 					$nssf = 0;
+					$taxable = 0;
+					$paye = 0;
+					$paye_less_relief = 0;
+					$monthly_relief = 0;
+					$insurance_relief = 0;
+					$insurance_amount = 0;
+						
+					/*********** NSSF ***********/
+					$nssf_query = $this->payroll_model->get_nssf();
 					
 					if($nssf_query->num_rows() > 0)
 					{
@@ -239,13 +241,27 @@ $created_by = $this->session->userdata('first_name');
 						{
 							$nssf_id = $row2->nssf_id;
 							$nssf = $row2->amount;
+							$nssf_percentage = $row2->percentage;
+							
+							if($nssf_percentage == 1)
+							{
+								$nssf = $gross_taxable * ($nssf/100);
+							}
 						}
 					}
 					$taxable = $gross_taxable - $nssf;
 					
-                    /*********** PAYE ***********/
-					$paye = $this->payroll_model->calculate_paye($gross_taxable);
-					$paye_less_relief = $paye - $monthly_relief - $insurance_relief;
+					if($taxable > 10164)
+					{
+						$monthly_relief = $this->payroll_model->get_monthly_relief();
+						$insurance_res = $this->payroll_model->get_insurance_relief($personnel_id);
+						$insurance_relief = $insurance_res['relief'];
+						$insurance_amount = $insurance_res['amount'];
+						
+						/*********** PAYE ***********/
+						$paye = $this->payroll_model->calculate_paye($taxable);
+						$paye_less_relief = $paye - $monthly_relief - $insurance_relief;
+					}
                     ?>
                 </div>
                 

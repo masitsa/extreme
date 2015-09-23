@@ -189,23 +189,7 @@ class Payroll_model extends CI_Model
 		$total_tax = 0;
 		
 		if($taxable > 0)
-		{
-			//get pension rates
-			$nssf_query = $this->payroll_model->get_nssf();
-			$nssf = 0;
-			
-			if($nssf_query->num_rows() > 0)
-			{
-				foreach ($nssf_query->result() as $row2)
-				{
-					$nssf_id = $row2->nssf_id;
-					$nssf = $row2->amount;
-				}
-			}
-			
-			//less pension
-			$taxable -= $nssf;
-			
+		{	
 			//get tax rates
 			$paye_query = $this->payroll_model->get_paye();
 			$count = 0;
@@ -612,8 +596,44 @@ class Payroll_model extends CI_Model
 					PAYE
 					--------------------------------------------------------------------------------------
 				*/
-				$taxable = $total_payments + $total_benefits + $total_allowances;//echo $taxable.'<br/>';
-				$paye = $this->payroll_model->calculate_paye($taxable);//echo $paye.'<br/>';
+				$gross_taxable = $total_payments + $total_benefits + $total_allowances;//echo $taxable.'<br/>';
+				
+				/*
+					--------------------------------------------------------------------------------------
+					NSSF
+					--------------------------------------------------------------------------------------
+				*/
+				$nssf_query = $this->payroll_model->get_nssf();
+				$nssf = 0;
+				
+				if($nssf_query->num_rows() > 0)
+				{
+					foreach ($nssf_query->result() as $row2)
+					{
+						$nssf_id = $row2->nssf_id;
+						$nssf = $row2->amount;
+						
+						$nssf_percentage = $row2->percentage;
+						
+						if($nssf_percentage == 1)
+						{
+							$nssf = $gross_taxable * ($nssf/100);
+						}
+					}
+				}
+				
+				$taxable = $gross_taxable - $nssf;
+				
+				if($taxable > 10164)
+				{
+					$paye = $this->payroll_model->calculate_paye($taxable);//echo $paye.'<br/>';
+				}
+				
+				else
+				{
+					$paye = 0;
+				}
+				
 				$table_paye = $this->get_table_id("paye");
 				
 				$items = array(
@@ -675,22 +695,6 @@ class Payroll_model extends CI_Model
 			
 				$this->db->insert($table, $items);
 				
-				/*
-					--------------------------------------------------------------------------------------
-					NSSF
-					--------------------------------------------------------------------------------------
-				*/
-				$nssf_query = $this->payroll_model->get_nssf();
-				$nssf = 0;
-				
-				if($nssf_query->num_rows() > 0)
-				{
-					foreach ($nssf_query->result() as $row2)
-					{
-						$nssf_id = $row2->nssf_id;
-						$nssf = $row2->amount;
-					}
-				}
 				$table_nssf = $this->get_table_id("nssf");
 				
 				$items = array(
@@ -1057,7 +1061,8 @@ class Payroll_model extends CI_Model
 	public function edit_nssf($nssf_id)
 	{
 		$data = array(
-			'amount'		=> $this->input->post('amount')
+			'amount'		=> $this->input->post('amount'),
+			'percentage'		=> $this->input->post('percentage')
 		);
 		
 		$this->db->where('nssf_id', $nssf_id);

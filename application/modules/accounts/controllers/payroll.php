@@ -561,6 +561,7 @@ class Payroll extends accounts
 	public function edit_nssf($nssf_id)
 	{
 		$this->form_validation->set_rules('amount', 'Amount', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('percentage', 'NSSF type', 'required|numeric|xss_clean');
 		
 		//if form conatins invalid data
 		if ($this->form_validation->run())

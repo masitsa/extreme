@@ -134,9 +134,12 @@ class Personnel_model extends CI_Model
 			'personnel_address'=>$this->input->post('personnel_address'),
 			'personnel_locality'=>$this->input->post('personnel_locality'),
 			'title_id'=>$this->input->post('title_id'),
-			'personnel_number'=>$this->input->post('personnel_number'),
-			'personnel_city'=>$this->input->post('personnel_city'),
-			'personnel_post_code'=>$this->input->post('personnel_post_code')
+			'personnel_number' => $this->input->post('personnel_number'),
+			'personnel_city' => $this->input->post('personnel_city'),
+			'personnel_post_code' => $this->input->post('personnel_post_code'),
+			'personnel_account_number' => $this->input->post('personnel_account_number'),
+			'personnel_nssf_number' => $this->input->post('personnel_nssf_number'),
+			'personnel_kra_pin' => $this->input->post('personnel_kra_pin')
 		);
 		
 		$this->db->where('personnel_id', $personnel_id);

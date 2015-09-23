@@ -59,8 +59,8 @@ class Reports extends administration
 	
 	public function all_transactions($module = NULL)
 	{
-		$where = 'visit.patient_id = patients.patient_id ';
-		$table = 'visit, patients';
+		$where = 'visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type';
+		$table = 'visit, patients, visit_type';
 		$visit_search = $this->session->userdata('all_transactions_search');
 		$table_search = $this->session->userdata('all_transactions_tables');
 		
@@ -84,7 +84,7 @@ class Reports extends administration
 		
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/administration/reports/all_transactions/'.$module;
+		$config['base_url'] = site_url().'administration/reports/all_transactions/'.$module;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -125,27 +125,27 @@ class Reports extends administration
 		$v_data['total_services_revenue'] = $this->reports_model->get_total_services_revenue($where, $table);
 		$v_data['total_payments'] = $this->reports_model->get_total_cash_collection($where, $table);
 		
-		//total other debt
-		$where2 = $where.' AND visit.visit_type = 3';
-		$total_other_debt = $this->reports_model->get_total_services_revenue($where2, $table);
-		//students debit notes
-		$where2 = $where.' AND payments.payment_type = 2 AND visit.visit_type = 3';
-		$other_debit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
-		//students credit notes
-		$where2 = $where.' AND payments.payment_type = 3 AND visit.visit_type = 3';
-		$other_credit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
-		$v_data['total_other_debt'] = ($total_other_debt + $other_debit_notes) - $other_credit_notes;
+		//total outpatients debt
+		$where2 = $where.' AND patients.inpatient = 0';
+		$total_outpatient_debt = $this->reports_model->get_total_services_revenue($where2, $table);
+		//outpatient debit notes
+		$where2 = $where.' AND payments.payment_type = 2 AND patients.inpatient = 0';
+		$outpatient_debit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
+		//outpatient credit notes
+		$where2 = $where.' AND payments.payment_type = 3 AND patients.inpatient = 0';
+		$outpatient_credit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
+		$v_data['total_outpatient_debt'] = ($total_outpatient_debt + $outpatient_debit_notes) - $outpatient_credit_notes;
 		
-		//total insurance debt
-		$where2 = $where.' AND visit.visit_type = 4';
-		$total_insurance_debt = $this->reports_model->get_total_services_revenue($where2, $table);
-		//students debit notes
-		$where2 = $where.' AND payments.payment_type = 2 AND visit.visit_type = 4';
-		$insurance_debit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
-		//students credit notes
-		$where2 = $where.' AND payments.payment_type = 3 AND visit.visit_type = 4';
-		$insurance_credit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
-		$v_data['total_insurance_debt'] = ($total_insurance_debt + $insurance_debit_notes) - $insurance_credit_notes;
+		//total inpatient debt
+		$where2 = $where.' AND patients.inpatient = 1';
+		$total_inpatient_debt = $this->reports_model->get_total_services_revenue($where2, $table);
+		//inpatient debit notes
+		$where2 = $where.' AND payments.payment_type = 2 AND patients.inpatient = 1';
+		$inpatient_debit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
+		//inpatient credit notes
+		$where2 = $where.' AND payments.payment_type = 3 AND patients.inpatient = 1';
+		$inpatient_credit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
+		$v_data['total_inpatient_debt'] = ($total_inpatient_debt + $inpatient_debit_notes) - $inpatient_credit_notes;
 		
 		//all normal payments
 		$where2 = $where.' AND payments.payment_type = 1';
@@ -164,11 +164,11 @@ class Reports extends administration
 		$where2 = $where.' AND payments.payment_type = 3';
 		$v_data['credit_notes'] = $this->reports_model->get_total_cash_collection($where2, $table);
 		
-		//count other visits
+		//count outpatient visits
 		$where2 = $where.' AND patients.inpatient = 0';
 		$v_data['outpatients'] = $this->reception_model->count_items($table, $where2);
 		
-		//count insurance visits
+		//count inpatient visits
 		$where2 = $where.' AND patients.inpatient = 1';
 		$v_data['inpatients'] = $this->reception_model->count_items($table, $where2);
 		

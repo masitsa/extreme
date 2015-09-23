@@ -1,12 +1,8 @@
 <div class="row statistics">
     <div class="col-md-2 col-sm-12">
-    	 <section class="panel">
+    	 <section class="panel panel-featured panel-featured-info">
             <header class="panel-heading">
-                <h4 class="pull-left"><i class="icon-reorder"></i>Search <?php echo $title;?></h4>
-                <div class="widget-icons pull-right">
-                  <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                </div>
-                <div class="clearfix"></div>
+                <h2 class="panel-title">Visits</h2>
               </header>             
         
               <!-- Widget content -->
@@ -31,9 +27,8 @@
                     </tbody>
                 </table>
                 <!-- Text -->
-                <div class="datas-text">
-                	Total Visits <span class="bold"><?php echo number_format($total_patients, 0);?></span>
-                </div>
+                <h5>Total Visits</h5>
+                <h4><?php echo $total_patients;?></h4>
                 
                 <div class="clearfix"></div>
           	</div>
@@ -41,14 +36,10 @@
     </div>
     
     <div class="col-md-10 col-sm-12">
-    	 <section class="panel">
+    	 <section class="panel panel-featured panel-featured-info">
             <header class="panel-heading">
-                <h4 class="pull-left"><i class="icon-reorder"></i>Search <?php echo $title;?></h4>
-                <div class="widget-icons pull-right">
-                  <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                </div>
-                <div class="clearfix"></div>
-              </header>             
+            	<h2 class="panel-title">Transaction breakdown</h2>
+            </header>             
         
               <!-- Widget content -->
               <div class="panel-body">
@@ -148,16 +139,16 @@
                         <table class="table table-striped table-hover table-condensed">
                             <tbody>
                                 <tr>
-                                    <th>Insurance Debt</th>
-                                    <td><?php echo number_format(($total_insurance_debt), 2);?></td>
+                                    <th>Inpatient Debt</th>
+                                    <td><?php echo number_format(($total_inpatient_debt), 2);?></td>
                                 </tr>
                                 <tr>
-                                    <th>Normal Debt</th>
-                                    <td><?php echo number_format(($total_other_debt - $total_cash_collection), 2);?></td>
+                                    <th>Outpatient Debt</th>
+                                    <td><?php echo number_format(($total_outpatient_debt - $total_cash_collection), 2);?></td>
                                 </tr>
                                 <tr>
                                     <th>Total</th>
-                                    <td><?php echo number_format((($total_other_debt - $total_cash_collection) + $total_insurance_debt), 2);?></td>
+                                    <td><?php echo number_format((($total_outpatient_debt - $total_cash_collection) + $total_inpatient_debt), 2);?></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -169,9 +160,8 @@
 					}
 					?>
                     <div class="col-md-3">
-                        <div class="datas-text pull-right">Total Revenue <span class="bold">
-                            KSH <?php echo number_format($total_services_revenue, 2);?></span>
-                        </div>
+                        <h4>Total Revenue</h4>
+                        <h3>Ksh <?php echo number_format($total_services_revenue, 2);?></h3>
                     </div>
                 </div>
           	</div>

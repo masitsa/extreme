@@ -16,6 +16,9 @@ $personnel_city = $row->personnel_city;
 $personnel_number = $row->personnel_number;
 $personnel_post_code = $row->personnel_post_code;
 $branch_id = $row->branch_id;
+$personnel_account_number = $row->personnel_account_number;
+$personnel_nssf_number = $row->personnel_nssf_number;
+$personnel_kra_pin = $row->personnel_kra_pin;
 
 //repopulate data if validation errors occur
 $validation_error = validation_errors();
@@ -36,6 +39,9 @@ if(!empty($validation_error))
 	$personnel_number = set_value('personnel_number');
 	$personnel_post_code = set_value('personnel_post_code');
 	$branch_id = set_value('branch_id');
+	$personnel_account_number = set_value('personnel_account_number');
+	$personnel_nssf_number = set_value('personnel_nssf_number');
+	$personnel_kra_pin = set_value('personnel_kra_pin');
 }
 ?>
 <section class="panel">
@@ -265,6 +271,30 @@ if(!empty($validation_error))
             
             <div class="col-lg-7">
             	<input type="text" class="form-control" name="personnel_post_code" placeholder="Post code" value="<?php echo $personnel_post_code;?>">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-lg-5 control-label">Account number: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="personnel_account_number" placeholder="Account number" value="<?php echo $personnel_account_number;?>">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-lg-5 control-label">NSSF number: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="personnel_nssf_number" placeholder="NSSF number" value="<?php echo $personnel_nssf_number;?>">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-lg-5 control-label">KRA pin: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="personnel_kra_pin" placeholder="KRA pin" value="<?php echo $personnel_kra_pin;?>">
             </div>
         </div>
         
