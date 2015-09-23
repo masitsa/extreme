@@ -499,3 +499,12 @@ $route['cloud/deactivate-sync-table/(:num)'] = 'cloud/sync_tables/deactivate_syn
 $route['pharmacy/validate-import'] = 'pharmacy/do_drugs_import';
 $route['pharmacy/import-template'] = 'pharmacy/import_template';
 $route['pharmacy/import-drugs'] = 'pharmacy/import_drugs';
+
+
+
+
+
+/*
+*	doctor Routes
+*/
+$route['inventory-setup/inventory-categories'] = 'inventory/categories/index';
