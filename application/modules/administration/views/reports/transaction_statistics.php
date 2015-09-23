@@ -21,12 +21,12 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th>Insurance</th>
-                            <td><?php echo $insurance;?></td>
+                            <th>Outpatients</th>
+                            <td><?php echo $outpatients;?></td>
                         </tr>
                         <tr>
-                            <th>Normal</th>
-                            <td><?php echo $other;?></td>
+                            <th>Inpatients</th>
+                            <td><?php echo $inpatients;?></td>
                         </tr>
                     </tbody>
                 </table>
