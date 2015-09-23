@@ -6,7 +6,7 @@ class Sync_model extends CI_Model
 		// get the patient id and the branch id and patient
 		$patient_details = $this->get_table_details($visit_id);
 
-		  // var_dump($patient_details); die();
+		
 		if(count($patient_details) > 0)
 		{
 			$url = 'http://159.203.78.242/cloud/save_cloud_data';
@@ -15,7 +15,8 @@ class Sync_model extends CI_Model
 
 			//The JSON data.
 			$data_string = json_encode($patient_details);
-			//var_dump($data_string);die();
+
+		
 			try{                                                                                                         
 
 				$ch = curl_init($url);                                                                      
@@ -33,12 +34,13 @@ class Sync_model extends CI_Model
 			catch(Exception $e)
 			{
 				$response = "something went wrong";
-					
+				echo json_encode($response.' '.$e);
 			}
 		}
 		else
 		{
 			$response = "no data to sync";
+			echo json_encode($response);
 		}
 		
 		return $response;
@@ -47,12 +49,14 @@ class Sync_model extends CI_Model
 	public function get_table_details($visit_id)
 	{
 		$table_sync_array = $this->get_all_tables_sync();
-		$patients = array();
 
+		$patients = array();
+		$counter = $table_sync_array->num_rows();
 		if($table_sync_array->num_rows() > 0)
 		{
 			$patients['branch_code'] = $this->session->userdata('branch_code');
 			// loop the tables
+
 			foreach ($table_sync_array->result() as $key) {
 
 				// get the table sync items
@@ -142,7 +146,7 @@ class Sync_model extends CI_Model
 	public function parse_sync_up_response($result)
 	{	
 		$sync_response = json_decode($result);
-		var_dump($sync_response);
+		 var_dump($sync_response);
 		/*$patients = $sync_response->patients;
 		$location = $patients[0];
 		var_dump($location->response);*/
