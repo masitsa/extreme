@@ -24,7 +24,7 @@ $created_by = $this->session->userdata('first_name');
 		
 		.row .col-md-12 .title-item{float:left;width: 130px; font-weight:bold; text-align:right; padding-right: 20px;}
 		.title-img{float:left; padding-left:30px;}
-		
+		img.logo{max-height:70px; margin:0 auto;}
 		.col-xs-6{text-align:right;}
 	</style>
     <head>

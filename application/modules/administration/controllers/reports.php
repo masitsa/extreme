@@ -82,9 +82,6 @@ class Reports extends administration
 			$segment = 5;	
 		}
 		
-		//echo $where; die();
-		
-		
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/administration/reports/all_transactions/'.$module;
@@ -168,12 +165,12 @@ class Reports extends administration
 		$v_data['credit_notes'] = $this->reports_model->get_total_cash_collection($where2, $table);
 		
 		//count other visits
-		$where2 = $where.' AND visit.visit_type = 3';
-		$v_data['other'] = $this->reception_model->count_items($table, $where2);
+		$where2 = $where.' AND patients.inpatient = 0';
+		$v_data['outpatients'] = $this->reception_model->count_items($table, $where2);
 		
 		//count insurance visits
-		$where2 = $where.' AND visit.visit_type = 4';
-		$v_data['insurance'] = $this->reception_model->count_items($table, $where2);
+		$where2 = $where.' AND patients.inpatient = 1';
+		$v_data['inpatients'] = $this->reception_model->count_items($table, $where2);
 		
 		$data['title'] = $this->session->userdata('page_title');
 		$v_data['title'] = $this->session->userdata('page_title');
@@ -185,22 +182,6 @@ class Reports extends administration
 		$v_data['module'] = $module;
 		
 		$data['content'] = $this->load->view('reports/all_transactions', $v_data, true);
-		
-		if($module == "accounts")
-		{
-			$data['sidebar'] = 'accounts_sidebar';
-
-		}
-		else if($module == NULL)
-		{
-			$data['sidebar'] = 'admin_sidebar';
-		}
-		else
-		{
-			$data['sidebar'] = 'accounts_sidebar';
-		}
-		
-		
 		
 		$this->load->view('admin/templates/general_page', $data);
 	}
