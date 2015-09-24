@@ -9,6 +9,7 @@ class Cloud  extends MX_Controller
 
 
 	}
+	
 	public function save_cloud_data()
 	{
 		$json = file_get_contents('php://input');
@@ -21,6 +22,48 @@ class Cloud  extends MX_Controller
 		var_dump($member->patient_id);*/
 
 		echo json_encode($response);
+	}
+	
+	public function cron_sync_up()
+	{
+		//get all unsynced visits
+		$unsynced_visits = $this->cloud_model->get_unsynced_visits();
+		
+		$patients = array();
+		
+		if($unsynced_visits->num_rows() > 0)
+		{
+			//delete all unsynced visits
+			$this->db->where('sync_status', 0);
+			if($this->db->delete('sync'))
+			{
+				foreach($unsynced_visits->result() as $res)
+				{
+					$sync_data = $res->sync_data;
+					$sync_table_name = $res->sync_table_name;
+					$branch_code = $res->branch_code;
+					array_push($patients[$sync_table_name], $value);
+					
+					/*$response = $this->sync_model->syn_up_on_closing_visit($visit_id);
+		
+					if($response)
+					{
+					}*/
+				}
+				$patients['branch_code'] = $branch_code;
+			}
+		}
+		
+		//sync data
+		$response = $this->cloud_model->send_unsynced_visits($patients);
+		var_dump($response);
+		if($response)
+		{
+		}
+		
+		else
+		{
+		}
 	}
 }
 ?>
