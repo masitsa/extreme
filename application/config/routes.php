@@ -508,3 +508,4 @@ $route['pharmacy/import-drugs'] = 'pharmacy/import_drugs';
 *	doctor Routes
 */
 $route['inventory-setup/inventory-categories'] = 'inventory/categories/index';
+$route['inventory-setup/add-catergory'] = 'inventory/categories/add_category';

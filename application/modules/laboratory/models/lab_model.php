@@ -216,9 +216,9 @@ class Lab_model extends CI_Model
 
 	function get_lab_visit_item_old($visit_id){
 		$table = "visit_charge, service, service_charge";
-		$where = "service.service_id = 5 
+		$where = "(service.service_name LIKE 'Laboratory' OR service.service_name LIKE 'laboratory') 
 		AND visit_charge.service_charge_id = service_charge.service_charge_id 
-		AND service_charge.service_id = service.service_id AND visit_charge.visit_id = ". $visit_id;
+		AND service_charge.service_id = service.service_id AND service.branch_code = '".$this->session->userdata('branch_code')."' AND visit_charge.visit_id = ". $visit_id;
 		$items = "visit_charge.visit_charge_id";
 		$order = "visit_charge.visit_charge_id";
 		
@@ -229,9 +229,9 @@ class Lab_model extends CI_Model
 
 	function get_lab_visit_item($visit_id){
 		$table = "visit_lab_test, service, service_charge";
-		$where = "service.service_id = 5 
+		$where = "(service.service_name LIKE 'Laboratory' OR service.service_name LIKE 'laboratory')
 		AND visit_lab_test.service_charge_id = service_charge.service_charge_id 
-		AND service_charge.service_id = service.service_id AND visit_lab_test.visit_id = ". $visit_id;
+		AND service_charge.service_id = service.service_id AND service.branch_code = '".$this->session->userdata('branch_code')."' AND visit_lab_test.visit_id = ". $visit_id;
 		$items = "visit_lab_test.visit_lab_test_id,visit_lab_test.service_charge_id";
 		$order = "visit_lab_test.visit_lab_test_id";
 		

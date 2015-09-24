@@ -12,8 +12,8 @@ class Categories extends MX_Controller {
 		$this->load->model('admin/file_model');
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
-		 $this->load->model('site/site_model');
-		
+		$this->load->model('site/site_model');
+		$this->load->model('administration/personnel_model');
 		//path to image directory
 	}
     
@@ -77,6 +77,7 @@ class Categories extends MX_Controller {
 		{
 			$v_data['query'] = $query;
 			$v_data['page'] = $page;
+			$v_data['title'] = 'All Categories';
 			//$v_data['child_categories'] = $this->categories_model->all_child_categories();
 			$data['content'] = $this->load->view('categories/all_categories', $v_data, true);
 		}
@@ -108,48 +109,11 @@ class Categories extends MX_Controller {
 		if ($this->form_validation->run())
 		{
 			//upload product's gallery images
-			$resize['width'] = 600;
-			$resize['height'] = 800;
 			
-			if(is_uploaded_file($_FILES['category_image']['tmp_name']))
-			{
-				$this->load->library('image_lib');
-				
-				$categories_path = $this->categories_path;
-				/*
-					-----------------------------------------------------------------------------------------
-					Upload image
-					-----------------------------------------------------------------------------------------
-				*/
-		
-				$response = $this->file_model->upload_file($categories_path, 'category_image', $resize);
-				if($response['check'])
-				{
-					$file_name = $response['file_name'];
-					$thumb_name = $response['thumb_name'];
-				}
-			
-				else
-				{
-					$this->session->set_userdata('error_message', $response['error']);
-					
-					$data['title'] = 'Add New Category';
-					$v_data['all_categories'] = $this->categories_model->all_categories();
-					$data['content'] = $this->load->view('categories/add_category', $v_data, true);
-					$this->load->view('admin/templates/general_page', $data);
-					break;
-				}
-			}
-			
-			else{
-				$file_name = '';
-				$thumb_name = '';
-			}
-			
-			if($this->categories_model->add_category($file_name))
+			if($this->categories_model->add_category())
 			{
 				$this->session->set_userdata('success_message', 'Category added successfully');
-				redirect('vendor/all-categories');
+				redirect('categories/all-categories');
 			}
 			
 			else
@@ -160,6 +124,7 @@ class Categories extends MX_Controller {
 		
 		//open the add new category
 		$data['title'] = 'Add New Category';
+		$v_data['title'] = 'Add New Category';
 		$v_data['all_categories'] = $this->categories_model->all_parent_categories();
 		$data['content'] = $this->load->view('categories/add_category', $v_data, true);
 		$this->load->view('admin/templates/general_page', $data);

@@ -1,19 +1,16 @@
+ 
 <link href="<?php echo base_url();?>assets/jasny/jasny-bootstrap.css" rel="stylesheet">
 <script src="<?php echo base_url();?>assets/jasny/jasny-bootstrap.js"></script>
-          <div class="padd">
-            <!-- Adding Errors -->
-            <?php
-            if(isset($error)){
-                echo '<div class="alert alert-danger"> Oh snap! Change a few things up and try submitting again. </div>';
-            }
-            
-            $validation_errors = validation_errors();
-            
-            if(!empty($validation_errors))
-            {
-                echo '<div class="alert alert-danger"> Oh snap! '.$validation_errors.' </div>';
-            }
-            ?>
+ <section class="panel">
+            <header class="panel-heading">
+              <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
+              <div class="widget-icons pull-right">
+                    <a href="<?php echo base_url();?>inventory-setup/add-catergory" class="btn btn-primary pull-right btn-sm">Add Category</a>
+              </div>
+              <div class="clearfix"></div>
+        </header>
+        <div class="panel-body">
+          
             
             <?php echo form_open_multipart($this->uri->uri_string(), array("class" => "form-horizontal", "role" => "form"));?>
             <!-- Category Name -->
@@ -105,3 +102,5 @@
             <br />
             <?php echo form_close();?>
 		</div>
+    
+</section>
