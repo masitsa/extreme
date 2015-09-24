@@ -1111,5 +1111,41 @@ class Cloud_model extends CI_Model
 			echo 'No sync tables are set<br/>';
 		}
 	}
+	
+	public function get_unsynced_visits()
+	{
+		$this->db->select('sync.*, sync_table.sync_table_name');
+		$this->db->where('sync_status = 0 AND sync_table.sync_table_id = sync.sync_table_id');
+		return $this->db->get('sync, sync_table');
+	}
+	
+	public function send_unsynced_visits($patient_details)
+	{
+			$url = 'http://159.203.78.242/cloud/save_cloud_data';
+			//Encode the array into JSON.
+
+			//The JSON data.
+			$data_string = json_encode($patient_details);
+		
+			try{                                                                                                         
+
+				$ch = curl_init($url);                                                                      
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+					'Content-Type: application/json',                                                                                
+					'Content-Length: ' . strlen($data_string))                                                                       
+				);                                                                                                                     
+				$result = curl_exec($ch);
+				curl_close($ch);
+				$response = $this->parse_sync_up_response($result);
+			}
+			catch(Exception $e)
+			{
+				$response = "something went wrong";
+				echo json_encode($response.' '.$e);
+			}
+	}
 }
 ?>
