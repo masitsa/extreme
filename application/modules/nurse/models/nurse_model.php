@@ -610,6 +610,12 @@ class Nurse_model extends CI_Model
 
 		return $result;
 	}
+	
+	public function get_symptoms_visit($visit_id)
+	{
+		$this->db->where('visit_id', $visit_id);
+		return $this->db->get('visit_symptoms');
+	}
 
 	function get_visit_symptoms($visit_id){
 		$table = "status, visit_symptoms, symptoms";
@@ -629,10 +635,7 @@ class Nurse_model extends CI_Model
 		$order = "visit_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
-
 		return $result;
-		
-		
 	}
 
 	function get_visit_objective_findings($visit_id){
@@ -699,7 +702,8 @@ class Nurse_model extends CI_Model
 		return $query;
 	}
 
-	function update_visit_sypmtom($symptoms_id,$visit_id,$description){
+	function update_visit_sypmtom($symptoms_id,$visit_id,$description)
+	{
 		$description = str_replace('%20', ' ',$description);
 		$visit_data = array('description'=>$description);
 
@@ -707,9 +711,49 @@ class Nurse_model extends CI_Model
 		$this->db->update('visit_symptoms', $visit_data);
 		
 	}
-	function save_visit_sypmtom($symptoms_id,$visit_id,$status){
-		$visit_data = array('visit_id'=>$visit_id,'symptoms_id'=>$symptoms_id,'status_id'=>$status);
-		$this->db->insert('visit_symptoms', $visit_data);
+	function save_visit_sypmtom($symptoms_id,$visit_id,$status)
+	{
+		//check if symptom has been saved
+		$where = array(
+			'visit_id'=>$visit_id,
+			'symptoms_id'=>$symptoms_id
+		);
+		$this->db->where($where);
+		$query = $this->db->get('visit_symptoms');
+		
+		//exists
+		if($query->num_rows() > 0)
+		{
+			$this->db->where($where);
+			if($this->db->delete('visit_symptoms'))
+			{
+				return TRUE;
+			}
+			
+			else
+			{
+				return FALSE;
+			}
+		}
+		
+		else
+		{
+			$visit_data = array(
+				'visit_id'=>$visit_id,
+				'symptoms_id'=>$symptoms_id,
+				'status_id'=>$status
+			);
+			
+			if($this->db->insert('visit_symptoms', $visit_data))
+			{
+				return TRUE;
+			}
+			
+			else
+			{
+				return FALSE;
+			}
+		}
 	}
 
 	function update_objective_finding($objective_finding_id, $visit_id, $description)

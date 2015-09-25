@@ -95,7 +95,7 @@ echo
             </div>
             </div>
       </div>
-	c
+	  
 	<div class='center-align'>
 		<input type='button' class='btn btn-primary btn-sm' value='Save' onclick='save_medication(".$visit_id.")' />
 		

@@ -180,16 +180,6 @@ class Nurse  extends MX_Controller
 		$data['content'] = $this->load->view('patient_card', $v_data, true);
 		
 		$data['title'] = 'Patient Card';
-		
-		if($module == 0)
-		{
-			$data['sidebar'] = 'nurse_sidebar';
-		}
-		
-		else
-		{
-			$data['sidebar'] = 'doctor_sidebar';
-		}
 		if(($mike != NULL) && ($mike != 'a')){
 			$this->load->view('admin/templates/no_sidebar', $data);	
 		}else{
@@ -863,6 +853,8 @@ class Nurse  extends MX_Controller
 		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
         $v_data["links"] = $this->pagination->create_links();
 		$query = $this->nurse_model->get_symptom_list($table, $where, $config["per_page"], $page, $order);
+
+		$v_data['visit_symptoms'] = $this->nurse_model->get_symptoms_visit($visit_id);
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;

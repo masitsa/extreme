@@ -4,6 +4,8 @@
 	
 	$rs2 = $this->nurse_model->get_visit_objective_findings($visit_id);
 	$num_rows2 = count($rs2);
+
+	$objective_findings_classes = $this->medical_admin_model->get_objective_findings_classes();
 ?>
 
 <?php echo form_open("reception/register-other-patient", array("class" => "form-horizontal"));?>
@@ -25,35 +27,13 @@
 				<?php
                 $count = 0;
                 $prev_name = '';
-                
-				foreach ($get_objective_rs as $key2):
-                    $s = $count;
-					$objective_name = $key2->objective_findings_name;
-					$class_name = $key2->objective_findings_class_name;
-					$objective_id = $key2->objective_findings_id;
-					$status = 0;
-					$description= '';
-					
-					if($num_rows2 > 0)
+				
+				if($objective_findings_classes->num_rows() > 0)
+				{
+					foreach($objective_findings_classes->result() as $res)
 					{
-						foreach ($rs2 as $key)
-						{
-							$objective_findings_id = $key->objective_findings_id;
-							
-							if($objective_findings_id == $objective_id)
-							{
-								$status = 1;
-								$objective_findings_name = $key->objective_findings_name;
-								$visit_objective_findings_id = $key->visit_objective_findings_id;
-								$objective_findings_class_name = $key->objective_findings_class_name;
-								$description= $key->description;
-								break;
-							}
-						}
-					}
-					
-					if (($count == 0))
-					{           
+						$class_name = $res->objective_findings_class_name;
+						$class_id = $res->objective_findings_class_id;   
 						?>
 						<section class="panel panel-featured panel-featured-info">
 							<header class="panel-heading">
@@ -62,69 +42,87 @@
 					
 							<div class="panel-body">
 						<?php 
-					} 
-                
-					else if($class_name != $prev_name)
-					{         
+						
+						foreach ($get_objective_rs as $key2):
+							$class_id2 = $key2->objective_findings_class_id;
+							
+							if($class_id == $class_id2)
+							{
+								$s = $count;
+								$objective_name = $key2->objective_findings_name;
+								$objective_id = $key2->objective_findings_id;
+								$status = 0;
+								$description= '';
+							
+								if($num_rows2 > 0)
+								{
+									foreach ($rs2 as $key)
+									{
+										$objective_findings_id = $key->objective_findings_id;
+										
+										if($objective_findings_id == $objective_id)
+										{
+											$status = 1;
+											$objective_findings_name = $key->objective_findings_name;
+											$visit_objective_findings_id = $key->visit_objective_findings_id;
+											$objective_findings_class_name = $key->objective_findings_class_name;
+											$description= $key->description;
+											break;
+										}
+									}
+								}
+								?>
+							
+								<div class="col-md-3">
+									<div class="checkbox">
+										<label>
+											<?php 
+												if($status == 1)
+												{
+													?>
+													<input name="<?php echo $objective_name?>" type="checkbox" onClick="add_objective_findings(<?php echo $objective_id;?>, <?php echo $visit_id?>, <?php echo $status;?>);toggleField('myTF<?php echo $objective_id;  ?>');" checked="checked" id="objective_check">
+											<?php
+												}
+												
+												else
+												{
+													?>
+													<input name="<?php echo $objective_name?>" type="checkbox" onClick="add_objective_findings(<?php echo $objective_id;?>, <?php echo $visit_id?>, <?php echo $status;?>);toggleField('myTF<?php echo $objective_id;  ?>');" id="objective_check">
+											<?php
+												}
+											?>
+											
+											<?php echo $objective_name?>
+										</label>
+									</div>
+									
+									<?php 
+										if($status == 1)
+										{
+											?>
+											<input name="myTF<?php echo $objective_id;?>" id="myTF<?php echo $objective_id;  ?>" type="text" style="display:block;" onKeyUp="update_visit_obj(<?php echo $objective_id;?>, <?php echo $visit_id?>, <?php echo 1;?>);" value="<?php echo $description;?>"/>
+									<?php
+										}
+										
+										else
+										{
+											?>
+											<input name="myTF<?php echo $objective_id;?>" id="myTF<?php echo $objective_id;  ?>" type="text" style="display:none;" onKeyUp="update_visit_obj(<?php echo $objective_id;?>, <?php echo $visit_id?>, <?php echo 1;?>);" value="<?php echo $description;?>"/>
+									<?php
+										}
+									?>
+									
+								</div> 
+								<?php 
+							}
+							$count++;
+						endforeach;     
 						?>
 							</div>
 						</section>
-						
-						<section class="panel panel-featured panel-featured-info">
-							<header class="panel-heading">
-								<h2 class="panel-title"><?php echo $prev_name;?></h2>
-							</header>
-					
-							<div class="panel-body">
 						<?php 
 					}
-                
-                	$prev_name = $class_name;
-                	?>
-                
-                    <div class="col-md-3">
-                    	<div class="checkbox">
-                            <label>
-                            	<?php 
-									if($status == 1)
-									{
-										?>
-										<input name="<?php echo $objective_name?>" type="checkbox" onClick="add_objective_findings(<?php echo $objective_id;?>, <?php echo $visit_id?>, <?php echo $status;?>);toggleField('myTF<?php echo $objective_id;  ?>');" checked="checked" id="objective_check">
-                                <?php
-									}
-									
-									else
-									{
-										?>
-										<input name="<?php echo $objective_name?>" type="checkbox" onClick="add_objective_findings(<?php echo $objective_id;?>, <?php echo $visit_id?>, <?php echo $status;?>);toggleField('myTF<?php echo $objective_id;  ?>');" id="objective_check">
-                                <?php
-									}
-								?>
-                                
-								<?php echo $objective_name?>
-                            </label>
-                        </div>
-                        
-						<?php 
-                            if($status == 1)
-                            {
-                                ?>
-                                <input name="myTF<?php echo $objective_id;?>" id="myTF<?php echo $objective_id;  ?>" type="text" style="display:block;" onKeyUp="update_visit_obj(<?php echo $objective_id;?>, <?php echo $visit_id?>, <?php echo 1;?>);" value="<?php echo $description;?>"/>
-                        <?php
-                            }
-                            
-                            else
-                            {
-                                ?>
-                                <input name="myTF<?php echo $objective_id;?>" id="myTF<?php echo $objective_id;  ?>" type="text" style="display:none;" onKeyUp="update_visit_obj(<?php echo $objective_id;?>, <?php echo $visit_id?>, <?php echo 1;?>);" value="<?php echo $description;?>"/>
-                        <?php
-                            }
-                        ?>
-                        
-                    </div> 
-					<?php 
-                    $count++;
-                endforeach;
+				}
                 ?>
 					    
             </div>

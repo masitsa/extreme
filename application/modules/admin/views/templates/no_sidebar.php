@@ -20,30 +20,8 @@
             <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
         <![endif]-->
     	<section class="body">
-            <!-- Top Navigation -->
-            <?php //echo $this->load->view('admin/includes/top_navigation', $data, TRUE); ?>
-            
-            <div class="inner-wrapper">
-            	<?php //echo $this->load->view('admin/includes/sidebar', '', TRUE); ?>
-                
-                <section role="main" class="content-body">
-                	
-            		<header class="page-header">
-						<h2><?php echo $title;?></h2>
-					
-						<div class="right-wrapper pull-right">
-							<ol class="breadcrumbs">
-								<?php echo $this->admin_model->create_breadcrumbs($title);?>
-							</ol>
-					
-							<a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fa fa-chevron-left"></i></a>
-						</div>
-					</header>
-                    
-					<?php echo $content;?>
-                
-                </section>
-            </div>
+        	
+            <?php echo $content;?>
             
         </section>
         
