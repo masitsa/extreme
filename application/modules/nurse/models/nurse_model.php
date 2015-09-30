@@ -1390,5 +1390,70 @@ class Nurse_model extends CI_Model
 			return FALSE;
 		}
 	}
+	
+	public function bill_bed($bed_id, $visit_id)
+	{
+		//unset all other assigned beds
+		$this->db->where('bed_id', $bed_id);
+		$query = $this->db->get('bed');
+		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$bed_name = $row->bed_number;
+			
+			$this->db->where('service.service_id = service_charge.service_id AND service_name = "Bed charge" AND service_charge_name = "'.$bed_name.'"');
+			$query2 = $this->db->get('service, service_charge');
+			$service_charge_amount = 0;
+			
+			if($query2->num_rows() > 0)
+			{
+				$row2 = $query2->row();
+				$service_charge_amount = $row2->service_charge_amount;
+				$service_charge_id = $row2->service_charge_id;
+				
+				//add new bed charge
+				$data = array(
+					'service_charge_id' => $service_charge_id,
+					'visit_id' => $visit_id,
+					'visit_charge_amount' => $service_charge_amount,
+					'visit_charge_units' => 1,
+					'created_by'=>$this->session->userdata("personnel_id"),
+					'date'=>date("Y-m-d H:i:s")
+				);
+				
+				if($this->db->insert('visit_charge', $data))
+				{
+					return TRUE;
+				}
+				
+				else
+				{
+					return FALSE;
+				}
+			}
+			
+			else
+			{
+				return FALSE;
+			}
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	function get_visit_bed_charges($v_id)
+	{
+		$table = "visit_charge, service_charge, service";
+		$where = "visit_charge.visit_charge_delete = 0 AND visit_charge.visit_id = $v_id AND visit_charge.service_charge_id = service_charge.service_charge_id AND service.service_id = service_charge.service_id AND service.service_name = 'Bed charge'";
+		$items = "*";
+		$order = "visit_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		return $result;
+	}
 }
 ?>

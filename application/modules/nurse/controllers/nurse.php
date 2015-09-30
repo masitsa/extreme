@@ -468,7 +468,11 @@ class Nurse  extends MX_Controller
 		$data = array('visit_id'=>$visit_id);
 		$this->load->view('view_procedure',$data);
 	}
-
+	
+	function view_bed_charges($visit_id){
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('display_bed_charges',$data);
+	}
 	
 	public function search_procedures($visit_id)
 	{
@@ -708,9 +712,13 @@ class Nurse  extends MX_Controller
 	}
 	function delete_procedure($procedure_id)
 	{
-		// $this->db->where(array("visit_charge_id"=>$procedure_id));
-		// $this->db->delete('visit_charge', $visit_data);
+		$visit_data = array('visit_charge_delete'=>1,'deleted_by'=>$this->session->userdata("personnel_id"),'deleted_on'=>date("Y-m-d"),'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
 
+		$this->db->where(array("visit_charge_id"=>$procedure_id));
+		$this->db->update('visit_charge', $visit_data);
+	}
+	function delete_bed($procedure_id)
+	{
 		$visit_data = array('visit_charge_delete'=>1,'deleted_by'=>$this->session->userdata("personnel_id"),'deleted_on'=>date("Y-m-d"),'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
 
 		$this->db->where(array("visit_charge_id"=>$procedure_id));
@@ -776,6 +784,13 @@ class Nurse  extends MX_Controller
 
 		$visit_data = array('visit_charge_units'=>$units,'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
 		$this->db->where(array("visit_charge_id"=>$procedure_id));
+		$this->db->update('visit_charge', $visit_data);
+	}
+	public function bed_total($visit_charge_id,$units,$amount){
+		
+
+		$visit_data = array('visit_charge_units'=>$units,'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
+		$this->db->where(array("visit_charge_id"=>$visit_charge_id));
 		$this->db->update('visit_charge', $visit_data);
 	}
 	public function vaccine_total($vaccine_id,$units,$amount){
@@ -2156,7 +2171,15 @@ class Nurse  extends MX_Controller
 		{
 			if($this->nurse_model->update_room_details($visit_id))
 			{
-				$this->session->set_userdata('success_message', 'Room details updated successfully');
+				if($this->nurse_model->bill_bed($this->input->post('bed_id'), $visit_id))
+				{
+					$this->session->set_userdata('success_message', 'Room details updated successfully');
+				}
+				
+				else
+				{
+					$this->session->set_userdata('error_message', 'Unable to bill for bed');
+				}
 			}
 			
 			else
