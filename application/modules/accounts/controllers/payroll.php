@@ -127,21 +127,21 @@ class Payroll extends accounts
 				$row = $branches->result();
 				$branch_id = $row[0]->branch_id;
 				$branch_name = $row[0]->branch_name;
-				$where = 'personnel_status != 0 AND branch_id = '.$branch_id;
+				$where = 'personnel_type_id = 1 AND personnel_status != 0 AND branch_id = '.$branch_id;
 				$this->session->set_userdata('branch_id', $branch_id);
 				$this->session->set_userdata('branch_name', $branch_name);
 			}
 			
 			else
 			{
-				$where = 'personnel_status != 0';
+				$where = 'personnel_type_id = 1 AND personnel_status != 0';
 			}
 		}
 		
 
 		else
 		{
-			$where = 'personnel_status != 0 AND branch_id = '.$branch_id;
+			$where = 'personnel_type_id = 1 AND personnel_status != 0 AND branch_id = '.$branch_id;
 		}
 		$table = 'personnel';
 		//pagination
@@ -284,9 +284,19 @@ class Payroll extends accounts
 			
 			$onames = $row2->personnel_onames;
 			$fname = $row2->personnel_fname;
+			$personnel_account_number = $row2->personnel_account_number;
+			$personnel_nssf_number = $row2->personnel_nssf_number;
+			$personnel_kra_pin = $row2->personnel_kra_pin;
+			$personnel_nhif_number = $row2->personnel_nhif_number;
+			$personnel_national_id_number = $row2->personnel_national_id_number;
 			
 			$v_data['personnel_name'] = $fname." ".$onames;
 			$v_data['personnel_id'] = $personnel_id;
+			$v_data['personnel_account_number'] = $personnel_account_number;
+			$v_data['personnel_nssf_number'] = $personnel_nssf_number;
+			$v_data['personnel_kra_pin'] = $personnel_kra_pin;
+			$v_data['personnel_national_id_number'] = $personnel_national_id_number;
+			$v_data['personnel_nhif_number'] = $personnel_nhif_number;
 			
 			$v_data['payments'] = $this->payroll_model->get_all_payments();
 			$v_data['benefits'] = $this->payroll_model->get_all_benefits();
@@ -369,7 +379,7 @@ class Payroll extends accounts
 
 	public function print_payroll($payroll_id)
 	{
-		$where = 'personnel_status = 1';
+		$where = 'personnel_status = 1 AND personnel_type_id = 1';
 		
 		$this->db->where('payroll.branch_id = branch.branch_id AND payroll.payroll_id = '.$payroll_id);
 		$branches = $this->db->get('payroll, branch');
@@ -1433,6 +1443,30 @@ class Payroll extends accounts
 		
 		$this->session->set_userdata("success_message", "Relief updated successfully");
 		redirect("accounts/payment-details/".$personnel_id);
+	}
+	
+	public function edit_payment_details($personnel_id)
+	{
+		$this->form_validation->set_rules('personnel_account_number', 'Account number', 'required|xss_clean');
+		$this->form_validation->set_rules('personnel_nssf_number', 'NSSF number', 'required|xss_clean');
+		$this->form_validation->set_rules('personnel_nhif_number', 'NHIF number', 'required|xss_clean');
+		$this->form_validation->set_rules('personnel_kra_pin', 'KRA pin', 'required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			if($this->payroll_model->edit_payment_details($personnel_id))
+			{
+				$this->session->set_userdata("success_message", "Payment details edited successfully");
+			}
+			
+			else
+			{
+				$this->session->set_userdata("error_message","Could not edit payment details. Please try again");
+			}
+		}
+		
+		redirect('accounts/payment-details/'.$personnel_id);
 	}
 }
 ?>

@@ -6,8 +6,12 @@ class Cloud  extends MX_Controller
 	{
 		parent:: __construct();
 		$this->load->model('cloud_model');
-
-
+		
+		$this->load->model('auth/auth_model');
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
 	}
 	
 	public function save_cloud_data()

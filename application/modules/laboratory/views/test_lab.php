@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 if ($this->session->userdata('nurse_lab') <> NULL){
 	$nurse_lab = $this->session->userdata('nurse_lab');
 }
@@ -96,7 +93,7 @@ foreach ($rs as $key6):
 		<tr>
         	<td>".($s)."</td>
 			<td>".$test."</td>
-			<td>".$price."</td>
+			<td>".number_format($price, 2)."</td>
 			<td>
 				<div class='btn-toolbar'>
 					<div class='btn-group'>
@@ -111,22 +108,20 @@ endforeach;
 $lab_visit = 0;
 echo "
 	<tr bgcolor='#D9EDF7'>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td>".$total."</td>";
+		<th colspan=2>Total</th>
+		<th>".number_format($total, 2)."</th>";
 if(!empty($nurse_lab)){
-	echo"	<td><input type='button' class='btn' onclick='update_doctor(".$visit_id.")' value='Send to Lab'/></td>
+	echo"	<td><input type='button' class='btn btn-primary' onclick='update_doctor(".$visit_id.")' value='Send to Lab'/></td>
 	</tr>
 ";
 }
 else if($lab_visit == 5){
-	echo"	<td><input type='button' class='btn' onclick='send_to_lab3(".$visit_id.")' value='Done'/></td>
+	echo"	<td><input type='button' class='btn btn-primary' onclick='send_to_lab3(".$visit_id.")' value='Done'/></td>
 	</tr>
 ";
 }
 else{
-	echo"	<td><input type='button' class='btn' onclick='send_to_lab2(".$visit_id.")' value='Done'/></td>
+	echo"	<td><input type='button' class='btn btn-primary' onclick='send_to_lab2(".$visit_id.")' value='Done'/></td>
 	</tr>
 ";
 }

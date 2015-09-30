@@ -61,6 +61,30 @@
                         </h5>
                     </div>
                     
+					<?php 
+                        $validation_error = validation_errors();
+                        
+                        if(!empty($validation_error))
+                        {
+                            echo '<div class="alert alert-danger center-align">'.$validation_error.'</div>';
+                        }
+						
+						$error = $this->session->userdata('error_message');
+						$success = $this->session->userdata('success_message');
+						
+						if(!empty($error))
+						{
+							echo '<div class="alert alert-danger">'.$error.'</div>';
+							$this->session->unset_userdata('error_message');
+						}
+						
+						if(!empty($success))
+						{
+							echo '<div class="alert alert-success">'.$success.'</div>';
+							$this->session->unset_userdata('success_message');
+						}
+                    ?>
+                    
 					<div class="tabs">
                         <ul class="nav nav-tabs nav-justified">
                             <li class="active">
@@ -72,11 +96,12 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="outpatient">
+                                <h4 class="center-align" style="margin-bottom:10px;">Initiate outpatient visit</h4>
                                 <?php $this->load->view('visit/initiate_outpatient');?>
                             </div>
                             <div class="tab-pane" id="inpatient">
-                                <h4 class="center-align">Initiate inpatient visit</h4>
-                                <?php //$this->load->view('visit/initiate_inpatient');?>
+                                <h4 class="center-align" style="margin-bottom:10px;">Initiate inpatient visit</h4>
+                                <?php $this->load->view('visit/initiate_inpatient');?>
                             </div>
                         </div>
                     </div>

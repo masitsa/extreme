@@ -50,7 +50,35 @@
                           <div class="form-group">
                               <label class="col-lg-4 control-label">Service Charge name</label>
                               <div class="col-lg-8">
+                              	<?php
+									if(strtolower($service_name) == 'bed charge')
+									{
+										$all_beds = $this->beds_model->all_beds();
+										?>
+                                  		<select class="form-control" name="service_charge_name">
+                              			<?php
+										
+										if($all_beds->num_rows() > 0)
+										{
+											foreach($all_beds->result() as $res)
+											{
+												$bed_name = $res->bed_number;
+												
+												echo '<option value="'.$bed_name.'">'.$bed_name.'</option>';
+											}
+										?>
+										</select>
+										<?php
+										}
+									}
+									
+									else
+                                	{
+								?>
                                   <input type="text" class="form-control" name="service_charge_name" placeholder="Service Charge Name" value="<?php echo set_value('service_charge_name');?>">
+                              	<?php
+									}
+								?>
                               </div>
                           </div>
                           <div class="form-group">

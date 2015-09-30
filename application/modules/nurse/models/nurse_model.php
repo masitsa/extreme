@@ -610,6 +610,12 @@ class Nurse_model extends CI_Model
 
 		return $result;
 	}
+	
+	public function get_symptoms_visit($visit_id)
+	{
+		$this->db->where('visit_id', $visit_id);
+		return $this->db->get('visit_symptoms');
+	}
 
 	function get_visit_symptoms($visit_id){
 		$table = "status, visit_symptoms, symptoms";
@@ -629,10 +635,7 @@ class Nurse_model extends CI_Model
 		$order = "visit_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
-
 		return $result;
-		
-		
 	}
 
 	function get_visit_objective_findings($visit_id){
@@ -699,7 +702,8 @@ class Nurse_model extends CI_Model
 		return $query;
 	}
 
-	function update_visit_sypmtom($symptoms_id,$visit_id,$description){
+	function update_visit_sypmtom($symptoms_id,$visit_id,$description)
+	{
 		$description = str_replace('%20', ' ',$description);
 		$visit_data = array('description'=>$description);
 
@@ -707,9 +711,49 @@ class Nurse_model extends CI_Model
 		$this->db->update('visit_symptoms', $visit_data);
 		
 	}
-	function save_visit_sypmtom($symptoms_id,$visit_id,$status){
-		$visit_data = array('visit_id'=>$visit_id,'symptoms_id'=>$symptoms_id,'status_id'=>$status);
-		$this->db->insert('visit_symptoms', $visit_data);
+	function save_visit_sypmtom($symptoms_id,$visit_id,$status)
+	{
+		//check if symptom has been saved
+		$where = array(
+			'visit_id'=>$visit_id,
+			'symptoms_id'=>$symptoms_id
+		);
+		$this->db->where($where);
+		$query = $this->db->get('visit_symptoms');
+		
+		//exists
+		if($query->num_rows() > 0)
+		{
+			$this->db->where($where);
+			if($this->db->delete('visit_symptoms'))
+			{
+				return TRUE;
+			}
+			
+			else
+			{
+				return FALSE;
+			}
+		}
+		
+		else
+		{
+			$visit_data = array(
+				'visit_id'=>$visit_id,
+				'symptoms_id'=>$symptoms_id,
+				'status_id'=>$status
+			);
+			
+			if($this->db->insert('visit_symptoms', $visit_data))
+			{
+				return TRUE;
+			}
+			
+			else
+			{
+				return FALSE;
+			}
+		}
 	}
 
 	function update_objective_finding($objective_finding_id, $visit_id, $description)
@@ -1284,5 +1328,67 @@ class Nurse_model extends CI_Model
 		return $query;
 	}
 	
+	public function get_ward_rooms($ward_id)
+	{
+		$where = 'ward.ward_id = room.ward_id AND ward.ward_id = '.$ward_id;
+		$this->db->select('room.*');
+		$this->db->where($where);
+		$query = $this->db->get('ward, room');
+		
+		return $query;
+	}
+	
+	public function get_room_beds($room_id)
+	{
+		$where = 'bed.room_id = room.room_id AND room.room_id = \''.$room_id.'\'';
+		$this->db->select('bed.*');
+		$this->db->where($where);
+		$query = $this->db->get('bed, room');
+		
+		return $query;
+	}
+	
+	public function get_visit_bed($visit_id)
+	{
+		$where = 'visit_bed.visit_bed_status = 1 AND visit_bed.bed_id = bed.bed_id AND bed.room_id = room.room_id AND visit_bed.visit_id = '.$visit_id;
+		$this->db->select('bed.bed_number, bed.bed_id, room.room_id');
+		$this->db->where($where);
+		$query = $this->db->get('bed, room, visit_bed');
+		
+		return $query;
+	}
+	
+	public function update_room_details($visit_id)
+	{
+		//unset all other assigned beds
+		$this->db->where('visit_id', $visit_id);
+		if($this->db->update('visit_bed', array('visit_bed_status' => 0)))
+		{
+			//add new bed
+			$data = array(
+				'bed_id' => $this->input->post('bed_id'),
+				'visit_id' => $visit_id,
+				'visit_bed_status' => 1,
+				'created'=>date('Y-m-d H:i:s'),
+				'created_by'=>$this->session->userdata('personnel_id'),
+				'modified_by'=>$this->session->userdata('personnel_id')
+			);
+			
+			if($this->db->insert('visit_bed', $data))
+			{
+				return TRUE;
+			}
+			
+			else
+			{
+				return FALSE;
+			}
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
 }
 ?>

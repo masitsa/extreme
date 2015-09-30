@@ -17,7 +17,7 @@
 						<th><a href="'.site_url().'admin/beds/last_modified/'.$room_id.'/'.$order_method.'/'.$page.'">Last modified</a></th>
 						<th><a href="'.site_url().'admin/beds/modified_by/'.$room_id.'/'.$order_method.'/'.$page.'">Modified by</a></th>
 						<th><a href="'.site_url().'admin/beds/bed_status/'.$room_id.'/'.$order_method.'/'.$page.'">Status</a></th>
-						<th colspan="5">Actions</th>
+						<th colspan="3">Actions</th>
 					</tr>
 				</thead>
 				  <tbody>
@@ -90,7 +90,6 @@
 						<td>'.$last_modified.'</td>
 						<td>'.$modified_by.'</td>
 						<td>'.$status.'</td>
-						<td><a href="'.site_url().'hospital-administration/beds/'.$bed_id.'" class="btn btn-sm btn-warning" title="View beds for '.$bed_number.'"><i class="fa fa-bed"></i> Beds</a></td>
 						<td><a href="'.site_url().'hospital-administration/edit-bed/'.$room_id.'/'.$bed_id.'" class="btn btn-sm btn-info" title="Edit '.$bed_number.'"><i class="fa fa-pencil"></i> Edit</a></td>
 						<td>'.$button.'</td>
 						<td><a href="'.site_url().'hospital-administration/delete-bed/'.$room_id.'/'.$bed_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$bed_number.'?\');" title="Delete '.$bed_number.'"><i class="fa fa-trash"></i> Delete</a></td>

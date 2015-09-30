@@ -161,6 +161,14 @@
                 </div>
                 
                 <div class="form-group">
+                    <label class="col-lg-4 control-label">Card Number: </label>
+                    
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" name="current_patient_number" placeholder="Current Card Number">
+                    </div>
+                </div>
+                
+                <div class="form-group">
                     <label class="col-lg-4 control-label">Next of Kin Surname: </label>
                     
                     <div class="col-lg-8">

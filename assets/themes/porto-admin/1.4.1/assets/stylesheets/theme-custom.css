@@ -19,3 +19,82 @@
 	max-width: 300px;
 	margin: 10px auto;
 }
+
+.control-label{font-weight:bold;}
+
+
+/* Logs list */
+ul.logs {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+    width: 97%;
+}
+.logs li:before,
+.logs li:after {
+    clear: both;
+    content: "";
+    display: table;
+    line-height: 0;
+}
+.logs li {
+    background-color: #F9F9F9;
+    border-bottom: 1px solid #D9D9D9;
+    line-height: 28px;
+    margin-bottom: 7px;
+    padding: 0;
+    position: relative;
+}
+.logs li > span.time {
+    color: #ADADAD;
+    font-size: 11px;
+    line-height: 28px;
+    padding: 0px 9px;
+    position: absolute;
+    right: 3px;
+    text-align: right;
+}
+.logs li > span.log-text {
+    /*display: inline-block; */
+    list-height: 28px;
+    margin-left: 35px;
+    padding: 0;
+    overflow: hidden;
+    width: 70%;
+}
+@media (max-width: 479px) {
+    .logs li > span.log-text {
+        width: 50%;
+    }
+}
+.logs i {
+    background-color: #999999;
+    color: #ffffff;
+    display: inline-block;
+    height: 28px;
+    line-height: 28px;
+    margin-right: 5px;
+    position: absolute;
+    text-align: center;
+    width: 28px;
+}
+.logs .label i {
+    background-color: transparent;
+    color: #ffffff;
+    display: inline;
+    height: auto;
+    margin-right: 5px;
+    width: auto;
+}
+.logs i.i-green {
+    background-color: #94B86E;
+}
+.logs i.i-red {
+    background-color: #E25856;
+}
+.logs i.i-blue {
+    background-color: #658DB3;
+}
+.logs i.i-orange {
+    background-color: #F0AD4E;
+}

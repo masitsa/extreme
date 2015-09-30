@@ -16,6 +16,12 @@ class Laboratory  extends MX_Controller
 		$this->load->model('admin/admin_model');
 		$this->load->model('reception/database');
 		$this->load->model('administration/personnel_model');
+		
+		$this->load->model('auth/auth_model');
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
 	}
 	
 	public function index()
@@ -176,8 +182,8 @@ class Laboratory  extends MX_Controller
 		$data = array('visit_id'=>$visit_id);
 		$this->load->view('tests/test2',$data);
 	}
-	public function laboratory_list($lab,$visit_id){
-
+	public function laboratory_list($lab,$visit_id)
+	{
 		//check patient visit type
 		$rs = $this->nurse_model->check_visit_type($visit_id);
 		if(count($rs)>0){

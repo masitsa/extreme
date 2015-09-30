@@ -14,6 +14,7 @@
 					<tr>
 						<th>#</th>
 						<th><a href="'.site_url().'human-resource/personnel/branch_id/'.$order_method.'/'.$page.'">Branch</a></th>
+						<th><a href="'.site_url().'human-resource/personnel/personnel.personnel_type_id/'.$order_method.'/'.$page.'">Type</a></th>
 						<th><a href="'.site_url().'human-resource/personnel/personnel_onames/'.$order_method.'/'.$page.'">Other names</a></th>
 						<th><a href="'.site_url().'human-resource/personnel/personnel_fname/'.$order_method.'/'.$page.'">First name</a></th>
 						<th><a href="'.site_url().'human-resource/personnel/personnel_username/'.$order_method.'/'.$page.'">Username</a></th>
@@ -48,6 +49,7 @@
 				$personnel_phone = $row->personnel_phone;
 				$personnel_email = $row->personnel_email;
 				$personnel_status = $row->personnel_status;
+				$personnel_type_name = $row->personnel_type_name;
 				$personnel_name = $personnel_fname.' '.$personnel_onames;
 				
 				//status
@@ -93,6 +95,7 @@
 					<tr>
 						<td>'.$count.'</td>
 						<td>'.$branch.'</td>
+						<td>'.$personnel_type_name.'</td>
 						<td>'.$personnel_onames.'</td>
 						<td>'.$personnel_fname.'</td>
 						<td>'.$personnel_username.'</td>

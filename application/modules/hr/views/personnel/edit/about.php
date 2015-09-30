@@ -19,6 +19,9 @@ $branch_id = $row->branch_id;
 $personnel_account_number = $row->personnel_account_number;
 $personnel_nssf_number = $row->personnel_nssf_number;
 $personnel_kra_pin = $row->personnel_kra_pin;
+$personnel_national_id_number = $row->personnel_national_id_number;
+$personnel_nhif_number = $row->personnel_nhif_number;
+$personnel_type_id2 = $row->personnel_type_id;
 
 //repopulate data if validation errors occur
 $validation_error = validation_errors();
@@ -42,6 +45,9 @@ if(!empty($validation_error))
 	$personnel_account_number = set_value('personnel_account_number');
 	$personnel_nssf_number = set_value('personnel_nssf_number');
 	$personnel_kra_pin = set_value('personnel_kra_pin');
+	$personnel_national_id_number = set_value('personnel_national_id_number');
+	$personnel_nhif_number = set_value('personnel_nhif_number');
+	$personnel_type_id2 = set_value('personnel_type_id');
 }
 ?>
 <section class="panel">
@@ -85,6 +91,37 @@ if(!empty($validation_error))
 								else
 								{
 									echo '<option value="'.$branch_id2.'">'.$branch_name.'</option>';
+								}
+							}
+						}
+					?>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-lg-5 control-label">Type: </label>
+            
+            <div class="col-lg-7">
+                <select class="form-control" name="personnel_type_id">
+                	<?php
+                    	if($personnel_types->num_rows() > 0)
+						{
+							$status = $personnel_types->result();
+							
+							foreach($status as $res)
+							{
+								$personnel_type_id = $res->personnel_type_id;
+								$personnel_type_name = $res->personnel_type_name;
+								
+								if($personnel_type_id == $personnel_type_id2)
+								{
+									echo '<option value="'.$personnel_type_id.'" selected>'.$personnel_type_name.'</option>';
+								}
+								
+								else
+								{
+									echo '<option value="'.$personnel_type_id.'">'.$personnel_type_name.'</option>';
 								}
 							}
 						}
@@ -158,6 +195,14 @@ if(!empty($validation_error))
                     </span>
                     <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="personnel_dob" placeholder="Date of Birth" value="<?php echo $personnel_dob;?>">
                 </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-lg-5 control-label">ID number: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="personnel_national_id_number" placeholder="ID number" value="<?php echo $personnel_national_id_number;?>">
             </div>
         </div>
         
@@ -287,6 +332,14 @@ if(!empty($validation_error))
             
             <div class="col-lg-7">
             	<input type="text" class="form-control" name="personnel_nssf_number" placeholder="NSSF number" value="<?php echo $personnel_nssf_number;?>">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-lg-5 control-label">NHIF number: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="personnel_nhif_number" placeholder="NHIF number" value="<?php echo $personnel_nhif_number;?>">
             </div>
         </div>
         

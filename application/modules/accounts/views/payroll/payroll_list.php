@@ -351,7 +351,7 @@
                             	<div class="row" style="margin-bottom:20px;">
                                     <div class="col-sm-4 col-sm-offset-8">
                                        <!-- <a href="<?php echo site_url();?>accounts/export-payroll" class="btn btn-sm btn-success">Export</a>-->
-                                        <a href="<?php echo site_url();?>accounts/salary-data" class="btn btn-sm btn-info">Edit personnel payment data</a>
+                                        <a href="<?php echo site_url();?>accounts/salary-data" class="btn btn-sm btn-info pull-right">Edit personnel payment data</a>
                                         <?php
 										$search = $this->session->userdata('payroll_search');
 		

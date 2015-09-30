@@ -11,6 +11,12 @@ class Sync_tables extends MX_Controller
 		$this->load->model('site/site_model');
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
+		
+		$this->load->model('auth/auth_model');
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
 	}
     
 	/*

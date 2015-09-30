@@ -69,15 +69,11 @@
                         </table>
                     </div>
                 </div>
+				<?php
+                if(isset($links)){echo $links;}
+                ?>
             
             </div>
-        </div>
-            
-        <div class="widget-foot">
-			<?php
-            if(isset($links)){echo $links;}
-            ?>
-        </div>
 
      </section>
                  

@@ -243,7 +243,7 @@
 
 					<!-- END OF FIRST ROW -->
 
-					<div class="row" style= "margin-top:2em">
+					<!--<div class="row" style= "margin-top:2em">
 					<div class="col-md-12">
 
 						<section class="panel panel-featured panel-featured-info">
@@ -350,7 +350,7 @@
 
 					</div>
 
-					</div>
+					</div>-->
 					<!-- END OF SECOND ROW -->
 					
 					<div class="row" style= "margin-top:2em">
@@ -535,7 +535,7 @@
 										  
 											<div class="col-lg-8">
                                             	<select name="service_id" class="form-control">
-                                                	<option value="">--Select a service--</option>
+                                                	<option value="">All services</option>
                                             	<?php
 												if(count($item_invoiced_rs) > 0)
 												{

@@ -1,5 +1,5 @@
 
-      	<div class="row">
+		<div class="row">
         
           <section class="panel">
 
@@ -57,7 +57,7 @@
                         	
                             <div class="row">
                                 <div class="col-md-4">
-                                    <section class="panel">
+                                    <section class="panel panel-featured panel-featured-info">
                                         <header class="panel-heading">						
                                             <h2 class="panel-title">Payments</h2>
                                         </header>
@@ -120,7 +120,7 @@
                                 </div>
                                 
                                 <div class="col-md-4">
-                                    <section class="panel">
+                                    <section class="panel panel-featured panel-featured-info">
                                         <header class="panel-heading">						
                                             <h2 class="panel-title">Non cash benefits</h2>
                                         </header>
@@ -191,7 +191,7 @@
                                 </div>
                                 
                                 <div class="col-md-4">
-                                    <section class="panel">
+                                    <section class="panel panel-featured panel-featured-info">
                                         <header class="panel-heading">						
                                             <h2 class="panel-title">Cash benefits</h2>
                                         </header>
@@ -263,7 +263,7 @@
                             <!-- Deductions -->
                             <div class="row">
                             	<div class="col-md-4">
-                                    <section class="panel">
+                                    <section class="panel panel-featured panel-featured-info">
                                         <header class="panel-heading">						
                                             <h2 class="panel-title">Deductions</h2>
                                         </header>
@@ -324,7 +324,7 @@
                                     </section>
                                 </div>
                                 <div class="col-md-4">
-                                    <section class="panel">
+                                    <section class="panel panel-featured panel-featured-info">
                                         <header class="panel-heading">						
                                             <h2 class="panel-title">Other deductions</h2>
                                         </header>
@@ -386,7 +386,7 @@
                                 </div>
                                 
                                 <div class="col-md-4">
-                                    <section class="panel">
+                                    <section class="panel panel-featured panel-featured-info">
                                         <header class="panel-heading">						
                                             <h2 class="panel-title">Relief</h2>
                                         </header>
@@ -471,7 +471,7 @@
                             <!-- Loans & savings  -->
                             <div class="row">
                             	<div class="col-md-6">
-                                    <section class="panel">
+                                    <section class="panel panel-featured panel-featured-info">
                                         <header class="panel-heading">						
                                             <h2 class="panel-title">Loan schemes</h2>
                                         </header>
@@ -587,7 +587,7 @@
                                     </section>
                                 </div>
                                 <div class="col-md-6">
-                                    <section class="panel">
+                                    <section class="panel panel-featured panel-featured-info">
                                         <header class="panel-heading">						
                                             <h2 class="panel-title">Savings</h2>
                                         </header>
@@ -656,6 +656,65 @@
                                 </div>
                             </div>
                             <!-- End loans & savings -->
+                            <div class="row">
+                            	<div class="col-md-12">
+                                    <section class="panel panel-featured panel-featured-info">
+                                        <header class="panel-heading">						
+                                            <h2 class="panel-title">Payment details</h2>
+                                        </header>
+                                        <div class="panel-body">
+                                        	<form action="<?php echo site_url("accounts/payroll/edit-payment-details/".$personnel_id);?>" method="post">
+                                            	<div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="col-lg-5 control-label">Account number: </label>
+                                                            
+                                                            <div class="col-lg-7">
+                                                                <input type="text" class="form-control" name="personnel_account_number" placeholder="Account number" value="<?php echo $personnel_account_number;?>">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="col-lg-5 control-label">NSSF number: </label>
+                                                            
+                                                            <div class="col-lg-7">
+                                                                <input type="text" class="form-control" name="personnel_nssf_number" placeholder="NSSF number" value="<?php echo $personnel_nssf_number;?>">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="col-lg-5 control-label">NHIF number: </label>
+                                                            
+                                                            <div class="col-lg-7">
+                                                                <input type="text" class="form-control" name="personnel_nhif_number" placeholder="NHIF number" value="<?php echo $personnel_nhif_number;?>">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="col-lg-5 control-label">KRA number: </label>
+                                                            
+                                                            <div class="col-lg-7">
+                                                                <input type="text" class="form-control" name="personnel_kra_pin" placeholder="KRA number" value="<?php echo $personnel_kra_pin;?>">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-12 center-align">
+                                                    	<button class='btn btn-success' type='submit'><i class='fa fa-pencil'></i> Edit payment details</button>
+                                                    </div>
+                                            	</div>
+                                            </form>
+                                        </div>
+                                    </section>
+                            	</div>
+                            </div>
+                            <!-- End payment details -->
                         </div>
                     </div>
                 </div>

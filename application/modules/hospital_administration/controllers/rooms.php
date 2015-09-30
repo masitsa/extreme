@@ -19,7 +19,7 @@ class Rooms extends Hospital_administration
 		$where = 'ward_id = '.$ward_id;
 		$table = 'room';
 		//pagination
-		$segment = 5;
+		$segment = 6;
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'hospital-administration/rooms/'.$ward_id.'/'.$order.'/'.$order_method;
 		$config['total_rows'] = $this->users_model->count_items($table, $where);

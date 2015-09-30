@@ -361,7 +361,7 @@ class CI_Session {
 	{
 		// We only update the session every five minutes by default
 		if ($this->CI->input->is_ajax_request() OR ($this->userdata['last_activity'] + $this->sess_time_to_update) >= $this->now)
-		{
+		{	
 			return;
 		}
 
@@ -415,6 +415,25 @@ class CI_Session {
 	 */
 	function sess_destroy()
 	{
+		/******** Custom **********/
+		$personnel_id = $this->userdata['personnel_id'];
+		
+		if($personnel_id > 0)
+		{
+			$session_log_insert = array(
+				"personnel_id" => $personnel_id, 
+				"session_name_id" => 2
+			);
+			$table = "session";
+			if($this->CI->db->insert($table, $session_log_insert))
+			{
+			}
+			
+			else
+			{
+			}
+		}
+		
 		// Kill the session DB row
 		if ($this->sess_use_database === TRUE && isset($this->userdata['session_id']))
 		{

@@ -14,6 +14,7 @@ $personnel_city = set_value('personnel_city');
 $personnel_number = set_value('personnel_number');
 $personnel_post_code = set_value('personnel_post_code');
 $branch_id = set_value('branch_id');
+$personnel_type_id2 = set_value('personnel_type_id');
 ?>          
           <section class="panel">
                 <header class="panel-heading">
@@ -97,6 +98,37 @@ $branch_id = set_value('branch_id');
         </div>
         
         <div class="form-group">
+            <label class="col-lg-5 control-label">Type: </label>
+            
+            <div class="col-lg-7">
+                <select class="form-control" name="personnel_type_id">
+                	<?php
+                    	if($personnel_types->num_rows() > 0)
+						{
+							$status = $personnel_types->result();
+							
+							foreach($status as $res)
+							{
+								$personnel_type_id = $res->personnel_type_id;
+								$personnel_type_name = $res->personnel_type_name;
+								
+								if($personnel_type_id == $personnel_type_id2)
+								{
+									echo '<option value="'.$personnel_type_id.'" selected>'.$personnel_type_name.'</option>';
+								}
+								
+								else
+								{
+									echo '<option value="'.$personnel_type_id.'">'.$personnel_type_name.'</option>';
+								}
+							}
+						}
+					?>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-group">
             <label class="col-lg-5 control-label">Title: </label>
             
             <div class="col-lg-7">
@@ -164,6 +196,10 @@ $branch_id = set_value('branch_id');
             </div>
         </div>
         
+	</div>
+    
+    <div class="col-md-6">
+        
         <div class="form-group">
             <label class="col-lg-5 control-label">Gender: </label>
             
@@ -225,10 +261,6 @@ $branch_id = set_value('branch_id');
                 </select>
             </div>
         </div>
-        
-	</div>
-    
-    <div class="col-md-6">
         
         <div class="form-group">
             <label class="col-lg-5 control-label">Email Address: </label>

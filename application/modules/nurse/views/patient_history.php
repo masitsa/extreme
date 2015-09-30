@@ -64,7 +64,7 @@
                 
                 if(!empty($search))
                 {
-                    echo '<a href="'.site_url().'/nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
+                    echo '<a href="'.site_url().'nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
                 }
                 $result = '';
             
@@ -228,9 +228,8 @@
                                     <td>'.$patient_diagnosis.'</td>
                                     <td>'.$plan.'</td>
                                     <td align=center>'.$waiting_time.'</td>
-                                    
                                     <td>'.$doctor.'</td>
-                                    <td><a onclick="patient_history_popup('.$visit_id1.',1)" class="btn btn-sm btn-info">Patient Card</a></td>
+                                    <td><a href="'.site_url().'doctor/patient_card/'.$visit_id1.'" target="_blank" class="btn btn-sm btn-info">Patient Card</a></td>
                                 </tr> 
                             ';
                             $count++;

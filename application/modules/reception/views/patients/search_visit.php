@@ -5,7 +5,7 @@
     </header>
       <div class="panel-body">
 			<?php
-            echo form_open("reception/search_visits2/".$visit.'/'.$page_name, array("class" => "form-horizontal"));
+            echo form_open("reception/search_visits/".$visit.'/'.$page_name, array("class" => "form-horizontal"));
             ?>
             <div class="row">
                 <div class="col-md-4">

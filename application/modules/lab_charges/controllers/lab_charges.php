@@ -11,12 +11,17 @@ class Lab_charges extends MX_Controller
 		$this->load->model('pharmacy/pharmacy_model');
 		$this->load->model('reception/reception_model');
 		
-		$this->load->model('auth/auth_model');
 		$this->load->model('site/site_model');
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
 		$this->load->model('reception/database');
 		$this->load->model('administration/personnel_model');
+		
+		$this->load->model('auth/auth_model');
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
 	}
 	
 	public function index()

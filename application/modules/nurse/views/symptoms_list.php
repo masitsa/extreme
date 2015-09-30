@@ -54,18 +54,70 @@
                             foreach ($rs9 as $rs10) :
                                 $symptoms_id = $rs10->symptoms_id;
                                 $symptoms_name = $rs10->symptoms_name;
-                            ?>
-                            <tr>  
-                                <td align='left'><?php  echo $symptoms_name  ?> </td>
-                                <td ><input name='yes' type='checkbox' value='<?php echo $symptoms_id ?>' onclick='toggleField("myTF<?php echo $symptoms_id; ?>");add_symptoms("<?php echo $symptoms_id ?>","<?php echo 1 ?>","<?php echo $visit_id ?>" );' /></td>
-                                
-                                <td align='right'><input name='no' type='checkbox' value= '<?php echo  $symptoms_id ;?>' onclick='toggleField("myTF<?php echo $symptoms_id; ?>");add_symptoms("<?php echo $symptoms_id ?>","<?php echo 2 ?>","<?php echo $visit_id ?>" );'  /></td>
-                                
-                                <td> <textarea cols='20' name="myTF<?php echo $symptoms_id;?>" id="myTF<?php echo $symptoms_id;?>" rows='4' cols='1' style='display:none;' onKeyUp='update_visit_symptoms("<?php echo $symptoms_id ?>","<?php echo 0; ?>","<?php echo $visit_id ?>" );' required placeholder='Describe <?php echo $symptoms_name; ?>'></textarea>
-
-                                 </td>
-                            </tr>
-                            <?php endforeach;?>
+								$description = '';
+								$toggle = 0;
+								$symptoms_id2 = '';
+								
+								if($visit_symptoms->num_rows() > 0)
+								{
+									foreach($visit_symptoms->result() as $res)
+									{
+										$symptoms_id2 = $res->symptoms_id;
+										if($symptoms_id2 == $symptoms_id)
+										{
+											$toggle = 1;
+											$status_id = $res->status_id;
+											$description = $res->description;
+											
+											if($status_id == 1)
+											{
+												$yes_check = 'checked="checked"';
+												$no_check = '';
+											}
+											
+											else
+											{
+												$yes_check = '';
+												$no_check = 'checked="checked"';
+											}
+											break;
+										}
+									}
+								}
+								
+								if($toggle == 0)
+								{
+									?>
+									<tr>  
+										<td align='left'><?php  echo $symptoms_name  ?> </td>
+										<td ><input name='yes' type='checkbox' value='<?php echo $symptoms_id ?>' onclick='toggleField("myTF<?php echo $symptoms_id; ?>");add_symptoms("<?php echo $symptoms_id ?>","<?php echo 1 ?>","<?php echo $visit_id ?>" );' /></td>
+										
+										<td align='right'><input name='no' type='checkbox' value= '<?php echo  $symptoms_id ;?>' onclick='toggleField("myTF<?php echo $symptoms_id; ?>");add_symptoms("<?php echo $symptoms_id ?>","<?php echo 2 ?>","<?php echo $visit_id ?>" );' /></td>
+										
+										<td> <textarea cols='20' name="myTF<?php echo $symptoms_id;?>" id="myTF<?php echo $symptoms_id;?>" rows='4' cols='1' style='display:none;' onKeyUp='update_visit_symptoms("<?php echo $symptoms_id ?>","<?php echo 0; ?>","<?php echo $visit_id ?>" );' required placeholder='Describe <?php echo $symptoms_name; ?>'></textarea>
+										 </td>
+									</tr>
+									<?php 
+								}
+								
+								else
+								{
+									?>
+									<tr>  
+										<td align='left'><?php  echo $symptoms_name  ?> </td>
+										<td ><input name='yes' type='checkbox' value='<?php echo $symptoms_id ?>' onclick='toggleField("myTF<?php echo $symptoms_id; ?>");add_symptoms("<?php echo $symptoms_id ?>","<?php echo 1 ?>","<?php echo $visit_id ?>" );' <?php echo $yes_check;?>/></td>
+										
+										<td align='right'><input name='no' type='checkbox' value= '<?php echo  $symptoms_id ;?>' onclick='toggleField("myTF<?php echo $symptoms_id; ?>");add_symptoms("<?php echo $symptoms_id ?>","<?php echo 2 ?>","<?php echo $visit_id ?>" );' <?php echo $no_check;?>/></td>
+										
+										<td> <textarea cols='20' name="myTF<?php echo $symptoms_id;?>" id="myTF<?php echo $symptoms_id;?>" rows='4' cols='1' style='display:block;' onKeyUp='update_visit_symptoms("<?php echo $symptoms_id ?>","<?php echo 0; ?>","<?php echo $visit_id ?>" );' required placeholder='Describe <?php echo $symptoms_name; ?>'> <?php echo $description;?></textarea>
+										 </td>
+									</tr>
+									<?php 
+								}
+							
+							endforeach;
+							
+							?>
                         </table>
                     </div>
                 </div>

@@ -1,8 +1,6 @@
 <?php   if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once "./application/modules/auth/controllers/auth.php";
-
-class Medical_admin extends auth
+class Medical_admin extends MX_Controller
 {	
 	function __construct()
 	{
@@ -13,6 +11,12 @@ class Medical_admin extends auth
 		$this->load->model('database');
 		$this->load->model('reception/reception_model');
 		$this->load->model('nurse/nurse_model');
+		
+		$this->load->model('auth/auth_model');
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
 	}
 	
 	public function index()

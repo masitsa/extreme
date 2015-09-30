@@ -242,10 +242,16 @@ $created_by = $this->session->userdata('first_name');
 							$nssf_id = $row2->nssf_id;
 							$nssf = $row2->amount;
 							$nssf_percentage = $row2->percentage;
-							
+					
 							if($nssf_percentage == 1)
 							{
-								$nssf = $gross_taxable * ($nssf/100);
+								$nssf_deduction_amount = $gross_taxable;
+								
+								if($nssf_deduction_amount > 18000)
+								{
+									$nssf_deduction_amount = 18000;
+								}
+								$nssf = $nssf_deduction_amount * ($nssf/100);
 							}
 						}
 					}
@@ -261,6 +267,11 @@ $created_by = $this->session->userdata('first_name');
 						/*********** PAYE ***********/
 						$paye = $this->payroll_model->calculate_paye($taxable);
 						$paye_less_relief = $paye - $monthly_relief - $insurance_relief;
+						
+						if($paye_less_relief < 0)
+						{
+							$paye_less_relief = 0;
+						}
 					}
                     ?>
                 </div>

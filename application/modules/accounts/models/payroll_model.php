@@ -157,6 +157,19 @@ class Payroll_model extends CI_Model
 				{
 					$nssf_id = $row2->nssf_id;
 					$nssf = $row2->amount;
+						
+					$nssf_percentage = $row2->percentage;
+					
+					if($nssf_percentage == 1)
+					{
+						$nssf_deduction_amount = $gross;
+						
+						if($nssf_deduction_amount > 18000)
+						{
+							$nssf_deduction_amount = 18000;
+						}
+						$nssf = $nssf_deduction_amount * ($nssf/100);
+					}
 				}
 			}
 		}
@@ -490,7 +503,7 @@ class Payroll_model extends CI_Model
 		$table = "payroll_item";
 		
 		//get personnel
-		$this->db->where('branch_id', $branch_id);
+		$this->db->where('branch_id = '.$branch_id.' AND personnel_type_id = 1');
 		$result = $this->db->get('personnel');//echo $result->num_rows();die();
 		if($result->num_rows() > 0)
 		{
@@ -521,7 +534,7 @@ class Payroll_model extends CI_Model
 							"payroll_item_amount" => $payment
 						);
 				
-					$this->db->insert($table, $items);
+						$this->db->insert($table, $items);
 					endforeach;
 				}
 				
@@ -617,7 +630,13 @@ class Payroll_model extends CI_Model
 						
 						if($nssf_percentage == 1)
 						{
-							$nssf = $gross_taxable * ($nssf/100);
+							$nssf_deduction_amount = $gross_taxable;
+							
+							if($nssf_deduction_amount > 18000)
+							{
+								$nssf_deduction_amount = 18000;
+							}
+							$nssf = $nssf_deduction_amount * ($nssf/100);
 						}
 					}
 				}
@@ -1511,6 +1530,24 @@ class Payroll_model extends CI_Model
 		$return['relief'] = $relief;
 		
 		return $return;
+	}
+	public function edit_payment_details($personnel_id)
+	{
+		$data = array(
+			'personnel_account_number' => $this->input->post('personnel_account_number'),
+			'personnel_nssf_number' => $this->input->post('personnel_nssf_number'),
+			'personnel_kra_pin' => $this->input->post('personnel_kra_pin'),
+			'personnel_nhif_number' => $this->input->post('personnel_nhif_number')
+		);
+		
+		$this->db->where('personnel_id', $personnel_id);
+		if($this->db->update('personnel', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
 	}
 }
 ?>

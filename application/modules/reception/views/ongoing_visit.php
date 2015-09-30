@@ -313,7 +313,7 @@
 					else
 					{
 
-						if($page == 'nurse' || $page == 'doctor')
+						if($page_name == 'nurse' || $page_name == 'doctor')
 						{
 							$result .= 
 							'

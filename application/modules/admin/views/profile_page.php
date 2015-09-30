@@ -11,6 +11,29 @@ $contacts = $this->site_model->get_contacts();
           <div class="clearfix"></div>
     </header>
 	<div class="panel-body">
+	<?php
+			$success = $this->session->userdata('success_message');
+			$error = $this->session->userdata('error_message');
+			
+			if(!empty($success))
+			{
+				echo '
+					<div class="alert alert-success">'.$success.'</div>
+				';
+				
+				$this->session->unset_userdata('success_message');
+			}
+			
+			if(!empty($error))
+			{
+				echo '
+					<div class="alert alert-danger">'.$error.'</div>
+				';
+				
+				$this->session->unset_userdata('error_message');
+			}
+			
+		?>
 		<div class="row">
             <div class="col-sm-12 col-md-4 col-lg-3">
                 <img src="<?php echo base_url();?>assets/logo/<?php echo $logo;?>">

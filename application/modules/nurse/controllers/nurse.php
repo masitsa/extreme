@@ -12,11 +12,16 @@ class Nurse  extends MX_Controller
 		$this->load->model('medical_admin/medical_admin_model');
 		$this->load->model('pharmacy/pharmacy_model');
 		$this->load->model('administration/administration_model');
-		$this->load->model('auth/auth_model');
 		$this->load->model('site/site_model');
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
 		$this->load->model('administration/personnel_model');
+		
+		$this->load->model('auth/auth_model');
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
 	}
 	
 	public function index()
@@ -180,16 +185,6 @@ class Nurse  extends MX_Controller
 		$data['content'] = $this->load->view('patient_card', $v_data, true);
 		
 		$data['title'] = 'Patient Card';
-		
-		if($module == 0)
-		{
-			$data['sidebar'] = 'nurse_sidebar';
-		}
-		
-		else
-		{
-			$data['sidebar'] = 'doctor_sidebar';
-		}
 		if(($mike != NULL) && ($mike != 'a')){
 			$this->load->view('admin/templates/no_sidebar', $data);	
 		}else{
@@ -603,7 +598,8 @@ class Nurse  extends MX_Controller
 		$this->visit_vaccines($visit_id);	
 	}
 
-	function visit_vaccines($visit_id){
+	function visit_vaccines($visit_id)
+	{
 		$data = array('visit_id'=>$visit_id);
 		$this->load->view('visit_vaccines/vaccines_assigned',$data);	
 	}
@@ -645,7 +641,7 @@ class Nurse  extends MX_Controller
 		
 		$order = 'service_charge.service_charge_name';
 		
-		$where = 'service_charge.service_id = service.service_id AND (service.service_name = "Procedure" OR service.service_name = "procedure" OR service.service_name = "procedures" OR service.service_name = "Procedures" ) AND service.branch_code = "'.$this->session->userdata('branch_code').'" AND service_charge.visit_type_id = visit_type.visit_type_id  AND service_charge.visit_type_id = '.$visit_t;
+		$where = 'service_charge.service_id = service.service_id AND (service.service_name = "Procedure" OR service.service_name = "procedure" OR service.service_name = "procedures" OR service.service_name = "Procedures" ) AND service.department_id = departments.department_id AND departments.department_name = "General practice" AND service.branch_code = "'.$this->session->userdata('branch_code').'" AND service_charge.visit_type_id = visit_type.visit_type_id  AND service_charge.visit_type_id = '.$visit_t;
 		$procedure_search = $this->session->userdata('procedure_search');
 		
 		if(!empty($procedure_search))
@@ -653,7 +649,7 @@ class Nurse  extends MX_Controller
 			$where .= $procedure_search;
 		}
 		
-		$table = 'service_charge,visit_type,service';
+		$table = 'service_charge,visit_type,service, departments';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/nurse/procedures/'.$visit_id;
@@ -863,6 +859,8 @@ class Nurse  extends MX_Controller
 		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
         $v_data["links"] = $this->pagination->create_links();
 		$query = $this->nurse_model->get_symptom_list($table, $where, $config["per_page"], $page, $order);
+
+		$v_data['visit_symptoms'] = $this->nurse_model->get_symptoms_visit($visit_id);
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
@@ -2071,7 +2069,108 @@ class Nurse  extends MX_Controller
 		
 		
 		$this->load->view('admin/templates/general_page', $data);
-
+	}
+	
+	public function inpatient_card($visit_id, $mike = NULL, $module = NULL,$opener = NULL)
+	{
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$v_data['patient_type'] = $patient['patient_type'];
+		$v_data['patient_othernames'] = $patient['patient_othernames'];
+		$v_data['patient_surname'] = $patient['patient_surname'];
+		$v_data['patient_type_id'] = $patient['visit_type_id'];
+		$v_data['account_balance'] = $patient['account_balance'];
+		$v_data['visit_type_name'] = $patient['visit_type_name'];
+		$v_data['patient_id'] = $patient['patient_id'];
+		$v_data['visit_ward_id'] = $patient['ward_id'];
+		
+		$patient_date_of_birth = $patient['patient_date_of_birth'];
+		$age = $this->reception_model->calculate_age($patient_date_of_birth);
+		$visit_date = $this->reception_model->get_visit_date($visit_id);
+		$gender = $patient['gender'];
+		$visit_date = date('jS M Y',strtotime($visit_date));
+		$v_data['age'] = $age;
+		$v_data['visit_date'] = $visit_date;
+		$v_data['gender'] = $gender;
+		$v_data['wards'] = $this->reception_model->get_wards();
+		$v_data['ward_rooms'] = $this->nurse_model->get_ward_rooms($v_data['visit_ward_id']);
+		$v_data['visit_bed'] = $this->nurse_model->get_visit_bed($visit_id);
+		
+		$v_data['module'] = $module;
+		$v_data['mike'] = $mike;
+		$v_data['visit_id'] = $visit_id;
+		$v_data['dental'] = 0;
+		$data['content'] = $this->load->view('inpatient/patient_card', $v_data, true);
+		
+		$data['title'] = 'Patient Card';
+		if(($mike != NULL) && ($mike != 'a')){
+			$this->load->view('admin/templates/no_sidebar', $data);	
+		}else{
+			$this->load->view('admin/templates/general_page', $data);	
+		}
+	}
+	
+	public function get_room_beds($room_id)
+	{
+		$room_beds = $this->nurse_model->get_room_beds($room_id);
+		$beds = '';
+		
+		if($room_beds->num_rows() > 0)
+		{
+			foreach($room_beds->result() as $res)
+			{
+				$bed_id = $res->bed_id;
+				$bed_number = $res->bed_number;
+				
+				$beds .= '<option value="'.$bed_id.'">'.$bed_number.'</option>';
+			}
+		}
+		
+		echo $beds;
+	}
+	
+	public function get_ward_rooms($ward_id)
+	{
+		$ward_rooms = $this->nurse_model->get_ward_rooms($ward_id);
+		$rooms = '';
+		
+		if($ward_rooms->num_rows() > 0)
+		{
+			foreach($ward_rooms->result() as $res)
+			{
+				$room_id = $res->room_id;
+				$room_name = $res->room_name;
+				
+				$rooms .= '<option value="'.$room_id.'">'.$room_name.'</option>';
+			}
+		}
+		
+		echo $rooms;
+	}
+	
+	public function set_patient_room($visit_id)
+	{
+		$this->form_validation->set_rules('bed_id', 'Bed', 'required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			if($this->nurse_model->update_room_details($visit_id))
+			{
+				$this->session->set_userdata('success_message', 'Room details updated successfully');
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'Could not update room details. Please try again');
+			}
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', validation_errors());
+		}
+		
+		redirect('nurse/inpatient_card/'.$visit_id.'/a/0');
 	}
 }
 ?>

@@ -4,7 +4,7 @@ $rs = $this->pharmacy_model->select_prescription($visit_id);
 $num_rows =count($rs);
 
 echo"
-<input type='button' class='btn btn-primary' value='Load Prescription' onclick='window.location.reload()'/></div>
+	<div class='center-align' style='margin-bottom:10px;'><input type='button' class='btn btn-primary' value='Load Prescription' onclick='window.location.reload()'/></div>
 	<table class='table table-striped table-hover table-condensed'>
 		 <tr>
 		 	<th>No.</th>

@@ -13,13 +13,18 @@ class Administration  extends MX_Controller
 		$this->load->model('reports_model');
 		$this->load->model('administration_model');
 		
-		$this->load->model('auth/auth_model');
 		$this->load->model('site/site_model');
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
 		$this->load->model('reception/database');
 		$this->load->model('administration/sync_model');
 		$this->load->model('administration/personnel_model');
+		
+		$this->load->model('auth/auth_model');
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
 	}
 	
 	public function index()
@@ -40,10 +45,7 @@ class Administration  extends MX_Controller
 	{
 		$this->sync_model->sync_data_down();	
 	}
-	public function sync_down_request()
-	{
-		$this->sync_model->sync_data_down();	
-	}
+	
 	public function services($page_name = NULL)
 	{
 		// this is it

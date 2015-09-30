@@ -39,6 +39,7 @@ if(!empty($service_charge_id)){
 		if($num_visit > 0){//if visit charge has been saved
 			/*$save= new doctor();
 			$save->update_lab_visit($visit_id,$service_charge_id);*/
+			$this->lab_model->save_lab_charge($visit_id, $service_charge_id);
 		}
 		else{
 
@@ -55,6 +56,7 @@ if(!empty($service_charge_id)){
 		if($num_visit > 0){//if visit charge has been saved
 			/*$save= new doctor();
 			$save->update_lab_visit($visit_id,$service_charge_id);*/
+			$this->lab_model->save_lab_charge($visit_id, $service_charge_id);
 		}
 		else{
 			

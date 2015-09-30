@@ -2,19 +2,25 @@
 
 class Medical_admin_model extends CI_Model 
 {
-
-
-	function objective_findings(){
-
-		$table = "objective_findings,objective_findings_class";
-		$where = "objective_findings_class.objective_findings_class_id = objective_findings.objective_findings_class_id";
-		$items = "objective_findings.objective_findings_id, objective_findings.objective_findings_name,objective_findings_class.objective_findings_class_name";
-		$order = "objective_findings_class.objective_findings_class_name";
+	function objective_findings()
+	{
+		$table = "objective_findings";
+		$where = "objective_findings_status = 1";
+		$items = "*";
+		$order = "objective_findings.objective_findings_name";
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		return $result;		
+	}
+
+	public function get_objective_findings_classes()
+	{
+		$table = "objective_findings_class";
+		$order = "objective_findings_class_name";
 		
+		$this->db->order_by($order, 'ASC');
+		$result = $this->db->get($table);
 		return $result;
-						
 	}
 
 	function visit_objective($visit_id){

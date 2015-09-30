@@ -10,7 +10,7 @@ class Services_model extends CI_Model
 		$this->db->select('*');
 		$this->db->where($where);
 		$this->db->join('departments', 'departments.department_id = service.department_id', 'LEFT');
-		$this->db->order_by('service_name','ASC');
+		$this->db->order_by($order, $order_method);
 		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
@@ -610,12 +610,12 @@ class Services_model extends CI_Model
 						//cash paying
 						if($visit_type_id == 1)
 						{
-							$service_charge_amount = $cash_paying_rate;
+							$service_charge_amount = str_replace(' ', '', $cash_paying_rate);
 						}
 						
 						else
 						{
-							$service_charge_amount = $insurance_rate;
+							$service_charge_amount = str_replace(' ', '', $insurance_rate);
 						}
 						
 						// service charge entry
