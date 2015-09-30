@@ -8,7 +8,6 @@ class Reception  extends MX_Controller
 		parent:: __construct();
 		$this->load->model('reception_model');
 		$this->load->model('strathmore_population');
-		$this->load->model('auth/auth_model');
 		$this->load->model('database');
 		$this->load->model('administration/reports_model');
 		$this->load->model('administration/administration_model');
@@ -21,6 +20,12 @@ class Reception  extends MX_Controller
 		$this->load->model('administration/sync_model');
 		
 		$this->csv_path = realpath(APPPATH . '../assets/csv');
+		
+		$this->load->model('auth/auth_model');
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
 	}
 	
 	public function index()
@@ -177,14 +182,15 @@ class Reception  extends MX_Controller
 			//terminated visits
 			if($visits == 1)
 			{
-				if($page_name == 'nurse' || $page_name == 'doctor')
+				/*if($page_name == 'nurse' || $page_name == 'doctor')
 				{
 					$where .= ' ';
 				}
 				else
 				{
 					$where .= ' AND visit.close_card = '.$visits;	
-				}
+				}*/
+				$where .= ' AND visit.close_card = '.$visits;
 				
 			}
 			

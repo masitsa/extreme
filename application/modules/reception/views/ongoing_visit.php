@@ -1,16 +1,21 @@
 <!-- search -->
 <?php echo $this->load->view('patients/search_visit', '', TRUE);?>
 <!-- end search -->
- 
-		<section class="panel">
-		        <!-- Widget head -->
-		       <header class="panel-heading">
-		          <h5 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h5>
-		          <div class="widget-icons pull-right">
-		          	 <a href="<?php echo site_url();?>reception/patients-list" class="btn btn-success btn-sm pull-right">  Patients List</a>
-		          </div>
-		          <div class="clearfix"></div>
-		        </header>             
+ <section class="panel panel-featured panel-featured-info">
+    <header class="panel-heading">
+          <div class="pull-right">
+            <?php
+                if($page != 'nurse' || $page != 'doctor')
+                {
+                    ?>
+                     <a href="<?php echo site_url();?>reception/patients-list" class="btn btn-success btn-sm pull-right">  Patients List</a>
+                    <?php
+                }
+            ?>
+            
+          </div>
+        <h2 class="panel-title"><?php echo $title;?></h2>
+    </header>        
 
 		        <!-- Widget content -->
 		        <div class="panel-body">
@@ -321,6 +326,7 @@
 									<td>'.$visit_time_out.'</td>
 									<td>'.$doctor.'</td>
 									<td>'.$patient_diagnosis.'</td>
+									<td><a href="'.site_url().'doctor/patient_card/'.$visit_id.'" class="btn btn-sm btn-info">Patient card</a></td>
 								</tr> 
 							';
 						}

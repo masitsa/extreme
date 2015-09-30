@@ -207,9 +207,17 @@ class Personnel_model extends CI_Model
 		$this->db->select('personnel_section.*, section.section_name, section.section_position, section.section_parent, section.section_icon');
 		$this->db->order_by('section_parent', 'ASC');
 		$this->db->order_by('section_position', 'ASC');
-		$this->db->where('personnel_section.section_id = section.section_id AND personnel_section.personnel_id = '. $personnel_id);
+		$this->db->where('personnel_section.section_id = section.section_id AND personnel_section.personnel_id = '.$personnel_id);
 		$query = $this->db->get();
 		
+		return $query;
+	}
+	
+	public function get_personnel_approval_levels()
+	{
+		$this->db->where('inventory_level_status.inventory_level_status_id = personnel_approval.approval_status_id AND personnel_approval.personnel_id = 1');//.$this->session->userdata('personnel_id'));
+		$query = $this->db->get('inventory_level_status,personnel_approval');
+
 		return $query;
 	}
 }

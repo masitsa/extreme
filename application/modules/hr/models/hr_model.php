@@ -46,5 +46,19 @@ class Hr_model extends CI_Model
 			return FALSE;
 		}
 	}
+	public function get_non_personnel_roles($personnel_id)
+	{
+		$this->db->where('inventory_level_status.inventory_level_status_id NOT IN (SELECT personnel_approval.approval_status_id FROM personnel_approval WHERE personnel_id = '.$personnel_id.')');
+		$query = $this->db->get('inventory_level_status');
+
+		return $query;
+	}
+	public function get_personnel_approvals($personnel_id)
+	{
+		$this->db->where('inventory_level_status.inventory_level_status_id = personnel_approval.approval_status_id AND personnel_approval.personnel_id = '.$personnel_id);
+		$query = $this->db->get('inventory_level_status,personnel_approval');
+
+		return $query;
+	}
 }
 ?>

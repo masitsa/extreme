@@ -22,11 +22,7 @@
 							?>
 						</div>
 					</div>
-                	<div class="row">
-					    <div class="col-md-12">
-					       <div class="alert alert-danger">NOTE: Ensure that you bill for the tests you are going to do for the patient. Please click <a hred="#" class="btn btn-sm btn-success" >Charge for lab test</a> to add the test charge to the invoice and/or  <a hred="#" class="btn btn-sm btn-danger" >Remove lab test charge</a> to remove this charge from the invoice. Click <a class='btn btn-info' href='' >Remove from list</a> When you want to remove this test from the tests being done ~ development team </div>
-					    </div>
-					</div>
+                	
                 	<!-- laboratory technicial should choose what test should be done to the patient -->
 					 <div class="row">
 					 	<div class="col-md-12">

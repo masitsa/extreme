@@ -101,6 +101,9 @@ $route['human-resource/personnel'] = 'hr/personnel/index';
 $route['human-resource/personnel/(:any)/(:any)/(:num)'] = 'hr/personnel/index/$1/$2/$3';
 $route['human-resource/add-personnel'] = 'hr/personnel/add_personnel';
 $route['human-resource/edit-personnel/(:num)'] = 'hr/personnel/edit_personnel/$1';
+
+$route['human-resource/edit-order-authorize/(:num)'] = 'hr/personnel/edit_order_authorize/$1';
+
 $route['human-resource/edit-personnel-about/(:num)'] = 'hr/personnel/update_personnel_about_details/$1';
 $route['human-resource/edit-personnel-account/(:num)'] = 'hr/personnel/update_personnel_account_details/$1';
 $route['human-resource/edit-personnel/(:num)/(:num)'] = 'hr/personnel/edit_personnel/$1/$2';
@@ -500,12 +503,55 @@ $route['pharmacy/validate-import'] = 'pharmacy/do_drugs_import';
 $route['pharmacy/import-template'] = 'pharmacy/import_template';
 $route['pharmacy/import-drugs'] = 'pharmacy/import_drugs';
 
-
-
-
-
 /*
-*	doctor Routes
+*	Inventory Routes
 */
 $route['inventory-setup/inventory-categories'] = 'inventory/categories/index';
-$route['inventory-setup/add-catergory'] = 'inventory/categories/add_category';
+$route['inventory-setup/categories/(:num)'] = 'inventory/categories/index/$1';
+$route['inventory-setup/add-category'] = 'inventory/categories/add_category';
+$route['inventory-setup/edit-category/(:num)'] = 'inventory/categories/edit_category/$1';
+
+
+$route['inventory-setup/inventory-stores'] = 'inventory/stores/index';
+$route['inventory-setup/stores/(:num)'] = 'inventory/stores/index/$1';
+$route['inventory-setup/add-store'] = 'inventory/stores/add_store';
+$route['inventory-setup/edit-store/(:num)'] = 'inventory/stores/edit_store/$1';
+
+$route['inventory-setup/suppliers'] = 'inventory/suppliers/index';
+$route['inventory-setup/suppliers/(:num)'] = 'inventory/suppliers/index/$1';
+$route['inventory-setup/add-supplier'] = 'inventory/suppliers/add_supplier';
+$route['inventory-setup/edit-supplier/(:num)'] = 'inventory/suppliers/edit_supplier/$1';
+
+$route['inventory/orders'] = 'inventory/orders/index';
+$route['inventory/orders/(:num)'] = 'inventory/orders/index/$1';
+$route['inventory/add-order'] = 'inventory/orders/add_order';
+$route['inventory/add-order-item/(:num)/(:any)'] = 'inventory/orders/add_order_item/$1/$2';
+$route['inventory/update-order-item/(:num)/(:any)/(:num)'] = 'inventory/orders/update_order_item/$1/$2/$3';
+$route['inventory/update-supplier-prices/(:num)/(:any)/(:num)'] = 'inventory/orders/update_supplier_prices/$1/$2/$3';
+$route['inventory/send-for-correction/(:num)'] = 'inventory/orders/send_order_for_correction/$1';
+$route['inventory/send-for-approval/(:num)'] = 'inventory/orders/send_order_for_approval/$1';
+$route['inventory/send-for-approval/(:num)/(:num)'] = 'inventory/orders/send_order_for_approval/$1/$2';
+$route['inventory/submit-supplier/(:num)/(:any)'] = 'inventory/orders/submit_supplier/$1/$2';
+$route['inventory/generate-lpo/(:num)'] = 'inventory/orders/print_lpo_new/$1';
+$route['inventory/generate-rfq/(:num)/(:num)/(:any)'] = 'inventory/orders/print_rfq_new/$1/$2/$3';
+$route['inventory/edit_order/(:num)'] = 'inventory/orders/edit_order/$1';
+
+$route['inventory/products'] = 'inventory/products/index';
+$route['inventory/products/(:num)'] = 'inventory/products/index/$1';
+$route['inventory/add-product'] = 'inventory/products/add_product';
+$route['inventory/activate-product/(:num)'] = 'inventory/products/activate_product/$1';
+$route['inventory/deactivate-product/(:num)'] = 'inventory/products/deactivate_product/$1';
+$route['inventory/edit-product/(:num)'] = 'inventory/products/edit_product/$1';
+
+
+
+// pharmacy orders
+
+$route['pharmacy-setup/pharmacy-orders'] = 'inventory/orders/index';
+
+
+
+$route['orders'] = 'inventory/orders/index';
+
+
+
