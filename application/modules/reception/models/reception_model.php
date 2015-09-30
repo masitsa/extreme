@@ -2320,8 +2320,7 @@ class Reception_model extends CI_Model
 		$this->db->order_by('visit_type_name', 'ASC');
 		return $this->db->get('visit_type');
 	}
-<<<<<<< HEAD
-=======
+
 	
 	public function get_wards()
 	{
@@ -2416,6 +2415,6 @@ class Reception_model extends CI_Model
 		
 		return $query;
 	}
->>>>>>> 37d2631dcd527ecad85bb5f5b28f1d33b5cc470a
+
 }
 ?>

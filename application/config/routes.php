@@ -234,6 +234,7 @@ $route['hospital-administration/deactivate-insurance-company/(:num)'] = 'hospita
 *	Accounts Routes
 */
 $route['accounts/closed-visits'] = 'accounts/payroll/accounts_closed_visits';
+$route['accounts/inpatients'] = 'reception/inpatients/accounts';
 $route['accounts/un-closed-visits'] = 'accounts/payroll/accounts_unclosed_queue';
 $route['accounts/change-branch'] = 'accounts/payroll/change_branch';
 $route['accounts/print-payroll/(:num)'] = 'accounts/payroll/print_payroll/$1';
@@ -248,6 +249,7 @@ $route['accounts/close-payroll-search'] = 'accounts/payroll/close_payroll_search
 $route['accounts/create-payroll'] = 'accounts/payroll/create_payroll';
 $route['accounts/deactivate-payroll/(:num)'] = 'accounts/payroll/deactivate_payroll/$1';
 $route['accounts/print-payslips'] = 'accounts/payroll/print_payslips';
+$route['accounts/payroll/edit-payment-details/(:num)'] = 'accounts/payroll/edit_payment_details/$1';
 $route['accounts/payroll/edit_allowance/(:num)'] = 'accounts/payroll/edit_allowance/$1';
 $route['accounts/payroll/delete_allowance/(:num)'] = 'accounts/payroll/delete_allowance/$1';
 $route['accounts/payroll/edit_deduction/(:num)'] = 'accounts/payroll/edit_deduction/$1';
@@ -384,6 +386,7 @@ $route['reception/patients-list'] = 'reception/patients';
 $route['reception/deleted-visits'] = 'reception/visit_list/2';
 $route['reception/visit-history'] = 'reception/visit_list/1';
 $route['reception/general-queue'] = 'reception/general_queue/reception';
+$route['reception/inpatients'] = 'reception/inpatients/reception';
 $route['reception/appointments-list'] = 'reception/appointment_list';
 $route['reception/register-other-patient'] = 'reception/register_other_patient';
 $route['reception/add-patient'] = 'reception/add_patient';
@@ -391,7 +394,6 @@ $route['reception/validate-import'] = 'reception/do_patients_import';
 $route['reception/import-template'] = 'reception/import_template';
 $route['reception/import-patients'] = 'reception/import_patients';
 $route['reception/print-invoice/(:num)/(:any)'] = 'accounts/print_invoice_new/$1/$2';
-
 
 /*
 *	nurse Routes
@@ -401,7 +403,7 @@ $route['nurse/dashboard'] = 'nurse/index';
 $route['nurse/nurse-queue'] = 'nurse/nurse_queue';
 $route['nurse/general-queue'] = 'reception/general_queue/nurse';
 $route['nurse/visit-history'] = 'reception/visit_list/1/nurse';
-
+$route['nurse/inpatients'] = 'reception/inpatients/nurse';
 
 /*
 *	doctor Routes
@@ -412,8 +414,7 @@ $route['doctor/doctors-queue'] = 'doctor/doctor_queue';
 $route['doctor/general-queue'] = 'reception/general_queue/doctor';
 $route['doctor/visit-history'] = 'reception/visit_list/1/doctor';
 $route['doctor/patient-treatment'] = 'nurse/patient_treatment_statement/doctor';
-
-
+$route['doctor/inpatients'] = 'reception/inpatients/doctor';
 
 /*
 *	doctor Routes

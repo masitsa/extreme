@@ -5,15 +5,7 @@ $patient_id = $this->nurse_model->get_patient_id($visit_id);
 $get_medical_rs = $this->nurse_model->get_nurse_notes($patient_id,$visit_id);
 $num_rows = count($get_medical_rs);
 //echo $num_rows;
-<<<<<<< HEAD
 
-=======
-echo '<div class="row" id="nurses-notes-div">
-		    <div class="col-md-12">
-		       <div class="alert alert-danger"><p>Nurse notes entery has been changed. Please find a button named <a hred="#" class="btn btn-sm btn-success" >Save Nurse Notes</a> or <a hred="#" class="btn btn-sm btn-primary" >Update Nurse Notes</a> to save the keyed in notes.. ~ development team </p></div>
-		    </div>
-		</div>';
->>>>>>> 37d2631dcd527ecad85bb5f5b28f1d33b5cc470a
 if($num_rows > 0){
 	foreach ($get_medical_rs as $key):
 		$nurse_notes = $key->nurse_notes;

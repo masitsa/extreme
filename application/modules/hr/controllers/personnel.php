@@ -16,8 +16,8 @@ class Personnel extends hr
 	*/
 	public function index($order = 'branch_id', $order_method = 'ASC') 
 	{
-		$where = 'personnel_id > 0';
-		$table = 'personnel';
+		$where = 'personnel.personnel_type_id = personnel_type.personnel_type_id';
+		$table = 'personnel, personnel_type';
 		//pagination
 		$segment = 5;
 		$this->load->library('pagination');
@@ -72,7 +72,6 @@ class Personnel extends hr
 		$v_data['order'] = $order;
 		$v_data['order_method'] = $order_method;
 		$v_data['query'] = $query;
-		$v_data['all_personnel'] = $this->personnel_model->all_personnel();
 		$v_data['branches'] = $this->branches_model->all_branches();
 		$v_data['page'] = $page;
 		$data['content'] = $this->load->view('personnel/all_personnel', $v_data, true);
@@ -102,6 +101,7 @@ class Personnel extends hr
 		$this->form_validation->set_rules('personnel_number', 'Personnel number', 'xss_clean');
 		$this->form_validation->set_rules('personnel_city', 'City', 'xss_clean');
 		$this->form_validation->set_rules('personnel_post_code', 'Post code', 'xss_clean');
+		$this->form_validation->set_rules('personnel_type_id', 'Personnel_type', 'required|xss_clean');
 		
 		//if form conatins invalid data
 		if ($this->form_validation->run())
@@ -126,6 +126,7 @@ class Personnel extends hr
 		$v_data['titles'] = $this->personnel_model->get_title();
 		$v_data['genders'] = $this->personnel_model->get_gender();
 		$v_data['job_titles_query'] = $this->personnel_model->get_job_titles();
+		$v_data['personnel_types'] = $this->personnel_model->get_personnel_types();
 		$data['title'] = 'Add personnel';
 		$v_data['title'] = $data['title'];
 		$data['content'] = $this->load->view('personnel/add_personnel', $v_data, true);
@@ -161,6 +162,7 @@ class Personnel extends hr
 		$v_data['roles'] = $this->personnel_model->get_personnel_roles($personnel_id);
 		$v_data['leave_types'] = $this->personnel_model->get_leave_types();
 		$v_data['departments'] = $this->personnel_model->get_departments();
+		$v_data['personnel_types'] = $this->personnel_model->get_personnel_types();
 		$v_data['parent_sections'] = $this->sections_model->all_parent_sections('section_position');
 		$data['content'] = $this->load->view('personnel/edit_personnel', $v_data, true);
 		
@@ -242,6 +244,12 @@ class Personnel extends hr
 		$this->form_validation->set_rules('personnel_number', 'Personnel number', 'xss_clean');
 		$this->form_validation->set_rules('personnel_city', 'City', 'xss_clean');
 		$this->form_validation->set_rules('personnel_post_code', 'Post code', 'xss_clean');
+		$this->form_validation->set_rules('personnel_account_number', 'Account number', 'xss_clean');
+		$this->form_validation->set_rules('personnel_nssf_number', 'NSSF number', 'xss_clean');
+		$this->form_validation->set_rules('personnel_nhif_number', 'NHIF number', 'xss_clean');
+		$this->form_validation->set_rules('personnel_kra_pin', 'KRA pin', 'xss_clean');
+		$this->form_validation->set_rules('personnel_national_id_number', 'ID number', 'xss_clean');
+		$this->form_validation->set_rules('personnel_type_id', 'Personnel_type', 'required|xss_clean');
 		
 		//if form conatins invalid data
 		if ($this->form_validation->run())

@@ -46,11 +46,9 @@ if(!empty($validation_error))
     $insurance_company_id = set_value('insurance_company_id');
     $patient_national_id = set_value('patient_national_id');
     $next_of_kin_contact = set_value('next_of_kin_contact');
-<<<<<<< HEAD
+
      $current_patient_number = set_value('current_patient_number');
-=======
-	$current_patient_number = set_value('current_patient_number');
->>>>>>> 37d2631dcd527ecad85bb5f5b28f1d33b5cc470a
+
 }
 ?>
  <section class="panel">
