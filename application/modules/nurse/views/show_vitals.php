@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-3">
       
         <div class="form-group">
             <label class="col-lg-8 control-label">Systolic: </label>
@@ -17,7 +17,7 @@
            
             </div>
         </div>
-
+        
         <!-- Body mass index  -->
 
         <div class="form-group">
@@ -28,6 +28,8 @@
                 
             </div>
         </div>
+	</div>
+	<div class="col-md-3">
         <div class="form-group">
             <label class="col-lg-8 control-label">Height (m) : </label>
             
@@ -56,10 +58,8 @@
             </div>
         </div>
         <div id="hwr_out"></div>
-
-    </div>
-
-    <div class="col-md-6">
+	</div>
+	<div class="col-md-3">
 
         <!-- temparature -->
 
@@ -71,6 +71,7 @@
               
             </div>
         </div>
+        
         <div class="form-group">
             <label class="col-lg-8 control-label">Pulse: </label>
             
@@ -88,6 +89,8 @@
                 
             </div>
         </div>
+	</div>
+	<div class="col-md-3">
 
         <div class="form-group">
             <label class="col-lg-8 control-label">Oxygen Saturation : </label>
@@ -99,7 +102,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-lg-8 control-label">Pain : </label>
+            <label class="col-lg-8 control-label">Pain (0 - 10): </label>
             
             <div class="col-lg-4">
                 <input type="text" id="vital10"  class="form-control"/>
@@ -108,7 +111,7 @@
         </div>
     </div>
 </div>
-<br>
+
 <div class="row">
     <div class="col-md-12">
         <div class="form-group">

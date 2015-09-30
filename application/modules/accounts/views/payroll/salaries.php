@@ -123,7 +123,7 @@
                             	
                             	<div class="row" style="margin-bottom:20px;">
                                     <div class="col-sm-2 col-sm-offset-10">
-                                        <a href="<?php echo site_url();?>accounts/payroll" class="btn btn-sm btn-info">Back to payroll</a>
+                                        <a href="<?php echo site_url();?>accounts/payroll" class="btn btn-sm btn-warning pull-right">Back to payroll</a>
                                         
                                     </div>
                                 </div>

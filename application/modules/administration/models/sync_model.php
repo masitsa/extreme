@@ -88,7 +88,7 @@ class Sync_model extends CI_Model
 								'created'=>date('Y-m-d H:i:s'),
 								'created_by'=>$this->session->userdata('personnel_id'),
 								'last_modified_by'=>$this->session->userdata('personnel_id'),
-								'sync_data' => $value
+								//'sync_data' => $value
 							);
 							$this->db->insert('sync', $sync_data);
 						 	array_push($patients[$sync_table_name], $value);
@@ -122,7 +122,7 @@ class Sync_model extends CI_Model
 								'created'=>date('Y-m-d H:i:s'),
 								'created_by'=>$this->session->userdata('personnel_id'),
 								'last_modified_by'=>$this->session->userdata('personnel_id'),
-								'sync_data' => $key
+								//'sync_data' => $key
 							);
 							$this->db->insert('sync', $sync_data);
 							array_push($patients[$sync_table_name], $key);

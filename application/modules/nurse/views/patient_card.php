@@ -59,10 +59,10 @@
 				<div class="row">
 					<div class="col-md-2">
 						<div class="row">
-							<div class="col-lg-10">
+							<div class="col-lg-6">
 								<strong>First name:</strong>
 							</div>
-							<div class="col-lg-2">
+							<div class="col-lg-6">
 								<?php echo $patient_surname;?>
 							</div>
 						</div>
@@ -70,10 +70,10 @@
 					
 					<div class="col-md-3">
 						<div class="row">
-							<div class="col-lg-10">
+							<div class="col-lg-6">
 								<strong>Other names:</strong>
 							</div>
-							<div class="col-lg-2">
+							<div class="col-lg-6">
 								<?php echo $patient_othernames;?>
 							</div>
 						</div>
@@ -81,10 +81,10 @@
 					
 					<div class="col-md-2">
 						<div class="row">
-							<div class="col-lg-10">
+							<div class="col-lg-6">
 								<strong>Gender:</strong>
 							</div>
-							<div class="col-lg-2">
+							<div class="col-lg-6">
 								<?php echo $gender;?>
 							</div>
 						</div>
@@ -92,10 +92,10 @@
 					
 					<div class="col-md-2">
 						<div class="row">
-							<div class="col-lg-10">
+							<div class="col-lg-6">
 								<strong>Age:</strong>
 							</div>
-							<div class="col-lg-2">
+							<div class="col-lg-6">
 								<?php echo $age;?>
 							</div>
 						</div>
@@ -103,10 +103,10 @@
 					
 					<div class="col-md-3">
 						<div class="row">
-							<div class="col-lg-10">
+							<div class="col-lg-6">
 								<strong>Account balance:</strong>
 							</div>
-							<div class="col-lg-2">
+							<div class="col-lg-6">
 								Kes <?php echo number_format($account_balance, 2);?>
 							</div>
 						</div>

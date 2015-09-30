@@ -74,7 +74,28 @@ class Auth_model extends CI_Model
 	{
 		$data['last_login'] = date('Y-m-d H:i:s');
 		$this->db->where('personnel_id', $personnel_id);
-		$this->db->update('personnel', $data); 
+		if($this->db->update('personnel', $data))
+		{
+			$session_log_insert = array(
+				"personnel_id" => $personnel_id, 
+				"session_name_id" => 1
+			);
+			$table = "session";
+			if($this->db->insert($table, $session_log_insert))
+			{
+				return TRUE;
+			}
+			
+			else
+			{
+				return FALSE;
+			}
+		}
+		
+		else
+		{
+			return FALSE;
+		}
 	}
 	
 	/*

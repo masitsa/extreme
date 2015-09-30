@@ -1,54 +1,20 @@
 <?php echo form_open("reception/register-other-patient", array("class" => "form-horizontal"));?>
 
 <div class="row">
-	<div class="col-md-6">
-        <div class="row">
-            <div class="col-md-12">
-                <section class="panel panel-featured panel-featured-info">
-                    <header class="panel-heading">
-                        <h2 class="panel-title">Vitals</h2>
-                    </header>
-                    <div class="panel-body">
-                        <!-- vitals from java script -->
-                        <div id="vitals"></div>
-                        <!-- end of vitals data -->
-                    </div>
-                 </section>
+	<div class="col-md-12">
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">Vitals</h2>
+            </header>
+            <div class="panel-body">
+                <!-- vitals from java script -->
+                <div id="vitals"></div>
+                <!-- end of vitals data -->
             </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-		<div class="row">
-			<div class="col-md-12">
-				<section class="panel panel-featured panel-featured-info">
-					<header class="panel-heading">
-						<h2 class="panel-title">Procedures</h2>
-					</header>
-					<div class="panel-body">
-                    	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Procedure' onclick='myPopup3(<?php echo $visit_id; ?>)'/></p></div>
-						<!-- visit Procedures from java script -->
-						<div id="procedures"></div>
-						<!-- end of visit procedures -->
-					</div>
-				 </section>
-			</div>
-			
-			<div class="col-md-12">
-				<section class="panel panel-featured panel-featured-info">
-					<header class="panel-heading">
-						<h2 class="panel-title">Vaccines</h2>
-					</header>
-					<div class="panel-body">
-                    	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Vaccine' onclick='myPopup4(<?php echo $visit_id; ?>)'/></p></div>
-						<!-- visit Procedures from java script -->
-						<div id="vaccines_to_patients"></div>
-						<!-- end of visit procedures -->
-					</div>
-				 </section>
-			</div>
-        </div>
+         </section>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
         <section class="panel panel-featured panel-featured-info">
@@ -65,66 +31,32 @@
 <div class="row">
     <div class="col-md-12">
         <section class="panel panel-featured panel-featured-info">
-			<header class="panel-heading">
-				<h2 class="panel-title">Allergies</h2>
-			</header>
-			<div class="panel-body">
-				<!-- vitals from java script -->
-				<div id="medication"></div>
-				<!-- end of vitals data -->
-			</div>
-		</section>
+            <header class="panel-heading">
+                <h2 class="panel-title">Procedures</h2>
+            </header>
+            <div class="panel-body">
+                <div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Procedure' onclick='myPopup3(<?php echo $visit_id; ?>)'/></p></div>
+                <!-- visit Procedures from java script -->
+                <div id="procedures"></div>
+                <!-- end of visit procedures -->
+            </div>
+         </section>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-md-12">
-		<section class="panel panel-featured panel-featured-info">
-			<header class="panel-heading">
-				<h2 class="panel-title">Surgeries</h2>
-			</header>
-			<div class="panel-body">
-				<!-- vitals from java script -->
-				<div id="surgeries"></div>
-				<!-- end of vitals data -->
-			</div>
-		</section>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-		<section class="panel panel-featured panel-featured-info">
-			<header class="panel-heading">
-				<h2 class="panel-title">Patient vaccine history</h2>
-			</header>
-			<div class="panel-body">
-				<!-- vitals from java script -->
-				<div id="patient_vaccine"></div>
-				<!-- end of vitals data -->
-			</div>
-		</section>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-		<section class="panel panel-featured panel-featured-info">
-			<header class="panel-heading">
-				<h2 class="panel-title">Family history</h2>
-			</header>
-			<div class="panel-body">
-				<?php
-					$v_data['patient_id'] = $this->reception_model->get_patient_id_from_visit($visit_id);
-					$v_data['patient'] = $this->reception_model->patient_names2(NULL, $visit_id);
-					$v_data['family_disease_query'] = $this->nurse_model->get_family_disease();
-					$v_data['family_query'] = $this->nurse_model->get_family();
-				?>
-				<!-- vitals from java script -->
-				<?php echo $this->load->view("patients/family_history", $v_data, TRUE); ?>
-				<!-- end of vitals data -->
-			</div>
-		</section>
+	<div class="col-md-12">
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">Vaccines</h2>
+            </header>
+            <div class="panel-body">
+                <div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Vaccine' onclick='myPopup4(<?php echo $visit_id; ?>)'/></p></div>
+                <!-- visit Procedures from java script -->
+                <div id="vaccines_to_patients"></div>
+                <!-- end of visit procedures -->
+            </div>
+         </section>
     </div>
 </div>
 
@@ -629,7 +561,7 @@ function display_vaccines(visit_id){
     }
     
     var config_url = document.getElementById("config_url").value;
-    var url = config_url+"nurse/view_vaccines/"+visit_id;
+    var url = config_url+"nurse/visit_vaccines/"+visit_id;
   
     if(XMLHttpRequestObject) {
                 

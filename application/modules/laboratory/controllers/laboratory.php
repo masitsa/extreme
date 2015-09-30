@@ -16,6 +16,12 @@ class Laboratory  extends MX_Controller
 		$this->load->model('admin/admin_model');
 		$this->load->model('reception/database');
 		$this->load->model('administration/personnel_model');
+		
+		$this->load->model('auth/auth_model');
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
 	}
 	
 	public function index()

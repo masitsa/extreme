@@ -1,8 +1,6 @@
 <?php   if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once "./application/modules/auth/controllers/auth.php";
-
-class Personnel extends auth
+class Personnel extends MX_Controller
 {	
 	function __construct()
 	{
@@ -10,6 +8,12 @@ class Personnel extends auth
 		$this->load->model('reception/reception_model');
 		$this->load->model('personnel_model');
 		$this->load->model('database');
+		
+		$this->load->model('auth/auth_model');
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
 	}
 	
 	public function index()

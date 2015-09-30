@@ -352,10 +352,6 @@ if(count($distinct_rs) > 0){
 			';
 		
 	endforeach;
-		
-		
-	
-	
 	
 	echo "</table>";
 }

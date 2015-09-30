@@ -35,6 +35,7 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
         <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/vendor/bootstrap/css/bootstrap.css" media="all"/>
         <link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/stylesheets/theme-custom.css" media="all"/>
         <style type="text/css">
+		body{font-family:"Courier New", Courier, monospace}
         .receipt_spacing{letter-spacing:0px; font-size: 12px;}
         .center-align{margin:0 auto; text-align:center;}
         
@@ -70,7 +71,7 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
                 	<?php echo $contacts['company_name'];?><br/>
                     P.O. Box <?php echo $contacts['address'];?> <?php echo $contacts['post_code'];?>, <?php echo $contacts['city'];?><br/>
                     E-mail: <?php echo $contacts['email'];?>. Tel : <?php echo $contacts['phone'];?><br/>
-                    <?php echo $contacts['location'];?>, <?php echo $contacts['building'];?>, <?php echo $contacts['floor'];?><br/>
+                    <?php echo $contacts['location'];?><br/>
                 </strong>
             </div>
         </div>
@@ -83,7 +84,7 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
         
         <!-- Patient Details -->
     	<div class="row receipt_bottom_border" style="margin-bottom: 10px;">
-        	<div class="col-md-6 pull-left">
+        	<div class="col-md-6">
             	<div class="row">
                 	<div class="col-md-12">
                     	
@@ -100,11 +101,9 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
                     	<?php echo $patient_number; ?>
                     </div>
                 </div>
-                
-            	
             </div>
             
-        	<div class="col-md-6 pull-right">
+        	<div class="col-md-6">
             	<div class="row">
                 	<div class="col-md-12">
                     	<div class="title-item">Receipt Number:</div>
@@ -115,7 +114,7 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
             	
             	<div class="row">
                 	<div class="col-md-12">
-                    	<div class="title-item">Att. Doctor::</div> 
+                    	<div class="title-item">Att. Doctor:</div> 
                         
                     	<?php echo $doctor; ?>
                     </div>
@@ -227,8 +226,9 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
 								if($payment_id == $receipt_payment_id)
 								{
 									$payment_method = $key_items->payment_method;
+									$transaction_code = $key_items->transaction_code;
 									$payment_service_id = $key_items->payment_service_id;
-									$service_name = '';
+									$service_name = $payment_method.' '.$transaction_code;
 									
 									if(count($service_rs) > 0)
 									{

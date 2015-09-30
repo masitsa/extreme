@@ -27,11 +27,7 @@ echo
 						<td>".$month."</td>
 						<td>".$description."</td>
 						<td>
-						<div class='btn-toolbar'>
-							<div class='btn-group'>
-								<a class='btn' href='#'  onclick='delete_surgery(".$id.", ".$visit_id.")'><i class='icon-remove'></i></a>
-							</div>
-						</div>
+						<a class='btn btn-danger' href='#'  onclick='delete_surgery(".$id.", ".$visit_id.")'><i class='fa fa-trash'></i></a>
 						</td>
 					</tr>
 			";

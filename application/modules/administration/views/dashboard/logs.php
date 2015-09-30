@@ -19,7 +19,7 @@
 			
 				$sessions .= '
 				<li>
-					  <i class="icon-bell i-green"></i><span class="log-text">'.$personnel.' '.$session_name_name.' </span><span class="time">'.$session_time.'</span>
+					  <i class="fa fa-bell-o i-green"></i><span class="log-text">'.$personnel.' '.$session_name_name.' </span><span class="time">'.$session_time.'</span>
 				  </li>
 			';
 			}
@@ -28,7 +28,7 @@
 			{
 				$sessions .= '
 				<li>
-					  <i class="icon-warning-sign i-red"></i></i><span class="log-text">'.$personnel.' '.$session_name_name.' </span><span class="time">'.$session_time.'</span>
+					  <i class="fa fa-exclamation-triangle i-red"></i></i><span class="log-text">'.$personnel.' '.$session_name_name.' </span><span class="time">'.$session_time.'</span>
 				  </li>
 			';
 
@@ -37,17 +37,13 @@
 	}
 	
 ?>
-<div class="widget">
-                      <!-- Widget title -->
-                      <div class="widget-head">
-                          <h4 class="pull-left"><i class="icon-calendar"></i>Information</h4>
-                          <div class="widget-icons pull-right">
-                              <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a>
-                              <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                          </div>
-                          <div class="clearfix"></div>
-                      </div>
-                      <div class="widget-content">
+            <section class="panel panel-featured panel-featured-info">
+                <header class="panel-heading">
+                    <h2 class="panel-title">Logs</h2>
+                  </header>             
+    
+              <!-- Widget content -->
+                    <div class="panel-body">
                           <!-- Widget content -->
                           <div class="tabbable t-info">
                               <ul class="nav nav-tabs">
@@ -118,5 +114,6 @@
                                   </div> -->
                               </div>
                           </div>
-                      </div>
-                  </div>
+                        </div>
+                    
+                    </section>

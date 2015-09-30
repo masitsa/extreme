@@ -1,8 +1,6 @@
 <?php   if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once "./application/modules/auth/controllers/auth.php";
-
-class Counselling extends auth
+class Counselling extends MX_Controller
 {	
 	function __construct()
 	{
@@ -14,6 +12,12 @@ class Counselling extends auth
 		$this->load->model('database');
 		$this->load->model('medical_admin/medical_admin_model');
 		$this->load->model('pharmacy/pharmacy_model');
+		
+		$this->load->model('auth/auth_model');
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
 	}
 	public function index()
 	{

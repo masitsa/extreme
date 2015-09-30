@@ -181,6 +181,7 @@ class Services extends Hospital_administration
 	
 	public function add_service()
 	{
+		$this->form_validation->set_rules('department_id', 'Department', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('service_name', 'Service name', 'trim|required|xss_clean');
 
 		if ($this->form_validation->run())

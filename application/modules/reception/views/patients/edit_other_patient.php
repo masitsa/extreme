@@ -20,6 +20,7 @@ $relationship_id = $row->relationship_id;
 $patient_national_id = $row->patient_national_id;
 $insurance_company_id = $row->insurance_company_id;
 $next_of_kin_contact = $row->patient_kin_phonenumber1;
+$current_patient_number = $row->current_patient_number;
 //echo $gender_id;
 //repopulate data if validation errors occur
 $validation_error = validation_errors();
@@ -45,6 +46,7 @@ if(!empty($validation_error))
     $insurance_company_id = set_value('insurance_company_id');
     $patient_national_id = set_value('patient_national_id');
     $next_of_kin_contact = set_value('next_of_kin_contact');
+	$current_patient_number = set_value('current_patient_number');
 }
 ?>
  <section class="panel">
@@ -217,6 +219,14 @@ if(!empty($validation_error))
                                 
                                 <div class="col-lg-8">
                                     <input type="text" class="form-control" name="patient_phone2" placeholder="Other Phone" value="<?php echo $patient_phone2;?>">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Card Number: </label>
+                                
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control" name="current_patient_number" placeholder="Current Card Number" value="<?php echo $current_patient_number;?>">
                                 </div>
                             </div>
                             

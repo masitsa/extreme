@@ -21,13 +21,6 @@ class Site extends MX_Controller
 	function __construct()
 	{
 		parent:: __construct();
-		$this->load->model('admin/products_model');
-		$this->load->model('admin/categories_model');
-		$this->load->model('admin/brands_model');
-		$this->load->model('admin/brand_models_model');
-		$this->load->model('admin/users_model');
-		$this->load->model('site_model');
-		$this->load->model('admin/blog_model');
 		
 		//image paths
 		$this->posts_path = realpath(APPPATH . '../assets/images/posts');
@@ -620,6 +613,11 @@ class Site extends MX_Controller
 		$v_data['models'] = $models;
 		
 		echo json_encode($v_data);
+	}
+	
+	public function speech()
+	{
+		$this->load->view('speech');
 	}
 }
 ?>

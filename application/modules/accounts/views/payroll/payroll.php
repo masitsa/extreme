@@ -1,10 +1,11 @@
 
 <?php
 $personnel_id = $this->session->userdata('personnel_id');
-$personnel_fname = $this->session->userdata('first_name');
+$prepared_by = $this->session->userdata('first_name');
 $roll = $payroll->row();
 $year = $roll->payroll_year;
 $month = $roll->month_id;
+$totals = array();
 
 if ($query->num_rows() > 0)
 {
@@ -19,7 +20,7 @@ if ($query->num_rows() > 0)
 				<th>Ref</th>
 				<th>Personnel</th>
 				';
-	
+	$total = 'total_';
 	//payments
 	if($payments->num_rows() > 0)
 	{
@@ -49,7 +50,7 @@ if ($query->num_rows() > 0)
 	{
 		foreach($allowances->result() as $res)
 		{
-			$allowance_abbr = $res->allowance_abbr;
+			$allowance_abbr = $res->allowance_name;
 			$allowance_id = $res->allowance_id;
 			
 			$result .= '<th>'.$allowance_abbr.'</th>';
@@ -64,14 +65,20 @@ if ($query->num_rows() > 0)
 			<th>NHIF</th>
 			<th>Life Ins</th>
 	';
+	$total_gross = 0;
+	$total_paye = 0;
+	$total_nssf = 0;
+	$total_nhif = 0;
+	$total_life_ins = 0;
 	
 	//deductions
 	if($deductions->num_rows() > 0)
 	{
 		foreach($deductions->result() as $res)
 		{
-			$deduction_abbr = $res->deduction_abbr;
+			$deduction_abbr = $res->deduction_name;
 			$deduction_id = $res->deduction_id;
+			$total.$deduction_abbr = 0;
 			
 			//display all except nssf nhif insurance & pension
 			if(($deduction_id != 1))
@@ -102,7 +109,10 @@ if ($query->num_rows() > 0)
 		<tbody>
 	';
 	
-	$total_basic_pay = 0;
+	$total_payments = 0;
+	$total_savings = 0;
+	$total_loans = 0;
+	$total_net = 0;
 	
 	foreach ($query->result() as $row)
 	{
@@ -117,8 +127,8 @@ if ($query->num_rows() > 0)
 		$table = $this->payroll_model->get_table_id("basic_pay");
 		$table_id = 0;
 		$basic_pay = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
-		$total_basic_pay += $basic_pay;
-		$gross += $basic_pay;
+		//$total_basic_pay += $basic_pay;
+		//$gross += $basic_pay;
 		
 		$count++;
 		$result .= 
@@ -135,6 +145,7 @@ if ($query->num_rows() > 0)
 			foreach($payments->result() as $res)
 			{
 				$payment_id = $res->payment_id;
+				$payment_abbr = $res->payment_name;
 				$table = $this->payroll_model->get_table_id("payment");
 				$table_id = $payment_id;
 				
@@ -151,6 +162,7 @@ if ($query->num_rows() > 0)
 			foreach($benefits->result() as $res)
 			{
 				$benefit_id = $res->benefit_id;
+				$benefit_name = $res->benefit_name;
 				$table = $this->payroll_model->get_table_id("benefit");
 				$table_id = $benefit_id;
 				
@@ -166,6 +178,7 @@ if ($query->num_rows() > 0)
 			foreach($allowances->result() as $res)
 			{
 				$allowance_id = $res->allowance_id;
+				$allowance_name = $res->allowance_name;
 				$table = $this->payroll_model->get_table_id("allowance");
 				$table_id = $allowance_id;
 				
@@ -176,6 +189,7 @@ if ($query->num_rows() > 0)
 		}
 		
 		$result .= '<td>'.number_format($gross, 2).'</td>';
+		$total_gross += $gross;
 		
 		/*
 			--------------------------------------------------------------------------------------
@@ -186,10 +200,12 @@ if ($query->num_rows() > 0)
 		//nssf
 		$table = $this->payroll_model->get_table_id("nssf");
 		$nssf = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
+		$total_nssf += $nssf;
 		
 		//nhif
 		$table = $this->payroll_model->get_table_id("nhif");
 		$nhif = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
+		$total_nhif += $nhif;
 		
 		//paye
 		$table = $this->payroll_model->get_table_id("paye");
@@ -208,7 +224,13 @@ if ($query->num_rows() > 0)
 		$insurance_amount = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, 1);
 		//echo $insurance_relief;
 		$paye -= ($relief + $insurance_relief);
-		
+						
+		if($paye < 0)
+		{
+			$paye = 0;
+		}
+		$total_paye += $paye;
+		$total_life_ins += $insurance_amount;
 		$result .= 
 		'
 				<td>'.number_format($paye, 2).'</td>
@@ -225,6 +247,7 @@ if ($query->num_rows() > 0)
 			foreach($deductions->result() as $res)
 			{
 				$deduction_id = $res->deduction_id;
+				$deduction_name = $res->deduction_name;
 				
 				$table_id = $deduction_id;
 				$deduction_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
@@ -241,6 +264,7 @@ if ($query->num_rows() > 0)
 			foreach($other_deductions->result() as $res)
 			{
 				$other_deduction_id = $res->other_deduction_id;
+				$other_deduction_name = $res->other_deduction_name;
 				
 				$table_id = $other_deduction_id;
 				$other_deduction_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
@@ -266,6 +290,7 @@ if ($query->num_rows() > 0)
 				$total_savings += $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $savings_id);
 			}
 		}
+		$total_savings += $total_savings;
 		$result .= '<th>'.number_format($total_savings, 2).'</th>';
 		
 		//get loan schemes
@@ -278,6 +303,7 @@ if ($query->num_rows() > 0)
 		{
 			foreach($rs_schemes->result() as $res)
 			{
+				$loan_scheme_name = $res->loan_scheme_name;
 				$loan_scheme_name = $res->loan_scheme_name;
 				$loan_scheme_id = $res->loan_scheme_id;
 				
@@ -298,20 +324,43 @@ if ($query->num_rows() > 0)
 				}
 			}
 		}
+		$total_loans += ($total_schemes + $interest);
 		$result .= '<th>'.number_format(($total_schemes + $interest), 2).'</th>';
 		
 		//total deductions
 		$total_deductions = $total_deductions + $total_other_deductions + $total_schemes + $total_savings + $insurance_amount;
 		
 		//net
-		$net = number_format($gross - ($paye + $nssf + $nhif + $total_deductions), 2, '.', ',');
-		
+		$net = $gross - ($paye + $nssf + $nhif + $total_deductions);
+		$total_net += $net;
+		$net = number_format($net, 2, '.', ',');
 		$result .= 
 		'
 				<td>'.$net.'</td>
 			</tr> 
 		';
 	}
+	
+	$result .= '
+			<tr> 
+				<td colspan="8"></td>';
+	
+	//gross
+	$result .= '
+			<th>'.number_format($total_gross, 2, '.', ',').'</th>
+			<th>'.number_format($total_paye, 2, '.', ',').'</th>
+			<th>'.number_format($total_nssf, 2, '.', ',').'</th>
+			<th>'.number_format($total_nhif, 2, '.', ',').'</th>
+			<th>'.number_format($total_life_ins, 2, '.', ',').'</th>
+				<td></td>
+	';
+	
+	$result .= '
+				<th>'.number_format($total_savings, 2, '.', ',').'</th>
+				<th>'.number_format($total_loans, 2, '.', ',').'</th>
+				<th>'.number_format($total_net, 2, '.', ',').'</th>
+			</tr>
+	';
 	
 	$result .= 
 	'
@@ -379,7 +428,7 @@ else
         
         <div class="row receipt_bottom_border" >
         	<div class="col-md-12 center-align">
-            	<?php echo $result; echo 'Prepared By:	'.$personnel_fname.' '.date('jS M Y H:i:s',strtotime(date('Y-m-d H:i:s')));?>
+            	<?php echo $result; echo 'Prepared By:	'.$prepared_by.' '.date('jS M Y H:i:s',strtotime(date('Y-m-d H:i:s')));?>
             </div>
         </div>
     </body>

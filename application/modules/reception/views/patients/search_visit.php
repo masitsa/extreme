@@ -1,23 +1,20 @@
- <section class="panel">
+
+<section class="panel panel-featured panel-featured-info">
     <header class="panel-heading">
-          <h4 class="pull-left"><i class="icon-reorder"></i>Search</h4>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-          </div>
-          <div class="clearfix"></div>
-        </header>
+        <h2 class="panel-title">Search</h2>
+    </header>
       <div class="panel-body">
 			<?php
-            echo form_open("reception/search_visits2/".$visit.'/'.$page_name, array("class" => "form-horizontal"));
+            echo form_open("reception/search_visits/".$visit.'/'.$page_name, array("class" => "form-horizontal"));
             ?>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Patient Type: </label>
+                        <label class="col-md-4 control-label">Patient Type: </label>
                         
-                        <div class="col-lg-8">
+                        <div class="col-md-8">
                             <select class="form-control" name="visit_type_id">
-                            	<option value="">---Select Patient Type---</option>
+                            	<option value="">-Select Patient Type-</option>
                                 <?php
                                     if(count($type) > 0){
                                         foreach($type as $row):
@@ -33,11 +30,11 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Doctor: </label>
+                        <label class="col-md-4 control-label">Doctor: </label>
                         
-                        <div class="col-lg-8">
+                        <div class="col-md-8">
                             <select class="form-control" name="personnel_id">
-                            	<option value="">---Select Doctor---</option>
+                            	<option value="">-Select Doctor-</option>
                                 <?php
 									if(count($doctors) > 0){
 										foreach($doctors as $row):
@@ -53,28 +50,28 @@
                     </div>
                     
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Patient number: </label>
+                        <label class="col-md-4 control-label">Patient number: </label>
                         
-                        <div class="col-lg-8">
+                        <div class="col-md-8">
                             <input type="text" class="form-control" name="patient_number" placeholder="Patient number">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="col-lg-4 control-label">I.D. No.: </label>
-                        
-                        <div class="col-lg-8">
-                            <input type="text" class="form-control" name="patient_national_id" placeholder="I.D. No.">
                         </div>
                     </div>
                 </div>
                 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Visit Date: </label>
+                        <label class="col-md-4 control-label">I.D. No.: </label>
                         
-                        <div class="col-lg-8">
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="patient_national_id" placeholder="I.D. No.">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Visit Date: </label>
+                        
+                        <div class="col-md-8">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
@@ -83,19 +80,22 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                
+                <div class="col-md-4">
                     
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">First name: </label>
+                        <label class="col-md-4 control-label">First name: </label>
                         
-                        <div class="col-lg-8">
+                        <div class="col-md-8">
                             <input type="text" class="form-control" name="surname" placeholder="First name">
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Other Names: </label>
+                        <label class="col-md-4 control-label">Other Names: </label>
                         
-                        <div class="col-lg-8">
+                        <div class="col-md-8">
                             <input type="text" class="form-control" name="othernames" placeholder="Other Names">
                         </div>
                     </div>

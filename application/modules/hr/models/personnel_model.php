@@ -100,7 +100,8 @@ class Personnel_model extends CI_Model
 			'title_id'=>$this->input->post('title_id'),
 			'personnel_number'=>$this->input->post('personnel_number'),
 			'personnel_city'=>$this->input->post('personnel_city'),
-			'personnel_post_code'=>$this->input->post('personnel_post_code')
+			'personnel_post_code'=>$this->input->post('personnel_post_code'),
+			'personnel_type_id'=>$this->input->post('personnel_type_id')
 		);
 		
 		if($this->db->insert('personnel', $data))
@@ -111,8 +112,6 @@ class Personnel_model extends CI_Model
 			return FALSE;
 		}
 	}
-
-
 	
 	/*
 	*	Update an existing personnel
@@ -139,7 +138,10 @@ class Personnel_model extends CI_Model
 			'personnel_post_code' => $this->input->post('personnel_post_code'),
 			'personnel_account_number' => $this->input->post('personnel_account_number'),
 			'personnel_nssf_number' => $this->input->post('personnel_nssf_number'),
-			'personnel_kra_pin' => $this->input->post('personnel_kra_pin')
+			'personnel_kra_pin' => $this->input->post('personnel_kra_pin'),
+			'personnel_nhif_number' => $this->input->post('personnel_nhif_number'),
+			'personnel_national_id_number' => $this->input->post('personnel_national_id_number'),
+			'personnel_type_id'=>$this->input->post('personnel_type_id')
 		);
 		
 		$this->db->where('personnel_id', $personnel_id);
@@ -904,6 +906,19 @@ class Personnel_model extends CI_Model
 		else{
 			return FALSE;
 		}
+	}
+	
+	/*
+	*	Select get personnel types
+	*
+	*/
+	public function get_personnel_types()
+	{
+		$this->db->select('*');
+		$this->db->order_by('personnel_type_name', 'ASC');
+		$query = $this->db->get('personnel_type');
+		
+		return $query;
 	}
 }
 ?>

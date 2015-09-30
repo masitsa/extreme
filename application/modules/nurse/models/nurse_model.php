@@ -1328,5 +1328,67 @@ class Nurse_model extends CI_Model
 		return $query;
 	}
 	
+	public function get_ward_rooms($ward_id)
+	{
+		$where = 'ward.ward_id = room.ward_id AND ward.ward_id = '.$ward_id;
+		$this->db->select('room.*');
+		$this->db->where($where);
+		$query = $this->db->get('ward, room');
+		
+		return $query;
+	}
+	
+	public function get_room_beds($room_id)
+	{
+		$where = 'bed.room_id = room.room_id AND room.room_id = \''.$room_id.'\'';
+		$this->db->select('bed.*');
+		$this->db->where($where);
+		$query = $this->db->get('bed, room');
+		
+		return $query;
+	}
+	
+	public function get_visit_bed($visit_id)
+	{
+		$where = 'visit_bed.visit_bed_status = 1 AND visit_bed.bed_id = bed.bed_id AND bed.room_id = room.room_id AND visit_bed.visit_id = '.$visit_id;
+		$this->db->select('bed.bed_number, bed.bed_id, room.room_id');
+		$this->db->where($where);
+		$query = $this->db->get('bed, room, visit_bed');
+		
+		return $query;
+	}
+	
+	public function update_room_details($visit_id)
+	{
+		//unset all other assigned beds
+		$this->db->where('visit_id', $visit_id);
+		if($this->db->update('visit_bed', array('visit_bed_status' => 0)))
+		{
+			//add new bed
+			$data = array(
+				'bed_id' => $this->input->post('bed_id'),
+				'visit_id' => $visit_id,
+				'visit_bed_status' => 1,
+				'created'=>date('Y-m-d H:i:s'),
+				'created_by'=>$this->session->userdata('personnel_id'),
+				'modified_by'=>$this->session->userdata('personnel_id')
+			);
+			
+			if($this->db->insert('visit_bed', $data))
+			{
+				return TRUE;
+			}
+			
+			else
+			{
+				return FALSE;
+			}
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
 }
 ?>

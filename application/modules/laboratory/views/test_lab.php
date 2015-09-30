@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 if ($this->session->userdata('nurse_lab') <> NULL){
 	$nurse_lab = $this->session->userdata('nurse_lab');
 }

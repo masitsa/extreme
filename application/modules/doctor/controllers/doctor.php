@@ -12,14 +12,19 @@ class Doctor  extends MX_Controller
 		$this->load->model('doctor_model');
 		$this->load->model('medical_admin/medical_admin_model');
 		$this->load->model('pharmacy/pharmacy_model');
-
-		$this->load->model('auth/auth_model');
+		
 		$this->load->model('site/site_model');
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
 		$this->load->model('reception/database');
 		$this->load->model('site/site_model');
 		$this->load->model('administration/personnel_model');
+		
+		$this->load->model('auth/auth_model');
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
 	}
 	
 	public function index()
@@ -27,7 +32,7 @@ class Doctor  extends MX_Controller
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = \''.$this->session->userdata('personnel_id').'\'';
+		$where = 'visit.inpatient = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = \''.$this->session->userdata('personnel_id').'\'';
 		
 		$table = 'visit_department, visit, patients';
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 6, 0);
@@ -49,7 +54,7 @@ class Doctor  extends MX_Controller
 	
 	public function doctor_queue($page_name = NULL)
 	{
-		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\'';
 		
 		$table = 'visit_department, visit, patients, visit_type';
 		$patient_visit_search = $this->session->userdata('patient_visit_search');
@@ -271,6 +276,33 @@ class Doctor  extends MX_Controller
 	{
 		$this->session->unset_userdata('patient_visit_search');
 		$this->doctor_queue();
+	}
+	
+	public function patient_card($visit_id)
+	{
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$v_data['patient_type'] = $patient['patient_type'];
+		$v_data['patient_othernames'] = $patient['patient_othernames'];
+		$v_data['patient_surname'] = $patient['patient_surname'];
+		$v_data['patient_type_id'] = $patient['visit_type_id'];
+		$v_data['account_balance'] = $patient['account_balance'];
+		$v_data['visit_type_name'] = $patient['visit_type_name'];
+		$v_data['patient_id'] = $patient['patient_id'];
+		$patient_date_of_birth = $patient['patient_date_of_birth'];
+		$age = $this->reception_model->calculate_age($patient_date_of_birth);
+		$visit_date = $this->reception_model->get_visit_date($visit_id);
+		$gender = $patient['gender'];
+		$visit_date = date('jS M Y',strtotime($visit_date));
+		$v_data['age'] = $age;
+		$v_data['visit_date'] = $visit_date;
+		$v_data['gender'] = $gender;
+		
+		$v_data['visit_id'] = $visit_id;
+		$v_data['dental'] = 0;
+		$data['content'] = $this->load->view('patient_card', $v_data, true);
+		
+		$data['title'] = 'Patient Card';
+		$this->load->view('admin/templates/general_page', $data);
 	}
 }
 ?>

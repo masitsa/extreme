@@ -4,7 +4,7 @@ class Lab_model extends CI_Model
 {
 
 	function get_lab_visit2($visit_id){
-		$table = "visit_lab_test,service_charge";
+		$table = "visit_lab_test, service_charge";
 		$where = "visit_lab_test_status = 1 AND service_charge.service_charge_id = visit_lab_test.service_charge_id AND visit_lab_test.visit_id = ".$visit_id;
 		$items = "*";
 		$order = "visit_id";
@@ -216,9 +216,9 @@ class Lab_model extends CI_Model
 
 	function get_lab_visit_item_old($visit_id){
 		$table = "visit_charge, service, service_charge";
-		$where = "service.service_id = 5 
+		$where = "(service.service_name LIKE 'Laboratory' OR service.service_name LIKE 'laboratory') 
 		AND visit_charge.service_charge_id = service_charge.service_charge_id 
-		AND service_charge.service_id = service.service_id AND visit_charge.visit_id = ". $visit_id;
+		AND service_charge.service_id = service.service_id AND service.branch_code = '".$this->session->userdata('branch_code')."' AND visit_charge.visit_id = ". $visit_id;
 		$items = "visit_charge.visit_charge_id";
 		$order = "visit_charge.visit_charge_id";
 		
@@ -229,9 +229,9 @@ class Lab_model extends CI_Model
 
 	function get_lab_visit_item($visit_id){
 		$table = "visit_lab_test, service, service_charge";
-		$where = "service.service_id = 5 
+		$where = "(service.service_name LIKE 'Laboratory' OR service.service_name LIKE 'laboratory')
 		AND visit_lab_test.service_charge_id = service_charge.service_charge_id 
-		AND service_charge.service_id = service.service_id AND visit_lab_test.visit_id = ". $visit_id;
+		AND service_charge.service_id = service.service_id AND service.branch_code = '".$this->session->userdata('branch_code')."' AND visit_lab_test.visit_id = ". $visit_id;
 		$items = "visit_lab_test.visit_lab_test_id,visit_lab_test.service_charge_id";
 		$order = "visit_lab_test.visit_lab_test_id";
 		
@@ -571,6 +571,37 @@ class Lab_model extends CI_Model
 		$query = $this->db->get();
 		
 		return $query;
+	}
+	
+	public function save_lab_charge($visit_id, $service_charge_id)
+	{
+		//get service charge amount
+		$this->db->where('service_charge_id', $service_charge_id);
+		$query = $this->db->get('service_charge');
+		
+		$service_charge = 0;
+		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$service_charge = $row->service_charge_amount;
+		}
+		$visit_charge_data = array(
+			"visit_id" => $visit_id,
+			"service_charge_id" => $service_charge_id,
+			"created_by" => $this->session->userdata("personnel_id"),
+			"date" => date("Y-m-d"),
+			"visit_charge_amount" => $service_charge
+		);
+		if($this->db->insert('visit_charge', $visit_charge_data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
 	}
 }
 ?>
