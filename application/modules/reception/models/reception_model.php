@@ -155,7 +155,7 @@ class Reception_model extends CI_Model
 			'modified_by'=>$this->session->userdata('personnel_id'),
 			'visit_type_id'=>2,
 			'dependant_id'=>$this->input->post('dependant_id'),
-			//'insurance_company_id'=>$this->input->post('insurance_company_id'),
+			'current_patient_number'=>$this->input->post('current_patient_number'),
 			'branch_code'=>$this->session->userdata('branch_code'),
 			'patient_kin_phonenumber1'=>$this->input->post('next_of_kin_contact'),
 			'current_patient_number'=>$this->input->post('current_patient_number'),
@@ -194,7 +194,7 @@ class Reception_model extends CI_Model
 			'modified_by'=>$this->session->userdata('personnel_id'),
 			'visit_type_id'=>3,
 			'dependant_id'=>$this->input->post('dependant_id'),
-			'insurance_company_id'=>$this->input->post('insurance_company_id'),
+			'current_patient_number'=>$this->input->post('current_patient_number'),
 			'branch_code'=>$this->session->userdata('branch_code'),
 			'patient_kin_phonenumber1'=>$this->input->post('next_of_kin_contact'),
 			'current_patient_number'=>$this->input->post('current_patient_number'),
@@ -2320,6 +2320,7 @@ class Reception_model extends CI_Model
 		$this->db->order_by('visit_type_name', 'ASC');
 		return $this->db->get('visit_type');
 	}
+
 	
 	public function get_wards()
 	{
@@ -2414,5 +2415,6 @@ class Reception_model extends CI_Model
 		
 		return $query;
 	}
+
 }
 ?>

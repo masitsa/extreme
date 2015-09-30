@@ -6,11 +6,7 @@ $patient_id = $this->nurse_model->get_patient_id($visit_id);
 $get_medical_rs = $this->nurse_model->get_doctor_notes($patient_id);
 $num_rows = count($get_medical_rs);
 //echo $num_rows;
-echo '<div class="row">
-		    <div class="col-md-12">
-		       <div class="alert alert-danger">Nurse notes entery has been changed. Please find a button named <a hred="#" class="btn btn-sm btn-success" >Save Doctor Notes</a> or <a hred="#" class="btn btn-sm btn-primary" >Update Doctor Notes</a> to save the keyed in notes.. ~ development team </div>
-		    </div>
-		</div>';
+
 if($num_rows > 0){
 	foreach ($get_medical_rs as $key2) :
 		$doctor_notes = $key2->doctor_notes;

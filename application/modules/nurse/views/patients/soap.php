@@ -298,7 +298,7 @@ function plan(visit_id){
 }
 
 function get_test_results(page, visit_id){
-
+ 
   var XMLHttpRequestObject = false;
     
   if (window.XMLHttpRequest) {
@@ -319,7 +319,7 @@ function get_test_results(page, visit_id){
     // this is for the doctor and the nurse
     url = config_url+"laboratory/test2/"+visit_id;
   }
-  // alert(url);
+  alert(url);
   if(XMLHttpRequestObject) {
     if((page == 75) || (page == 85)){
       var obj = window.opener.document.getElementById("test_results");

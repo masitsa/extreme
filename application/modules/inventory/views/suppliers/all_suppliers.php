@@ -3,7 +3,7 @@
     <header class="panel-heading">
           <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
           <div class="widget-icons pull-right">
-            	<a href="<?php echo base_url();?>inventory-setup/add-category" class="btn btn-primary pull-right btn-sm">Add Category</a>
+            	<a href="<?php echo base_url();?>inventory-setup/add-supplier" class="btn btn-primary pull-right btn-sm">Add supplier</a>
           </div>
           <div class="clearfix"></div>
         </header>
@@ -29,7 +29,7 @@
 					$this->session->unset_userdata('success_message');
 				}
 						
-				$search = $this->session->userdata('category_search');
+				$search = $this->session->userdata('supplier_search');
 				
 				if(!empty($search))
 				{
@@ -65,7 +65,7 @@
 								  <thead>
 									<tr>
 									  <th class="table-sortable:default table-sortable" title="Click to sort">#</th>
-									  <th class="table-sortable:default table-sortable" title="Click to sort">Category Name</th>
+									  <th class="table-sortable:default table-sortable" title="Click to sort">Supplier Name</th>
 									  <th class="table-sortable:default table-sortable" title="Click to sort">Date Created</th>
 									  <th class="table-sortable:default table-sortable" title="Click to sort">Last Modified</th>
 									  <th>Status</th>
@@ -81,17 +81,18 @@
 							
 							foreach ($query->result() as $row)
 							{
-								$category_id = $row->category_id;
-								$category_name = $row->category_name;
-								$parent = $row->category_parent;
-								$category_status = $row->category_status;
-								$image = $row->category_image_name;
+								$supplier_id = $row->supplier_id;
+								$supplier_name = $row->supplier_name;
+								$supplier_status = $row->supplier_status;
+								$supplier_phone = $row->supplier_phone;
 								$created_by = $row->created_by;
 								$modified_by = $row->modified_by;
-								$category_image_name = $row->category_image_name;
+								$supplier_email = $row->supplier_email;
+								$supplier_physical_address = $row->supplier_physical_address;
+
 								
 								//status
-								if($category_status == 1)
+								if($supplier_status == 1)
 								{
 									$status = 'Active';
 								}
@@ -99,18 +100,9 @@
 								{
 									$status = 'Disabled';
 								}
-								$category_parent = '-';
+								$supplier_parent = '-';
 								
-								//category parent
-								foreach($query->result() as $row2)
-								{
-									$category_id2 = $row2->category_id;
-									if($parent == $category_id2)
-									{
-										$category_parent = $row2->category_name;
-										break;
-									}
-								}
+								
 								
 								/*$children = '';
 								//Display child categories
@@ -118,14 +110,14 @@
 								{
 									foreach($child_categories->result() as $res)
 									{
-										$child_category_id = $row->category_id;
-										$child_category_name = $row->category_name;
-										$child_parent = $row->category_parent;
-										$child_category_status = $row->category_status;
-										$child_image = $row->category_image_name;
+										$child_supplier_id = $row->supplier_id;
+										$child_supplier_name = $row->supplier_name;
+										$child_parent = $row->supplier_parent;
+										$child_supplier_status = $row->supplier_status;
+										$child_image = $row->supplier_image_name;
 										
-										//display only the particular category's children
-										if($child_parent == $category_id)
+										//display only the particular supplier's children
+										if($child_parent == $supplier_id)
 										{
 											
 										}
@@ -133,16 +125,16 @@
 								}*/
 								
 								//create deactivated status display
-								if($category_status == 0)
+								if($supplier_status == 0)
 								{
 									$status = '<span class="label label-danger">Deactivated</span>';
-									$button = '<a class="btn btn-info" href="'.site_url().'inventory-setup/activate-category/'.$category_id.'" onclick="return confirm(\'Do you want to activate '.$category_name.'?\');">Activate</a>';
+									$button = '<a class="btn btn-info" href="'.site_url().'inventory-setup/activate-supplier/'.$supplier_id.'" onclick="return confirm(\'Do you want to activate '.$supplier_name.'?\');">Activate</a>';
 								}
 								//create activated status display
-								else if($category_status == 1)
+								else if($supplier_status == 1)
 								{
 									$status = '<span class="label label-success">Active</span>';
-									$button = '<a class="btn btn-default" href="'.site_url().'inventory-setup/deactivate-category/'.$category_id.'" onclick="return confirm(\'Do you want to deactivate '.$category_name.'?\');">Deactivate</a>';
+									$button = '<a class="btn btn-default" href="'.site_url().'inventory-setup/deactivate-supplier/'.$supplier_id.'" onclick="return confirm(\'Do you want to deactivate '.$supplier_name.'?\');">Deactivate</a>';
 								}
 								
 								//creators & editors
@@ -179,13 +171,13 @@
 								'
 									<tr>
 										<td>'.$count.'</td>
-										<td>'.$category_name.'</td>
+										<td>'.$supplier_name.'</td>
 										<td>'.date('jS M Y H:i a',strtotime($row->created)).'</td>
 										<td>'.date('jS M Y H:i a',strtotime($row->last_modified)).'</td>
 										<td>'.$status.'</td>
-										<td><a href="'.site_url().'inventory-setup/edit-category/'.$category_id.'" class="btn btn-sm btn-success">Edit</a></td>
+										<td><a href="'.site_url().'inventory-setup/edit-supplier/'.$supplier_id.'" class="btn btn-sm btn-success">Edit</a></td>
 										<td>'.$button.'</td>
-										<td><a href="'.site_url().'inventory-setup/delete-category/'.$category_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$category_name.'?\');">Delete</a></td>
+										<td><a href="'.site_url().'inventory-setup/delete-supplier/'.$supplier_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$supplier_name.'?\');">Delete</a></td>
 										
 									
 									</tr> 
@@ -203,7 +195,7 @@
 					
 					else
 					{
-						$result .= 'There are no categories';
+						$result .= "There are no categories";
 					}
 					$result .= '</div>';
 					echo $result;

@@ -8,12 +8,12 @@ class Categories extends MX_Controller {
 	{
 		parent:: __construct();
 		$this->load->model('admin/users_model');
-		$this->load->model('inventory/categories_model');
+		$this->load->model('categories_model');
 		$this->load->model('admin/file_model');
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
-		 $this->load->model('site/site_model');
-		
+		$this->load->model('site/site_model');
+		$this->load->model('administration/personnel_model');
 		//path to image directory
 	}
     
@@ -72,19 +72,12 @@ class Categories extends MX_Controller {
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $data["links"] = $this->pagination->create_links();
 		$query = $this->categories_model->get_all_categories($table, $where, $config["per_page"], $page);
+	
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['title'] = 'All Categories';
+		$data['content'] = $this->load->view('categories/all_categories', $v_data, true);
 		
-		if ($query->num_rows() > 0)
-		{
-			$v_data['query'] = $query;
-			$v_data['page'] = $page;
-			//$v_data['child_categories'] = $this->categories_model->all_child_categories();
-			$data['content'] = $this->load->view('categories/all_categories', $v_data, true);
-		}
-		
-		else
-		{
-			$data['content'] = '<a href="'.site_url().'inventory-categories/add-category class="btn btn-success pull-right">Add Category</a>There are no categories';
-		}
 		$data['title'] = 'All Categories';
 		
 		$this->load->view('admin/templates/general_page', $data);
@@ -99,57 +92,17 @@ class Categories extends MX_Controller {
 	{
 		//form validation rules
 		$this->form_validation->set_rules('category_name', 'Category Name', 'required|xss_clean');
-		$this->form_validation->set_rules('category_status', 'Category Status', 'required|xss_clean');
-		$this->form_validation->set_rules('category_preffix', 'Category Preffix', 'required|is_unique[category.category_preffix]|xss_clean');
 		$this->form_validation->set_rules('category_parent', 'Category Parent', 'required|xss_clean');
-		$this->form_validation->set_message("is_unique", "A unique preffix is requred.");
 		
 		//if form has been submitted
 		if ($this->form_validation->run())
 		{
 			//upload product's gallery images
-			$resize['width'] = 600;
-			$resize['height'] = 800;
 			
-			if(is_uploaded_file($_FILES['category_image']['tmp_name']))
-			{
-				$this->load->library('image_lib');
-				
-				$categories_path = $this->categories_path;
-				/*
-					-----------------------------------------------------------------------------------------
-					Upload image
-					-----------------------------------------------------------------------------------------
-				*/
-		
-				$response = $this->file_model->upload_file($categories_path, 'category_image', $resize);
-				if($response['check'])
-				{
-					$file_name = $response['file_name'];
-					$thumb_name = $response['thumb_name'];
-				}
-			
-				else
-				{
-					$this->session->set_userdata('error_message', $response['error']);
-					
-					$data['title'] = 'Add New Category';
-					$v_data['all_categories'] = $this->categories_model->all_categories();
-					$data['content'] = $this->load->view('categories/add_category', $v_data, true);
-					$this->load->view('admin/templates/general_page', $data);
-					break;
-				}
-			}
-			
-			else{
-				$file_name = '';
-				$thumb_name = '';
-			}
-			
-			if($this->categories_model->add_category($file_name))
+			if($this->categories_model->add_category())
 			{
 				$this->session->set_userdata('success_message', 'Category added successfully');
-				redirect('vendor/all-categories');
+				redirect('inventory-setup/inventory-categories');
 			}
 			
 			else
@@ -160,6 +113,7 @@ class Categories extends MX_Controller {
 		
 		//open the add new category
 		$data['title'] = 'Add New Category';
+		$v_data['title'] = 'Add New Category';
 		$v_data['all_categories'] = $this->categories_model->all_parent_categories();
 		$data['content'] = $this->load->view('categories/add_category', $v_data, true);
 		$this->load->view('admin/templates/general_page', $data);
@@ -176,70 +130,15 @@ class Categories extends MX_Controller {
 		//form validation rules
 		$this->form_validation->set_rules('category_name', 'Category Name', 'required|xss_clean');
 		$this->form_validation->set_rules('category_status', 'Category Status', 'required|xss_clean');
-		$this->form_validation->set_rules('category_preffix', 'Category Preffix', 'required|xss_clean');
-		$this->form_validation->set_rules('category_parent', 'Category Parent', 'required|xss_clean');
-		$this->form_validation->set_message("is_unique", "A unique preffix is requred.");
 		
 		//if form has been submitted
 		if ($this->form_validation->run())
 		{
-			//upload product's gallery images
-			$resize['width'] = 600;
-			$resize['height'] = 800;
 			
-			if(is_uploaded_file($_FILES['category_image']['tmp_name']))
-			{
-				$categories_path = $this->categories_path;
-				
-				//delete original image
-				$this->file_model->delete_file($categories_path."\\".$this->input->post('current_image'), $categories_path);
-				
-				//delete original thumbnail
-				$this->file_model->delete_file($categories_path."\\thumbnail_".$this->input->post('current_image'), $categories_path);
-				/*
-				/*
-					-----------------------------------------------------------------------------------------
-					Upload image
-					-----------------------------------------------------------------------------------------
-				*/
-				$response = $this->file_model->upload_file($categories_path, 'category_image', $resize);
-				if($response['check'])
-				{
-					$file_name = $response['file_name'];
-					$thumb_name = $response['thumb_name'];
-				}
-			
-				else
-				{
-					$this->session->set_userdata('error_message', $response['error']);
-					
-					$data['title'] = 'Edit Category';
-					$query = $this->categories_model->get_category($category_id);
-					if ($query->num_rows() > 0)
-					{
-						$v_data['category'] = $query->result();
-						$v_data['all_categories'] = $this->categories_model->all_categories();
-						$data['content'] = $this->load->view('categories/edit_category', $v_data, true);
-					}
-					
-					else
-					{
-						$data['content'] = 'category does not exist';
-					}
-					
-					$this->load->view('admin/templates/general_page', $data);
-					break;
-				}
-			}
-			
-			else{
-				$file_name = $this->input->post('current_image');
-			}
-			//update category
-			if($this->categories_model->update_category($file_name, $category_id))
+			if($this->categories_model->update_category($category_id))
 			{
 				$this->session->set_userdata('success_message', 'Category updated successfully');
-				redirect('vendor/all-categories');
+				redirect('inventory-setup/inventory-categories');
 			}
 			
 			else
@@ -250,6 +149,7 @@ class Categories extends MX_Controller {
 		
 		//open the add new category
 		$data['title'] = 'Edit Category';
+		$v_data['title'] = 'Edit Category';
 		
 		//select the category from the database
 		$query = $this->categories_model->get_category($category_id);
@@ -294,7 +194,7 @@ class Categories extends MX_Controller {
 		}
 		$this->categories_model->delete_category($category_id);
 		$this->session->set_userdata('success_message', 'Category has been deleted');
-		redirect('vendor/all-categories');
+		redirect('inventory-setup/inventory-categories');
 	}
     
 	/*
@@ -307,7 +207,7 @@ class Categories extends MX_Controller {
 	{
 		$this->categories_model->activate_category($category_id);
 		$this->session->set_userdata('success_message', 'Category activated successfully');
-		redirect('vendor/all-categories');
+		redirect('inventory-setup/inventory-categories');
 	}
     
 	/*
@@ -320,7 +220,7 @@ class Categories extends MX_Controller {
 	{
 		$this->categories_model->deactivate_category($category_id);
 		$this->session->set_userdata('success_message', 'Category disabled successfully');
-		redirect('vendor/all-categories');
+		redirect('inventory-setup/inventory-categories');
 	}
 	public function search_categories()
 	{
@@ -343,7 +243,7 @@ class Categories extends MX_Controller {
 	public function close_categories_search()
 	{
 		$this->session->unset_userdata('category_search');
-		redirect('vendor/all-categories');
+		redirect('inventory-setup/inventory-categories');
 	}
 }
 ?>

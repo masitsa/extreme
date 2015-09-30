@@ -7,6 +7,13 @@ $personnel_fname = $row->personnel_fname;
 $personnel_account_status = $row->personnel_account_status;
 $personnel_id = $row->personnel_id;
 $authorize_invoice_changes = $row->authorize_invoice_changes;
+$authorize_order_changes = $row->authorize_order_changes;
+
+
+
+// authorization levels.
+
+
 
 //repopulate data if validation errors occur
 $validation_error = validation_errors();
@@ -224,6 +231,86 @@ if(!empty($validation_error))
                                     <?php echo form_close();?> 
 								</div>
 							</section> 
+                            <section class="panel panel-featured panel-featured-info">
+                                <header class="panel-heading">
+                                    
+                                    <h2 class="panel-title">Authorize to make Department Orders</h2>
+                                </header>
+                                
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <?php echo form_open("human-resource/edit-order-authorize/".$personnel_id, array("class" => "form-horizontal"));?>
+                                          <div class="form-group">
+                                                <div class="col-lg-12">
+                                                    <select name="approval_role_id" class="form-control">
+                                                        <option>SELECT AN APPROVAL STATUS</option>
+                                                       <?php
+
+                                                       $approval_array = $this->hr_model->get_non_personnel_roles($personnel_id);
+                                                       if($approval_array->num_rows() > 0)
+                                                       {
+                                                            foreach ($approval_array->result() as $key_approvals) {
+                                                                # code...
+                                                                $inventory_level_status_name = $key_approvals->inventory_level_status_name;
+                                                                $inventory_level_status_id = $key_approvals->inventory_level_status_id;
+                                                                ?>
+                                                                <option value="<?php echo $inventory_level_status_id?>"><?php echo $inventory_level_status_name;?></option>
+                                                                <?php
+
+                                                            }
+                                                       }
+                                                       ?>
+                                                    </select>
+                                                </div>
+                                            </div>                                    
+                                            <div class="row" style="margin-top:10px;">
+                                                <div class="col-md-12">
+                                                    <div class="form-actions center-align">
+                                                        <button class="btn btn-primary" type="submit">
+                                                            Update
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php echo form_close();?> 
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <h4>Authorization Lists</h4>
+
+                                    <table class="table table-condensed table-hover table-striped table-bordered">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Authorization Title</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        <tbody>
+                                            <?php
+                                            $approvals_assiged = $this->hr_model->get_personnel_approvals($personnel_id);
+                                               if($approvals_assiged->num_rows() > 0)
+                                               {
+                                                $counter = 0;
+                                                    foreach ($approvals_assiged->result() as $approvals) {
+                                                        # code...
+                                                        $inventory_level_status_name = $approvals->inventory_level_status_name;
+                                                        $inventory_level_status_id = $approvals->inventory_level_status_id;
+                                                        $personnel_approval_id = $approvals->personnel_approval_id;
+                                                        $counter++;
+                                                        ?>
+                                                        <tr>
+                                                            <td><?php echo $counter;?></td>
+                                                            <td><?php echo $inventory_level_status_name;?></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <?php
+
+                                                    }
+                                               }
+                                             ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section> 
                         </div>                       
                     	<div class="col-md-8">
                             <section class="panel panel-featured panel-featured-info">

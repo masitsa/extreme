@@ -4,7 +4,7 @@
     <header class="panel-heading">
           <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
           <div class="widget-icons pull-right">
-                <a href="<?php echo base_url();?>inventory-setup/inventory-categories" class="btn btn-primary pull-right btn-sm">Back to categories</a>
+                <a href="<?php echo base_url();?>inventory-setup/inventory-stores" class="btn btn-primary pull-right btn-sm">Back to stores</a>
           </div>
           <div class="clearfix"></div>
     </header>
@@ -14,23 +14,23 @@
             echo '<div class="alert alert-danger"> Oh snap! Change a few things up and try submitting again. </div>';
         }
     	
-    	//the category details
-    	$category_id = $category[0]->category_id;
-    	$category_name = $category[0]->category_name;
-    	$category_parent = $category[0]->category_parent;
-    	$category_status = $category[0]->category_status;
-    	$category_preffix = $category[0]->category_preffix;
-    	$image = $category[0]->category_image_name;
+    	//the store details
+    	$store_id = $store[0]->store_id;
+    	$store_name = $store[0]->store_name;
+    	$store_parent = $store[0]->store_parent;
+    	$store_status = $store[0]->store_status;
+    	$store_preffix = $store[0]->store_preffix;
+    	$image = $store[0]->store_image_name;
         
         $validation_errors = validation_errors();
         
         if(!empty($validation_errors))
         {
-    		$category_id = set_value('category_id');
-    		$category_name = set_value('category_name');
-    		$category_parent = set_value('category_parent');
-    		$category_status = set_value('category_status');
-    		$category_preffix = set_value('category_preffix');
+    		$store_id = set_value('store_id');
+    		$store_name = set_value('store_name');
+    		$store_parent = set_value('store_parent');
+    		$store_status = set_value('store_status');
+    		$store_preffix = set_value('store_preffix');
     		
             echo '<div class="alert alert-danger"> Oh snap! '.$validation_errors.' </div>';
         }
@@ -40,33 +40,33 @@
         <?php echo form_open_multipart($this->uri->uri_string(), array("class" => "form-horizontal", "role" => "form"));?>
         <div class="row">
             <div class="col-md-6">
-                <!-- Category Name -->
+                <!-- store Name -->
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Category Name</label>
+                    <label class="col-lg-4 control-label">Store Name</label>
                     <div class="col-lg-4">
-                    	<input type="text" class="form-control" name="category_name" placeholder="Category Name" value="<?php echo $category_name;?>" required>
+                    	<input type="text" class="form-control" name="store_name" placeholder="store Name" value="<?php echo $store_name;?>" required>
                     </div>
                 </div>
-                <!-- Category Parent -->
+                <!-- store Parent -->
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Category Parent</label>
+                    <label class="col-lg-4 control-label">Store Parent</label>
                     <div class="col-lg-4">
-                    	<select name="category_parent" class="form-control" required>
+                    	<select name="store_parent" class="form-control" required>
                         	<?php
             				echo '<option value="0">No Parent</option>';
-            				if($all_categories->num_rows() > 0)
+            				if($all_stores->num_rows() > 0)
             				{
-            					$result = $all_categories->result();
+            					$result = $all_stores->result();
             					
             					foreach($result as $res)
             					{
-            						if($res->category_id == $category_parent)
+            						if($res->store_id == $store_parent)
             						{
-            							echo '<option value="'.$res->category_id.'" selected>'.$res->category_name.'</option>';
+            							echo '<option value="'.$res->store_id.'" selected>'.$res->store_name.'</option>';
             						}
             						else
             						{
-            							echo '<option value="'.$res->category_id.'">'.$res->category_name.'</option>';
+            							echo '<option value="'.$res->store_id.'">'.$res->store_name.'</option>';
             						}
             					}
             				}
@@ -78,13 +78,13 @@
             <div class="col-md-6">
                 <!-- Activate checkbox -->
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Activate Category?</label>
+                    <label class="col-lg-4 control-label">Activate store?</label>
                     <div class="col-lg-4">
                         <div class="radio">
                             <label>
                             	<?php
-                                if($category_status == 1){echo '<input id="optionsRadios1" type="radio" checked value="1" name="category_status">';}
-            					else{echo '<input id="optionsRadios1" type="radio" value="1" name="category_status">';}
+                                if($store_status == 1){echo '<input id="optionsRadios1" type="radio" checked value="1" name="store_status">';}
+            					else{echo '<input id="optionsRadios1" type="radio" value="1" name="store_status">';}
             					?>
                                 Yes
                             </label>
@@ -92,8 +92,8 @@
                         <div class="radio">
                             <label>
                             	<?php
-                                if($category_status == 0){echo '<input id="optionsRadios1" type="radio" checked value="0" name="category_status">';}
-            					else{echo '<input id="optionsRadios1" type="radio" value="0" name="category_status">';}
+                                if($store_status == 0){echo '<input id="optionsRadios1" type="radio" checked value="0" name="store_status">';}
+            					else{echo '<input id="optionsRadios1" type="radio" value="0" name="store_status">';}
             					?>
                                 No
                             </label>
@@ -102,7 +102,7 @@
                 </div>
                 <div class="form-actions center-align">
                     <button class="submit btn btn-primary btn-sm" type="submit">
-                        Edit Category
+                        Edit store
                     </button>
                 </div>
             </div>

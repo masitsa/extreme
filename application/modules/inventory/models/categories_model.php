@@ -32,7 +32,7 @@ class Categories_model extends CI_Model
 	*/
 	public function all_parent_categories()
 	{
-		$this->db->where('category_status = 1 AND category_parent = 0');
+		$this->db->where('category_status = 1 AND category_parent = 0 AND branch_code = "'.$this->session->userdata('branch_code').'"');
 		$this->db->order_by('category_name', 'ASC');
 		$query = $this->db->get('category');
 		
@@ -74,17 +74,16 @@ class Categories_model extends CI_Model
 	*	@param string $image_name
 	*
 	*/
-	public function add_category($image_name)
+	public function add_category()
 	{
 		$data = array(
 				'category_name'=>ucwords(strtolower($this->input->post('category_name'))),
 				'category_parent'=>$this->input->post('category_parent'),
-				'category_preffix'=>strtoupper($this->input->post('category_preffix')),
 				'category_status'=>$this->input->post('category_status'),
 				'created'=>date('Y-m-d H:i:s'),
-				'created_by'=>$this->session->userdata('vendor_id'),
-				'modified_by'=>$this->session->userdata('vendor_id'),
-				'category_image_name'=>$image_name
+				'created_by'=>$this->session->userdata('personnel_id'),
+				'modified_by'=>$this->session->userdata('personnel_id'),
+				'branch_code'=>$this->session->userdata('branch_code')
 			);
 			
 		if($this->db->insert('category', $data))
@@ -102,18 +101,16 @@ class Categories_model extends CI_Model
 	*	@param int $category_id
 	*
 	*/
-	public function update_category($image_name, $category_id)
+	public function update_category($category_id)
 	{
 		$data = array(
 				'category_name'=>ucwords(strtolower($this->input->post('category_name'))),
 				'category_parent'=>$this->input->post('category_parent'),
-				'category_preffix'=>strtoupper($this->input->post('category_preffix')),
 				'category_status'=>$this->input->post('category_status'),
-				'modified_by'=>$this->session->userdata('vendor_id'),
-				'category_image_name'=>$image_name
+				'modified_by'=>$this->session->userdata('personnel_id')
 			);
 			
-		$this->db->where('category_id', $category_id);
+		$this->db->where('branch_code = "'.$this->session->userdata('branch_code').'"AND category_id = '.$category_id);
 		if($this->db->update('category', $data))
 		{
 			return TRUE;

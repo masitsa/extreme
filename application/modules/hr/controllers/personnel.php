@@ -761,5 +761,31 @@ class Personnel extends hr
 			redirect('human-resource/edit-personnel/'.$personnel_id);
 		}
     }
+    public function edit_order_authorize($personnel_id)
+    {
+
+    	$this->form_validation->set_rules('approval_role_id', 'Status Role', 'required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			
+			if($this->personnel_model->edit_order_authorize($personnel_id))
+			{
+				$this->session->set_userdata("success_message", "Authorize updated successfully");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+			
+			else
+			{
+				$this->session->set_userdata("error_message","Unable to update. Please try again");
+				redirect('human-resource/edit-personnel/'.$personnel_id);
+			}
+		}
+		else
+		{
+
+		}
+    }
 }
 ?>

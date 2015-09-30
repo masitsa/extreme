@@ -274,5 +274,6 @@ class Personnel extends MX_Controller
 		}
 		
 	}
+	
 }
 ?>
