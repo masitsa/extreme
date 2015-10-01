@@ -115,7 +115,7 @@ class Lab_charges extends MX_Controller
 	public function test_format($primary_key,$page_name = NULL)
 	{
 		// this is it
-		$where = 'service_charge.lab_test_id = lab_test.lab_test_id AND lab_test.lab_test_id = lab_test_format.lab_test_id AND lab_test_format.lab_test_id = '.$primary_key;
+		$where = 'lab_test.lab_test_id = lab_test_format.lab_test_id AND lab_test_format.lab_test_id = '.$primary_key;
 		$visit_search = $this->session->userdata('visit_search');
 		
 		if(!empty($visit_search))
@@ -132,7 +132,7 @@ class Lab_charges extends MX_Controller
 		{
 			$segment = 5;
 		}
-		$table = 'lab_test,lab_test_format, service_charge';
+		$table = 'lab_test, lab_test_format';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'lab_charges/test_format/'.$primary_key.'/'.$page_name;
@@ -168,7 +168,7 @@ class Lab_charges extends MX_Controller
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
         $v_data["test_iddd"] = $primary_key;
-		$query = $this->lab_charges_model->get_all_test_list($table, $where, $config["per_page"], $page, 'ASC');
+		$query = $this->lab_charges_model->get_all_test_list($table, $where, $config["per_page"], $page);
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
@@ -372,33 +372,29 @@ class Lab_charges extends MX_Controller
 	}
 	function create_new_lab_test_format($test_id)
     {
-    	$this->form_validation->set_rules('lab_test_format', 'Lab test Format', 'is_numeric|xss_clean');
+    	$this->form_validation->set_rules('lab_test_format', 'Lab test Format', 'required|xss_clean');
 
-    	if ($this->form_validation->run() == FALSE)
+    	if ($this->form_validation->run())
 		{
-
 			$checker = $this->lab_charges_model->add_test_format($test_id);
 
 			if($checker == TRUE)
 			{
 
 				$this->session->set_userdata("success_message","You have successfully created the lab test format");
-				redirect('lab_charges/add_lab_test_format/'.$test_id);	
 			}
 			else
 			{
 				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
 				
 			}
-
 		}
 		
 		else
 		{
-			
-			$this->session->set_userdata("error_message","Please enter the class name then try again");
-			redirect('lab_charges/add_lab_test_format/'.$test_id);					
+			$this->session->set_userdata("error_message", validation_errors());
 		}
+		redirect('lab_charges/add_lab_test_format/'.$test_id);	
     }
 	function create_new_lab_test()
     {
