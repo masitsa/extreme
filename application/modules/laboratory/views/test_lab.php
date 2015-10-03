@@ -19,10 +19,6 @@ if(!empty($service_charge_id)){
 		# code...
 		$lab_test_id = $key_array->lab_test_id;
 	endforeach;
-
-}
-
-if(!empty($service_charge_id)){
 	
 	$get_lab_visit_rs = $this->lab_model->get_visits_lab_result($visit_id, $lab_test_id);
 	$num_rows = count($get_lab_visit_rs);

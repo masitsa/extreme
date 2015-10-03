@@ -834,28 +834,27 @@ $p = 0;
    </section>
 
   
-	<script type="text/javascript">
+<script type="text/javascript">
 
-function myPopup2(visit_id,module) {
-	var config_url = $('#config_url').val();
-	window.open(config_url+"pharmacy/drugs/"+visit_id+"/"+module,"Popup","height=1200,width=600,,scrollbars=yes,"+ 
-                        "directories=yes,location=yes,menubar=yes," + 
-                         "resizable=no status=no,history=no top = 50 left = 100"); 
-}
-
-function myPopup2_soap(visit_id) {
-	var config_url = $('#config_url').val();
-	window.open(config_url+"pharmacy/drugs/"+visit_id,"Popup","height=1200,width=600,,scrollbars=yes,"+ 
-                        "directories=yes,location=yes,menubar=yes," + 
-                         "resizable=no status=no,history=no top = 50 left = 100"); 
-}
-
-function send_to_pharmacy2(visit_id){
- 
-	window.close(this);
-	//display_prescription(visit_id, 2);
-}
-	</script>
+	function myPopup2(visit_id,module) {
+		var config_url = $('#config_url').val();
+		window.open(config_url+"pharmacy/drugs/"+visit_id+"/"+module,"Popup","height=1200,width=600,,scrollbars=yes,"+ 
+							"directories=yes,location=yes,menubar=yes," + 
+							 "resizable=no status=no,history=no top = 50 left = 100"); 
+	}
+	
+	function myPopup2_soap(visit_id) {
+		var config_url = $('#config_url').val();
+		window.open(config_url+"pharmacy/drugs/"+visit_id,"Popup","height=1200,width=600,,scrollbars=yes,"+ 
+							"directories=yes,location=yes,menubar=yes," + 
+							 "resizable=no status=no,history=no top = 50 left = 100"); 
+	}
+	
+	function send_to_pharmacy2(visit_id)
+	{
+		window.close(this);
+	}
+</script>
 
 
                                         

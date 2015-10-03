@@ -174,7 +174,7 @@ class Laboratory  extends MX_Controller
 	}
 	public function test1($visit_id)
 	{
-		$data = array('visit_id'=>$visit_id);
+		$data = array('visit_id'=>$visit_id, 'lab_test'=>1, 'coming_from'=>'Lab');
 		$this->load->view('tests/test1',$data);
 	}
 	public function test2($visit_id)

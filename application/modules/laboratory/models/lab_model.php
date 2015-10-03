@@ -200,9 +200,9 @@ class Lab_model extends CI_Model
 	function get_lab_visit($visit_id, $service_charge_id=NULL){
 		$table = "visit_lab_test";
 		if($service_charge_id != NULL){
-				$where = "visit_id = ". $visit_id ." AND service_charge_id = ". $service_charge_id;
+				$where = "visit_lab_test_status = 1 AND visit_id = ". $visit_id ." AND service_charge_id = ". $service_charge_id;
 		}else{
-				$where = "visit_id = ". $visit_id;
+				$where = "visit_lab_test_status = 1 AND visit_id = ". $visit_id;
 		}
 		
 		$items = "*";
@@ -332,7 +332,6 @@ class Lab_model extends CI_Model
 		$where = "visit_id = ". $visit_id. " AND service_charge_id = ". $service_charge_id;
 		$items = "visit_lab_test_id";
 		$order = "visit_id";
-
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 

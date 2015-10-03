@@ -161,6 +161,7 @@ function send_to_lab3(visit_id){
 }
 
 function send_to_lab2(visit_id){
+	reload_opener_confirmation(visit_id);
     get_test_results(75, visit_id);
 }
 function get_test_results(page, visit_id){
@@ -234,6 +235,36 @@ function delete_cost(visit_charge_id, visit_id){
 				window.location.href = host+"data/doctor/laboratory.php?visit_id="+visit_id;
 			}
 		}
+		XMLHttpRequestObject.send(null);
+	}
+}
+
+function reload_opener_confirmation(visit_id){
+	var XMLHttpRequestObject = false;
+		
+	if (window.XMLHttpRequest) {
+	
+		XMLHttpRequestObject = new XMLHttpRequest();
+	} 
+		
+	else if (window.ActiveXObject) {
+		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var url = "<?php echo site_url();?>laboratory/confirm_lab_test_charge/"+visit_id;
+	
+	if(XMLHttpRequestObject) {
+				
+		XMLHttpRequestObject.open("GET", url);
+				
+		XMLHttpRequestObject.onreadystatechange = function(){
+			
+			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) 
+			{
+				var obj = window.opener.document.getElementById("lab_table");
+				obj.innerHTML = XMLHttpRequestObject.responseText;
+			}
+		}
+		
 		XMLHttpRequestObject.send(null);
 	}
 }

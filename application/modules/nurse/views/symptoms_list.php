@@ -162,7 +162,7 @@ function add_symptoms(symptoms_id, status, visit_id){
 
 
   if(XMLHttpRequestObject) {
-    var obj3 = window.opener.document.getElementById("symptoms");
+    var obj3 = window.opener.document.getElementById("visit_symptoms1");
     XMLHttpRequestObject.open("GET", url);
         
     XMLHttpRequestObject.onreadystatechange = function(){
@@ -177,9 +177,28 @@ function add_symptoms(symptoms_id, status, visit_id){
   }
 }
 
-function update_visit_symptoms(symptoms_id,status,visit_id){
+function update_visit_symptoms(symptoms_id,status,visit_id)
+{
+    var id= "myTF".concat(symptoms_id);
+    var description = document.getElementById(id).value;
+    var config_url = $('#config_url').val();
+    var data_url = config_url+"nurse/symptoms/"+symptoms_id+"/"+status+"/"+visit_id;
+	
+	$.ajax({
+		type:'POST',
+		url: data_url,
+		data:{description: description},
+		dataType: 'text',
+		success:function(data){
+			symptoms2(visit_id);
+		},
+		error: function(xhr, status, error) {
+			//alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+			alert(error);
+		}
+	});
   
-    var XMLHttpRequestObject = false;
+    /*var XMLHttpRequestObject = false;
         
     if (window.XMLHttpRequest) {
     
@@ -191,9 +210,6 @@ function update_visit_symptoms(symptoms_id,status,visit_id){
     }
     
     var id= "myTF".concat(symptoms_id);
-    var description = document.getElementById(id).value;
-     var config_url = $('#config_url').val();
-    var url = config_url+"nurse/symptoms/"+symptoms_id+"/"+status+"/"+visit_id+"/"+description;
 
     if(XMLHttpRequestObject) {
                 
@@ -207,7 +223,7 @@ function update_visit_symptoms(symptoms_id,status,visit_id){
         }
                 
         XMLHttpRequestObject.send(null);
-    }
+    }*/
 }
 
 function symptoms2(visit_id){
@@ -222,11 +238,11 @@ function symptoms2(visit_id){
         XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
     }
     var config_url = $('#config_url').val();
-    var url = config_url+"nurse/view_symptoms/"+visit_id;
+    var url = config_url+"nurse/view_selected_symptoms/"+visit_id;
    
     if(XMLHttpRequestObject) {
         
-        var obj = window.opener.document.getElementById("symptoms");
+        var obj = window.opener.document.getElementById("visit_symptoms1");
             
         XMLHttpRequestObject.open("GET", url);
                 

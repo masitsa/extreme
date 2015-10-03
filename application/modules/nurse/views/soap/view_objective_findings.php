@@ -21,29 +21,59 @@ if($num_rows > 0){
 	echo
 	"
 	<div class='row'>
-		<div class='col-md-6'>
-			<textarea class='form-control' rows='10' id='visit_objective_findings1' disabled='disabled'>"; 
+		<div class='col-md-12' id='visit_objective_findings1'>"; 
+			
+	echo"<table class='table table-condensed table-striped table-bordered'>"; 
+		echo"<tr>"; 
+			echo"<th>";
+				echo"#"; 
+			echo"</th>"; 
+			echo"<th>";
+				echo"Group"; 
+			echo"</th>"; 
+			echo"<th>";
+				echo"Name"; 
+			echo"</th>"; 
+			echo"<th>";
+				echo"Description"; 
+			echo"</th>"; 
+		echo"</tr>"; 
+		$count=0;
+		
 			foreach ($rs2 as $key):
-
+				$count++;
 				$objective_findings_name = $key->objective_findings_name;
 				$visit_objective_findings_id = $key->visit_objective_findings_id;
 				$objective_findings_class_name = $key->objective_findings_class_name;
 				$description= $key->description;
 				
-				echo $objective_findings_class_name.":".$objective_findings_name." ->".$description."\n" ;
+				echo"<tr>"; 
+					echo"<td>";
+						echo $count; 
+					echo"</td>"; 
+					echo"<td>";
+						echo $objective_findings_class_name; 
+					echo"</td>"; 
+					echo"<td>";
+						echo $objective_findings_name; 
+					echo"</td>"; 
+					echo"<td>";
+						echo $description; 
+					echo"</td>"; 
+				echo"<tr>"; 
 			endforeach; 
-			echo $visit_objective_findings; echo "
-			</textarea>
+			echo "
+			</table>
 		</div>
 		
-		<div class='col-md-6'>
-			<textarea class='form-control' rows='10' id='visit_objective_findings' onkeyup='save_objective_findings(".$visit_id.")'>".$visit_objective_findings."</textarea>
+		<div class='col-md-12' style='height:400px;'>
+			<textarea class='cleditor' rows='10' id='visit_objective_findings' onkeyup='save_objective_findings(".$visit_id.")'>".$visit_objective_findings."</textarea>
 		</div>
 	</div>
 	";
 	echo "
 	<br>
-	<div class='row'>
+	<div class='row' style='margin-top:10px;'>
 			<div class='center-align '>
 				<a class='btn btn-info btn-sm' type='submit' onclick='save_objective_findings(".$visit_id.")'>Update Objective Findings</a>
 			</div>
@@ -56,29 +86,58 @@ else{
 	echo
 	"
 	<div class='row'>
-		<div class='col-md-6'>
-			<textarea rows='10' class='form-control' id='visit_objective_findings1' disabled='disabled'>"; 
+		<div class='col-md-12' id='visit_objective_findings1'>"; 
+			
+	echo"<table class='table table-condensed table-striped table-bordered'>"; 
+		echo"<tr>"; 
+			echo"<th>";
+				echo"#"; 
+			echo"</th>"; 
+			echo"<th>";
+				echo"Group"; 
+			echo"</th>"; 
+			echo"<th>";
+				echo"Name"; 
+			echo"</th>"; 
+			echo"<th>";
+				echo"Description"; 
+			echo"</th>"; 
+		echo"</tr>"; 
+		$count=0;
+		
 			foreach ($rs2 as $key):
-
+				$count++;
 				$objective_findings_name = $key->objective_findings_name;
 				$visit_objective_findings_id = $key->visit_objective_findings_id;
 				$objective_findings_class_name = $key->objective_findings_class_name;
 				$description= $key->description;
 				
-				
-				echo $objective_findings_class_name.":".$objective_findings_name." ->".$description."\n" ;
+				echo"<tr>"; 
+					echo"<td>";
+						echo $count; 
+					echo"</td>"; 
+					echo"<td>";
+						echo $objective_findings_class_name; 
+					echo"</td>"; 
+					echo"<td>";
+						echo $objective_findings_name; 
+					echo"</td>"; 
+					echo"<td>";
+						echo $description; 
+					echo"</td>"; 
+				echo"<tr>"; 
 			endforeach; 
-			echo $visit_objective_findings; echo "
-			</textarea>
+			echo "
+			</table>
 		</div>
 		
-		<div class='col-md-6'>
-			<textarea rows='10' class='form-control' id='visit_objective_findings' onkeyup='save_objective_findings(".$visit_id.")'></textarea>
+		<div class='col-md-12' style='height:400px;'>
+			<textarea rows='10' class='cleditor' id='visit_objective_findings' onkeyup='save_objective_findings(".$visit_id.")'>".$visit_objective_findings."</textarea>
 		</div>
 	</div>
 	";
 	echo "
-	<div class='row'>
+	<div class='row' style='margin-top:10px;'>
 		<div class='center-align '>
 			<a class='btn btn-info btn-sm' type='submit' onclick='save_objective_findings(".$visit_id.")'>Save Objective Findings</a>
 		</div>

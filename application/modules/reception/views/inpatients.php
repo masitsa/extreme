@@ -35,12 +35,12 @@
 				
 				else if($page_name == 'laboratory')
 				{
-					$actions = 4;
+					$actions = 3;
 				}
 				
 				else if($page_name == 'pharmacy')
 				{
-					$actions = 3;
+					$actions = 2;
 				}
 				
 				else if($page_name == 'accounts')
@@ -180,7 +180,6 @@
 
 					<td><a href="'.site_url().'laboratory/test/'.$visit_id.'" class="btn btn-sm btn-info">Tests</a></td>
 					<td><a href="'.site_url().'laboratory/test_history/'.$visit_id.'" class="btn btn-sm btn-danger">History</a></td>
-					<td><a href="'.site_url().'laboratory/send_to_accounts/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to accounts?\');">To Accounts</a></td>
 					';
 				}
 				
@@ -193,8 +192,6 @@
 					</td>
 
 					<td><a href="'.site_url().'pharmacy/prescription1/'.$visit_id.'/1" class="btn btn-sm btn-info">Prescription</a></td>
-				
-					<td><a href="'.site_url().'pharmacy/send_to_accounts/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to accounts?\');">To Accounts</a></td>
 					';
 				}
 				else if($page_name == 'administration')

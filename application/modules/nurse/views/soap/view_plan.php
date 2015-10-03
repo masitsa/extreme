@@ -5,13 +5,19 @@ $num_rows = count($rs);
 	
 echo "
 	<div class='row' style='margin-bottom:10px;'>
-		<div class='col-md-4 center-align'>
+		<div class='col-md-2 center-align' col-md-offset-1>
 			<input type='button' class='btn btn-warning btn-sm' value='Laboratory Test' onclick='open_window_lab(0, ".$visit_id.")'/>
 		</div>
-		<div class='col-md-4 center-align'>
+		<div class='col-md-2 center-align'>
+			<input type='button' class='btn btn-primary btn-sm' value='XRay' onclick='open_window_xray(0, ".$visit_id.")'/>
+		</div>
+		<div class='col-md-2 center-align'>
+			<input type='button' class='btn btn-danger btn-sm' value='Ultrasound' onclick='open_window_ultrasound(0, ".$visit_id.")'/>
+		</div>
+		<div class='col-md-2 center-align'>
 			<input type='button' class='btn btn-info btn-sm' value='Diagnose' onclick='open_window(6, ".$visit_id.")'/>
 		</div>
-		<div class='col-md-4 center-align'>
+		<div class='col-md-2 center-align'>
 			<input type='button' class='btn btn-success btn-sm' value='Prescribe' onclick='open_window(1, ".$visit_id.")'/>
 			<!-- 
 			<a href='".site_url()."pharmacy/prescription/".$visit_id."' target='_blank' class='btn btn-success btn-sm'>Prescribe</a>
@@ -26,8 +32,8 @@ if($num_rows > 0){
 	echo
 	"
 	<div class='row'>
-		<div class='col-md-12'>
-			<textarea class='form-control' id='visit_plan' rows='8' >".$visit_plan."</textarea>
+		<div class='col-md-12' style='height:400px;'>
+			<textarea class='cleditor' id='visit_plan' >".$visit_plan."</textarea>
 		</div>
 	</div>
 	";
@@ -46,8 +52,8 @@ else{
 	echo
 	"
 	<div class='row'>
-		<div class='col-md-12'>
-			<textarea class='form-control' id='visit_plan' rows='8' ></textarea>
+		<div class='col-md-12' style='height:400px;'>
+			<textarea class='cleditor' id='visit_plan' ></textarea>
 		</div>
 	</div>
 	";
@@ -61,13 +67,6 @@ else{
 
 		";
 }
-
-
-
-echo "
-
-<div id='test_results'></div>";
-
 
 ?>
 <script type="text/javascript">

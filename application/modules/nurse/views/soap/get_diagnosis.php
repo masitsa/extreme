@@ -37,12 +37,9 @@ if($num_rows > 0){
 				<td>".$code."</td>
 				<td>".$name."</td></tr>";
 	endforeach;
-}
  echo"</table>
  </div>
  </section>
  ";
+}
 ?>
-<script type="text/javascript">
-	
-</script>

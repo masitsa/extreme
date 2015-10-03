@@ -63,7 +63,7 @@ class Reception_model extends CI_Model
 		$this->db->from($table);
 		$this->db->select('visit.*, patients.*, visit_type.visit_type_name');
 		$this->db->where($where);
-		$this->db->order_by('visit.visit_date','ASC');
+		$this->db->order_by('visit.visit_date','DESC');
 		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
