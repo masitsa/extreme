@@ -69,6 +69,10 @@ $data['visit_id'] = $visit_id;
 
 <?php echo $this->load->view("laboratory/tests/test2", $data, TRUE); ?>
 
+<?php echo $this->load->view("radiology/tests/test2", $data, TRUE); ?>
+
+<?php echo $this->load->view("radiology/tests_ultrasound/test2", $data, TRUE); ?>
+
 <div class="row">
  	<div class="col-md-12">
 		<section class="panel panel-featured panel-featured-info">

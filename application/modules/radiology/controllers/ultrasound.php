@@ -135,22 +135,29 @@ class Ultrasound  extends MX_Controller
 		}
 
 	}
-	public function test($visit_id){
+	public function test($visit_id)
+	{
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
-		$visit_type = $patient['visit_type'];
-		$patient_type = $patient['patient_type'];
-		$patient_othernames = $patient['patient_othernames'];
-		$patient_surname = $patient['patient_surname'];
+		$v_data['patient_type'] = $patient['patient_type'];
+		$v_data['patient_othernames'] = $patient['patient_othernames'];
+		$v_data['patient_surname'] = $patient['patient_surname'];
+		$v_data['patient_type_id'] = $patient['visit_type_id'];
+		$v_data['account_balance'] = $patient['account_balance'];
+		$v_data['visit_type_name'] = $patient['visit_type_name'];
+		$v_data['patient_id'] = $patient['patient_id'];
 		$patient_date_of_birth = $patient['patient_date_of_birth'];
 		$age = $this->reception_model->calculate_age($patient_date_of_birth);
+		$visit_date = $this->reception_model->get_visit_date($visit_id);
 		$gender = $patient['gender'];
+		$visit_date = date('jS M Y',strtotime($visit_date));
+		$v_data['age'] = $age;
+		$v_data['visit_date'] = $visit_date;
+		$v_data['gender'] = $gender;
+		$v_data['visit_id'] = $visit_id;
+		$v_data['visit'] = 1;
 		
-		$patient = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
-		
-		$v_data = array('visit_id'=>$visit_id,'visit'=>1,'patient'=>$patient);
-		$data['content'] = $this->load->view('tests/test', $v_data, true);
-		$data['sidebar'] = 'ultrasound_sidebar';
-		$data['title'] = 'Laboratory Test List';
+		$data['content'] = $this->load->view('tests_ultrasound/test', $v_data, true);
+		$data['title'] = 'Ultrasound';
 		$this->load->view('admin/templates/general_page', $data);
 	}
 	public function search_ultrasounds($visit_id)
@@ -175,7 +182,7 @@ class Ultrasound  extends MX_Controller
 	public function test1($visit_id)
 	{
 		$data = array('visit_id'=>$visit_id, 'ultrasound'=>1, 'coming_from'=>'Lab');
-		$this->load->view('tests/test1',$data);
+		$this->load->view('tests_ultrasound/test1',$data);
 	}
 	public function test2($visit_id)
 	{
@@ -292,14 +299,7 @@ class Ultrasound  extends MX_Controller
 		$data = array('service_charge_id' => $service_charge_id, 'visit_id' => $visit_id);
 		$this->load->view('confirm_test_ultrasound', $data);
 	}
-
-	public function save_result($id,$result,$visit_id)
-	{
-		$result = str_replace('%20', ' ',$result);
-		$data = array('id'=>$id,'result'=>$result,'visit_id'=>$visit_id);
-		$this->load->view('save_result',$data);
-
-	}
+	
 	public function finish_ultrasound($visit_id){
 		redirect('ultrasound/ultrasound_queue');
 	}
@@ -626,10 +626,18 @@ class Ultrasound  extends MX_Controller
 
 	}
 	
-	public function save_result_ultrasound()
+	public function save_result()
 	{
-		$visit_id = $this->input->post('visit_id');
-		$this->ultrasound_model->save_tests_format2($visit_id);
+		$visit_charge_id = $this->input->post('visit_charge_id');
+		if($this->xray_model->save_tests_format2($visit_charge_id))
+		{
+			echo 'true';
+		}
+		
+		else
+		{
+			echo 'false';
+		}
 	}
 	
 	public function save_ultrasound_comment()

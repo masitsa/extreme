@@ -442,8 +442,10 @@ $route['hospital-reports/doctor-reports'] = 'administration/reports/doctor_repor
 *	ultrasound Routes
 */
 $route['radiology/ultrasound-outpatients'] = 'radiology/ultrasound/ultrasound_queue/12';
-$route['laboratory/general-queue'] = 'reception/general_queue/laboratory';
-$route['laboratory/inpatients'] = 'reception/inpatients/laboratory';
+$route['radiology/ultrasound-inpatients'] = 'reception/inpatients/ultrasound';
+$route['radiology/x-ray-outpatients'] = 'radiology/xray/xray_queue/12';
+$route['radiology/x-ray-inpatients'] = 'reception/inpatients/xray';
+$route['radiology/general-queue'] = 'reception/general_queue/radiology';
 
 /*
 *	doctor Routes

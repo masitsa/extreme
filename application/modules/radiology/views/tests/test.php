@@ -1,12 +1,73 @@
 
     <section class="panel panel-featured panel-featured-info">
         <header class="panel-heading">
-            <h2 class="panel-title">Tests for <?php echo $patient;?></h2>
+            <h2 class="panel-title">Xray</h2>
         </header>
 
         <div class="panel-body">
+        	
+            <div class="well well-sm info">
+                <h5 style="margin:0;">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <strong>First name:</strong>
+                                </div>
+                                <div class="col-lg-6">
+                                    <?php echo $patient_surname;?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <strong>Other names:</strong>
+                                </div>
+                                <div class="col-lg-6">
+                                    <?php echo $patient_othernames;?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <strong>Gender:</strong>
+                                </div>
+                                <div class="col-lg-6">
+                                    <?php echo $gender;?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <strong>Age:</strong>
+                                </div>
+                                <div class="col-lg-6">
+                                    <?php echo $age;?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <strong>Account balance:</strong>
+                                </div>
+                                <div class="col-lg-6">
+                                    Kes <?php echo number_format($account_balance, 2);?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </h5>
+            </div>
             <div class="tabbable" style="margin-bottom: 18px;">
-              <ul class="nav nav-tabs">
+              <ul class="nav nav-tabs nav-justified">
                 <li class="active"><a href="#tests-pane" data-toggle="tab">Tests</a></li>
                 <li ><a href="#visit_trail" data-toggle="tab">Visit Trail</a></li>
               </ul>
@@ -16,18 +77,19 @@
 						<div class="center-align">
 							<?php
 					        	if(($visit == 2)||(($visit == 3))||(($visit == 1))||(($visit == 4))){
-									echo "<input type='button' onClick='open_window_lab(8, ".$visit_id.")' value='Add Test' class='btn btn-large btn-primary'>";
+									echo "<input type='button' onClick='open_window_xray(8, ".$visit_id.")' value='Add Xray' class='btn btn-large btn-primary'>";
 								}
 							
 							?>
 						</div>
 					</div>
                 	
-                	<!-- laboratory technicial should choose what test should be done to the patient -->
+                	<!-- xray technicial should choose what test should be done to the patient -->
 					 <div class="row">
 					 	<div class="col-md-12">
-                            <div id="lab_table"></div>
+                            <div id="xray_table"></div>
                         </div>
+
 					 </div>
 					<!-- bill for thr test asap -->
 
@@ -48,9 +110,9 @@
   <script type="text/javascript">
 	  $(document).ready(function(){
 	       get_test_results(100, <?php echo $visit_id?>);
-		   get_lab_table(<?php echo $visit_id;?>);
+		   //get_xray_table(<?php echo $visit_id;?>);
 	  });
-	 function get_lab_table(visit_id){
+	 function get_xray_table(visit_id){
         var XMLHttpRequestObject = false;
             
         if (window.XMLHttpRequest) {
@@ -61,7 +123,7 @@
         else if (window.ActiveXObject) {
             XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
         }
-        var url = "<?php echo site_url();?>laboratory/confirm_lab_test_charge/"+visit_id;
+        var url = "<?php echo site_url();?>radiology/xray/confirm_xray_test_charge/"+visit_id;
 		
         if(XMLHttpRequestObject) {
                     
@@ -71,16 +133,16 @@
                 
                 if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
                     
-                    document.getElementById("lab_table").innerHTML = XMLHttpRequestObject.responseText;
+                    document.getElementById("xray_table").innerHTML = XMLHttpRequestObject.responseText;
                 }
             }
             
             XMLHttpRequestObject.send(null);
         }
     }
-  	function open_window_lab(test, visit_id){
+  	function open_window_xray(test, visit_id){
 	  var config_url = $('#config_url').val();
-	  window.open(config_url+"laboratory/laboratory_list/"+test+"/"+visit_id,"Popup","height=1200, width=800, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
+	  window.open(config_url+"radiology/xray/xray_list/"+test+"/"+visit_id,"Popup","height=1200, width=800, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
 	}
 	function get_test_results(page, visit_id){
 
@@ -97,11 +159,11 @@
 	  var config_url = $('#config_url').val();
 	  if((page == 1) || (page == 65) || (page == 85)){
 	    
-	    url = config_url+"laboratory/test/"+visit_id;
+	    url = config_url+"radiology/xray/test/"+visit_id;
 	  }
 	  
 	  else if ((page == 75) || (page == 100)){
-	    url = config_url+"laboratory/test1/"+visit_id;
+	    url = config_url+"radiology/xray/test1/"+visit_id;
 	  }
 	// alert(url);
 	  if(XMLHttpRequestObject) {
@@ -118,6 +180,11 @@
 	      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
 	  //window.alert(XMLHttpRequestObject.responseText);
 	        obj.innerHTML = XMLHttpRequestObject.responseText;
+			/* CL Editor */
+			$(".cleditor").cleditor({
+				width: "auto",
+				height: "100%"
+			});
 	        if((page == 75) || (page == 85)){
 	          window.close(this);
 	        }
@@ -128,40 +195,18 @@
 	  }
 	}
 
-	function save_result_format(id, format, visit_id){
-		var config_url = $('#config_url').val();
-		
-		var res = document.getElementById("laboratory_result2"+format).value;
-		var data_url = config_url+"laboratory/save_result_lab";
-         	
-        $.ajax({
-			type:'POST',
-			url: data_url,
-			data:{id: id, res: res, format: format, visit_id: visit_id},
-			dataType: 'text',
-			success:function(data){
-				//$("#result_space"+format).val(data);
-			},
-			error: function(xhr, status, error) {
-				//alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
-				alert(error);
-			}
-
-        });
-	}
-
-	function save_lab_comment(id, visit_id)
+	function save_xray_comment(id, visit_id)
 	{
 		var config_url = $('#config_url').val();
 		
-		var res = document.getElementById("laboratory_comment"+id).value;
+		var res = document.getElementById("xray_comment"+id).value;
 		
-		var data_url = config_url+"laboratory/save_lab_comment";
+		var data_url = config_url+"radiology/xray/save_xray_comment";
 			
 		$.ajax({
 			type:'POST',
 			url: data_url,
-			data:{visit_charge_id: id, lab_visit_format_comments: res, visit_id: visit_id},
+			data:{visit_charge_id: id, xray_visit_format_comments: res, visit_id: visit_id},
 			dataType: 'text',
 			success:function(data){
 				//$("#result_space"+format).val(data);
@@ -174,21 +219,27 @@
 		});
 	}
 
-	function save_result(id, visit_id){
-		
+	function save_result(visit_charge_id, visit_id){
 		var config_url = $('#config_url').val();
-		var res = document.getElementById("laboratory_result"+id).value;
-        var data_url = config_url+"laboratory/save_result/"+id+"/"+res+"/"+visit_id;
-   	 // window.alert(data_url);
-         var result_space = $('#result_space'+id).val();//document.getElementById("vital"+vital_id).value;
+		
+		var result = document.getElementById("xray_result"+visit_charge_id).value;
+		var data_url = config_url+"radiology/xray/save_result";
          	
         $.ajax({
 			type:'POST',
 			url: data_url,
-			data:{result: result_space},
+			data:{visit_charge_id: visit_charge_id, result: result, visit_id: visit_id},
 			dataType: 'text',
-			success:function(data){
-				//$("#result_space"+id).val(data);
+			success:function(data)
+			{
+				if(data == 'true')
+				{
+					alert('Comment saved successfully');
+				}
+				else
+				{
+					alert('Unable to save comment');
+				}
 			},
 			error: function(xhr, status, error) {
 				//alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
@@ -196,9 +247,8 @@
 			}
 
         });
-	
-		
 	}
+	
 	function send_to_doc(visit_id){
 	
 
@@ -214,7 +264,7 @@
 		}
 		var config_url = $('#config_url').val();
 
-		var url = config_url+"laboratory/send_to_doctor/"+visit_id;
+		var url = config_url+"radiology/xray/send_to_doctor/"+visit_id;
 					
 		if(XMLHttpRequestObject) {
 					
@@ -224,14 +274,14 @@
 				
 				if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
 					
-					//window.location.href = host+"index.php/laboratory/lab_queue";
+					//window.location.href = host+"index.php/xray/xray_queue";
 				}
 			}
 					
 			XMLHttpRequestObject.send(null);
 		}
 	}
-	function finish_lab_test(visit_id){
+	function finish_xray_test(visit_id){
 
 		var XMLHttpRequestObject = false;
 			
@@ -244,7 +294,7 @@
 			XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
 		}
 		var config_url = $('#config_url').val();
-		var url = config_url+"laboratory/finish_lab_test/"+visit_id;
+		var url = config_url+"radiology/xray/finish_xray_test/"+visit_id;
 				
 		if(XMLHttpRequestObject) {
 					
@@ -254,7 +304,7 @@
 				
 				if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
 					
-					//window.location.href = host+"index.php/laboratory/lab_queue";
+					//window.location.href = host+"index.php/xray/xray_queue";
 				}
 			}
 					
@@ -265,7 +315,7 @@
 	function save_comment(visit_charge_id){
 		var config_url = $('#config_url').val();
 		var comment = document.getElementById("test_comment").value;
-        var data_url = config_url+"laboratory/save_comment/"+comment+"/"+visit_charge_id;
+        var data_url = config_url+"radiology/xray/save_comment/"+comment+"/"+visit_charge_id;
      
         // var comment_tab = $('#comment').val();//document.getElementById("vital"+vital_id).value;
          	
@@ -289,7 +339,7 @@
 	}
 	function print_previous_test(visit_id, patient_id){
 		var config_url = $('#config_url').val();
-    	window.open(config_url+"laboratory/print_test/"+visit_id+"/"+patient_id,"Popup","height=900,width=1200,,scrollbars=yes,"+
+    	window.open(config_url+"radiology/xray/print_test/"+visit_id+"/"+patient_id,"Popup","height=900,width=1200,,scrollbars=yes,"+
                         "directories=yes,location=yes,menubar=yes," +
                          "resizable=no status=no,history=no top = 50 left = 100");
 	}

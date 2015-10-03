@@ -307,5 +307,15 @@ class Doctor  extends MX_Controller
 		$data['title'] = 'Patient Card';
 		$this->load->view('admin/templates/general_page', $data);
 	}
+	
+	public function print_prescription($visit_id)
+	{
+		$data = array('visit_id'=>$visit_id);
+		$data['contacts'] = $this->site_model->get_contacts();
+		
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$data['patient'] = $patient;
+		$this->load->view('print_prescription', $data);
+	}
 }
 ?>

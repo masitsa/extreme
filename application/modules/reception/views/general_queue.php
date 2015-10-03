@@ -42,6 +42,16 @@
 					$actions = 4;
 				}
 				
+				else if($page_name == 'xray')
+				{
+					$actions = 4;
+				}
+				
+				else if($page_name == 'ultrasound')
+				{
+					$actions = 4;
+				}
+				
 				else if($page_name == 'pharmacy')
 				{
 					$actions = 3;
@@ -186,6 +196,20 @@
 					<td><a href="'.site_url().'laboratory/test/'.$visit_id.'" class="btn btn-sm btn-info">Tests</a></td>
 					<td><a href="'.site_url().'laboratory/test_history/'.$visit_id.'" class="btn btn-sm btn-danger">History</a></td>
 					<td><a href="'.site_url().'laboratory/send_to_accounts/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to accounts?\');">To Accounts</a></td>
+					';
+				}
+				
+				else if($page_name == 'radiology')
+				{
+					$buttons = '
+					<td>
+						<a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
+						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
+					</td>
+
+					<td><a href="'.site_url().'radiology/ultrasound/test/'.$visit_id.'" class="btn btn-sm btn-info">Ultrasound</a></td>
+					<td><a href="'.site_url().'radiology/xray/test/'.$visit_id.'" class="btn btn-sm btn-warning">X Ray</a></td>
+					<td><a href="'.site_url().'radiology/ultrasound/send_to_accounts/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to accounts?\');">To Accounts</a></td>
 					';
 				}
 				

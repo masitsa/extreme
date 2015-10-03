@@ -50,9 +50,9 @@ class Xray  extends MX_Controller
 	
 	public function xray_queue($page_name = 12)
 	{
-		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 11 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\' AND (service.service_name = "X Ray" OR service.service_name = "xray" OR service.service_name = "XRay" OR service.service_name = "xray" OR service.service_name = "Xray") AND visit_department.department_id = service.department_id';
 		
-		$table = 'visit_department, visit, patients, visit_type';
+		$table = 'visit_department, visit, patients, visit_type, service';
 		
 		$visit_search = $this->session->userdata('patient_visit_search');
 		
@@ -136,22 +136,30 @@ class Xray  extends MX_Controller
 		}
 
 	}
-	public function test($visit_id){
+	public function test($visit_id)
+	{
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
-		$visit_type = $patient['visit_type'];
-		$patient_type = $patient['patient_type'];
-		$patient_othernames = $patient['patient_othernames'];
-		$patient_surname = $patient['patient_surname'];
+		$v_data['patient_type'] = $patient['patient_type'];
+		$v_data['patient_othernames'] = $patient['patient_othernames'];
+		$v_data['patient_surname'] = $patient['patient_surname'];
+		$v_data['patient_type_id'] = $patient['visit_type_id'];
+		$v_data['account_balance'] = $patient['account_balance'];
+		$v_data['visit_type_name'] = $patient['visit_type_name'];
+		$v_data['patient_id'] = $patient['patient_id'];
 		$patient_date_of_birth = $patient['patient_date_of_birth'];
 		$age = $this->reception_model->calculate_age($patient_date_of_birth);
+		$visit_date = $this->reception_model->get_visit_date($visit_id);
 		$gender = $patient['gender'];
+		$visit_date = date('jS M Y',strtotime($visit_date));
+		$v_data['age'] = $age;
+		$v_data['visit_date'] = $visit_date;
+		$v_data['gender'] = $gender;
+		$v_data['visit_id'] = $visit_id;
+		$v_data['visit'] = 1;
 		
-		$patient = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
-		
-		$v_data = array('visit_id'=>$visit_id,'visit'=>1,'patient'=>$patient);
 		$data['content'] = $this->load->view('tests/test', $v_data, true);
 		$data['sidebar'] = 'xray_sidebar';
-		$data['title'] = 'Laboratory Test List';
+		$data['title'] = 'X Ray';
 		$this->load->view('admin/templates/general_page', $data);
 	}
 	public function search_xrays($visit_id)
@@ -294,12 +302,18 @@ class Xray  extends MX_Controller
 		$this->load->view('confirm_test_xray', $data);
 	}
 
-	public function save_result($id,$result,$visit_id)
+	public function save_result()
 	{
-		$result = str_replace('%20', ' ',$result);
-		$data = array('id'=>$id,'result'=>$result,'visit_id'=>$visit_id);
-		$this->load->view('save_result',$data);
-
+		$visit_charge_id = $this->input->post('visit_charge_id');
+		if($this->xray_model->save_tests_format2($visit_charge_id))
+		{
+			echo 'true';
+		}
+		
+		else
+		{
+			echo 'false';
+		}
 	}
 	public function finish_xray($visit_id){
 		redirect('xray/xray_queue');

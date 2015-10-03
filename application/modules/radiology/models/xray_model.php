@@ -483,15 +483,22 @@ class Xray_model extends CI_Model
 		
 	}
 	
-	function save_tests_format2($visit_id)
+	function save_tests_format2($visit_charge_id)
 	{
-		$result = $this->input->post('res');
-		$format = $this->input->post('format');
+		$result = $this->input->post('result');
 		
-		$data['xray_visit_results_result'] = $result;
-		$this->db->where(array('xray_visit_result_format' => $format, 'visit_id' => $visit_id));
+		$data['visit_charge_comment'] = $result;
+		$this->db->where(array('visit_charge_id' => $visit_charge_id));
 		
-		$this->db->update('xray_visit_results', $data);
+		if($this->db->update('visit_charge', $data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
 	}
 
 	

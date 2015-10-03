@@ -79,6 +79,16 @@
 			</h5>
 		</div>
 		
+        <div class="row">
+        	<div class="col-sm-3 col-sm-offset-3">
+            	<a href="<?php echo site_url().'doctor/print_prescription'.$visit_id;?>" class="btn btn-warning">Print prescription</a>
+            </div>
+            
+        	<div class="col-sm-3">
+            	<a href="<?php echo site_url().'doctor/print_lab_tests'.$visit_id;?>" class="btn btn-danger">Print lab tests</a>
+            </div>
+        </div>
+        
 		<div class="row">
 			<div class="col-md-12">
 				<div class="col-md-7">

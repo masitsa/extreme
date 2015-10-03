@@ -410,36 +410,40 @@ function display_prescription(visit_id, page){
 function open_window_lab(test, visit_id){
 	
   var config_url = $('#config_url').val();
-  window.open(config_url+"laboratory/laboratory_list/"+test+"/"+visit_id,"Popup","height=1200, width=600, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
+  var win = window.open(config_url+"laboratory/laboratory_list/"+test+"/"+visit_id,"Popup","height=1200, width=600, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
+  win.focus();
 }
 
 function open_window_xray(test, visit_id){
 	
   var config_url = $('#config_url').val();
-  window.open(config_url+"radiology/xray/xray_list/"+test+"/"+visit_id,"Popup","height=1200, width=600, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
+  var win = window.open(config_url+"radiology/xray/xray_list/"+test+"/"+visit_id,"Popup","height=1200, width=600, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
+  win.focus();
 }
 
 function open_window_ultrasound(test, visit_id){
 	
   var config_url = $('#config_url').val();
-  window.open(config_url+"radiology/ultrasound/ultrasound_list/"+test+"/"+visit_id,"Popup","height=1200, width=600, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
+  var win = window.open(config_url+"radiology/ultrasound/ultrasound_list/"+test+"/"+visit_id,"Popup","height=1200, width=600, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
+  win.focus();
 }
 
 function open_symptoms(visit_id){
   var config_url = $('#config_url').val();
-  window.open(config_url+"nurse/symptoms_list/"+visit_id,"Popup","height=1000,width=600,,scrollbars=yes,"+ 
+  var win = window.open(config_url+"nurse/symptoms_list/"+visit_id,"Popup","height=1000,width=600,,scrollbars=yes,"+ 
                         "directories=yes,location=yes,menubar=yes," + 
                          "resizable=no status=no,history=no top = 50 left = 100");
+  win.focus();
     
   
 }
 
 function open_objective_findings(visit_id){
   var config_url = $('#config_url').val();
-  window.open(config_url+"nurse/objective_finding/"+visit_id,"Popup","height=600,width=1000,,scrollbars=yes,"+ 
+  var win = window.open(config_url+"nurse/objective_finding/"+visit_id,"Popup","height=600,width=1000,,scrollbars=yes,"+ 
                         "directories=yes,location=yes,menubar=yes," + 
                          "resizable=no status=no,history=no top = 50 left = 100");
-    
+  win.focus();
   
 }
 
@@ -449,7 +453,7 @@ function save_assessment(visit_id){
   var config_url = $('#config_url').val();
   var data_url = config_url+"nurse/save_assessment/"+visit_id;
   //window.alert(data_url);
-   var assessment = $('#visit_assessment').val();//document.getElementById("vital"+vital_id).value;
+  var assessment = $('#visit_assessment').val();//document.getElementById("vital"+vital_id).value;
   $.ajax({
   type:'POST',
   url: data_url,
@@ -471,15 +475,17 @@ function open_window(plan, visit_id){
     var config_url = $('#config_url').val();
   if(plan == 6){
   
-    window.open(config_url+"nurse/disease/"+visit_id,"Popup","height=1000,width=600,,scrollbars=yes,"+ 
+    var win = window.open(config_url+"nurse/disease/"+visit_id,"Popup","height=1000,width=600,,scrollbars=yes,"+ 
                         "directories=yes,location=yes,menubar=yes," + 
                          "resizable=no status=no,history=no top = 50 left = 100");
+  	win.focus();
   }
   else if (plan == 1){
     
-    window.open(config_url+"pharmacy/prescription/"+visit_id,"Popup","height=1200,width=1300,,scrollbars=yes,"+ 
+    var win = window.open(config_url+"pharmacy/prescription/"+visit_id,"Popup","height=1200,width=1300,,scrollbars=yes,"+ 
                         "directories=yes,location=yes,menubar=yes," + 
                          "resizable=yes status=yes,history=yes top = 50 left = 100");
+  	win.focus();
   }
 }
 
@@ -669,8 +675,9 @@ $(document).on("click","a.delete_diagnosis",function()
 
 function print_previous_test(visit_id, patient_id){
 	var config_url = $('#config_url').val();
-	window.open(config_url+"laboratory/print_test/"+visit_id+"/"+patient_id,"Popup","height=900,width=1200,,scrollbars=yes,"+
+	var win = window.open(config_url+"laboratory/print_test/"+visit_id+"/"+patient_id,"Popup","height=900,width=1200,,scrollbars=yes,"+
 					"directories=yes,location=yes,menubar=yes," +
 					 "resizable=no status=no,history=no top = 50 left = 100");
+  win.focus();
 }
 </script>
