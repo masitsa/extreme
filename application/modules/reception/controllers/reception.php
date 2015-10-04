@@ -546,9 +546,9 @@ class Reception  extends MX_Controller
 		$visit_type_id = $this->input->post("visit_type_id"); 
 		
 		if(isset($_POST['department_id'])){
-			if($_POST['department_id'] == 7)
+			if(($_POST['department_id'] == 7) || ($_POST['department_id'] == 14))
 			{
-				//if nurse visit doctor must be selected
+				//if nurse visit (7) or theatre (14) service must be selected
 				$this->form_validation->set_rules('personnel_id', 'Doctor', 'is_natural_no_zero');
 				$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required|is_natural_no_zero');
 				$service_charge_id = $this->input->post("service_charge_name");
@@ -569,7 +569,8 @@ class Reception  extends MX_Controller
 			}
 		}
 		
-		if($visit_type_id != 1){
+		if($visit_type_id != 1)
+		{
 			$this->form_validation->set_rules('insurance_limit', 'Insurance limit', 'required');
 			$this->form_validation->set_rules('insurance_number', 'Insurance number', 'required');
 		}
@@ -611,8 +612,8 @@ class Reception  extends MX_Controller
 				//create visit
 				$visit_id = $this->reception_model->create_visit($visit_date, $patient_id, $doctor_id, $insurance_limit, $insurance_number, $visit_type_id, $timepicker_start, $timepicker_end, $appointment_id, $close_card);
 				
-				//save consultation charge for nurse visit and counseling
-				if($_POST['department_id'] == 7 || $_POST['department_id'] == 12)
+				//save consultation charge for nurse visit, counseling or theatre
+				if($_POST['department_id'] == 7 || $_POST['department_id'] == 12 || $_POST['department_id'] == 14)
 				{
 					$this->reception_model->save_visit_consultation_charge($visit_id, $service_charge_id);	
 				}

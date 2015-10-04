@@ -92,6 +92,10 @@ $data['lab_test'] = 100;
 	<?php echo $this->load->view("radiology/tests_ultrasound/test2", $data, TRUE); ?>
 </div>
 
+<div id="surgery_results">
+	<?php echo $this->load->view("theatre/tests/test2", $data, TRUE); ?>
+</div>
+
 <div class="row">
  	<div class="col-md-12">
 		<section class="panel panel-featured panel-featured-info">
@@ -425,6 +429,13 @@ function open_window_ultrasound(test, visit_id){
 	
   var config_url = $('#config_url').val();
   var win = window.open(config_url+"radiology/ultrasound/ultrasound_list/"+test+"/"+visit_id,"Popup","height=1200, width=600, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
+  win.focus();
+}
+
+function open_window_surgery(test, visit_id){
+	
+  var config_url = $('#config_url').val();
+  var win = window.open(config_url+"theatre/surgery_list/"+test+"/"+visit_id,"Popup","height=1200, width=600, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
   win.focus();
 }
 

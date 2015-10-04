@@ -19,6 +19,7 @@ class Nurse  extends MX_Controller
 		$this->load->model('laboratory/lab_model');
 		$this->load->model('radiology/xray_model');
 		$this->load->model('radiology/ultrasound_model');
+		$this->load->model('theatre/theatre_model');
 		
 		$this->load->model('auth/auth_model');
 		if(!$this->auth_model->check_login())

@@ -67,7 +67,6 @@
 													foreach($visit_departments->result() as $row):
 														$department_name = $row->department_name;
 														$department_id = $row->department_id;
-
 														
 														if($department_id == set_value('department_id'))
 														{
@@ -356,7 +355,7 @@
 			//var myTarget4 = document.getElementById("counseling_department");
 			// end of counseling department div
 			
-			if(myTarget==7)
+			if((myTarget==7) || (myTarget==14))
 			{
 				myTarget2.style.display = 'block';
 				//myTarget4.style.display = 'none';

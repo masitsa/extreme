@@ -145,11 +145,9 @@
 ?>
           </div>
           
-          <div class="widget-foot">
+          <div class="panel-foot">
                                 
 				<?php if(isset($links)){echo $links;}?>
-            
-                <div class="clearfix"></div> 
             
             </div>
         </div>

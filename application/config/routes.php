@@ -448,13 +448,22 @@ $route['radiology/x-ray-inpatients'] = 'reception/inpatients/xray';
 $route['radiology/general-queue'] = 'reception/general_queue/radiology';
 
 /*
-*	doctor Routes
+*	laboratory Routes
 */
 $route['laboratory'] = 'laboratory/index';
 $route['laboratory/dashboard'] = 'laboratory/index';
 $route['laboratory/lab-queue'] = 'laboratory/lab_queue/12';
 $route['laboratory/general-queue'] = 'reception/general_queue/laboratory';
 $route['laboratory/inpatients'] = 'reception/inpatients/laboratory';
+
+/*
+*	theatre Routes
+*/
+$route['theatre'] = 'theatre/index';
+$route['theatre/dashboard'] = 'theatre/index';
+$route['theatre/theatre-queue'] = 'theatre/theatre_queue/12';
+$route['theatre/general-queue'] = 'reception/general_queue/theatre';
+$route['theatre/inpatients'] = 'reception/inpatients/theatre';
 
 /*
 *	laboratory setup Routes
