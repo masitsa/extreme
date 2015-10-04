@@ -233,7 +233,7 @@ $route['hospital-administration/deactivate-insurance-company/(:num)'] = 'hospita
 /*
 *	Accounts Routes
 */
-$route['accounts/closed-visits'] = 'accounts/payroll/accounts_closed_visits';
+$route['accounts/closed-visits'] = 'accounts/accounts_closed_visits';
 $route['accounts/inpatients'] = 'reception/inpatients/accounts';
 $route['accounts/un-closed-visits'] = 'accounts/payroll/accounts_unclosed_queue';
 $route['accounts/change-branch'] = 'accounts/payroll/change_branch';
@@ -438,6 +438,14 @@ $route['hospital-reports/debtors-report'] = 'administration/reports/debtors_repo
 $route['hospital-reports/department-report'] = 'administration/reports/department_reports';
 $route['hospital-reports/doctor-reports'] = 'administration/reports/doctor_reports';
 
+/*
+*	ultrasound Routes
+*/
+$route['radiology/ultrasound-outpatients'] = 'radiology/ultrasound/ultrasound_queue/12';
+$route['radiology/ultrasound-inpatients'] = 'reception/inpatients/ultrasound';
+$route['radiology/x-ray-outpatients'] = 'radiology/xray/xray_queue/12';
+$route['radiology/x-ray-inpatients'] = 'reception/inpatients/xray';
+$route['radiology/general-queue'] = 'reception/general_queue/radiology';
 
 /*
 *	doctor Routes
@@ -446,7 +454,7 @@ $route['laboratory'] = 'laboratory/index';
 $route['laboratory/dashboard'] = 'laboratory/index';
 $route['laboratory/lab-queue'] = 'laboratory/lab_queue/12';
 $route['laboratory/general-queue'] = 'reception/general_queue/laboratory';
-
+$route['laboratory/inpatients'] = 'reception/inpatients/laboratory';
 
 /*
 *	laboratory setup Routes
@@ -466,6 +474,7 @@ $route['pharmacy'] = 'pharmacy/index';
 $route['pharmacy/dashboard'] = 'pharmacy/index';
 $route['pharmacy/pharmacy-queue'] = 'pharmacy/pharmacy_queue/12';
 $route['pharmacy/general-queue'] = 'reception/general_queue/pharmacy';
+$route['pharmacy/inpatients'] = 'reception/inpatients/pharmacy';
 
 
 /*

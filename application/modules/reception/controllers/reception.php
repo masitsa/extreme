@@ -549,7 +549,7 @@ class Reception  extends MX_Controller
 			if($_POST['department_id'] == 7)
 			{
 				//if nurse visit doctor must be selected
-				$this->form_validation->set_rules('personnel_id', 'Doctor', 'required|is_natural_no_zero');
+				$this->form_validation->set_rules('personnel_id', 'Doctor', 'is_natural_no_zero');
 				$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required|is_natural_no_zero');
 				$service_charge_id = $this->input->post("service_charge_name");
 				$doctor_id = $this->input->post('personnel_id');

@@ -16,6 +16,9 @@ class Nurse  extends MX_Controller
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
 		$this->load->model('administration/personnel_model');
+		$this->load->model('laboratory/lab_model');
+		$this->load->model('radiology/xray_model');
+		$this->load->model('radiology/ultrasound_model');
 		
 		$this->load->model('auth/auth_model');
 		if(!$this->auth_model->check_login())
@@ -468,7 +471,11 @@ class Nurse  extends MX_Controller
 		$data = array('visit_id'=>$visit_id);
 		$this->load->view('view_procedure',$data);
 	}
-
+	
+	function view_bed_charges($visit_id){
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('display_bed_charges',$data);
+	}
 	
 	public function search_procedures($visit_id)
 	{
@@ -708,9 +715,13 @@ class Nurse  extends MX_Controller
 	}
 	function delete_procedure($procedure_id)
 	{
-		// $this->db->where(array("visit_charge_id"=>$procedure_id));
-		// $this->db->delete('visit_charge', $visit_data);
+		$visit_data = array('visit_charge_delete'=>1,'deleted_by'=>$this->session->userdata("personnel_id"),'deleted_on'=>date("Y-m-d"),'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
 
+		$this->db->where(array("visit_charge_id"=>$procedure_id));
+		$this->db->update('visit_charge', $visit_data);
+	}
+	function delete_bed($procedure_id)
+	{
 		$visit_data = array('visit_charge_delete'=>1,'deleted_by'=>$this->session->userdata("personnel_id"),'deleted_on'=>date("Y-m-d"),'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
 
 		$this->db->where(array("visit_charge_id"=>$procedure_id));
@@ -776,6 +787,13 @@ class Nurse  extends MX_Controller
 
 		$visit_data = array('visit_charge_units'=>$units,'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
 		$this->db->where(array("visit_charge_id"=>$procedure_id));
+		$this->db->update('visit_charge', $visit_data);
+	}
+	public function bed_total($visit_charge_id,$units,$amount){
+		
+
+		$visit_data = array('visit_charge_units'=>$units,'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
+		$this->db->where(array("visit_charge_id"=>$visit_charge_id));
 		$this->db->update('visit_charge', $visit_data);
 	}
 	public function vaccine_total($vaccine_id,$units,$amount){
@@ -875,9 +893,72 @@ class Nurse  extends MX_Controller
 		$this->load->view('admin/templates/no_sidebar', $data);
 
 	}
-	function symptoms($symptoms_id,$status,$visit_id,$description=NULL){
-		$data = array('symptoms_id'=>$symptoms_id,'status'=>$status,'visit_id'=>$visit_id,'description'=>$description);
-		$this->load->view('soap/symptoms',$data);
+	function symptoms($symptoms_id,$status,$visit_id,$description=NULL)
+	{
+		if(isset($_POST['description']))
+		{
+			$description = $_POST['description'];
+		}
+		if ($status==0)
+		{
+			$this->nurse_model->update_visit_sypmtom($symptoms_id,$visit_id,$description);
+		}
+		else
+		{
+			$this->nurse_model->save_visit_sypmtom($symptoms_id,$visit_id,$status);
+		}
+		
+		$this->view_selected_symptoms($visit_id);
+	}
+	function view_selected_symptoms($visit_id)
+	{
+		$rs2 = $this->nurse_model->get_visit_symptoms($visit_id);
+		$num_rows2 = count($rs2);
+		
+		echo"<table class='table table-striped table-condensed table-bordered'>"; 
+			echo"<tr>"; 
+				echo"<th>";
+					echo"#"; 
+				echo"</th>"; 
+				echo"<th>";
+					echo"Symptom"; 
+				echo"</th>"; 
+				echo"<th>";
+					echo"Yes/ No"; 
+				echo"</th>"; 
+				echo"<th>";
+					echo"Description"; 
+				echo"</th>"; 
+			echo"</tr>"; 
+			
+			$count=0;
+			if($num_rows2 > 0)
+			{
+				foreach ($rs2 as $key):	
+					$count++;
+					$symptoms_name = $key->symptoms_name;
+					$status_name = $key->status_name;
+					$visit_symptoms_id = $key->visit_symptoms_id;
+					$description= $key->description;
+					
+					echo"<tr>";
+						echo"<td>";
+							echo $count;
+						echo"</td>";
+						echo"<td>";
+							echo $symptoms_name; 
+						echo"</td>";
+						echo"<td>";
+							echo $status_name; 
+						echo"</td>";
+						echo"<td>";
+							echo $description; 
+						echo"</td>";
+					echo"</tr>";
+				endforeach;
+			}
+			
+		echo "</table>";
 	}
 	function objective_finding($visit_id){
 		$v_data['visit_id'] = $visit_id;
@@ -898,16 +979,65 @@ class Nurse  extends MX_Controller
 		{
 			$this->nurse_model->save_objective_finding($objective_finding_id, $visit_id);
 		}
-		$data = array('visit_id'=>$visit_id);
-		$this->load->view('soap/add_objective_findings', $data);
+		
+		$this->view_selected_findings($visit_id);
+	}
+	
+	public function view_selected_findings($visit_id)
+	{
+		$rs2 = $this->nurse_model->get_visit_objective_findings($visit_id);
+		$num_rows2 = count($rs2);
+			
+		echo"<table class='table table-condensed table-striped table-bordered'>"; 
+			echo"<tr>"; 
+				echo"<th>";
+					echo"#"; 
+				echo"</th>"; 
+				echo"<th>";
+					echo"Group"; 
+				echo"</th>"; 
+				echo"<th>";
+					echo"Name"; 
+				echo"</th>"; 
+				echo"<th>";
+					echo"Description"; 
+				echo"</th>"; 
+			echo"</tr>"; 
+			$count=0;
+			
+			if($num_rows2 > 0)
+			{
+				foreach ($rs2 as $key):
+					$count++;
+					$objective_findings_name = $key->objective_findings_name;
+					$visit_objective_findings_id = $key->visit_objective_findings_id;
+					$objective_findings_class_name = $key->objective_findings_class_name;
+					$description= $key->description;
+					
+					echo"<tr>"; 
+						echo"<td>";
+							echo $count; 
+						echo"</td>"; 
+						echo"<td>";
+							echo $objective_findings_class_name; 
+						echo"</td>"; 
+						echo"<td>";
+							echo $objective_findings_name; 
+						echo"</td>"; 
+						echo"<td>";
+							echo $description; 
+						echo"</td>"; 
+					echo"<tr>"; 
+				endforeach;
+			}
+		echo "</table>";
 	}
 	
 	function update_objective_findings($objective_finding_id, $visit_id, $status, $description = NULL)
 	{
 		if($this->nurse_model->update_objective_finding($objective_finding_id, $visit_id, $description))
 		{
-			$data = array('visit_id'=>$visit_id,'description'=>$description);
-			$this->load->view('soap/add_objective_findings', $data);
+			$this->view_selected_findings($visit_id);
 		}
 	}
 	
@@ -2156,7 +2286,15 @@ class Nurse  extends MX_Controller
 		{
 			if($this->nurse_model->update_room_details($visit_id))
 			{
-				$this->session->set_userdata('success_message', 'Room details updated successfully');
+				if($this->nurse_model->bill_bed($this->input->post('bed_id'), $visit_id))
+				{
+					$this->session->set_userdata('success_message', 'Room details updated successfully');
+				}
+				
+				else
+				{
+					$this->session->set_userdata('error_message', 'Unable to bill for bed');
+				}
 			}
 			
 			else

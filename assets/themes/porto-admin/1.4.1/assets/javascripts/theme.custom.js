@@ -8,6 +8,22 @@ $( document ).ready(function() {
 		});
 		
 	}, 5000);
+	
+	/* CL Editor */
+	$(".cleditor").cleditor({
+		width: "auto",
+		height: "100%"
+	});
+	
+});
+
+$(document).on("click",".nav-tabs li a",function()
+{
+	$(".cleditorButton").removeAttr( "disabled" );
+	$(".cleditorGroup div").removeClass( "cleditorDisabled" );
+	$(".cleditorMain iframe html body").css( "display", 'block' );
+	$(".cleditorMain iframe").css( "width", '100%' );
+	$(".cleditorMain iframe").css( "height", '100%' );
 });
 
 $(document).on("change",".parent_sections select",function()

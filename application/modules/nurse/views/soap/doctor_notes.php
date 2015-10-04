@@ -15,12 +15,8 @@ if($num_rows > 0){
 echo
 '
 	<div class="row">
-		<div class="col-md-12">
-			 <table align="center">
-			 	<tr>
-					<td><textarea id="doctor_notes_item" rows="10" cols="100" class="form-control col-md-6" >'.$doctor_notes.'</textarea></td>
-		         </tr>
-			</table>
+		<div class="col-md-12" style="height:500px;">
+			 <textarea id="doctor_notes_item" rows="10" cols="100" class="cleditor" >'.$doctor_notes.'</textarea>
 		</div>
 	</div>
 	<br>
@@ -43,12 +39,8 @@ echo
 
 '
 	<div class="row">
-		<div class="col-md-12">
-			 <table align="center">
-			 	<tr>
-					<td><textarea id="doctor_notes_item" rows="10" cols="100" class="form-control col-md-6" ></textarea></td>
-		         </tr>
-			</table>
+		<div class="col-md-12" style="height:500px;">
+			 <textarea id="doctor_notes_item" rows="10" cols="100" class="cleditor" ></textarea>
 		</div>
 	</div>
 	<br>

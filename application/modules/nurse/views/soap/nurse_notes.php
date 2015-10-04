@@ -13,12 +13,8 @@ if($num_rows > 0){
 	
 echo
 '	<div class="row">
-		<div class="col-md-12">
-			<table align="center">
-			 	<tr>
-					<td><textarea id="nurse_notes_item" rows="10" cols="100" class="form-control col-md-6">'.$nurse_notes.'</textarea></td>
-		         </tr>
-			</table>
+		<div class="col-md-12" style="height:500px;">
+			<textarea id="nurse_notes_item" class="cleditor">'.$nurse_notes.'</textarea>
 		</div>
 	</div>
 	<br>
@@ -40,12 +36,8 @@ else{
 echo
 '
 	<div class="row">
-	    <div class="col-md-12">
-		 <table align="center">
-		 	<tr>
-				<td><textarea id="nurse_notes_item" rows="10" cols="100" class="form-control col-md-6" ></textarea></td>
-	         </tr>
-		</table>
+	    <div class="col-md-12" style="height:500px;">
+		 	<textarea id="nurse_notes_item" class="cleditor" ></textarea>
 		</div>
 	</div>
 	<br>
@@ -64,6 +56,7 @@ echo
 }
 	
 ?>
+
 <script type="text/javascript">
 	
 	function save_nurse_notes(visit_id){

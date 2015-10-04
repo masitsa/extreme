@@ -30,9 +30,9 @@
                         </div>
 					 </div>
 					<!-- bill for thr test asap -->
-	              
 
                   	<div id="test_results"></div>
+                    
                 </div>
                  <div class="tab-pane" id="visit_trail">
                   <?php echo $this->load->view("nurse/patients/visit_trail", '', TRUE);?>

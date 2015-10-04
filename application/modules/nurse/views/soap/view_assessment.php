@@ -14,8 +14,8 @@ if($num_rows > 0){
 	echo
 	"
 	<div class='row'>
-		<div class='col-md-12'>
-			<textarea class='form-control' rows='8' id='visit_assessment' >".$visit_assessment."</textarea>
+		<div class='col-md-12' style='height:400px;'>
+			<textarea class='cleditor' id='visit_assessment' >".$visit_assessment."</textarea>
 		</div>
 	</div>
 	";
@@ -34,8 +34,8 @@ else{
 	echo
 	"
 	<div class='row'>
-		<div class='col-md-12'>
-			<textarea class='form-control' rows='8' id='visit_assessment' ></textarea>
+		<div class='col-md-12' style='height:400px;'>
+			<textarea class='cleditor' id='visit_assessment' ></textarea>
 		</div>
 	</div>
 	";

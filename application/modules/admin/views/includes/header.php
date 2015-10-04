@@ -32,6 +32,9 @@
 		<!-- Theme CSS -->
 		<link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/stylesheets/theme.css" />
 		<link rel="stylesheet" href="<?php echo base_url()."assets/themes/porto-admin/1.4.1/";?>assets/stylesheets/theme-custom.css" />
+        
+        <!-- CLEditor -->
+        <link rel="stylesheet" href="<?php echo base_url()."assets/bluish";?>/style/jquery.cleditor.css">
 
 		<!-- Theme Custom CSS -->
 		

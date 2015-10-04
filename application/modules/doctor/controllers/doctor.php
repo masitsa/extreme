@@ -18,7 +18,10 @@ class Doctor  extends MX_Controller
 		$this->load->model('admin/admin_model');
 		$this->load->model('reception/database');
 		$this->load->model('site/site_model');
+		$this->load->model('laboratory/lab_model');
 		$this->load->model('administration/personnel_model');
+		$this->load->model('radiology/xray_model');
+		$this->load->model('radiology/ultrasound_model');
 		
 		$this->load->model('auth/auth_model');
 		if(!$this->auth_model->check_login())
@@ -303,6 +306,16 @@ class Doctor  extends MX_Controller
 		
 		$data['title'] = 'Patient Card';
 		$this->load->view('admin/templates/general_page', $data);
+	}
+	
+	public function print_prescription($visit_id)
+	{
+		$data = array('visit_id'=>$visit_id);
+		$data['contacts'] = $this->site_model->get_contacts();
+		
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$data['patient'] = $patient;
+		$this->load->view('print_prescription', $data);
 	}
 }
 ?>

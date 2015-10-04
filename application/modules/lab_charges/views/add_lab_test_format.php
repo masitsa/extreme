@@ -42,11 +42,17 @@ if($lab_test_details->num_rows() > 0)
 			<?php
 			$error = $this->session->userdata('error_message');
 			$success = $this->session->userdata('success_message');
+			$validation_errors = validation_errors();
 			
 			if(!empty($error))
 			{
 				echo '<div class="alert alert-danger">'.$error.'</div>';
 				$this->session->unset_userdata('error_message');
+			}
+			
+			if(!empty($validation_errors))
+			{
+				echo '<div class="alert alert-danger">'.$validation_errors.'</div>';
 			}
 			
 			if(!empty($success))

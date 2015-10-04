@@ -47,7 +47,7 @@
 
  <section class="panel">
 	<header class="panel-heading">
-		<h2 class="panel-title"Patient card</h2>
+		<h2 class="panel-title">Patient card</h2>
 	</header>
 	
 	<!-- Widget content -->
@@ -163,7 +163,7 @@
               </ul>
               <div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
                 <div class="tab-pane active" id="vitals-pane">
-                  <?php echo $this->load->view("patients/vitals", '', TRUE);?>
+                  	<?php echo $this->load->view("patients/vitals", '', TRUE);?>
                 </div>
                
                 
@@ -257,7 +257,7 @@
   	var config_url = document.getElementById("config_url").value;
 
 	$(document).ready(function(){
-	 var config_url = document.getElementById("config_url").value;
+	 	var config_url = document.getElementById("config_url").value;
    
 	  	$.get(config_url+"nurse/get_family_history/<?php echo $visit_id;?>", function( data ) {
 			$("#new-nav").html(data);

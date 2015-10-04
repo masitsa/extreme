@@ -42,9 +42,6 @@ if(!empty($coming_from)){
 	}
 	$lab_rs = $this->lab_model->get_lab_visit_item($visit_id);
 	$num_lab_visit = count($lab_rs);
-	
-	if($num_lab_visit > 0){
-		
 		echo"
 <div class='row'>
 	<div class='col-md-12'>
@@ -53,7 +50,11 @@ if(!empty($coming_from)){
             <h2 class='panel-title'>Laboratory test results</h2>
         </header>
 
-        <div class='panel-body'>
+        <div class='panel-body'>";
+	
+	if($num_lab_visit > 0){
+		
+		echo"
 			<table class='table table-striped table-hover table-condensed'>
 				<tr>
 					<th>Test</th>
@@ -195,8 +196,6 @@ if(!empty($coming_from)){
 		echo //MM.$lab_test.
 		"
 		</table>
-		</div>
-		</div>
 		
 		<div class='row' style='margin-bottom: 20px;'>
 			<div class='col-md-12'>
@@ -256,11 +255,9 @@ if(!empty($coming_from)){
 	}
 }
 echo '
+			</div>
+		</section>
 	</div>
-</section>';
+</div>
+';
 ?>
-<script type="text/javascript">
-
-	
-	
-</script>

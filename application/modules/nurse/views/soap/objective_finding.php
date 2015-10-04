@@ -140,37 +140,7 @@
 	
 	function close_objective_findings(visit_id)
 	{
-		var XMLHttpRequestObject = false;
-    
-		if (window.XMLHttpRequest) 
-		{
-			XMLHttpRequestObject = new XMLHttpRequest();
-		} 
-		
-		else if (window.ActiveXObject) 
-		{
-			XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-		var config_url = $('#config_url').val();
-		var url = config_url+"nurse/get_visit_objective_findings/"+visit_id;
-		
-		if(XMLHttpRequestObject) 
-		{
-			var obj3 = window.opener.document.getElementById("objective_findings");
-			XMLHttpRequestObject.open("GET", url);
-			
-			XMLHttpRequestObject.onreadystatechange = function()
-			{
-			
-				if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) 
-				{
-					obj3.innerHTML = XMLHttpRequestObject.responseText;
-					window.close(this);
-				}
-			}
-			
-			XMLHttpRequestObject.send(null);
-		}
+		window.close(this);
 	}
 
 function add_objective_findings(objective_findings_id, visit_id, status)
@@ -190,7 +160,7 @@ function add_objective_findings(objective_findings_id, visit_id, status)
   var url = config_url+"nurse/add_objective_findings/"+objective_findings_id+"/"+visit_id+"/"+status;
  
   if(XMLHttpRequestObject) {
-    var obj3 = window.opener.document.getElementById("objective_findings");
+    var obj3 = window.opener.document.getElementById("visit_objective_findings1");
     XMLHttpRequestObject.open("GET", url);
         
     XMLHttpRequestObject.onreadystatechange = function(){
@@ -254,8 +224,8 @@ function update_visit_obj(objective_findings_id,visit_id,update_id){
 		XMLHttpRequestObject.onreadystatechange = function(){
 			
 			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-			//	window.alert(objective_findings1(visit_id));
-				symptoms(visit_id);
+				var obj3 = window.opener.document.getElementById("visit_objective_findings1");
+				obj3.innerHTML = XMLHttpRequestObject.responseText;
 			}
 		}
 				

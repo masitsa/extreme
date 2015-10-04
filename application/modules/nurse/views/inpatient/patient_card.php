@@ -103,25 +103,25 @@
           	<?php
               	$error = $this->session->userdata('error_message');
               	$validation_error = validation_errors();
-        				$success = $this->session->userdata('success_message');
-        				
-        				if(!empty($error))
-        				{
-        					echo '<div class="alert alert-danger">'.$error.'</div>';
-        					$this->session->unset_userdata('error_message');
-        				}
-        				
-        				if(!empty($validation_error))
-        				{
-        					echo '<div class="alert alert-danger">'.$validation_error.'</div>';
-        				}
-        				
-        				if(!empty($success))
-        				{
-        					echo '<div class="alert alert-success">'.$success.'</div>';
-        					$this->session->unset_userdata('success_message');
-        				}
-      			?>
+				$success = $this->session->userdata('success_message');
+				
+				if(!empty($error))
+				{
+					echo '<div class="alert alert-danger">'.$error.'</div>';
+					$this->session->unset_userdata('error_message');
+				}
+				
+				if(!empty($validation_error))
+				{
+					echo '<div class="alert alert-danger">'.$validation_error.'</div>';
+				}
+				
+				if(!empty($success))
+				{
+					echo '<div class="alert alert-success">'.$success.'</div>';
+					$this->session->unset_userdata('success_message');
+				}
+      		?>
          <div class="clearfix"></div>
           </div>
 

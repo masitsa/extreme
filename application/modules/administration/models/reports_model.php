@@ -313,6 +313,27 @@ class Reports_model extends CI_Model
 		}
 	}
 	
+	public function get_service_notes($visit_id, $service_id, $payment_type)
+	{
+		//retrieve all users
+		$this->db->from('payments');
+		$this->db->select('SUM(amount_paid) AS total_invoiced');
+		$this->db->where('payments.visit_id = '.$visit_id.' AND payments.payment_service_id = '.$service_id.' AND payments.payment_type = '.$payment_type);
+		$query = $this->db->get();
+		
+		$cash = $query->row();
+		
+		if($cash->total_invoiced > 0)
+		{
+			return $cash->total_invoiced;
+		}
+		
+		else
+		{
+			return 0;
+		}
+	}
+	
 	public function get_all_payment_values($visit_id,$payment_method_id)
 	{
 		# code...
@@ -494,10 +515,10 @@ class Reports_model extends CI_Model
 				$report[$row_count][$current_column] = $service->service_name;
 				$current_column++;
 			}
-			$report[$row_count][$current_column] = 'Debit Note Total';
+			/*$report[$row_count][$current_column] = 'Debit Note Total';
 			$current_column++;
 			$report[$row_count][$current_column] = 'Credit Note Total';
-			$current_column++;
+			$current_column++;*/
 			$report[$row_count][$current_column] = 'Invoice Total';
 			$current_column++;
 			
@@ -630,13 +651,21 @@ class Reports_model extends CI_Model
 						$visit_charge = $this->reports_model->get_all_visit_charges($visit_id, $service_id);
 						$total_invoiced += $visit_charge;
 						
-						$report[$row_count][$current_column] = $visit_charge;
+						//get debit notes for that service
+						$service_debit_notes = $this->reports_model->get_service_notes($visit_id, $service_id, 2);
+						
+						//get debit notes for that service
+						$service_credit_notes = $this->reports_model->get_service_notes($visit_id, $service_id, 3);
+						
+						$notes_difference = $service_debit_notes - $service_credit_notes;
+						
+						$report[$row_count][$current_column] = ($visit_charge + $notes_difference);
 						$current_column++;
 					}
-					$report[$row_count][$current_column] = $debit_note_amount;
+					/*$report[$row_count][$current_column] = $debit_note_amount;
 					$current_column++;
 					$report[$row_count][$current_column] = $credit_note_amount;
-					$current_column++;
+					$current_column++;*/
 					$report[$row_count][$current_column] = $total_invoiced;
 					$current_column++;
 					// display amounts collected on every payment method
@@ -680,13 +709,22 @@ class Reports_model extends CI_Model
 						$visit_charge = $this->reports_model->get_all_visit_charges($visit_id, $service_id);
 						$total_invoiced += $visit_charge;
 						
-						$report[$row_count][$current_column] = $visit_charge;
+						//get debit notes for that service
+						$service_debit_notes = $this->reports_model->get_service_notes($visit_id, $service_id, 2);
+						
+						//get debit notes for that service
+						$service_credit_notes = $this->reports_model->get_service_notes($visit_id, $service_id, 3);
+						
+						$notes_difference = $service_debit_notes - $service_credit_notes;
+						
+						$report[$row_count][$current_column] = ($visit_charge + $notes_difference);
+						
 						$current_column++;
 					}
-					$report[$row_count][$current_column] = $debit_note_amount;
+					/*$report[$row_count][$current_column] = $debit_note_amount;
 					$current_column++;
 					$report[$row_count][$current_column] = $credit_note_amount;
-					$current_column++;
+					$current_column++;*/
 					$report[$row_count][$current_column] = $invoice_total;
 					$current_column++;
 					foreach($payment_method_query->result() as $paymentmethod)

@@ -25,6 +25,7 @@
                         
                         <div class="col-lg-8">
                             <select class="form-control" name="visit_type_id">
+                            	<option value="">-- Select patient type --</option>
                                 <?php
                                     if($visit_types->num_rows() > 0)
                                     {

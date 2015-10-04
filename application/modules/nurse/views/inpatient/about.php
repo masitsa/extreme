@@ -150,6 +150,12 @@ $room_beds = $this->nurse_model->get_room_beds($visit_room_id);
                 </div>
                 <?php echo form_close();?>
             </div>
+            
+            <div class="row">
+            	<div class="col-md-12">
+            		<div id="bed_charges"></div>
+            	</div>
+            </div>
          </section>
     </div>
     
