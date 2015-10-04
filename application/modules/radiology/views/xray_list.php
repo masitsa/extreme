@@ -181,11 +181,11 @@ function get_test_results(page, visit_id){
   }
   
   else if ((page == 75) || (page == 100)){
-    url = config_url+"radiology/xray/test2/"+visit_id;
+    url = config_url+"radiology/xray/test1/"+visit_id;
   }
   if(XMLHttpRequestObject) {
     if((page == 75) || (page == 85)){
-      var obj = window.opener.document.getElementById("xray_results");
+      var obj = window.opener.document.getElementById("test_results");
     }
     else{
       var obj = document.getElementById("xray_results");
@@ -197,8 +197,16 @@ function get_test_results(page, visit_id){
       if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
   //window.alert(XMLHttpRequestObject.responseText);
         obj.innerHTML = XMLHttpRequestObject.responseText;
-        if((page == 75) || (page == 85)){
-          window.close(this);
+        if(page == 75){
+			/* CL Editor */
+			$(".cleditor", opener.document).cleditor({
+				width: "auto",
+				height: "100%"
+			});
+          	window.close(this);
+        }
+        if(page == 85){
+          	window.close(this);
         }
         
       }

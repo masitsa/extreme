@@ -1711,6 +1711,7 @@ class Reception_model extends CI_Model
 		$this->db->from('departments');
 		$this->db->select('*');
 		$this->db->where('visit = 1');
+		$this->db->order_by('department_name');
 		$query = $this->db->get();
 		
 		return $query;
@@ -1920,7 +1921,7 @@ class Reception_model extends CI_Model
 	public function get_visit_trail($visit_id)
 	{
 		$where = 'visit_department.visit_id = '.$visit_id.' AND visit_department.department_id = departments.department_id';
-		$this->db->select('departments.department_name, visit_department.*');
+		$this->db->select('departments.department_name, visit_department.*, personnel.personnel_fname');
 		$this->db->where($where);
 		$this->db->join('personnel', 'visit_department.created_by = personnel.personnel_id', 'left');
 		$this->db->order_by('visit_department.created','ASC');

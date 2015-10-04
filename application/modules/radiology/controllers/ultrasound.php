@@ -257,10 +257,9 @@ class Ultrasound  extends MX_Controller
 		$data['content'] = $this->load->view('ultrasound_list', $v_data, true);
 		
 		$data['title'] = 'Laboratory Test List';
-		$this->load->view('admin/templates/no_sidebar', $data);	
-
+		$this->load->view('admin/templates/no_sidebar', $data);
 	}
-
+	
 	public function delete_cost($visit_charge_id, $visit_id)
 	{
 		$this->ultrasound_model->delete_visit_ultrasound($visit_charge_id);

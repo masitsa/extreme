@@ -139,9 +139,11 @@
             XMLHttpRequestObject.send(null);
         }
     }
-  	function open_window_ultrasound(test, visit_id){
-	  var config_url = $('#config_url').val();
-	  window.open(config_url+"radiology/ultrasound/ultrasound_list/"+test+"/"+visit_id,"Popup","height=1200, width=800, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
+  	function open_window_ultrasound(test, visit_id)
+	{
+		  var config_url = $('#config_url').val();
+		  var win = window.open(config_url+"radiology/ultrasound/ultrasound_list/"+test+"/"+visit_id,"Popup","height=1200, width=800, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
+		  win.focus();
 	}
 	function get_test_results(page, visit_id){
 

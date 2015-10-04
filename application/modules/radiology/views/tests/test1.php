@@ -65,7 +65,7 @@ if(!empty($coming_from)){
 				<tr ".$class.">
 					<td>".$r."</td>
 					<td>".$service_charge_name."</td>
-					<td><textarea class='cleditor' id='xray_result".$visit_charge_id."'>".$visit_charge_comment."</textarea></td>
+					<td style='height: 500px;'><textarea class='cleditor' id='xray_result".$visit_charge_id."'>".$visit_charge_comment."</textarea></td>
 					<td><a href='#' onclick='save_result(".$visit_charge_id.", ".$visit_id.")' class='btn btn-success'>Save</a></td>";
 			echo "</tr>";
 			$r++;
