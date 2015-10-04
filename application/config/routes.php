@@ -101,7 +101,7 @@ $route['human-resource/personnel'] = 'hr/personnel/index';
 $route['human-resource/personnel/(:any)/(:any)/(:num)'] = 'hr/personnel/index/$1/$2/$3';
 $route['human-resource/add-personnel'] = 'hr/personnel/add_personnel';
 $route['human-resource/edit-personnel/(:num)'] = 'hr/personnel/edit_personnel/$1';
-
+$route['human-resource/edit-store-authorize/(:num)'] = 'hr/personnel/edit_store_authorize/$1';
 $route['human-resource/edit-order-authorize/(:num)'] = 'hr/personnel/edit_order_authorize/$1';
 
 $route['human-resource/edit-personnel-about/(:num)'] = 'hr/personnel/update_personnel_about_details/$1';
@@ -537,13 +537,31 @@ $route['inventory/generate-lpo/(:num)'] = 'inventory/orders/print_lpo_new/$1';
 $route['inventory/generate-rfq/(:num)/(:num)/(:any)'] = 'inventory/orders/print_rfq_new/$1/$2/$3';
 $route['inventory/edit_order/(:num)'] = 'inventory/orders/edit_order/$1';
 
-$route['inventory/products'] = 'inventory/products/index';
-$route['inventory/products/(:num)'] = 'inventory/products/index/$1';
-$route['inventory/add-product'] = 'inventory/products/add_product';
-$route['inventory/activate-product/(:num)'] = 'inventory/products/activate_product/$1';
-$route['inventory/deactivate-product/(:num)'] = 'inventory/products/deactivate_product/$1';
-$route['inventory/edit-product/(:num)'] = 'inventory/products/edit_product/$1';
+$route['inventory/products'] = 'inventory_management/index';
+$route['inventory/products/(:num)'] = 'inventory_management/index/$1';
+$route['inventory/add-product'] = 'inventory_management/add_product';
+$route['inventory/activate-product/(:num)'] = 'inventory_management/products/activate_product/$1';
+$route['inventory/deactivate-product/(:num)'] = 'inventory_management/products/deactivate_product/$1';
+$route['inventory/edit-product/(:num)'] = 'inventory_management/edit_product/$1';
 
+
+$route['inventory/product-details/(:num)'] = 'inventory_management/manage_product/$1';
+$route['inventory/manage-store'] = 'inventory_management/manage_store';
+$route['inventory/store-requests'] ='inventory_management/store_requests';
+$route['inventory/selected-items/(:num)'] = 'inventory_management/now_store_requests/$1';
+$route['inventory/make-order/(:num)'] = 'inventory_management/make_order/$1';
+$route['inventory/save-product-request/(:num)/(:num)'] = 'inventory_management/save_order_products/$1/$2';
+$route['inventory/update-store-order/(:num)/(:num)'] = 'inventory_management/update_order_products/$1/$2';
+$route['inventory/award-store-order/(:num)/(:num)'] = 'inventory_management/award_order_products/$1/$2';
+$route['inventory/receive-store-order/(:num)/(:num)/(:num)/(:num)'] = 'inventory_management/receive_order_products/$1/$2/$3/$4';
+$route['inventory/product-purchases/(:num)'] = 'inventory_management/all_product_purchases/$1';
+$route['inventory/purchase-product/(:num)'] = 'inventory_management/product_purchases/$1';
+$route['inventory/edit-product-purchase/(:num)/(:num)'] = 'inventory_management/edit_product_purchase/$1/$2';
+
+
+$route['inventory/product-deductions'] = 'inventory_management/all_product_deductions';
+$route['inventory/deduction-product/(:num)'] = 'inventory_management/product_deductions/$1';
+$route['inventory/edit-product-deduction/(:num)/(:num)'] = 'inventory_management/edit_product_deduction/$1/$2';
 
 
 // pharmacy orders

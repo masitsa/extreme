@@ -8,7 +8,7 @@ class Orders extends MX_Controller
 	{
 		parent:: __construct();
 		$this->load->model('admin/users_model');
-		$this->load->model('products_model');
+		$this->load->model('inventory_management/products_model');
 		$this->load->model('orders_model');
 		$this->load->model('suppliers_model');
 		$this->load->model('categories_model');

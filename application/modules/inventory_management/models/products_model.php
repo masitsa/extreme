@@ -14,10 +14,10 @@ class Products_model extends CI_Model
 		return $query;
 	}
 	
-	public function get_all_products($table, $where, $per_page, $page, $limit = NULL, $order_by = 'created', $order_method = 'DESC')
+	public function get_all_products($table, $where, $per_page, $page, $limit = NULL, $order_by = 'product.created', $order_method = 'DESC')
 	{
 		$this->db->from($table);
-		$this->db->select('product.product_id, product.product_name,product.product_status, product.product_description,product.category_id, product.created, product.created_by, product.last_modified, product.modified_by, category.category_name');
+		$this->db->select('*');
 		$this->db->where($where);
 		$this->db->order_by($order_by, $order_method);
 		

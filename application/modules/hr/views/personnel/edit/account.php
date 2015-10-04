@@ -7,7 +7,6 @@ $personnel_fname = $row->personnel_fname;
 $personnel_account_status = $row->personnel_account_status;
 $personnel_id = $row->personnel_id;
 $authorize_invoice_changes = $row->authorize_invoice_changes;
-$authorize_order_changes = $row->authorize_order_changes;
 
 
 
@@ -301,6 +300,95 @@ if(!empty($validation_error))
                                                             <td><?php echo $counter;?></td>
                                                             <td><?php echo $inventory_level_status_name;?></td>
                                                             <td></td>
+                                                        </tr>
+                                                        <?php
+
+                                                    }
+                                               }
+                                             ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+                            <section class="panel panel-featured panel-featured-info">
+                                <header class="panel-heading">
+                                    
+                                    <h2 class="panel-title">Assign Store Management</h2>
+                                </header>
+                                
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <?php echo form_open("human-resource/edit-store-authorize/".$personnel_id, array("class" => "form-horizontal"));?>
+                                          <div class="form-group">
+                                                <div class="col-lg-12">
+                                                    <select name="store_id" class="form-control">
+                                                        <option>SELECT STORE TO MANAGE</option>
+                                                       <?php
+
+                                                       $store_management_array = $this->hr_model->get_non_assigned_stores($personnel_id);
+                                                       if($store_management_array->num_rows() > 0)
+                                                       {
+                                                            foreach ($store_management_array->result() as $key_store) {
+                                                                # code...
+                                                                $store_name = $key_store->store_name;
+                                                                $store_id = $key_store->store_id;
+                                                                ?>
+                                                                <option value="<?php echo $store_id?>"><?php echo $store_name;?></option>
+                                                                <?php
+
+                                                            }
+                                                       }
+                                                       ?>
+                                                    </select>
+                                                </div>
+                                            </div>                                    
+                                            <div class="row" style="margin-top:10px;">
+                                                <div class="col-md-12">
+                                                    <div class="form-actions center-align">
+                                                        <button class="btn btn-primary" type="submit">
+                                                            Update
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php echo form_close();?> 
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <h4>Authorization Lists</h4>
+
+                                    <table class="table table-condensed table-hover table-striped table-bordered">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Store Name</th>
+                                            <th>IS PARENT</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        <tbody>
+                                            <?php
+                                            $stores_assiged = $this->hr_model->get_personnel_stores($personnel_id);
+                                               if($stores_assiged->num_rows() > 0)
+                                               {
+                                                $counter_number = 0;
+                                                    foreach ($stores_assiged->result() as $stores) {
+                                                        # code...
+                                                        $store_name = $stores->store_name;
+                                                        $store_id = $stores->store_id;
+                                                        $store_parent = $stores->store_parent;
+                                                        if($store_parent > 0)
+                                                        {
+                                                            $is_parent = 'NO';
+                                                        }
+                                                        else
+                                                        {
+                                                            $is_parent = 'YES';
+                                                        }
+                                                        $counter_number++;
+                                                        ?>
+                                                        <tr>
+                                                            <td><?php echo $counter_number;?></td>
+                                                            <td><?php echo $store_name;?></td>
+                                                            <td><?php echo $is_parent;?></td>
                                                         </tr>
                                                         <?php
 

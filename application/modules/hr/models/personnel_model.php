@@ -907,6 +907,31 @@ class Personnel_model extends CI_Model
 			return FALSE;
 		}
 	}
+
+	/*
+	*	Activate a deactivated personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function edit_store_authorize($personnel_id)
+	{
+		$data = array(
+				'store_id' => $this->input->post('store_id'),
+				'personnel_id' => $personnel_id,
+				'created'=>date("Y-m-d H:i:s"),
+				'created_by'=>$this->session->userdata('personnel_id'),
+				'modified_by'=>$this->session->userdata('personnel_id')
+			);
+		
+
+		if($this->db->insert('personnel_store', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
 	
 	/*
 	*	Select get personnel types

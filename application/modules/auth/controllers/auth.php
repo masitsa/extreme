@@ -102,6 +102,23 @@ class Auth extends MX_Controller
 	
 	public function logout()
 	{
+		$personnel_id = $this->session->userdata('personnel_id');
+		
+		if($personnel_id > 0)
+		{
+			$session_log_insert = array(
+				"personnel_id" => $personnel_id, 
+				"session_name_id" => 2
+			);
+			$table = "session";
+			if($this->db->insert($table, $session_log_insert))
+			{
+			}
+			
+			else
+			{
+			}
+		}
 		$this->session->sess_destroy();
 		redirect('login');
 	}
