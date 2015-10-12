@@ -134,6 +134,7 @@ class Xray_model extends CI_Model
 		return $result;
 		
 	}
+	
 	function get_test_comment($visit_charge_id){
 
 		$table = "xray_visit_format_comment";

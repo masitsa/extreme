@@ -18,6 +18,9 @@ echo "
 			<input type='button' class='btn btn-info btn-sm' value='Diagnose' onclick='open_window(6, ".$visit_id.")'/>
 		</div>
 		<div class='col-md-2 center-align'>
+			<input type='button' class='btn btn-default btn-sm' value='Surgeries' onclick='open_window_surgery(0, ".$visit_id.")'/>
+		</div>
+		<div class='col-md-2 center-align'>
 			<input type='button' class='btn btn-success btn-sm' value='Prescribe' onclick='open_window(1, ".$visit_id.")'/>
 			<!-- 
 			<a href='".site_url()."pharmacy/prescription/".$visit_id."' target='_blank' class='btn btn-success btn-sm'>Prescribe</a>

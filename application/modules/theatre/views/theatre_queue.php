@@ -4,29 +4,20 @@
  
 <div class="row">
     <div class="col-md-12">
-
-      <!-- Widget -->
-      <div class="widget boxed">
-        <!-- Widget head -->
-        <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> for <?php echo date('jS M Y',strtotime(date('Y-m-d')));?></h4>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-          </div>
-          <div class="clearfix"></div>
-        </div>             
+ 	<section class="panel">
+    	<header class="panel-heading">
+          	<h2 class="panel-title"><?php echo $title;?> for <?php echo date('jS M Y',strtotime(date('Y-m-d')));?></h2>
+        </header>             
 
         <!-- Widget content -->
-        <div class="widget-content">
-          <div class="padd">
+        <div class="panel-body">
           
 <?php
 		$search = $this->session->userdata('visit_search');
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
 		
@@ -75,15 +66,15 @@
 				$strath_no = $row->strath_no;
 				$visit_type_id = $row->visit_type_id;
 				$visit_type = $row->visit_type;
+				$accounts = $row->accounts;
+				$visit_table_visit_type = $visit_type;
+				$patient_table_visit_type = $visit_type_id;
 				$coming_from = $this->reception_model->coming_from($visit_id);
-				
-				$patient = $this->reception_model->patient_names2($patient_id, $visit_id);
-				$visit_type = $patient['visit_type'];
-				$patient_type = $patient['patient_type'];
-				$patient_othernames = $patient['patient_othernames'];
-				$patient_surname = $patient['patient_surname'];
-				$patient_date_of_birth = $patient['patient_date_of_birth'];
-				$gender = $patient['gender'];
+				$sent_to = $this->reception_model->going_to($visit_id);
+				$visit_type_name = $row->visit_type_name;
+				$patient_othernames = $row->patient_othernames;
+				$patient_surname = $row->patient_surname;
+				$patient_date_of_birth = $row->patient_date_of_birth;
 				
 				//creators and editors
 				if($personnel_query->num_rows() > 0)
@@ -116,7 +107,7 @@
 				
 				if($module != 1)
 				{
-					$to_doctor = '<td><a href="'.site_url().'/nurse/send_to_doctor/'.$visit_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Send to doctor?\');">To Doctor</a></td>';
+					$to_doctor = '<td><a href="'.site_url().'nurse/send_to_doctor/'.$visit_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Send to doctor?\');">To Doctor</a></td>';
 				}
 				
 				else
@@ -130,12 +121,12 @@
 							<td>'.$count.'</td>
 							<td>'.$visit_created.'</td>
 							<td>'.$patient_surname.' '.$patient_othernames.'</td>
-							<td>'.$visit_type.'</td>
+							<td>'.$visit_type_name.'</td>
 							<td>'.$visit_time.'</td>
 							<td>'.$coming_from.'</td>
 							<td>'.$doctor.'</td>
-							<td><a href="'.site_url().'/dental/patient_card/'.$visit_id.'" class="btn btn-sm btn-success">Patient Card</a></td>
-							<td><a href="'.site_url().'/dental/send_to_account/'.$visit_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to accounts?\');">To Account</a></td>
+							<td><a href="'.site_url().'nurse/patient_card/'.$visit_id.'/a/2" class="btn btn-sm btn-success">Patient Card</a></td>
+							<td><a href="'.site_url().'theatre/send_to_account/'.$visit_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to accounts?\');">To Accounts</a></td>
 						</tr> 
 					';
 			}
@@ -154,21 +145,18 @@
 		
 		echo $result;
 ?>
-          </div>
-          
-          <div class="widget-foot">
-                                
-				<?php if(isset($links)){echo $links;}?>
-            
-                <div class="clearfix"></div> 
-            
-            </div>
-        </div>
-        <!-- Widget ends -->
-
-      </div>
+                  </div>
+                  
+                  <div class="panel-foot">
+                                        
+                        <?php if(isset($links)){echo $links;}?>
+                    
+                    </div>
+                </div>
+                <!-- Widget ends -->
+        </section>
     </div>
-  </div>
+</div>
   <audio id="sound1" src="<?php echo base_url();?>sound/beep.mp3"></audio>
   <script type="text/javascript">
   	$(document).ready(function(){
