@@ -33,6 +33,7 @@
 			$branch_building = $branch->branch_building;
 			$branch_floor = $branch->branch_floor;
 			$branch_status = $branch->branch_status;
+			$branch_parent = $branch->branch_parent;
             
             $validation_errors = validation_errors();
             
@@ -50,6 +51,7 @@
 				$branch_building = set_value('branch_building');
 				$branch_floor = set_value('branch_floor');
 				$branch_status = set_value('branch_status');
+				$branch_parent = set_value('branch_parent');
 				
                 echo '<div class="alert alert-danger"> Oh snap! '.$validation_errors.' </div>';
             }
@@ -124,6 +126,33 @@
                             </div>
                     	</div>
                     	<div class="col-md-6">
+                        	<!-- Branch Parent -->
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Branch Parent</label>
+                                <div class="col-lg-4">
+                                    <select name="branch_parent" class="form-control">
+                                        <?php
+                                        echo '<option value="">No Parent</option>';
+                                        if($all_branches->num_rows() > 0)
+                                        {
+                                            $result = $all_branches->result();
+                                            
+                                            foreach($result as $res)
+                                            {
+                                                if($res->branch_code == $branch_parent)
+                                                {
+                                                    echo '<option value="'.$res->branch_code.'" selected>'.$res->branch_name.'</option>';
+                                                }
+                                                else
+                                                {
+                                                    echo '<option value="'.$res->branch_code.'">'.$res->branch_name.'</option>';
+                                                }
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
                             <!-- Image -->
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Branch Image</label>

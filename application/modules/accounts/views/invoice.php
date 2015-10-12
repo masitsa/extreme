@@ -8,6 +8,9 @@ $patient_surname = $patient['patient_surname'];
 $patient_surname = $patient['patient_surname'];
 $patient_number = $patient['patient_number'];
 $gender = $patient['gender'];
+$patient_insurance_number = $patient['patient_insurance_number'];
+$inpatient = $patient['inpatient'];
+$visit_type_name = $patient['visit_type_name'];
 
 $today = date('jS F Y H:i a',strtotime(date("Y:m:d h:i:s")));
 $visit_date = date('jS F Y',strtotime($this->accounts_model->get_visit_date($visit_id)));
@@ -200,7 +203,7 @@ if($all_notes->num_rows() > 0)
             	
             	<div class="row">
                 	<div class="col-md-12">
-                    	<div class="title-item">Att. Doctor::</div> 
+                    	<div class="title-item">Att. Doctor:</div> 
                         
                     	<?php echo $doctor; ?>
                     </div>
@@ -215,7 +218,15 @@ if($all_notes->num_rows() > 0)
                     	<?php echo $visit_date; ?>
                     </div>
                 </div>
-                
+                <?php if($visit_type != 1){?>
+            	<div class="row">
+                	<div class="col-md-12">
+                    	<div class="title-item">Insurance:</div>
+                        
+                    	<?php echo $visit_type_name; ?> - <?php echo $patient_insurance_number; ?>
+                    </div>
+                </div>
+                <?php }?>
             </div>
         </div>
         
@@ -233,7 +244,9 @@ if($all_notes->num_rows() > 0)
                                   <th>#</th>
                                   <th>Service</th>
                                   <th>Item Name</th>
-                                  <th>Charge</th>
+                                  <th>Units</th>
+                                  <th>Unit Cost</th>
+                                  <th>Total</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -263,6 +276,8 @@ if($all_notes->num_rows() > 0)
 														<td><?php echo $s;?></td>
 														<td><?php echo $service_name;?></td>
 														<td><?php echo $service_charge_name;?></td>
+														<td><?php echo $units;?></td>
+														<td><?php echo number_format($visit_charge_amount,2);?></td>
 														<td><?php echo number_format($visit_total,2);?></td>
 													</tr>
 													<?php
@@ -285,6 +300,8 @@ if($all_notes->num_rows() > 0)
 													<td><?php echo $s;?></td>
 													<td><?php echo $service_name;?></td>
 													<td><?php echo $service_charge_name;?></td>
+                                                    <td><?php echo $units;?></td>
+                                                    <td><?php echo number_format($visit_charge_amount,2);?></td>
 													<td><?php echo number_format($visit_total,2);?></td>
 												</tr>
 												<?php
@@ -320,6 +337,8 @@ if($all_notes->num_rows() > 0)
 													<td><?php echo $s;?></td>
 													<td><?php echo $service_name;?></td>
 													<td>Debit notes</td>
+													<td>1</td>
+													<td><?php echo number_format($debit_note_pesa,2);?></td>
 													<td><?php echo number_format($debit_note_pesa,2);?></td>
 												</tr>
 												<?php
@@ -332,6 +351,8 @@ if($all_notes->num_rows() > 0)
 													<td><?php echo $s;?></td>
 													<td><?php echo $service_name;?></td>
 													<td>Credit notes</td>
+													<td>1</td>
+													<td>(<?php echo number_format($credit_note_pesa,2);?>)</td>
 													<td>(<?php echo number_format($credit_note_pesa,2);?>)</td>
 												</tr>
 												<?php
@@ -393,11 +414,11 @@ if($all_notes->num_rows() > 0)
 								  
                                       ?>
                                       <tr>
-                                        <td colspan="3"><strong>Total Payments:</strong></td>
+                                        <td colspan="5" align="right"><strong>Total Payments:</strong></td>
                                         <td><strong> <?php echo number_format($total_payments,2);?></strong></td>
                                       </tr>
                                       <tr>
-                                        <td colspan="3"><strong>Total Invoice:</strong></td>
+                                        <td colspan="5" align="right"><strong>Total Invoice:</strong></td>
                                         <td><strong> <?php echo number_format($total_amount - $total_payments,2);?></strong></td>
                                       </tr>
                                       <?php
@@ -410,18 +431,34 @@ if($all_notes->num_rows() > 0)
         </div>
         
     	<div class="row" style="font-style:italic; font-size:11px;">
-        	<div class="col-md-8 pull-left">
-            <div class="col-md-4 pull-left">
-            	Served by: <?php echo $served_by;?> 
-            </div>
-            <div class="col-md-4 pull-left">
-              Signature by: .....................................
-            </div>
-            <div class="col-md-4 pull-left">
-              Patient Signature : ................................
-            </div>
-          </div>
-        	<div class="col-md-4 pull-right">
+        	<div class="col-md-10 pull-left">
+            	<?php if($inpatient == 0){?>
+                <div class="col-md-4 pull-left">
+                    Prepared by: <?php echo $served_by;?> 
+                </div>
+                <div class="col-md-4 pull-left">
+                  Signature by: .....................................
+                </div>
+                <div class="col-md-4 pull-left">
+                  Patient Signature : ................................
+                </div>
+                
+                <?php } else{?>
+                <div class="col-md-3 pull-left">
+                   Prepared by: <?php echo $served_by;?> 
+                </div>
+                <div class="col-md-3 pull-left">
+                  Confirmed by: .....................................
+                </div>
+                <div class="col-md-3 pull-left">
+                  Approved by: .....................................
+                </div>
+                <div class="col-md-3 pull-left">
+                  Patient Signature : ................................
+                </div>
+                <?php } ?>
+          	</div>
+        	<div class="col-md-2 pull-right">
             	<?php echo date('jS M Y H:i a'); ?> Thank you
             </div>
         </div>

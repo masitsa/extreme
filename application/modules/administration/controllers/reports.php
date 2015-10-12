@@ -59,7 +59,13 @@ class Reports extends administration
 	
 	public function all_transactions($module = NULL)
 	{
-		$where = 'visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type';
+		$branch_code = $this->session->userdata('search_branch_code');
+		
+		if(empty($branch_code))
+		{
+			$branch_code = $this->session->userdata('branch_code');
+		}
+		$where = 'visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type AND visit.visit_delete = 0 AND visit.branch_code = \''.$branch_code.'\'';
 		$table = 'visit, patients, visit_type';
 		$visit_search = $this->session->userdata('all_transactions_search');
 		$table_search = $this->session->userdata('all_transactions_tables');
@@ -72,6 +78,7 @@ class Reports extends administration
 			{
 				$table .= $table_search;
 			}
+			
 		}
 		if($module == NULL)
 		{
@@ -176,6 +183,7 @@ class Reports extends administration
 		$v_data['title'] = $this->session->userdata('page_title');
 		$v_data['debtors'] = $this->session->userdata('debtors');
 		
+		$v_data['branches'] = $this->reports_model->get_all_active_branches();
 		$v_data['services_query'] = $this->reports_model->get_all_active_services();
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();
@@ -189,10 +197,11 @@ class Reports extends administration
 	public function search_transactions($module = NULL)
 	{
 		$visit_type_id = $this->input->post('visit_type_id');
-		$patient_number = $this->input->post('patient_number');
+		$branch_code = $this->input->post('branch_code');
 		$personnel_id = $this->input->post('personnel_id');
 		$visit_date_from = $this->input->post('visit_date_from');
 		$visit_date_to = $this->input->post('visit_date_to');
+		$this->session->set_userdata('search_branch_code', $branch_code);
 		
 		$search_title = 'Showing reports for: ';
 		
@@ -210,12 +219,12 @@ class Reports extends administration
 			}
 		}
 		
-		if(!empty($patient_number))
+		/*if(!empty($patient_number))
 		{
 			$patient_number = ' AND patients.patient_number LIKE \'%'.$patient_number.'%\' ';
 			
 			$search_title .= 'Patient number. '.$patient_number;
-		}
+		}*/
 		
 		if(!empty($personnel_id))
 		{
@@ -254,7 +263,7 @@ class Reports extends administration
 			$visit_date = '';
 		}
 		
-		$search = $visit_type_id.$patient_number.$visit_date.$personnel_id;
+		$search = $visit_type_id.$visit_date.$personnel_id;
 		$visit_search = $this->session->userdata('all_transactions_search');
 		
 		if(!empty($visit_search))
@@ -539,10 +548,6 @@ class Reports extends administration
 		
 		$data['content'] = $this->load->view('reports/doctor_reports', $v_data, true);
 		
-		
-		$data['sidebar'] = 'admin_sidebar';
-		
-		
 		$this->load->view('admin/templates/general_page', $data);
 	}
 	public function search_doctors()
@@ -565,5 +570,302 @@ class Reports extends administration
 		
 		$this->reports_model->doctor_patients_export($personnel_id, $date_from, $date_to);
 	}
+	
+	public function debtors_report_invoices($visit_type_id, $order = 'debtor_invoice_created', $order_method = 'DESC')
+	{
+		//get bill to
+		$v_data['visit_type_query'] = $this->reports_model->get_visit_type();
+		
+		//select first debtor from query
+		if($visit_type_id == 0)
+		{
+			if($v_data['visit_type_query']->num_rows() > 0)
+			{
+				$res = $v_data['visit_type_query']->result();
+				$visit_type_id = $res[0]->visit_type_id;
+				$visit_type_name = $res[0]->visit_type_name;
+			}
+		}
+		
+		else
+		{
+			if($v_data['visit_type_query']->num_rows() > 0)
+			{
+				$res = $v_data['visit_type_query']->result();
+				
+				foreach($res as $r)
+				{
+					$visit_type_id2 = $r->visit_type_id;
+					
+					if($visit_type_id == $visit_type_id2)
+					{
+						$visit_type_name = $r->visit_type_name;
+						break;
+					}
+				}
+			}
+		}
+		
+		if($visit_type_id > 0)
+		{
+			$where = 'debtor_invoice.visit_type_id = '.$visit_type_id;
+			$table = 'debtor_invoice';
+			
+			$visit_search = $this->session->userdata('all_transactions_search');
+			$table_search = $this->session->userdata('all_transactions_tables');
+			
+			if(!empty($visit_search))
+			{
+				$where .= $visit_search;
+			
+				if(!empty($table_search))
+				{
+					$table .= $table_search;
+				}
+			}
+			
+			$segment = 7;
+			
+			//pagination
+			$this->load->library('pagination');
+			$config['base_url'] = site_url().'administration/reports/debtors_report_data/'.$visit_type_id.'/'.$order.'/'.$order_method;
+			$config['total_rows'] = $this->reception_model->count_items($table, $where);
+			$config['uri_segment'] = $segment;
+			$config['per_page'] = 20;
+			$config['num_links'] = 5;
+			
+			$config['full_tag_open'] = '<ul class="pagination pull-right">';
+			$config['full_tag_close'] = '</ul>';
+			
+			$config['first_tag_open'] = '<li>';
+			$config['first_tag_close'] = '</li>';
+			
+			$config['last_tag_open'] = '<li>';
+			$config['last_tag_close'] = '</li>';
+			
+			$config['next_tag_open'] = '<li>';
+			$config['next_link'] = 'Next';
+			$config['next_tag_close'] = '</span>';
+			
+			$config['prev_tag_open'] = '<li>';
+			$config['prev_link'] = 'Prev';
+			$config['prev_tag_close'] = '</li>';
+			
+			$config['cur_tag_open'] = '<li class="active"><a href="#">';
+			$config['cur_tag_close'] = '</a></li>';
+			
+			$config['num_tag_open'] = '<li>';
+			$config['num_tag_close'] = '</li>';
+			$this->pagination->initialize($config);
+			
+			$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+			$v_data["links"] = $this->pagination->create_links();
+			$query = $this->reports_model->get_all_debtors_invoices($table, $where, $config["per_page"], $page, $order, $order_method);
+			
+			$where .= ' AND debtor_invoice.debtor_invoice_id = debtor_invoice_item.debtor_invoice_id AND visit.visit_id = debtor_invoice_item.visit_id ';
+			$table .= ', visit, debtor_invoice_item';
+			$v_data['where'] = $where;
+			$v_data['table'] = $table;
+			
+			if($order_method == 'DESC')
+			{
+				$order_method = 'ASC';
+			}
+			else
+			{
+				$order_method = 'DESC';
+			}
+			$v_data['total_patients'] = $this->reports_model->get_total_visits($where, $table);
+			$v_data['total_services_revenue'] = $this->reports_model->get_total_services_revenue($where, $table);
+			$v_data['total_payments'] = $this->reports_model->get_total_cash_collection($where, $table);
+			
+			$v_data['order'] = $order;
+			$v_data['order_method'] = $order_method;
+			$v_data['visit_type_name'] = $visit_type_name;
+			$v_data['visit_type_id'] = $visit_type_id;
+			$v_data['query'] = $query;
+			$v_data['page'] = $page;
+			$v_data['search'] = $visit_search;
+			
+			$data['title'] = $this->session->userdata('page_title');
+			$v_data['title'] = $this->session->userdata('page_title');
+			$v_data['debtors'] = $this->session->userdata('debtors');
+			
+			$v_data['services_query'] = $this->reports_model->get_all_active_services();
+			$v_data['type'] = $this->reception_model->get_types();
+			$v_data['doctors'] = $this->reception_model->get_doctor();
+			//$v_data['module'] = $module;
+			
+			$data['content'] = $this->load->view('reports/debtors_report_invoices', $v_data, true);
+		}
+		
+		else
+		{
+			$data['title'] = $this->session->userdata('page_title');
+			$data['content'] = 'Please add debtors first';
+		}
+		
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	
+	public function create_new_batch($visit_type_id)
+	{
+		$this->form_validation->set_rules('invoice_date_from', 'Invoice date from', 'required|xss_clean');
+		$this->form_validation->set_rules('invoice_date_to', 'Invoice date to', 'required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			if($this->reports_model->add_debtor_invoice($visit_type_id))
+			{
+				
+			}
+			
+			else
+			{
+				
+			}
+		}
+		
+		else
+		{
+			$this->session->set_userdata("error_message", validation_errors());
+		}
+		//echo 'done '.$visit_type_id;
+		redirect('accounts/insurance-invoices/'.$visit_type_id);
+	}
+	
+	public function view_invoices($debtor_invoice_id)
+	{
+		$_SESSION['all_transactions_search'] = NULL;
+		$_SESSION['all_transactions_tables'] = NULL;
+		
+		$this->session->unset_userdata('search_title');
+		
+		$search = 'debtor_invoice_item.visit_id = visit.visit_id AND debtor_invoice_item.debtor_invoice_id = '.$debtor_invoice_id;
+		$table = ', debtor_invoice_item';
+		
+		//create title
+		$this->db->where('visit_type.visit_type = debtor_invoice.visit_type_id AND debtor_invoice.debtor_invoice_id = '.$debtor_invoice_id);
+		$this->db->select('visit_type_name, date_from, date_to');
+		$query = $this->db->get('debtor_invoice, visit_type');
+		
+		$row = $query->row();
+		
+		$visit_type_name = $row->visit_type_name;
+		$date_from = date('jS M Y',strtotime($row->date_from));
+		$date_to = date('jS M Y',strtotime($row->date_to));
+		
+		$search_title = 'Invoices for '.$visit_type_name.' between '.$date_from.' and '.$date_to;
+		
+		$_SESSION['all_transactions_search'] = $search;
+		$_SESSION['all_transactions_tables'] = $table;
+		
+		$this->session->set_userdata('search_title', $search_title);
+		
+		redirect('administration/reports/all_transactions');
+	}
+	
+	public function export_debt_transactions($debtor_invoice_id)
+	{
+		$this->reports_model->export_debt_transactions($debtor_invoice_id);
+	}
+	
+	public function invoice($debtor_invoice_id)
+	{
+		$where = 'debtor_invoice.debtor_invoice_id = '.$debtor_invoice_id.' AND debtor_invoice.visit_type_id = visit_type.visit_type_id';
+		$table = 'debtor_invoice, visit_type';
+		
+		$data = array(
+			'debtor_invoice_id'=>$debtor_invoice_id,
+			'query' => $this->reports_model->get_debtor_invoice($where, $table),
+			'personnel_query' => $this->personnel_model->get_all_personnel()
+		);
+			
+		$where .= ' AND debtor_invoice.debtor_invoice_id = debtor_invoice_item.debtor_invoice_id AND visit.visit_id = debtor_invoice_item.visit_id ';
+		$table .= ', visit, debtor_invoice_item';
+		
+		$data['where'] = $where;
+		$data['table'] = $table;
+		$data['contacts'] = $this->site_model->get_contacts();
+		
+		$this->load->view('reports/invoice', $data);
+	}
+	
+	public function search_debtors($visit_type_id)
+	{
+		$_SESSION['all_transactions_search'] = NULL;
+		$_SESSION['all_transactions_tables'] = NULL;
+		
+		$this->session->unset_userdata('search_title');
+		
+		$date_from = $this->input->post('batch_date_from');
+		$date_to = $this->input->post('batch_date_to');
+		$batch_no = $this->input->post('batch_no');
+		
+		if(!empty($batch_no) && !empty($date_from) && !empty($date_to))
+		{
+			$search = ' AND debtor_invoice.batch_no LIKE \'%'.$batch_no.'%\' AND debtor_invoice.debtor_invoice_created >= \''.$date_from.'\' AND debtor_invoice.debtor_invoice_created <= \''.$date_to.'\'';
+			$search_title = 'Showing invoices for batch no. '.$batch_no.' created between '.date('jS M Y',strtotime($date_from)).' and '.date('jS M Y',strtotime($date_to));
+		}
+		
+		else if(!empty($batch_no) && !empty($date_from) && empty($date_to))
+		{
+			$search = ' AND debtor_invoice.batch_no LIKE \'%'.$batch_no.'%\' AND debtor_invoice.debtor_invoice_created LIKE \''.$date_from.'%\'';
+			$search_title = 'Showing invoices for batch no. '.$batch_no.' created on '.date('jS M Y',strtotime($date_from));
+		}
+		
+		else if(!empty($batch_no) && empty($date_from) && !empty($date_to))
+		{
+			$search = ' AND debtor_invoice.batch_no LIKE \'%'.$batch_no.'%\' AND debtor_invoice.debtor_invoice_created LIKE \''.$date_to.'%\'';
+			$search_title = 'Showing invoices for batch no. '.$batch_no.' created on '.date('jS M Y',strtotime($date_to));
+		}
+		
+		else if(empty($batch_no) && !empty($date_from) && !empty($date_to))
+		{
+			$search = ' AND debtor_invoice.debtor_invoice_created >= \''.$date_from.'\' AND debtor_invoice.debtor_invoice_created <= \''.$date_to.'\'';
+			$search_title = 'Showing invoices created between '.date('jS M Y',strtotime($date_from)).' and '.date('jS M Y',strtotime($date_to));
+		}
+		
+		else if(empty($batch_no) && !empty($date_from) && empty($date_to))
+		{
+			$search = ' AND debtor_invoice.debtor_invoice_created LIKE \''.$date_from.'%\'';
+			$search_title = 'Showing invoices created created on '.date('jS M Y',strtotime($date_from));
+		}
+		
+		else if(empty($batch_no) && empty($date_from) && !empty($date_to))
+		{
+			$search = ' AND debtor_invoice.debtor_invoice_created LIKE \''.$date_to.'%\'';
+			$search_title = 'Showing invoices created created on '.date('jS M Y',strtotime($date_to));
+		}
+		else if(!empty($batch_no) && empty($date_from) && empty($date_to))
+		{
+			$search = ' AND debtor_invoice.batch_no LIKE \'%'.$batch_no.'%\'';
+			$search_title = 'Showing invoices for batch no. '.$batch_no;
+		}
+		
+		else
+		{
+			$search = '';
+			$search_title = '';
+		}
+		
+		
+		$_SESSION['all_transactions_search'] = $search;
+		
+		$this->session->set_userdata('search_title', $search_title);
+		
+		redirect('administration/reports/debtors_report_data/'.$visit_type_id);
+	}
+	
+	public function close_debtors_search($visit_type_id)
+	{
+		$_SESSION['all_transactions_search'] = NULL;
+		$_SESSION['all_transactions_tables'] = NULL;
+		
+		$this->session->unset_userdata('search_title');
+		redirect('administration/reports/debtors_report_data/'.$visit_type_id);
+	}
+	
 }
 ?>

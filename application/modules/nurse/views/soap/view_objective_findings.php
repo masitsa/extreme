@@ -72,8 +72,8 @@ if($num_rows > 0){
 	</div>
 	";
 	echo "
-	<br>
-	<div class='row' style='margin-top:10px;'>
+	
+	<div class='row' style='margin-top:60px;'>
 			<div class='center-align '>
 				<a class='btn btn-info btn-sm' type='submit' onclick='save_objective_findings(".$visit_id.")'>Update Objective Findings</a>
 			</div>
@@ -137,7 +137,7 @@ else{
 	</div>
 	";
 	echo "
-	<div class='row' style='margin-top:10px;'>
+	<div class='row' style='margin-top:60px;'>
 		<div class='center-align '>
 			<a class='btn btn-info btn-sm' type='submit' onclick='save_objective_findings(".$visit_id.")'>Save Objective Findings</a>
 		</div>

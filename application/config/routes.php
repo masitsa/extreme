@@ -90,6 +90,21 @@ $route['administration/deactivate-branch/(:num)/(:num)'] = 'admin/branches/deact
 /*
 *	HR Routes
 */
+$route['human-resource/schedules'] = 'hr/schedules/index';
+$route['human-resource/delete-schedule/(:num)'] = 'hr/schedules/delete_schedule/$1';
+$route['human-resource/delete-schedule/(:num)/(:num)'] = 'hr/schedules/delete_schedule/$1/$2';
+$route['human-resource/activate-schedule/(:num)'] = 'hr/schedules/activate_schedule/$1';
+$route['human-resource/activate-schedule/(:num)/(:num)'] = 'hr/schedules/activate_schedule/$1/$2';
+$route['human-resource/deactivate-schedule/(:num)'] = 'hr/schedules/deactivate_schedule/$1';
+$route['human-resource/deactivate-schedule/(:num)/(:num)'] = 'hr/schedules/deactivate_schedule/$1/$2';
+$route['human-resource/schedule-personnel/(:num)'] = 'hr/schedules/schedule_personnel/$1';
+$route['human-resource/fill-timesheet/(:num)/(:num)'] = 'hr/schedules/fill_timesheet/$1/$2';
+$route['human-resource/doctors-schedule'] = 'hr/schedules/doctors_schedule';
+$route['human-resource/schedule-personnel/(:num)/(:any)/(:any)/(:num)'] = 'hr/schedules/schedule_personnel/$1/$2/$3/$4';
+$route['human-resource/schedule-personnel/(:num)/(:any)/(:any)'] = 'hr/schedules/schedule_personnel/$1/$2/$3';
+$route['human-resource/schedules/(:any)/(:any)/(:num)'] = 'hr/schedules/index/$1/$2/$3';
+$route['human-resource/schedules/(:any)/(:any)'] = 'hr/schedules/index/$1/$2';
+
 $route['human-resource/my-account'] = 'admin/dashboard';
 $route['human-resource/my-account/edit-about/(:num)'] = 'hr/personnel/my_account/update_personnel_about_details/$1';
 $route['human-resource/edit-personnel-account/(:num)'] = 'hr/personnel/update_personnel_account_details/$1';
@@ -233,9 +248,7 @@ $route['hospital-administration/deactivate-insurance-company/(:num)'] = 'hospita
 /*
 *	Accounts Routes
 */
-$route['accounts/closed-visits'] = 'accounts/accounts_closed_visits';
-$route['accounts/inpatients'] = 'reception/inpatients/accounts';
-$route['accounts/un-closed-visits'] = 'accounts/payroll/accounts_unclosed_queue';
+$route['accounts/petty-cash'] = 'accounts/petty_cash/index';
 $route['accounts/change-branch'] = 'accounts/payroll/change_branch';
 $route['accounts/print-payroll/(:num)'] = 'accounts/payroll/print_payroll/$1';
 $route['accounts/export-payroll/(:num)'] = 'accounts/payroll/export_payroll/$1';
@@ -294,6 +307,9 @@ $route['accounts/payroll/edit-personnel-savings/(:num)'] = 'accounts/payroll/edi
 $route['accounts/payroll/edit-personnel-loan-schemes/(:num)'] = 'accounts/payroll/edit_personnel_loan_schemes/$1';
 $route['accounts/payroll/edit-personnel-relief/(:num)'] = 'accounts/payroll/edit_personnel_relief/$1';
 $route['accounts/payroll/view-payslip/(:num)'] = 'accounts/payroll/view_payslip/$1';
+
+$route['accounts/insurance-invoices'] = 'administration/reports/debtors_report_invoices/0';
+$route['accounts/insurance-invoices/(:num)'] = 'administration/reports/debtors_report_invoices/$1';
 
 //Always comes last
 $route['accounts/payroll/(:any)/(:any)'] = 'accounts/payroll/payrolls/$1/$2';
@@ -436,7 +452,7 @@ $route['hospital-reports/all-transactions'] = 'administration/reports/all_transa
 $route['hospital-reports/cash-report'] = 'administration/reports/all_transactions/admin';
 $route['hospital-reports/debtors-report'] = 'administration/reports/debtors_report/0';
 $route['hospital-reports/department-report'] = 'administration/reports/department_reports';
-$route['hospital-reports/doctor-reports'] = 'administration/reports/doctor_reports';
+$route['hospital-reports/doctors-report'] = 'administration/reports/doctor_reports';
 
 /*
 *	ultrasound Routes
@@ -500,10 +516,13 @@ $route['pharmacy-setup/types'] = 'pharmacy/types';
 /*
 *	Inventory Routes
 */
-$route['accounts'] = 'accounts/index';
-$route['accounts/dashboard'] = 'accounts/index';
-$route['accounts/accounts-queue'] = 'accounts/accounts_queue/12';
-$route['accounts/general-queue'] = 'reception/general_queue/accounts';
+$route['cash-office'] = 'accounts/index';
+$route['cash-office/dashboard'] = 'accounts/index';
+$route['cash-office/accounts-queue'] = 'accounts/accounts_queue/12';
+$route['cash-office/general-queue'] = 'reception/general_queue/accounts';
+$route['cash-office/closed-visits'] = 'accounts/accounts_closed_visits';
+$route['cash-office/inpatients'] = 'reception/inpatients/accounts';
+$route['cash-office/un-closed-visits'] = 'accounts/payroll/accounts_unclosed_queue';
 
 
 /*
@@ -562,7 +581,6 @@ $route['inventory/activate-product/(:num)'] = 'inventory_management/products/act
 $route['inventory/deactivate-product/(:num)'] = 'inventory_management/products/deactivate_product/$1';
 $route['inventory/edit-product/(:num)'] = 'inventory_management/edit_product/$1';
 
-
 $route['inventory/product-details/(:num)'] = 'inventory_management/manage_product/$1';
 $route['inventory/manage-store'] = 'inventory_management/manage_store';
 $route['inventory/store-requests'] ='inventory_management/store_requests';
@@ -576,14 +594,11 @@ $route['inventory/product-purchases/(:num)'] = 'inventory_management/all_product
 $route['inventory/purchase-product/(:num)'] = 'inventory_management/product_purchases/$1';
 $route['inventory/edit-product-purchase/(:num)/(:num)'] = 'inventory_management/edit_product_purchase/$1/$2';
 
-
 $route['inventory/product-deductions'] = 'inventory_management/all_product_deductions';
 $route['inventory/deduction-product/(:num)'] = 'inventory_management/product_deductions/$1';
 $route['inventory/edit-product-deduction/(:num)/(:num)'] = 'inventory_management/edit_product_deduction/$1/$2';
 
-
 // pharmacy orders
-
 $route['pharmacy-setup/pharmacy-orders'] = 'inventory/orders/index';
 
 

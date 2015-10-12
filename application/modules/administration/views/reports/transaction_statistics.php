@@ -58,7 +58,7 @@
                                     <td><?php echo number_format($total_cash_collection, 2);?></td>
                                 </tr>
                                 <tr>
-                                    <th>Creditors</th>
+                                    <th>Debtors</th>
                                     <td><?php echo number_format(($total_services_revenue - $total_cash_collection), 2);?></td>
                                 </tr>
                                 <tr>

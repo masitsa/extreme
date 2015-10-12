@@ -1,7 +1,8 @@
 <?php   if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-class Stores extends MX_Controller {
+class Stores extends MX_Controller 
+{
 	var $stores_path;
 	
 	function __construct()

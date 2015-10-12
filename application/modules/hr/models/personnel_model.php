@@ -9,6 +9,7 @@ class Personnel_model extends CI_Model
 	public function retrieve_personnel()
 	{
 		$this->db->where('personnel_status = 1');
+		$this->db->order_by('personnel_fname');
 		$query = $this->db->get('personnel');
 		
 		return $query;

@@ -159,8 +159,17 @@ function send_to_xray3(visit_id)
 }
 
 function send_to_xray2(visit_id){
-	//reload_opener_confirmation(visit_id);
-    get_test_results(75, visit_id);
+	var xray = '<?php echo $xray;?>';
+	
+	if(xray == '8')
+	{
+		get_test_results(85, visit_id);
+	}
+	
+	else
+	{
+    	get_test_results(75, visit_id);
+	}
 }
 function get_test_results(page, visit_id){
 
@@ -175,18 +184,29 @@ function get_test_results(page, visit_id){
     XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
   }
   var config_url = $('#config_url').val();
-  if((page == 1) || (page == 65) || (page == 85)){
+  if((page == 1) || (page == 65)){
     
     url = config_url+"radiology/xray/test/"+visit_id;
   }
+  else if((page == 85)){
+    
+    url = config_url+"radiology/xray/test1/"+visit_id;
+  }
   
-  else if ((page == 75) || (page == 100)){
+  else if ((page == 75)){
+    url = config_url+"radiology/xray/test2/"+visit_id;
+  }
+  
+  else if ((page == 100)){
     url = config_url+"radiology/xray/test1/"+visit_id;
   }
   if(XMLHttpRequestObject) {
-    if((page == 75) || (page == 85)){
-      var obj = window.opener.document.getElementById("test_results");
+    if((page == 75)){
+      var obj = window.opener.document.getElementById("xray_results");
     }
+    else if(page == 85){
+      var obj = window.opener.document.getElementById("test_results");
+	}
     else{
       var obj = document.getElementById("xray_results");
     }
@@ -198,14 +218,14 @@ function get_test_results(page, visit_id){
   //window.alert(XMLHttpRequestObject.responseText);
         obj.innerHTML = XMLHttpRequestObject.responseText;
         if(page == 75){
+          	window.close(this);
+        }
+        if(page == 85){
 			/* CL Editor */
 			$(".cleditor", opener.document).cleditor({
 				width: "auto",
 				height: "100%"
 			});
-          	window.close(this);
-        }
-        if(page == 85){
           	window.close(this);
         }
         

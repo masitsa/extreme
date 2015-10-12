@@ -2,21 +2,13 @@
 <?php echo $this->load->view('patients/search_patient', '', TRUE);?>
 <!-- end search -->
 
-    <section class="panel">
-
- 
-        <!-- Widget head -->
-        <header class="panel-heading">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
-          <div class="widget-icons pull-right">
-            <a href="<?php echo base_url();?>reception/import-patients" class="btn btn-success  btn-sm pull-right" style="margin-left:10px;">Import Patients</a>
-				<a href="<?php echo base_url();?>reception/add-patient" class="btn btn-success btn-sm pull-right">Add Patient</a>
-          </div>
-          <div class="clearfix"></div>
-        </header>             
+<section class="panel">
+    <header class="panel-heading">
+        <h2 class="panel-title"><?php echo $title;?></h2>
+    </header>
 
         <!-- Widget content -->
-         <div class="panel-body">
+        <div class="panel-body">
           <div class="padd">
 		<?php
 		$error = $this->session->userdata('error_message');
@@ -38,8 +30,16 @@
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'reception/close_patient_search" class="btn btn-warning btn-sm ">Close Search</a>';
+			echo '
+			<a href="'.site_url().'reception/close_patient_search" class="btn btn-warning btn-sm ">Close Search</a>
+			';
 		}
+		
+		echo '
+			<a href="'.site_url().'reception/import-patients" class="btn btn-primary  btn-sm pull-right" style="margin-left:10px; margin-bottom:20px;">Import Patients</a>
+			
+			<a href="'.site_url().'reception/add-patient" class="btn btn-success btn-sm pull-right">Add Patient</a>
+			';
 		
 		if($delete != 1)
 		{
@@ -217,7 +217,7 @@
 							<td>  '.number_format($account_balance,0).'</td>
 							<td><a href="'.site_url().'reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-info">Visit</a></td>
 							<td><a href="'.site_url().'reception/edit_patient/'.$patient_id.'" class="btn btn-sm btn-warning">Edit </a></td>
-							<td><a href="'.site_url().'administration/individual_statement/'.$patient_id.'/2" class="btn btn-sm btn-danger" target="_blank">Patient Statement</a></td>
+							<td><a href="'.site_url().'administration/individual_statement/'.$patient_id.'/2" class="btn btn-sm btn-danger" target="_blank">Statement</a></td>
 							<!--<td><a href="'.site_url().'reception/change_patient_type/'.$patient_id.'" class="btn btn-sm btn-primary">Change patient type</a></td>
 							<td><a href="'.site_url().'reception/delete_patient/'.$patient_id.'/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">Delete</a></td>-->
 						</tr> 

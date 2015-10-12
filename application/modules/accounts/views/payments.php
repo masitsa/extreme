@@ -1,10 +1,6 @@
 
  <section class="panel">
 	<header class="panel-heading">
-		<div class="panel-actions">
-			<a data-panel-toggle="" class="panel-action panel-action-toggle" href="#"></a>
-		</div>
-		
 		<h2 class="panel-title"><?php echo $visit_type_name;?> patient</h2>
 	</header>
 	
@@ -79,7 +75,7 @@
 			</h5>
 		</div>
 		
-        <div class="row">
+        <!--<div class="row">
         	<div class="col-sm-3 col-sm-offset-3">
             	<a href="<?php echo site_url().'doctor/print_prescription'.$visit_id;?>" class="btn btn-warning">Print prescription</a>
             </div>
@@ -87,7 +83,7 @@
         	<div class="col-sm-3">
             	<a href="<?php echo site_url().'doctor/print_lab_tests'.$visit_id;?>" class="btn btn-danger">Print lab tests</a>
             </div>
-        </div>
+        </div>-->
         
 		<div class="row">
 			<div class="col-md-12">
@@ -111,7 +107,9 @@
 												<th>#</th>
 												<th>Service</th>
 												<th>Item Name</th>
-												<th>Charge</th>
+												<th>Units</th>
+												<th>Unit Cost</th>
+												<th>Total</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -135,6 +133,8 @@
 														<td><?php echo $s;?></td>
 														<td><?php echo $service_name;?></td>
 														<td><?php echo $service_charge_name;?></td>
+														<td><?php echo $units;?></td>
+														<td><?php echo number_format($visit_charge_amount,2);?></td>
 														<td><?php echo number_format($visit_total,2);?></td>
 													</tr>
 													<?php
@@ -225,11 +225,11 @@
 												}
 												?>
 												<tr>
-													<td colspan="3"><strong>Total Payments:</strong></td>
+													<td colspan="5" align="right"><strong>Total Payments:</strong></td>
 													<td><strong> <?php echo number_format($total_payments,2);?></strong></td>
 												</tr>
 												<tr>
-													<td colspan="3"><strong>Total Invoice:</strong></td>
+													<td colspan="5" align="right"><strong>Total Invoice:</strong></td>
 													<td><strong> <?php echo number_format($total_amount - $total_payments,2);?></strong></td>
 												</tr>
 												<?php
@@ -384,7 +384,7 @@
 												<th>Service</th>
 												<th>Method</th>
 												<th>Amount</th>
-												<th></th>
+												<th colspan="2"></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -453,7 +453,65 @@
 															<td><?php echo $service_name;?></td>
 															<td><?php echo $payment_method;?></td>
 															<td><?php echo $amount_paidd;?></td>
-															<td><a href="<?php echo site_url().'accounts/print_single_receipt/'.$payment_id;?>" class="btn btn-small btn-warning" target="_blank"><i class="fa fa-print"></i> Print</a></td>
+															<td><a href="<?php echo site_url().'accounts/print_single_receipt/'.$payment_id;?>" class="btn btn-small btn-warning" target="_blank"><i class="fa fa-print"></i></a></td>
+															<td>
+                                                            	<button type="button" class="btn btn-small btn-default" data-toggle="modal" data-target="#refund_payment<?php echo $payment_id;?>"><i class="fa fa-times"></i></button>
+<!-- Modal -->
+<div class="modal fade" id="refund_payment<?php echo $payment_id;?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            	<h4 class="modal-title" id="myModalLabel">Cancel payment</h4>
+            </div>
+            <div class="modal-body">
+            	<?php echo form_open("accounts/cancel_payment/".$payment_id.'/'.$visit_id, array("class" => "form-horizontal"));?>
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Action: </label>
+                    
+                    <div class="col-md-8">
+                        <select class="form-control" name="cancel_action_id">
+                        	<option value="">-- Select action --</option>
+                            <?php
+                                if($cancel_actions->num_rows() > 0)
+                                {
+                                    foreach($cancel_actions->result() as $res)
+                                    {
+                                        $cancel_action_id = $res->cancel_action_id;
+                                        $cancel_action_name = $res->cancel_action_name;
+                                        
+                                        echo '<option value="'.$cancel_action_id.'">'.$cancel_action_name.'</option>';
+                                    }
+                                }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Description: </label>
+                    
+                    <div class="col-md-8">
+                        <textarea class="form-control" name="cancel_description"></textarea>
+                    </div>
+                </div>
+                
+                <div class="row">
+                	<div class="col-md-8 col-md-offset-4">
+                    	<div class="center-align">
+                        	<button type="submit" class="btn btn-primary">Save action</button>
+                        </div>
+                    </div>
+                </div>
+                <?php echo form_close();?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+                                                            </td>
 														</tr>
 														<?php
 														$total_payments =  $total_payments + $amount_paid;
@@ -745,20 +803,40 @@
 					$department_id = $row->department_id;
 					$accounts = $row->accounts;
 					$department_name = $row->department_name;
-				  
-					if(($accounts == 0) && ($department_id != 6))
+					
+					if($department_name == 'Accounts')
 					{
-						?>
-						<a href= "<?php echo site_url();?>accounts/send_to_department/<?php echo $visit_id;?>/1" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you want to end visit?\');">Send to <?php echo $department_name;?></a>
-						<?php
+						$query = $this->accounts_model->get_last_department($visit_id);
+						
+						if($query->num_rows() > 0)
+						{
+							$row2 = $query->row();
+						  
+							$department_id = $row2->department_id;
+							$accounts = 0;
+							$department_name = $row2->department_name;
+						}
 					}
 				  
+				  	//without end visit
+					//if(($accounts == 0) && ($department_id != 6))
+					if(($accounts == 0))
+					{
+						?>
+						<a href= "<?php echo site_url();?>accounts/send_to_department/<?php echo $visit_id;?>/<?php echo $department_id;?>" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you want to send to <?php echo $department_name;?>?\');">Send to <?php echo $department_name;?></a>
+                        
+						<a href= "<?php echo site_url();?>reception/end_visit/<?php echo $visit_id;?>/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to end visit?\');">End Visit</a>
+						<?php
+					}
+				  	
+					//with end visit
 					else
 					{
-						if(($accounts == 0) && ($department_id == 6))
+						//if(($accounts == 0) && ($department_id == 6))
+						if(($accounts == 0))
 						{
 							?>
-							<a href= "<?php echo site_url();?>accounts/send_to_department/<?php echo $visit_id;?>/1" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you want to end visit?\');">Send to <?php echo $department_name;?></a>
+							<a href= "<?php echo site_url();?>accounts/send_to_department/<?php echo $visit_id;?>/<?php echo $department_id;?>" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you want to send to <?php echo $department_name;?>?\');">Send to <?php echo $department_name;?></a>
 							<?php
 						}
 						if(isset($close_page))
@@ -768,12 +846,12 @@
 							<?php
 						}
 					  
-					  else
-					  {
-						?>
-						<a href= "<?php echo site_url();?>reception/end_visit/<?php echo $visit_id;?>/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to end visit?\');">End Visit</a>
-						<?php
-					  }
+						else
+						{
+							?>
+							<a href= "<?php echo site_url();?>reception/end_visit/<?php echo $visit_id;?>/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to end visit?\');">End Visit</a>
+							<?php
+						}
 				  }
 			  }
 			 ?>

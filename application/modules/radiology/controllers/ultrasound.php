@@ -202,7 +202,8 @@ class Ultrasound  extends MX_Controller
 		
 		$order = 'service_charge_name';
 		
-		$where = 'service_charge.service_id = service.service_id AND service.branch_code = "'.$this->session->userdata('branch_code').'" AND (service.service_name = "Ultrasound" OR service.service_name = "ultrasound") AND  service_charge.visit_type_id = '.$visit_t;
+		//$where = 'service_charge.service_id = service.service_id AND service.branch_code = "'.$this->session->userdata('branch_code').'" AND (service.service_name = "Ultrasound" OR service.service_name = "ultrasound") AND  service_charge.visit_type_id = '.$visit_t;
+		$where = 'service_charge.service_id = service.service_id AND (service.service_name = "Ultrasound" OR service.service_name = "ultrasound") AND  service_charge.visit_type_id = '.$visit_t;
 		$test_search = $this->session->userdata('ultrasound_search');
 		
 		if(!empty($test_search))
@@ -253,6 +254,7 @@ class Ultrasound  extends MX_Controller
 		
 		$data['title'] = $v_data['title'] = 'X Ray List';
 		
+		$v_data['ultrasound'] = $ultrasound;
 		$v_data['visit_id'] = $visit_id;
 		$data['content'] = $this->load->view('ultrasound_list', $v_data, true);
 		
@@ -628,7 +630,7 @@ class Ultrasound  extends MX_Controller
 	public function save_result()
 	{
 		$visit_charge_id = $this->input->post('visit_charge_id');
-		if($this->xray_model->save_tests_format2($visit_charge_id))
+		if($this->ultrasound_model->save_tests_format2($visit_charge_id))
 		{
 			echo 'true';
 		}

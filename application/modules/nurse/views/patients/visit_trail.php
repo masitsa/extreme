@@ -241,7 +241,9 @@ else
                         <th>Service</th>
                         <th>Item Name</th>
                         <th>Time Charged</th>
-                        <th>Charge</th>
+                        <th>Units</th>
+                        <th>Unit Cost</th>
+                        <th>Total</th>
                         <?php
                         if($page_name == 'administration')
                         {
@@ -341,7 +343,9 @@ else
                                   
 
                                 </td>
-                                <td><?php echo $visit_charge_timestamp;?></td>
+                                <td><?php echo date('jS M Y H:i a',strtotime($visit_charge_timestamp));?></td>
+                                <td><?php echo $units;?></td>
+                                <td><?php echo number_format($visit_charge_amount,2);?></td>
                                 <td><?php echo number_format($visit_total,2);?></td>
                                 <?php
                               if(($page_name == 'administration') && $service_id != 1)
@@ -393,17 +397,17 @@ else
                             }
                             ?>
                             <tr>
-                             <td colspan="3"></td>
+                             <td colspan="5"></td>
                               <td><span>Total Invoice :</span></td>
                               <td> <?php echo number_format($total,2);?></td>
                             </tr>
                             <tr>
-                              <td colspan="3"></td>
+                              <td colspan="5"></td>
                               <td>Total Amount Paid :</td>
                               <td> <?php echo number_format($total_payments,2);?></td>
                             </tr>
                             <tr>
-                              <td colspan="3"></td>
+                              <td colspan="5"></td>
                               <td>Balance :</td>
                               <td> <?php echo number_format(($total_amount - $total_payments),2);?></td>
                             </tr>
@@ -411,7 +415,7 @@ else
                         }else{
                            ?>
                             <tr>
-                              <td colspan="4"> No Charges</td>
+                              <td colspan="6"> No Charges</td>
                             </tr>
                             <?php
                         }

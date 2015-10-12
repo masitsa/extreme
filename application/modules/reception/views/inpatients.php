@@ -38,7 +38,7 @@
 					$actions = 3;
 				}
 				
-				else if($page_name == 'pharmacy')
+				else if(($page_name == 'pharmacy') || ($page_name == 'xray') || ($page_name == 'ultrasound'))
 				{
 					$actions = 2;
 				}
@@ -194,6 +194,31 @@
 					<td><a href="'.site_url().'pharmacy/prescription1/'.$visit_id.'/1" class="btn btn-sm btn-info">Prescription</a></td>
 					';
 				}
+				
+				else if($page_name == 'ultrasound')
+				{
+					$buttons = '
+					<td>
+						<a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
+						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
+					</td>
+
+					<td><a href="'.site_url().'radiology/ultrasound/test/'.$visit_id.'" class="btn btn-sm btn-info">Ultrasounds</a></td>
+					';
+				}
+				
+				else if($page_name == 'xray')
+				{
+					$buttons = '
+					<td>
+						<a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
+						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
+					</td>
+					
+					<td><a href="'.site_url().'radiology/xray/test/'.$visit_id.'" class="btn btn-sm btn-info">Xrays</a></td>
+					';
+				}
+				
 				else if($page_name == 'administration')
 				{
 					$buttons = '

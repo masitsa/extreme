@@ -26,7 +26,6 @@ class Orders extends MX_Controller
 	*/
 	public function index() 
 	{
-
 		// get my approval roles
 
 		$where = 'orders.order_status_id = order_status.order_status_id';
@@ -38,7 +37,6 @@ class Orders extends MX_Controller
 		$config['uri_segment'] = 4;
 		$config['per_page'] = 20;
 		$config['num_links'] = 5;
-		
 		
 		$config['full_tag_open'] = '<ul class="pagination pull-right">';
 		$config['full_tag_close'] = '</ul>';

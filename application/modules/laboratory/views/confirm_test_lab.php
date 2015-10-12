@@ -1,8 +1,4 @@
 <?php
-
-
-
-
 if ($this->session->userdata('nurse_lab') <> NULL){
 	$nurse_lab = $this->session->userdata('nurse_lab');
 }
@@ -74,7 +70,7 @@ $rs = $this->lab_model->get_lab_visit2($visit_id);
 $num_rows = count($rs);
 
 echo "
-
+<div class='alert alert-info'>Please ensure you have clicked <a class='btn btn-success btn-sm'>Charge for lab test</a></div>
 <table class='table table-striped table-hover table-condensed'>
 	<thead>
 		<th>No.</th>
@@ -83,6 +79,11 @@ echo "
 		<th colspan=2></th>
 	</thead>
 	<tbody>
+";
+
+$send = "<a class='btn btn-warning btn-sm' href='".site_url()."laboratory/send_to_accounts/".$visit_id."' onclick='return confirm(\'Do you want to send the patient to the accounts ?\');'>Send to accounts</a>
+
+<a class='btn btn-info btn-sm' href='".site_url()."laboratory/send_to_doctor/".$visit_id."' onclick='return confirm(\'Do you want to send the patient to the doctor ?\');'>Send to doctor</a>
 ";
 
 $total = 0;
@@ -101,6 +102,7 @@ foreach ($rs as $key6):
 	if($visit_charge_response > 0)
 	{
 		$button = "<a class='btn btn-danger btn-sm' href='".site_url()."laboratory/remove_cost/".$visit_charge_response."/".$visit_id."' onclick='return confirm('Do you want to remove ".$test." from the invoice ?');'>Remove lab test charge</a>";
+		
 		$status = '';
 	}
 	else
@@ -133,14 +135,12 @@ foreach ($rs as $key6):
 	";
 
 endforeach;
+
 $lab_visit = 0;
-
-
-
 echo "
 </tbody>
 </table>
-
 ";
+echo '<div class="center-align">'.$send.'</div>';
 
 ?>

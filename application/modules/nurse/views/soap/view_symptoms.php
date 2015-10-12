@@ -71,8 +71,7 @@ if($num_rows > 0){
 	</div>
 	";
 	echo "
-	
-	<div class='row' style='margin-top:30px;'>
+	<div class='row' style='margin-top:60px;'>
 			<div class='center-align '>
 				<a class='btn btn-info btn-sm' type='submit' onclick='save_symptoms(".$visit_id.")'>Update Symptoms</a>
 			</div>
@@ -137,7 +136,7 @@ else{
 	";
 	echo "
 	
-	<div class='row' style='margin-top:30px;'>
+	<div class='row' style='margin-top:60px;'>
 			<div class='center-align '>
 				<a class='btn btn-info btn-sm' type='submit' onclick='save_symptoms(".$visit_id.")'>Save Symptoms</a>
 			</div>

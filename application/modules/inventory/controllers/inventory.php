@@ -11,7 +11,7 @@ class Inventory extends MX_Controller
 		$this->load->model('admin/users_model');
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
-		$this->load->model('personnel_model');
+		$this->load->model('hr/personnel_model');
 		
 		if(!$this->auth_model->check_login())
 		{

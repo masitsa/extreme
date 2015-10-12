@@ -77,6 +77,7 @@ class Branches_model extends CI_Model
 	{
 		$data = array(
 				'branch_name'		=> $this->input->post('branch_name'),
+				'branch_parent'		=> $this->input->post('branch_parent'),
 				'branch_status'		=> $this->input->post('branch_status'),
 				'branch_phone'		=> $this->input->post('branch_phone'),
 				'branch_email'		=> $this->input->post('branch_email'),
@@ -113,6 +114,7 @@ class Branches_model extends CI_Model
 	{
 		$data = array(
 				'branch_name'		=> $this->input->post('branch_name'),
+				'branch_parent'		=> $this->input->post('branch_parent'),
 				'branch_status'		=> $this->input->post('branch_status'),
 				'branch_phone'		=> $this->input->post('branch_phone'),
 				'branch_email'		=> $this->input->post('branch_email'),

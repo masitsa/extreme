@@ -96,6 +96,34 @@
                             </div>
                     	</div>
                     	<div class="col-md-6">
+                        	<!-- Branch Parent -->
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Branch Parent</label>
+                                <div class="col-lg-4">
+                                    <select name="branch_parent" class="form-control">
+                                        <?php
+                                        echo '<option value="">No Parent</option>';
+                                        if($all_branches->num_rows() > 0)
+                                        {
+											$branch_parent = set_value('branch_parent');;
+                                            $result = $all_branches->result();
+                                            
+                                            foreach($result as $res)
+                                            {
+                                                if($res->branch_code == $branch_parent)
+                                                {
+                                                    echo '<option value="'.$res->branch_code.'" selected>'.$res->branch_name.'</option>';
+                                                }
+                                                else
+                                                {
+                                                    echo '<option value="'.$res->branch_code.'">'.$res->branch_name.'</option>';
+                                                }
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
                             <!-- Image -->
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Branch Image</label>

@@ -8,8 +8,7 @@
 
 			<!-- Widget head -->
 			<header class="panel-heading">
-				<h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
-				<div class="clearfix"></div>
+				<h2 class="panel-title"><?php echo $title;?></h2>
 			</header>             
 
 			<!-- Widget content -->

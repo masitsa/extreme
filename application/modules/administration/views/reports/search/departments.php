@@ -5,8 +5,7 @@
 
 			<!-- Widget head -->
 			<header class="panel-heading">
-				<h4 class="pull-left"><i class="icon-reorder"></i>Search <?php echo $title;?></h4>
-				<div class="clearfix"></div>
+				<h2 class="panel-title">Search <?php echo $title;?></h2>
 			</header>             
 
 			<!-- Widget content -->

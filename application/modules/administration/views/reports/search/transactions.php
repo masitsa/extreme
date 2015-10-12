@@ -83,11 +83,30 @@
                 
                 <div class="col-md-4">
                     
-                    <div class="form-group">
+                    <!--<div class="form-group">
                         <label class="col-lg-4 control-label">Patient number: </label>
                         
                         <div class="col-lg-8">
                             <input type="text" class="form-control" name="patient_number" placeholder="Patient number">
+                        </div>
+                    </div>-->
+                    
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Branch: </label>
+                        
+                        <div class="col-lg-8">
+                            <select class="form-control" name="branch_code">
+                            	<option value="">---Select branch---</option>
+                                <?php
+									if($branches->num_rows() > 0){
+										foreach($branches->result() as $row):
+											$branch_name = $row->branch_name;
+											$branch_code = $row->branch_code;
+											echo "<option value=".$branch_code.">".$branch_name."</option>";
+										endforeach;
+									}
+								?>
+                            </select>
                         </div>
                     </div>
                     

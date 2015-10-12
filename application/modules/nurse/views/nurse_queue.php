@@ -4,13 +4,8 @@
 
  <section class="panel">
     <header class="panel-heading">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> for <?php echo date('jS M Y',strtotime(date('Y-m-d')));?></h4>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-          </div>
-          <div class="clearfix"></div>
-        </header>             
+    	<h2 class="panel-title"><?php echo $title;?> for <?php echo date('jS M Y',strtotime(date('Y-m-d')));?></h2>
+    </header>
 
         <!-- Widget content -->
         <div class="panel-body">

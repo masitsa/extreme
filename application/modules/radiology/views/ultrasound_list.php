@@ -159,8 +159,17 @@ function send_to_ultrasound3(visit_id)
 }
 
 function send_to_ultrasound2(visit_id){
-	//reload_opener_confirmation(visit_id);
-    get_test_results(75, visit_id);
+	var ultrasound = '<?php echo $ultrasound;?>';
+	
+	if(ultrasound == '8')
+	{
+		get_test_results(85, visit_id);
+	}
+	
+	else
+	{
+    	get_test_results(75, visit_id);
+	}
 }
 function get_test_results(page, visit_id){
 
@@ -175,22 +184,29 @@ function get_test_results(page, visit_id){
     XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
   }
   var config_url = $('#config_url').val();
-  if((page == 1) || (page == 65) || (page == 85)){
+  if((page == 1) || (page == 65)){
     
     url = config_url+"radiology/ultrasound/test/"+visit_id;
   }
+  else if((page == 85)){
+    
+    url = config_url+"radiology/ultrasound/test1/"+visit_id;
+  }
   
   else if ((page == 75)){
-    url = config_url+"radiology/ultrasound/test1/"+visit_id;
+    url = config_url+"radiology/ultrasound/test2/"+visit_id;
   }
   
   else if ((page == 100)){
     url = config_url+"radiology/ultrasound/test2/"+visit_id;
   }
   if(XMLHttpRequestObject) {
-    if((page == 75) || (page == 85)){
-      var obj = window.opener.document.getElementById("test_results");
+    if((page == 75)){
+      var obj = window.opener.document.getElementById("ultrasound_results");
     }
+    else if(page == 85){
+      var obj = window.opener.document.getElementById("test_results");
+	}
     else{
       var obj = document.getElementById("ultrasound_results");
     }
@@ -198,18 +214,18 @@ function get_test_results(page, visit_id){
     
     XMLHttpRequestObject.onreadystatechange = function(){
     
-      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-  //window.alert(XMLHttpRequestObject.responseText);
+      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) 
+	  {
         obj.innerHTML = XMLHttpRequestObject.responseText;
         if(page == 75){
+          	window.close(this);
+        }
+        if(page == 85){
 			/* CL Editor */
 			$(".cleditor", opener.document).cleditor({
 				width: "auto",
 				height: "100%"
 			});
-          	window.close(this);
-        }
-        if(page == 85){
           	window.close(this);
         }
         

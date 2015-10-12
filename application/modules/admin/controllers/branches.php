@@ -131,6 +131,7 @@ class Branches extends admin
 		$this->form_validation->set_rules('branch_building', 'Building', 'xss_clean');
 		$this->form_validation->set_rules('branch_floor', 'Floor', 'xss_clean');
 		$this->form_validation->set_rules('branch_status', 'Status', 'xss_clean');
+		$this->form_validation->set_rules('branch_parent', 'Branch parent', 'xss_clean');
 		
 		//if form has been submitted
 		if ($this->form_validation->run())
@@ -155,6 +156,7 @@ class Branches extends admin
 		
 		//open the add new branch
 		
+		$v_data['all_branches'] = $this->branches_model->all_branches();
 		$data['title'] = 'Add branch';
 		$v_data['title'] = $data['title'];
 		$data['content'] = $this->load->view('branches/add_branch', $v_data, true);
@@ -205,6 +207,7 @@ class Branches extends admin
 		$this->form_validation->set_rules('branch_building', 'Building', 'xss_clean');
 		$this->form_validation->set_rules('branch_floor', 'Floor', 'xss_clean');
 		$this->form_validation->set_rules('branch_status', 'Status', 'xss_clean');
+		$this->form_validation->set_rules('branch_parent', 'Branch parent', 'xss_clean');
 		
 		//if form has been submitted
 		if ($this->form_validation->run())
@@ -236,6 +239,7 @@ class Branches extends admin
 		}
 		
 		//open the add new branch
+		$v_data['all_branches'] = $this->branches_model->all_branches();
 		$data['title'] = 'Edit branch';
 		$v_data['title'] = $data['title'];
 		

@@ -162,6 +162,17 @@ $room_beds = $this->nurse_model->get_room_beds($visit_room_id);
 	<div class="col-md-12">
         <section class="panel panel-featured panel-featured-info">
             <header class="panel-heading">
+                <h2 class="panel-title">Consultant fee</h2>
+            </header>
+            <div class="panel-body">
+            	<div id="consultation_charges"></div>
+            </div>
+        </section>
+    </div>
+    
+	<div class="col-md-12">
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
                 <h2 class="panel-title">About patient</h2>
             </header>
             <div class="panel-body">

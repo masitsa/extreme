@@ -46,14 +46,25 @@ class Auth extends MX_Controller
                    'login_status' => TRUE,
                    'first_name'   => 'Alvaro',
                    'username'     => 'amasitsa',
+                   'personnel_type_id'     => '2',
                    'personnel_id' => 0,
-                   'branch_code'   => 'OSH',
+                   'branch_code'   => 'KDPH',
                    'branch_name'     => 'KISII',
-                   'branch_id' => 1
+                   'branch_id' => 2
                );
 
 				$this->session->set_userdata($newdata);
-				redirect('dashboard');
+				
+				$personnel_type_id = $this->session->userdata('personnel_type_id');
+				if(!empty($personnel_type_id) && ($personnel_type_id != 1))
+				{
+					redirect('doctor/dashboard');
+				}
+				
+				else
+				{
+					redirect('dashboard');
+				}
 			}
 			
 			else
@@ -61,7 +72,16 @@ class Auth extends MX_Controller
 				//check if personnel has valid login credentials
 				if($this->auth_model->validate_personnel())
 				{
-					redirect('dashboard');
+					$personnel_type_id = $this->session->userdata('personnel_type_id');
+					if(!empty($personnel_type_id) && ($personnel_type_id != 1))
+					{
+						redirect('doctor/dashboard');
+					}
+					
+					else
+					{
+						redirect('dashboard');
+					}
 				}
 				
 				else

@@ -94,9 +94,9 @@ if(!empty($validation_error))
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-lg-4 control-label">Title: </label>
+                                <label class="col-md-4 control-label">Title: </label>
                                 
-                                <div class="col-lg-8">
+                                <div class="col-md-8">
                                     <select class="form-control" name="title_id">
                                         <?php
                                             if($titles->num_rows() > 0)
@@ -125,25 +125,25 @@ if(!empty($validation_error))
                             </div>
                             
                             <div class="form-group">
-                                <label class="col-lg-4 control-label">Surname: </label>
+                                <label class="col-md-4 control-label">Surname: </label>
                                 
-                                <div class="col-lg-8">
+                                <div class="col-md-8">
                                     <input type="text" class="form-control" name="patient_surname" placeholder="Surname" value="<?php echo $patient_surname;?>">
                                 </div>
                             </div>
                             
                             <div class="form-group">
-                                <label class="col-lg-4 control-label">Other Names: </label>
+                                <label class="col-md-4 control-label">Other Names: </label>
                                 
-                                <div class="col-lg-8">
+                                <div class="col-md-8">
                                     <input type="text" class="form-control" name="patient_othernames" placeholder="Other Names" value="<?php echo $patient_othernames;?>">
                                 </div>
                             </div>
                             
                             <div class="form-group">
-                                <label class="col-lg-4 control-label">Date of Birth: </label>
+                                <label class="col-md-4 control-label">Date of Birth: </label>
                                 
-                                <div class="col-lg-8">
+                                <div class="col-md-8">
                                     <div class="input-group">
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
@@ -154,9 +154,9 @@ if(!empty($validation_error))
                             </div>
                             
                             <div class="form-group">
-                                <label class="col-lg-4 control-label">Gender: </label>
+                                <label class="col-md-4 control-label">Gender: </label>
                                 
-                                <div class="col-lg-8">
+                                <div class="col-md-8">
                                     <select class="form-control" name="gender_id">
                                         <?php
                                             if($genders->num_rows() > 0)
@@ -187,17 +187,17 @@ if(!empty($validation_error))
                             
                            
                             <div class="form-group">
-                                <label class="col-lg-4 control-label">Email Address: </label>
+                                <label class="col-md-4 control-label">Email Address: </label>
                                 
-                                <div class="col-lg-8">
+                                <div class="col-md-8">
                                     <input type="text" class="form-control" name="patient_email" placeholder="Email Address" value="<?php echo $patient_email;?>">
                                 </div>
                             </div>
                             
                             <div class="form-group">
-                                <label class="col-lg-4 control-label">National ID: </label>
+                                <label class="col-md-4 control-label">National ID: </label>
                                 
-                                <div class="col-lg-8">
+                                <div class="col-md-8">
                                     <input type="text" class="form-control" name="patient_national_id" placeholder="National ID" value="<?php echo $patient_national_id;?>">
                                 </div>
                             </div>
@@ -209,63 +209,56 @@ if(!empty($validation_error))
                            
                             
                             <div class="form-group">
-                                <label class="col-lg-4 control-label">Primary Phone: </label>
+                                <label class="col-md-4 control-label">Primary Phone: </label>
                                 
-                                <div class="col-lg-8">
+                                <div class="col-md-8">
                                     <input type="text" class="form-control" name="patient_phone1" placeholder="Primary Phone" value="<?php echo $patient_phone1;?>">
-                                </div>
-                            </div>
-                             <div class="form-group">
-                                <label class="col-lg-4 control-label">Card Number: </label>
-                                
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="current_patient_number" placeholder="Current Card Number" value="<?php echo $current_patient_number;?>">
                                 </div>
                             </div>
                             
                             <div class="form-group">
-                                <label class="col-lg-4 control-label">Other Phone: </label>
+                                <label class="col-md-4 control-label">Other Phone: </label>
                                 
-                                <div class="col-lg-8">
+                                <div class="col-md-8">
                                     <input type="text" class="form-control" name="patient_phone2" placeholder="Other Phone" value="<?php echo $patient_phone2;?>">
                                 </div>
                             </div>
                             
                             <div class="form-group">
-                                <label class="col-lg-4 control-label">Card Number: </label>
+                                <label class="col-md-4 control-label">Card Number: </label>
                                 
-                                <div class="col-lg-8">
+                                <div class="col-md-8">
                                     <input type="text" class="form-control" name="current_patient_number" placeholder="Current Card Number" value="<?php echo $current_patient_number;?>">
                                 </div>
                             </div>
                             
                             <div class="form-group">
-                                <label class="col-lg-4 control-label">Next of Kin Surname: </label>
+                                <label class="col-md-4 control-label">Next of Kin Surname: </label>
                                 
-                                <div class="col-lg-8">
+                                <div class="col-md-8">
                                     <input type="text" class="form-control" name="patient_kin_sname" placeholder="Kin Surname" value="<?php echo $patient_kin_sname;?>">
                                 </div>
                             </div>
                             
                             <div class="form-group">
-                                <label class="col-lg-4 control-label">Next of Kin Other Names: </label>
+                                <label class="col-md-4 control-label">Next of Kin Other Names: </label>
                                 
-                                <div class="col-lg-8">
+                                <div class="col-md-8">
                                     <input type="text" class="form-control" name="patient_kin_othernames" placeholder="Kin Other Names" value="<?php echo $patient_kin_sname;?>">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-lg-4 control-label">Next of Kin Contact: </label>
+                                <label class="col-md-4 control-label">Next of Kin Contact: </label>
                                 
-                                <div class="col-lg-8">
+                                <div class="col-md-8">
                                     <input type="text" class="form-control" name="next_of_kin_contact" placeholder="" value="<?php echo $next_of_kin_contact;?>">
                                 </div>
                             </div>
                             
                             <div class="form-group">
-                                <label class="col-lg-4 control-label">Relationship To Kin: </label>
+                                <label class="col-md-4 control-label">Relationship To Kin: </label>
                                 
-                                <div class="col-lg-8">
+                                <div class="col-md-8">
                                     <select class="form-control" name="relationship_id">
                                         <?php
                                             if($relationships->num_rows() > 0)
@@ -293,9 +286,9 @@ if(!empty($validation_error))
                                 </div>
                             </div>
                          <!--    <div class="form-group">
-                                <label class="col-lg-4 control-label">Insurance : </label>
+                                <label class="col-md-4 control-label">Insurance : </label>
                                 
-                                <div class="col-lg-8">
+                                <div class="col-md-8">
                                     <select class="form-control" name="insurance_company_id">
                                          <option value="0">Select an insurance Company</option>
                                         <?php

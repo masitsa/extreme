@@ -49,7 +49,11 @@ class Laboratory  extends MX_Controller
 	}
 	public function lab_queue($page_name = 12)
 	{
-		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\'';
+		//with branch code
+		/*$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\' AND visit.visit_date = \''.date('Y-m-d').'\'';*/
+		
+		//without branch code
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 18 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.visit_date = \''.date('Y-m-d').'\'';
 		
 		$table = 'visit_department, visit, patients, visit_type';
 		
@@ -135,7 +139,8 @@ class Laboratory  extends MX_Controller
 		}
 
 	}
-	public function test($visit_id){
+	public function test($visit_id)
+	{
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
 		$visit_type = $patient['visit_type'];
 		$patient_type = $patient['patient_type'];
@@ -203,8 +208,8 @@ class Laboratory  extends MX_Controller
 		
 		$order = 'service_charge_name';
 		
-		$where = 'service_charge.service_charge_name = lab_test.lab_test_name
-		AND lab_test_class.lab_test_class_id = lab_test.lab_test_class_id  AND service_charge.service_id = service.service_id AND service.branch_code = "'.$this->session->userdata('branch_code').'" AND (service.service_name = "Lab" OR service.service_name = "lab" OR service.service_name = "Laboratory" OR service.service_name = "laboratory" OR service.service_name = "Laboratory test")  AND  service_charge.visit_type_id = '.$visit_t;
+		//$where = 'service_charge.service_charge_name = lab_test.lab_test_name AND lab_test_class.lab_test_class_id = lab_test.lab_test_class_id  AND service_charge.service_id = service.service_id AND service.branch_code = "'.$this->session->userdata('branch_code').'" AND (service.service_name = "Lab" OR service.service_name = "lab" OR service.service_name = "Laboratory" OR service.service_name = "laboratory" OR service.service_name = "Laboratory test")  AND  service_charge.visit_type_id = '.$visit_t;
+		$where = 'service_charge.service_charge_name = lab_test.lab_test_name AND lab_test_class.lab_test_class_id = lab_test.lab_test_class_id  AND service_charge.service_id = service.service_id AND (service.service_name = "Lab" OR service.service_name = "lab" OR service.service_name = "Laboratory" OR service.service_name = "laboratory" OR service.service_name = "Laboratory test")  AND  service_charge.visit_type_id = '.$visit_t;
 		$test_search = $this->session->userdata('lab_test_search');
 		
 		if(!empty($test_search))
@@ -310,7 +315,8 @@ class Laboratory  extends MX_Controller
 		$this->load->view('save_result',$data);
 
 	}
-	public function finish_lab_test($visit_id){
+	public function finish_lab_test($visit_id)
+	{
 		redirect('laboratory/lab_queue');
 	}
 
@@ -327,7 +333,7 @@ class Laboratory  extends MX_Controller
 		}
 		else
 		{
-			FALSE;
+			redirect('laboratory/test/'.$visit_id);
 		}
 	}
 	public function send_to_accounts($visit_id,$module= NULL)

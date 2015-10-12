@@ -26,9 +26,9 @@
           <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Title: </label>
+                    <label class="col-md-4 control-label">Title: </label>
                     
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <select class="form-control" name="title_id">
                             <?php
                                 if($titles->num_rows() > 0)
@@ -57,25 +57,25 @@
                 </div>
                 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">First name: </label>
+                    <label class="col-md-4 control-label">First name: </label>
                     
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <input type="text" class="form-control" name="patient_surname" placeholder="First name" value="<?php echo set_value('patient_surname');?>">
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Other Names: </label>
+                    <label class="col-md-4 control-label">Other Names: </label>
                     
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <input type="text" class="form-control" name="patient_othernames" placeholder="Other Names">
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Gender: </label>
+                    <label class="col-md-4 control-label">Gender: </label>
                     
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <select class="form-control" name="gender_id">
                             <?php
                                 if($genders->num_rows() > 0)
@@ -104,25 +104,25 @@
                 </div>
                 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Email Address: </label>
+                    <label class="col-md-4 control-label">Email Address: </label>
                     
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <input type="text" class="form-control" name="patient_email" placeholder="Email Address">
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">National ID: </label>
+                    <label class="col-md-4 control-label">National ID: </label>
                     
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <input type="text" class="form-control" name="patient_national_id" placeholder="National ID">
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Date of Birth : </label>
+                    <label class="col-md-4 control-label">Date of Birth : </label>
             
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
@@ -139,62 +139,55 @@
                 
                 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Primary Phone: </label>
+                    <label class="col-md-4 control-label">Primary Phone: </label>
                     
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <input type="text" class="form-control" name="patient_phone1" placeholder="Primary Phone">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Card Number: </label>
+                    <label class="col-md-4 control-label">Other Phone: </label>
                     
-                    <div class="col-lg-8">
-                        <input type="text" class="form-control" name="current_patient_number" placeholder="Current Card Number">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-lg-4 control-label">Other Phone: </label>
-                    
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <input type="text" class="form-control" name="patient_phone2" placeholder="Other Phone">
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Card Number: </label>
+                    <label class="col-md-4 control-label">Card Number: </label>
                     
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <input type="text" class="form-control" name="current_patient_number" placeholder="Current Card Number">
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Next of Kin Surname: </label>
+                    <label class="col-md-4 control-label">Next of Kin Surname: </label>
                     
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <input type="text" class="form-control" name="patient_kin_sname" placeholder="Kin Surname">
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Next of Kin Other Names: </label>
+                    <label class="col-md-4 control-label">Next of Kin Other Names: </label>
                     
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <input type="text" class="form-control" name="patient_kin_othernames" placeholder="Kin Other Names">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Next of Kin Contact: </label>
+                    <label class="col-md-4 control-label">Next of Kin Contact: </label>
                     
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <input type="text" class="form-control" name="next_of_kin_contact" placeholder="">
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Relationship To Kin: </label>
+                    <label class="col-md-4 control-label">Relationship To Kin: </label>
                     
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <select class="form-control" name="relationship_id">
                             <?php
                                 if($relationships->num_rows() > 0)
@@ -222,9 +215,9 @@
                     </div>
                 </div>
                 <!--<div class="form-group">
-                    <label class="col-lg-4 control-label">Insurance : </label>
+                    <label class="col-md-4 control-label">Insurance : </label>
                     
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <select class="form-control" name="insurance_company_id">
                             <option value="0">Select an insurance Company</option>
                             <?php

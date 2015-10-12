@@ -38,7 +38,8 @@ class Auth_model extends CI_Model
                    'branch_id'  				=> $result[0]->branch_id,
                    'branch_code'  				=> $result[0]->branch_code,
                    'branch_name'  				=> $result[0]->branch_name,
-				   'authorize_invoice_changes'	=> $result[0]->authorize_invoice_changes
+				   'authorize_invoice_changes'	=> $result[0]->authorize_invoice_changes,
+                   'personnel_type_id'     		=> $result[0]->personnel_type_id
                );
 
 			$this->session->set_userdata($newdata);

@@ -55,6 +55,7 @@
 				$branch_address = $row->branch_address;
 				$branch_city = $row->branch_city;
 				$branch_post_code = $row->branch_post_code;
+				$branch_parent = $row->branch_parent;
 				$branch_working_weekday = $row->branch_working_weekday;
 				$branch_working_weekend = $row->branch_working_weekend;
 				

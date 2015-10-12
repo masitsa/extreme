@@ -113,7 +113,7 @@ class Reports_model extends CI_Model
 		{
 			$date = date('Y-m-d');
 		}
-		$where = 'visit_date = \''.$date.'\'';
+		$where = 'visit_date = \''.$date.'\' AND visit.inpatient = '.$patient_type_id;
 		
 		$this->db->select('COUNT(visit_id) AS visit_total');
 		$this->db->where($where);
@@ -127,6 +127,7 @@ class Reports_model extends CI_Model
 	public function get_all_service_types()
 	{
 		$this->db->select('*');
+		$this->db->where('service_delete', 0);
 		$query = $this->db->get('service');
 		
 		return $query;
@@ -242,6 +243,21 @@ class Reports_model extends CI_Model
 		$this->db->from('service');
 		$this->db->where('service_delete = 0');
 		$this->db->order_by('service_name','ASC');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	
+	/*
+	*	Retrieve all active branches
+	*
+	*/
+	public function get_all_active_branches()
+	{
+		//retrieve all users
+		$this->db->from('branch');
+		$this->db->where('branch_status = 1');
+		$this->db->order_by('branch_name','ASC');
 		$query = $this->db->get();
 		
 		return $query;
@@ -401,7 +417,7 @@ class Reports_model extends CI_Model
 			$this->db->from($table.', payments');
 		}
 		$this->db->select('SUM(payments.amount_paid) AS total_paid');
-		$this->db->where($where.' AND visit.visit_id = payments.visit_id');
+		$this->db->where($where.' AND visit.visit_id = payments.visit_id AND payments.cancel = 0');
 		$query = $this->db->get();
 		
 		$cash = $query->row();
@@ -436,7 +452,7 @@ class Reports_model extends CI_Model
 			$this->db->from($table.', payments');
 		}
 		$this->db->select('*');
-		$this->db->where($where.' AND visit.visit_id = payments.visit_id');
+		$this->db->where($where.' AND visit.visit_id = payments.visit_id AND payments.cancel = 0');
 		$query = $this->db->get();
 		
 		return $query;
@@ -459,7 +475,7 @@ class Reports_model extends CI_Model
 		$this->load->library('excel');
 		
 		//get all transactions
-		$where = 'visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type';
+		$where = 'visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
 		$table = 'visit, patients, visit_type';
 		$visit_search = $this->session->userdata('all_transactions_search');
 		$table_search = $this->session->userdata('all_transactions_tables');
@@ -886,124 +902,6 @@ class Reports_model extends CI_Model
 		return $query;
 	}
 	
-	/*
-	*	Retrieve debtors_invoices
-	*	@param string $table
-	* 	@param string $where
-	*	@param int $per_page
-	* 	@param int $page
-	*
-	*/
-	public function get_all_debtors_invoices($table, $where, $per_page, $page, $order, $order_method)
-	{
-		//retrieve all users
-		$this->db->from($table);
-		$this->db->select('*');
-		$this->db->where($where);
-		$this->db->order_by($order, $order_method);
-		$query = $this->db->get('', $per_page, $page);
-		
-		return $query;
-	}
-	
-	public function add_debtor_invoice($insurance_company_id)
-	{
-		$data = array(
-			'debtor_invoice_created'=>date('Y-m-d H:i:s'),
-			'debtor_invoice_created_by'=>$this->session->userdata('personnel_id'),
-			'batch_no'=>$this->create_batch_number(),
-			'insurance_company_id'=>$insurance_company_id,
-			'debtor_invoice_modified_by'=>$this->session->userdata('personnel_id'),
-			'date_from' => $this->input->post('invoice_date_from'),
-			'date_to' => $this->input->post('invoice_date_to')
-		);
-		
-		if($this->db->insert('debtor_invoice', $data))
-		{
-			$debtor_invoice_id = $this->db->insert_id();
-			
-			if($debtor_invoice_id > 0)
-			{
-				//get all invoices within the selected dates
-				$this->db->where(
-					array(
-						'insurance_company_id' => $insurance_company_id,
-						'visit_date >= ' => $this->input->post('invoice_date_from'),
-						'visit_date <= ' => $this->input->post('invoice_date_to')
-					)
-				);
-				$this->db->select('visit_id');
-				$query = $this->db->get('visit');
-				
-				if($query->num_rows() > 0)
-				{
-					$invoice_data['debtor_invoice_id'] = $debtor_invoice_id;
-					
-					foreach($query->result() as $res)
-					{
-						$visit_id = $res->visit_id;
-						
-						$invoice_data['visit_id'] = $visit_id;
-						
-						if($this->db->insert('debtor_invoice_item', $invoice_data))
-						{
-						}
-						
-						else
-						{
-							$this->session->set_userdata('error_message', 'Unable to add details for visit ID '.$visit_id);
-						}
-					}
-					$this->session->set_userdata('success_message', 'Batch added successfully');
-					return TRUE;
-				}
-				
-				else
-				{
-					$this->session->set_userdata('error_message', 'The selected date range does not contain any invoices');
-					return FALSE;
-				}
-			}
-			
-			else
-			{
-				$this->session->set_userdata('error_message', 'The selected date range does not contain any invoices');
-				return FALSE;
-			}
-		}
-		else{
-			return FALSE;
-		}
-	}
-	
-	/*
-	*	Create batch number
-	*
-	*/
-	public function create_batch_number()
-	{
-		//select product code
-		$this->db->from('debtor_invoice');
-		$this->db->where("batch_no LIKE 'BAT".date('y')."/%'");
-		$this->db->select('MAX(batch_no) AS number');
-		$query = $this->db->get();
-		$preffix = "BAT".date('y').'/';
-		
-		if($query->num_rows() > 0)
-		{
-			$result = $query->result();
-			$number =  $result[0]->number;
-			$real_number = str_replace($preffix, "", $number);
-			$real_number++;//go to the next number
-			$number = $preffix.sprintf('%06d', $real_number);
-		}
-		else{//start generating receipt numbers
-			$number = $preffix.sprintf('%06d', 1);
-		}
-		
-		return $number;
-	}
-	
 	public function calculate_debt_total($debtor_invoice_id, $where, $table)
 	{
 		$where .= ' AND debtor_invoice.debtor_invoice_id = '.$debtor_invoice_id;
@@ -1028,8 +926,9 @@ class Reports_model extends CI_Model
 	public function get_all_doctors()
 	{
 		$this->db->select('personnel.*');
-		$this->db->where('(job_title.job_title_name LIKE "Doctor" OR job_title.job_title_name = "doctor") AND personnel.personnel_id = personnel_job.personnel_id AND job_title.job_title_id =  personnel_job.job_title_id');
-		$query = $this->db->get('personnel,job_title,personnel_job');
+		$this->db->where('personnel.personnel_type_id != 1');
+		$this->db->order_by('personnel_fname');
+		$query = $this->db->get('personnel');
 		
 		return $query;
 	}
@@ -1216,5 +1115,211 @@ class Reports_model extends CI_Model
 		$_SESSION['all_transactions_search'] = $where;
 		
 		$this->export_transactions();
+	}
+	
+	public function calculate_hours_worked($personnel_id, $date_from, $date_to)
+	{
+		$where = 'personnel_id = '.$personnel_id;
+		
+		if(!empty($date_from) && !empty($date_to))
+		{
+			$where .= ' AND (schedule_date >= \''.$date_from.'\' AND schedule_date <= \''.$date_to.'\') ';
+		}
+		
+		else if(empty($date_from) && !empty($date_to))
+		{
+			$where .= ' AND schedule_date = \''.$date_to.'\'';
+		}
+		
+		else if(!empty($date_from) && empty($date_to))
+		{
+			$where .= ' AND schedule_date = \''.$date_from.'\'';
+		}
+		
+		$this->db->where($where);
+		$query = $this->db->get('schedule_item');
+		$total_hours = 0;
+		
+		if($query->num_rows() > 0)
+		{
+			foreach($query->result() as $res)
+			{
+				$schedule_start_time = $res->schedule_start_time;
+				$schedule_end_time = $res->schedule_end_time;
+				
+				$hours_difference = (strtotime($schedule_end_time) - strtotime($schedule_start_time)) / 3600;
+				$total_hours += $hours_difference;
+			}
+		}
+		
+		return $total_hours;
+	}
+	
+	public function calculate_days_worked($personnel_id, $date_from, $date_to)
+	{
+		$where = 'personnel_id = '.$personnel_id;
+		
+		if(!empty($date_from) && !empty($date_to))
+		{
+			$where .= ' AND (schedule_date >= \''.$date_from.'\' AND schedule_date <= \''.$date_to.'\') ';
+		}
+		
+		else if(empty($date_from) && !empty($date_to))
+		{
+			$where .= ' AND schedule_date = \''.$date_to.'\'';
+		}
+		
+		else if(!empty($date_from) && empty($date_to))
+		{
+			$where .= ' AND schedule_date = \''.$date_from.'\'';
+		}
+		
+		$this->db->where($where);
+		$query = $this->db->get('schedule_item');
+		$total_days = $query->num_rows();
+		
+		return $total_days;
+	}
+	
+	public function get_visit_type()
+	{
+		//invoiced
+		$this->db->select('*');
+		$this->db->from('visit_type');
+		$this->db->where('visit_type_id > 1');
+		$this->db->order_by('visit_type_name');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	/*
+	*	Retrieve total visits
+	*
+	*/
+	public function get_total_visits($where, $table)
+	{
+		$this->db->from($table);
+		$this->db->where($where);
+		$total = $this->db->count_all_results();
+		
+		return $total;
+	}
+	
+	/*
+	*	Retrieve debtors_invoices
+	*	@param string $table
+	* 	@param string $where
+	*	@param int $per_page
+	* 	@param int $page
+	*
+	*/
+	public function get_all_debtors_invoices($table, $where, $per_page, $page, $order, $order_method)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by($order, $order_method);
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+	
+	public function add_debtor_invoice($visit_type_id)
+	{
+		$data = array(
+			'debtor_invoice_created'=>date('Y-m-d H:i:s'),
+			'debtor_invoice_created_by'=>$this->session->userdata('personnel_id'),
+			'batch_no'=>$this->create_batch_number(),
+			'visit_type_id'=>$visit_type_id,
+			'debtor_invoice_modified_by'=>$this->session->userdata('personnel_id'),
+			'date_from' => $this->input->post('invoice_date_from'),
+			'date_to' => $this->input->post('invoice_date_to')
+		);
+		
+		if($this->db->insert('debtor_invoice', $data))
+		{
+			$debtor_invoice_id = $this->db->insert_id();
+			
+			if($debtor_invoice_id > 0)
+			{
+				//get all invoices within the selected dates
+				$this->db->where(
+					array(
+						'visit_type' => $visit_type_id,
+						'visit_date >= ' => $this->input->post('invoice_date_from'),
+						'visit_date <= ' => $this->input->post('invoice_date_to')
+					)
+				);
+				$this->db->select('visit_id');
+				$query = $this->db->get('visit');
+				
+				if($query->num_rows() > 0)
+				{
+					$invoice_data['debtor_invoice_id'] = $debtor_invoice_id;
+					
+					foreach($query->result() as $res)
+					{
+						$visit_id = $res->visit_id;
+						
+						$invoice_data['visit_id'] = $visit_id;
+						
+						if($this->db->insert('debtor_invoice_item', $invoice_data))
+						{
+						}
+						
+						else
+						{
+							$this->session->set_userdata('error_message', 'Unable to add details for visit ID '.$visit_id);
+						}
+					}
+					$this->session->set_userdata('success_message', 'Batch added successfully');
+					return TRUE;
+				}
+				
+				else
+				{
+					$this->session->set_userdata('error_message', 'The selected date range does not contain any invoices');
+					return FALSE;
+				}
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'The selected date range does not contain any invoices');
+				return FALSE;
+			}
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Create batch number
+	*
+	*/
+	public function create_batch_number()
+	{
+		//select product code
+		$this->db->from('debtor_invoice');
+		$this->db->where("batch_no LIKE '".$this->session->userdata('branch_code').'-'.date('y')."-%'");
+		$this->db->select('MAX(batch_no) AS number');
+		$query = $this->db->get();
+		$preffix = $this->session->userdata('branch_code').'-'.date('y').'-';
+		
+		if($query->num_rows() > 0)
+		{
+			$result = $query->result();
+			$number =  $result[0]->number;
+			$real_number = str_replace($preffix, "", $number);
+			$real_number++;//go to the next number
+			$number = $preffix.sprintf('%06d', $real_number);
+		}
+		else{//start generating receipt numbers
+			$number = $preffix.sprintf('%06d', 1);
+		}
+		
+		return $number;
 	}
 }

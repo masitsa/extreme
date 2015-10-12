@@ -20,11 +20,10 @@ if($num_rows > 0){
 	</div>
 	";
 	echo "
-	<br>
-	<div class='row'>
-			<div class='center-align '>
-				<a class='btn btn-info btn-sm' type='submit' onclick='save_assessment(".$visit_id.")'>Update Assesment</a>
-			</div>
+	<div class='row' style='margin-top:60px;'>
+		<div class='center-align '>
+			<a class='btn btn-info btn-sm' type='submit' onclick='save_assessment(".$visit_id.")'>Update Assesment</a>
+		</div>
 	</div>
 
 		";
@@ -40,11 +39,10 @@ else{
 	</div>
 	";
 	echo "
-	<br>
-	<div class='row'>
-			<div class='center-align '>
-				<a class='btn btn-info btn-sm' type='submit' onclick='save_assessment(".$visit_id.")'>Save Assesment</a>
-			</div>
+	<div class='row' style='margin-top:60px;'>
+		<div class='center-align '>
+			<a class='btn btn-info btn-sm' type='submit' onclick='save_assessment(".$visit_id.")'>Save Assesment</a>
+		</div>
 	</div>
 
 		";

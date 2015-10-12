@@ -264,8 +264,8 @@ if(!empty($coming_from)){
 		else{
 			echo"
 			<div class='center-align'>
-				<input type='button' value='Print' name='std' class='btn btn-sm btn-info' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/>
-				<input type='button' class='btn btn-sm btn-success' value='Done' onclick='finish_lab_test(".$visit_id.")'/>
+				<input type='button' value='Print' name='std' class='btn btn-sm btn-success' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/>
+				<a href='".site_url()."laboratory/send_to_doctor/".$visit_id."' class='btn btn-sm btn-info'>Send to doctor</a>
 			</div>
 		";
 		}

@@ -6,21 +6,17 @@
         	<?php
         	if($type_links == 1){
         		?>
-        		 <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> for <?php echo date('jS M Y',strtotime(date('Y-m-d')));?></h4>
+        		 <h2 class="panel-title"><i class="icon-reorder"></i><?php echo $title;?> for <?php echo date('jS M Y',strtotime(date('Y-m-d')));?></h2>
 
         		<?php
         	}else{
         		?>
-        		<h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> </h4>
+        		<h2 class="panel-title"><?php echo $title;?> </h2>
 
         		<?php
         	}
         	?>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-          </div>
-          <div class="clearfix"></div>
-        </header>             
+        </header>
 
         <!-- Widget content -->
           <div class="panel-body">

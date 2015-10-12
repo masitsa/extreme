@@ -243,7 +243,7 @@ class Accounts_model extends CI_Model
 		$table = "visit_charge, service_charge, service";
 		$where = "service_charge.service_id = service.service_id AND visit_charge.visit_charge_delete = 0 AND visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_id =". $visit_id;
 		$items = "service.service_id,service.service_name,service_charge.service_charge_name,visit_charge.service_charge_id,visit_charge.visit_charge_units, visit_charge.visit_charge_amount, visit_charge.visit_charge_timestamp,visit_charge.visit_charge_id,visit_charge.created_by";
-		$order = "visit_charge.service_charge_id";
+		$order = "service.service_name";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
@@ -300,7 +300,7 @@ class Accounts_model extends CI_Model
 	}
 	public function payments($visit_id){
 		$table = "payments, payment_method";
-		$where = "payment_method.payment_method_id = payments.payment_method_id AND payments.visit_id =". $visit_id;
+		$where = "payments.cancel = 0 AND payment_method.payment_method_id = payments.payment_method_id AND payments.visit_id =". $visit_id;
 		$items = "*";
 		$order = "payments.payment_id";
 		
@@ -898,6 +898,49 @@ class Accounts_model extends CI_Model
 		$query = $this->db->get('visit_department, departments');
 		
 		return $query;
+	}
+	
+	public function get_last_department($visit_id)
+	{
+		$this->db->select('departments.department_name, a.accounts, departments.department_id');
+		$this->db->where('a.created = (
+						SELECT MAX(created)
+						FROM visit_department AS b
+						WHERE b.visit_department_status = 0 AND b.visit_id = '.$visit_id.')
+						AND a.department_id = departments.department_id AND a.visit_id = '.$visit_id);
+		$query = $this->db->get('visit_department AS a, departments');
+		
+		return $query;
+	}
+	
+	public function get_cancel_actions()
+	{
+		$this->db->where('cancel_action_status', 1);
+		$this->db->order_by('cancel_action_name');
+		
+		return $this->db->get('cancel_action');
+	}
+	
+	public function cancel_payment($payment_id)
+	{
+		$data = array(
+			"cancel_action_id" => $this->input->post('cancel_action_id'),
+			"cancel_description" => $this->input->post('cancel_description'),
+			"cancelled_by" => $this->input->post('cancel_action_id'),
+			"cancelled_date" => date("Y-m-d H:i:s"),
+			"cancel" => 1
+		);
+		
+		$this->db->where('payment_id', $payment_id);
+		if($this->db->update('payments', $data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
 	}
 }
 ?>

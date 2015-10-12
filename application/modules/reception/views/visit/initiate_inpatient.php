@@ -127,6 +127,16 @@
 									</div>
 								</div>
                                 
+                                <div class="form-group">
+                                    <label class="col-lg-4 control-label">Consultation charge: </label>
+                                    
+                                    <div class="col-lg-8">
+                                        <select name="service_charge_name" class="form-control" id="services_charges2">
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                
 								<div class="form-group">
 									<label class="col-lg-4 control-label">Admission date: </label>
 									
@@ -184,5 +194,17 @@
 			// $('#consultation').css('display', 'block');
 		}
 	}
+	
+	$(document).on("change","select#visit_type_id2",function(e)
+	{
+		var service_id = '8';
+		var visit_type_id = $(this).val();
+		
+		//get department services
+		$.get( "<?php echo site_url();?>reception/get_services_charges/"+visit_type_id+"/"+service_id, function( data ) 
+		{
+			$( "#services_charges2" ).html( data );
+		});
+	});
 	
 </script>

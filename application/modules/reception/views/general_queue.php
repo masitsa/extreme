@@ -4,12 +4,8 @@
  
  <section class="panel">
     <header class="panel-heading">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> for <?php echo date('jS M Y',strtotime(date('Y-m-d')));?></h4>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-          </div>
-          <div class="clearfix"></div>
-        </header>
+        <h2 class="panel-title"><?php echo $title;?> for <?php echo date('jS M Y',strtotime(date('Y-m-d')));?></h2>
+    </header>
       <div class="panel-body">
           <div class="padd">
           
@@ -138,7 +134,7 @@
 						
 						if($personnel_id == $personnel_id2)
 						{
-							$doctor = $adm->personnel_fname;
+							$doctor = $adm->personnel_onames;
 							break;
 						}
 						
@@ -274,9 +270,9 @@
 						<a  class="btn btn-sm btn-success" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
 						<a  class="btn btn-sm btn-success" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
 					</td>
-					<td><a href="'.site_url().'reception/print-invoice/'.$visit_id.'/reception" target="_blank" class="btn btn-sm btn-warning fa fa-print"> Print Invoice </a></td>
+					<!--<td><a href="'.site_url().'reception/print-invoice/'.$visit_id.'/reception" target="_blank" class="btn btn-sm btn-warning fa fa-print"> Invoice </a></td>-->
 					<td><a href="'.site_url().'reception/end_visit/'.$visit_id.'" class="btn btn-sm btn-info" onclick="return confirm(\'Do you really want to end this visit ?\');">End Visit</a></td>
-					<td><a href="'.site_url().'reception/delete_visit/'.$visit_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this visit?\');">Delete Visit</a></td>';
+					<td><a href="'.site_url().'reception/delete_visit/'.$visit_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this visit?\');">Delete</a></td>';
 					$buttons .= '<td></td>';
 				}
 			

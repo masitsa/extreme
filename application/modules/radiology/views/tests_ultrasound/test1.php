@@ -1,6 +1,7 @@
 <?php
 $patient_id = $this->nurse_model->get_patient_id($visit_id);
 $coming_from = $this->reception_model->coming_from($visit_id);
+$ultrasound_test = 0;
 
 if(!empty($coming_from)){
 

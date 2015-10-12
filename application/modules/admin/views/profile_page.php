@@ -1,14 +1,10 @@
 <?php
 $contacts = $this->site_model->get_contacts();
- $logo = $contacts['logo'];
+$logo = $contacts['logo'];
 ?>
 <section class="panel">
 	<header class="panel-heading">
-            <h5 class="pull-left"><i class="icon-reorder"></i>Profile Details</h5>
-          <div class="widget-icons pull-right">
-
-          </div>
-          <div class="clearfix"></div>
+    	<h2 class="panel-title">Profile Details</h2>
     </header>
 	<div class="panel-body">
 	<?php

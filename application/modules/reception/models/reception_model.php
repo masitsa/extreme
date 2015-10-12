@@ -445,7 +445,7 @@ class Reception_model extends CI_Model
 		{
 			$table = "patients, visit";
 			$where = "patients.patient_id = visit.patient_id AND visit.visit_id = ".$visit_id;
-			$items = "patients.*, visit.visit_type, visit.ward_id";
+			$items = "patients.*, visit.visit_type, visit.ward_id, visit.patient_insurance_number, visit.inpatient";
 			$order = "patient_surname";
 		}
 		
@@ -454,23 +454,21 @@ class Reception_model extends CI_Model
 		foreach ($result as $row)
 		{
 			$patient_id = $row->patient_id;
-			$dependant_id = $row->dependant_id;
 			$patient_number = $row->patient_number;
-			$dependant_id = $row->dependant_id;
-			$strath_no = $row->strath_no;
 			$created_by = $row->created_by;
 			$modified_by = $row->modified_by;
 			$created = $row->patient_date;
 			$last_modified = $row->last_modified;
 			$last_visit = $row->last_visit;
 			$ward_id = $row->ward_id;
-			
 			$patient_national_id = $row->patient_national_id;
 			$patient_othernames = $row->patient_othernames;
 			$patient_surname = $row->patient_surname;
 			$patient_date_of_birth = $row->patient_date_of_birth;
 			$gender_id = $row->gender_id;
+			
 			$faculty ='';
+			$dependant_id = '';
 			if($gender_id == 1)
 			{
 				$gender = 'M';
@@ -483,10 +481,14 @@ class Reception_model extends CI_Model
 			{
 				$visit_type_id = '';
 				$visit_type_name = '';
+				$patient_insurance_number = '';
+				$inpatient = '';
 			}
 			
 			else
 			{
+				$inpatient = $row->inpatient;
+				$patient_insurance_number = $row->patient_insurance_number;
 				$visit_type_id = $row->visit_type;
 				$this->db->where('visit_type_id', $visit_type_id);
 				$this->db->select('visit_type_name');
@@ -504,6 +506,8 @@ class Reception_model extends CI_Model
 		$this->load->model('administration/administration_model');
 		$account_balance = $this->administration_model->patient_account_balance($patient_id);
 		// end of patient balance
+		$patient['patient_insurance_number'] = $patient_insurance_number;
+		$patient['inpatient'] = $inpatient;
 		$patient['patient_id'] = $patient_id;
 		$patient['account_balance'] = $account_balance;
 		$patient['patient_national_id'] = $patient_national_id;
@@ -1810,7 +1814,7 @@ class Reception_model extends CI_Model
 					$data['accounts'] = 0;
 				}
 			}
-			
+			//var_dump($data);die();
 			if($this->db->insert('visit_department', $data))
 			{
 				return TRUE;
@@ -2192,8 +2196,8 @@ class Reception_model extends CI_Model
 			for($r = 1; $r < $total_rows; $r++)
 			{
 				$current_patient_number = $array[$r][0];
-				$items['patient_surname'] = ucwords(strtolower($array[$r][1]));
-				$items['patient_othernames'] = ucwords(strtolower($array[$r][2]));
+				$items['patient_surname'] = mysql_real_escape_string(ucwords(strtolower($array[$r][1])));
+				$items['patient_othernames'] = mysql_real_escape_string(ucwords(strtolower($array[$r][2])));
 				$title = $array[$r][3];
 				$items['patient_date_of_birth'] = $array[$r][4];
 				$civil_status_id = $array[$r][5];

@@ -14,6 +14,7 @@ class Hr extends MX_Controller
 		$this->load->model('personnel_model');
 		$this->load->model('leave_model');
 		$this->load->model('hr_model');
+		$this->load->model('schedules_model');
 		$this->load->model('admin/branches_model');
 		
 		if(!$this->auth_model->check_login())

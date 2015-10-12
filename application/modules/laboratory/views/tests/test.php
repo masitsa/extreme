@@ -6,7 +6,7 @@
 
         <div class="panel-body">
             <div class="tabbable" style="margin-bottom: 18px;">
-              <ul class="nav nav-tabs">
+              <ul class="nav nav-tabs nav-justified">
                 <li class="active"><a href="#tests-pane" data-toggle="tab">Tests</a></li>
                 <li ><a href="#visit_trail" data-toggle="tab">Visit Trail</a></li>
               </ul>
@@ -116,7 +116,7 @@
 	    XMLHttpRequestObject.onreadystatechange = function(){
 	    
 	      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-	  //window.alert(XMLHttpRequestObject.responseText);
+	  		//window.alert(XMLHttpRequestObject.responseText);
 	        obj.innerHTML = XMLHttpRequestObject.responseText;
 	        if((page == 75) || (page == 85)){
 	          window.close(this);

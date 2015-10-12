@@ -478,6 +478,11 @@ class Nurse  extends MX_Controller
 		$this->load->view('display_bed_charges',$data);
 	}
 	
+	function view_consultation_charges($visit_id){
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('display_consultation_charges',$data);
+	}
+	
 	public function search_procedures($visit_id)
 	{
 		$this->form_validation->set_rules('search_item', 'Search', 'trim|required|xss_clean');
@@ -1237,7 +1242,11 @@ class Nurse  extends MX_Controller
 	}
 	public function send_to_labs($visit_id,$module)
 	{
-		if($this->reception_model->set_visit_department($visit_id, 4))
+		$this->db->where('visit_id', $visit_id);
+		$query = $this->db->get('visit');
+		$row = $query->row();
+		$visit_type = $row->visit_type;
+		if($this->reception_model->set_visit_department($visit_id, 18, $visit_type))
 		{
 			if($module == 1){
 				redirect('doctor/doctor_queue');
@@ -1253,7 +1262,11 @@ class Nurse  extends MX_Controller
 	}
 	public function send_to_pharmacy($visit_id,$module)
 	{
-		if($this->reception_model->set_visit_department($visit_id, 5))
+		$this->db->where('visit_id', $visit_id);
+		$query = $this->db->get('visit');
+		$row = $query->row();
+		$visit_type = $row->visit_type;
+		if($this->reception_model->set_visit_department($visit_id, 5, $visit_type))
 		{
 			if($module == 1){
 				redirect('doctor/doctor_queue');
@@ -1381,7 +1394,11 @@ class Nurse  extends MX_Controller
 	}
 	public function send_to_accounts($visit_id, $module)
 	{
-		if($this->reception_model->set_visit_department($visit_id, 6))
+		$this->db->where('visit_id', $visit_id);
+		$query = $this->db->get('visit');
+		$row = $query->row();
+		$visit_type = $row->visit_type;
+		if($this->reception_model->set_visit_department($visit_id, 6, $visit_type))
 		{
 			if($module == 0){
 				redirect("nurse/nurse_queue");
@@ -1397,7 +1414,6 @@ class Nurse  extends MX_Controller
 		{
 			echo 'error';
 		}
-
 	}
 	function from_lab_queue($page_name = NULL){
 		// this is it

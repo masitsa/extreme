@@ -204,7 +204,9 @@ class Xray  extends MX_Controller
 		
 		$order = 'service_charge_name';
 		
-		$where = 'service_charge.service_id = service.service_id AND service.branch_code = "'.$this->session->userdata('branch_code').'" AND (service.service_name = "X Ray" OR service.service_name = "xray" OR service.service_name = "XRay" OR service.service_name = "xray" OR service.service_name = "Xray")  AND  service_charge.visit_type_id = '.$visit_t;
+		//$where = 'service_charge.service_id = service.service_id AND service.branch_code = "'.$this->session->userdata('branch_code').'" AND (service.service_name = "X Ray" OR service.service_name = "xray" OR service.service_name = "XRay" OR service.service_name = "xray" OR service.service_name = "Xray")  AND  service_charge.visit_type_id = '.$visit_t;
+		
+		$where = 'service_charge.service_id = service.service_id AND (service.service_name = "X Ray" OR service.service_name = "xray" OR service.service_name = "XRay" OR service.service_name = "xray" OR service.service_name = "Xray")  AND  service_charge.visit_type_id = '.$visit_t;
 		$test_search = $this->session->userdata('xray_search');
 		
 		if(!empty($test_search))
@@ -255,6 +257,7 @@ class Xray  extends MX_Controller
 		
 		$data['title'] = $v_data['title'] = 'X Ray List';
 		
+		$v_data['xray'] = $xray;
 		$v_data['visit_id'] = $visit_id;
 		$data['content'] = $this->load->view('xray_list', $v_data, true);
 		

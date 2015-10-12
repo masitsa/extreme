@@ -33,7 +33,7 @@ class Reception  extends MX_Controller
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit.visit_delete = 0 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\' AND visit.visit_date = \''.date('Y-m-d').'\'';
 		
 		$table = 'visit, patients, visit_type';
 		$query = $this->reception_model->get_all_ongoing_visits2($table, $where, 10, 0);
@@ -319,6 +319,11 @@ class Reception  extends MX_Controller
 		$segment = 4;
 		
 		$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
+		
+		if(($page_name == 'laboratory') || ($page_name == 'radiology') || ($page_name == 'pharmacy'))
+		{
+			$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit_type.visit_type_id = visit.visit_type';
+		}
 		
 		$table = 'visit_department, visit, patients, visit_type';
 		
@@ -659,10 +664,12 @@ class Reception  extends MX_Controller
 		$this->form_validation->set_rules('ward_id', 'Ward', 'required|is_natural_no_zero');
 		$this->form_validation->set_rules('visit_type_id', 'Visit type', 'required|is_natural_no_zero');
 		$this->form_validation->set_rules('personnel_id', 'Doctor', 'required|is_natural_no_zero');
+		$this->form_validation->set_rules('service_charge_name', 'Consultation charge', 'required|is_natural_no_zero');
 		
 		$ward_id = $this->input->post("ward_id"); 
 		$visit_type_id = $this->input->post("visit_type_id"); 
-		$doctor_id = $this->input->post("personnel_id"); 
+		$doctor_id = $this->input->post("personnel_id");
+		$service_charge_id = $this->input->post("service_charge_name");
 		
 		if($visit_type_id != 1)
 		{
@@ -699,6 +706,9 @@ class Reception  extends MX_Controller
 				//save admission fee
 				if($this->reception_model->save_admission_fee($visit_type_id, $visit_id))
 				{
+					//save consultation fee
+					$this->reception_model->save_visit_consultation_charge($visit_id, $service_charge_id);
+					
 					$this->session->set_userdata('success_message', 'Inpatient visit initiated successfully');
 				}
 				

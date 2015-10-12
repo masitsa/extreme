@@ -120,6 +120,7 @@ $(document).ready(function(){
                     load_vitals(count, visit_id);
                 }
 				display_bed_charges(visit_id);
+				display_consultation_charges(visit_id);
                 previous_vitals(visit_id);
                 // get_family_history(visit_id);
                 // nurse_notes(visit_id);
@@ -403,6 +404,38 @@ function display_bed_charges(visit_id){
     }
 }
 
+function display_consultation_charges(visit_id){
+
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    var config_url = document.getElementById("config_url").value;
+    var url = config_url+"nurse/view_consultation_charges/"+visit_id;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+                document.getElementById("consultation_charges").innerHTML=XMLHttpRequestObject.responseText;
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
+
 function myPopup3(visit_id) {
     var config_url = document.getElementById("config_url").value;
     var win = window.open( config_url+"nurse/procedures/"+visit_id, "myWindow", "status = 1, height = auto, width = 600, resizable = 0" );
@@ -520,6 +553,40 @@ function calculatebedtotal(amount, visit_charge_id, service_charge_id, v_id){
     }
 }
 
+//Calculate consultation total
+function calculateconsultationtotal(amount, visit_charge_id, service_charge_id, v_id){
+       
+    var units = document.getElementById('consultation_charge_units'+visit_charge_id).value;  
+
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    var url = config_url+"nurse/bed_total/"+visit_charge_id+"/"+units+"/"+amount;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) 
+			{
+    			display_consultation_charges(v_id);
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
+
 function grand_total(procedure_id, units, amount, v_id){
     var XMLHttpRequestObject = false;
         
@@ -581,6 +648,36 @@ function delete_procedure(id, visit_id){
 }
 
 function delete_bed(id, visit_id){
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+     var config_url = document.getElementById("config_url").value;
+    var url = config_url+"nurse/delete_bed/"+id;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+                display_bed_charges(visit_id);
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
+
+function delete_consultation(id, visit_id){
     var XMLHttpRequestObject = false;
         
     if (window.XMLHttpRequest) {

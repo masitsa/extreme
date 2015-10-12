@@ -1455,5 +1455,34 @@ class Nurse_model extends CI_Model
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		return $result;
 	}
+
+	function get_visit_consultant_charges($v_id)
+	{
+		$table = "visit_charge, service_charge, service";
+		$where = "visit_charge.visit_charge_delete = 0 AND visit_charge.visit_id = $v_id AND visit_charge.service_charge_id = service_charge.service_charge_id AND service.service_id = service_charge.service_id AND service.service_name = 'Consultation'";
+		$items = "*";
+		$order = "visit_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		return $result;
+	}
+
+	function get_visit_consultant($v_id)
+	{
+		$table = "visit, personnel";
+		$where = "visit.visit_id = $v_id AND visit.personnel_id = personnel.personnel_id";
+		$items = "*";
+		$order = "visit_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		$personnel = '';
+		
+		if(count($result) > 0)
+		{
+			$personnel = 'Dr. '.$result[0]->personnel_onames.' '.$result[0]->personnel_fname;
+		}
+		
+		return $personnel;
+	}
 }
 ?>

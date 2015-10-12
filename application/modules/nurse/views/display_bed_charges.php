@@ -12,7 +12,6 @@ echo "
 		<th>Unit Cost</th>
 		<th>Total</th>
 		<th></th>
-		<th></th>
 	</tr>		
 ";                     
 		$total= 0;  
@@ -31,15 +30,12 @@ echo "
 						<tr> 
 							<td align='center'>".$procedure_name."</td>
 							<td align='center'>
-								<input type='text' id='bed_charge_units".$visit_charge_id."' value='".$units."' size='3' onkeyup='calculatebedtotal(".$visit_charge_amount.",".$visit_charge_id.", ".$service_charge_id.",".$visit_id.")'/>
+								<input type='text' class='form-control' id='bed_charge_units".$visit_charge_id."' value='".$units."' size='3'/>
 							</td>
 							<td align='center'>".number_format($visit_charge_amount)."</td>
-							<td align='center'><input type='text' readonly='readonly' size='5' value='".$units * $visit_charge_amount."' id='total".$visit_charge_id."'></div></td>
+							<td align='center'><input type='text' class='form-control' readonly='readonly' size='5' value='".$units * $visit_charge_amount."' id='total".$visit_charge_id."'></div></td>
 							<td>
 							<a class='btn btn-sm btn-primary' href='#' onclick='calculatebedtotal(".$visit_charge_amount.",".$visit_charge_id.", ".$service_charge_id.",".$visit_id.")'><i class='fa fa-pencil'></i></a>
-							</td>
-							<td>
-								<a class='btn btn-sm btn-danger' href='#' onclick='delete_bed(".$visit_charge_id.", ".$visit_id.")'><i class='fa fa-trash'></i></a>
 							</td>
 						</tr>	
 				";

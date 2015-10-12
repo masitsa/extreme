@@ -159,16 +159,17 @@ class Charts extends auth
 		$highest_bar = 0;
 		
 		//get outpatient total
-		$total = $this->reports_model->get_patient_type_total(1, $date);
+		$total_outpatients = $this->reports_model->get_patient_type_total(0, $date);
+		$total_inpatients = $this->reports_model->get_patient_type_total(1, $date);
 		//mark the highest bar
-		if($total > $highest_bar)
+		if($total_outpatients > $highest_bar)
 		{
-			$highest_bar = $total;
+			$highest_bar = $total_outpatients;
 		}
 		
 		//prep data for the particular visit type
-		$result[strtolower('outpatients')] = $total;
-		$result[strtolower('inpatients')] = 0;
+		$result[strtolower('outpatients')] = $total_outpatients;
+		$result[strtolower('inpatients')] = $total_inpatients;
 		
 		$result['highest_bar'] = $highest_bar;//var_dump($result['bars']);
 		echo json_encode($result);

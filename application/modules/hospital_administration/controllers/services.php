@@ -18,8 +18,23 @@ class Services extends Hospital_administration
 
 	public function index($order = 'service_name', $order_method = 'ASC')
 	{
+		//check if branch has parent
+		$this->db->where('branch_code', $this->session->userdata('branch_code'));
+		$query = $this->db->get('branch');
+		$branch_code = $this->session->userdata('branch_code');
+		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$branch_parent = $row->branch_parent;
+			
+			if(!empty($branch_parent))
+			{
+				$branch_code = $branch_parent;
+			}
+		}
 		// this is it
-		$where = 'service_delete = 0 AND service.branch_code = "'.$this->session->userdata('branch_code').'"';
+		$where = 'service_delete = 0 AND service.branch_code = "'.$branch_code.'"';
 		$service_search = $this->session->userdata('service_search');
 		
 		if(!empty($service_search))
@@ -86,7 +101,6 @@ class Services extends Hospital_administration
 		$data['title'] = 'Services';
 		$v_data['title'] = 'Services';
 		$v_data['module'] = 0;
-		
 		
 		$data['content'] = $this->load->view('services/services', $v_data, true);
 		

@@ -6,12 +6,14 @@ class Doctor  extends MX_Controller
 	function __construct()
 	{
 		parent:: __construct();
+		$this->load->model('admin/users_model');
 		$this->load->model('nurse/nurse_model');
 		$this->load->model('reception/reception_model');
 		$this->load->model('accounts/accounts_model');
 		$this->load->model('doctor_model');
 		$this->load->model('medical_admin/medical_admin_model');
 		$this->load->model('pharmacy/pharmacy_model');
+		$this->load->model('administration/reports_model');
 		
 		$this->load->model('site/site_model');
 		$this->load->model('admin/sections_model');
@@ -31,9 +33,9 @@ class Doctor  extends MX_Controller
 		}
 	}
 	
-	public function index()
+	public function index($order = 'category_name', $order_method = 'ASC')
 	{
-		$this->session->unset_userdata('visit_search');
+		/*$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
 		$where = 'visit.inpatient = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = \''.$this->session->userdata('personnel_id').'\'';
@@ -53,12 +55,259 @@ class Doctor  extends MX_Controller
 		
 		$data['title'] = 'Dashboard';
 		$data['sidebar'] = 'doctor_sidebar';
-		$this->load->view('admin/templates/general_page', $data);	
+		$this->load->view('admin/templates/general_page', $data);	*/
+		
+		$where = 'personnel_id = \''.$this->session->userdata('personnel_id').'\'';
+		$search = $this->session->userdata('timesheet_search');
+		$title = 'All timesheets';
+		//echo $search; die();
+		
+		if(!empty($search))
+		{
+			$where .= $search;
+			$title = $this->session->userdata('timesheet_search_title');
+		}
+		
+		$table = 'schedule_item';
+		
+		$segment = 3;
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'doctor/dashboard/'.$order.'/'.$order_method;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->doctor_model->get_all_schedule_items($table, $where, $config["per_page"], $page, $order, $order_method);
+		
+		//change of order method 
+		if($order_method == 'DESC')
+		{
+			$order_method = 'ASC';
+		}
+		
+		else
+		{
+			$order_method = 'DESC';
+		}
+		
+		$v_data['total_due'] = $this->doctor_model->get_total_due($table, $where);
+		$v_data['patients_seen'] = $this->doctor_model->get_total_patients_seen($this->session->userdata('personnel_id'), $search);
+		$v_data['order'] = $order;
+		$v_data['order_method'] = $order_method;
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['invoices'] =$this->doctor_model->get_all_invoices($table, $where, $config["per_page"], $page, $order, $order_method);
+		
+		$data['title'] = 'Dashboard';
+		$v_data['title'] = $title;
+		$v_data['module'] = 1;
+		
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['doctors'] = $this->reception_model->get_doctor();
+		
+		$data['content'] = $this->load->view('dashboard', $v_data, true);
+		
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	
+	public function delete_time($schedule_item_id)
+	{
+		$this->db->where('schedule_item_id', $schedule_item_id);
+		if($this->db->delete('schedule_item'))
+		{
+			$this->session->set_userdata('success_message', 'Hours deleted successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Unable to delete hours. Please try again');
+		}
+		redirect('doctor/dashboard');
+	}
+	
+	public function filter_timesheets()
+	{
+		$date_from = $this->input->post('date_from');
+		$date_to = $this->input->post('date_to');
+		
+		if(!empty($date_from) && !empty($date_to))
+		{
+			$where = ' AND (schedule_date >= \''.$date_from.'\' AND schedule_date <= \''.$date_to.'\') ';
+			$title = 'Timesheets from '.date('jS M Y', strtotime($date_from)).' to '.date('jS M Y', strtotime($date_to));
+		}
+		
+		else if(empty($date_from) && !empty($date_to))
+		{
+			$where = ' AND schedule_date = \''.$date_to.'\'';
+			$title = 'Timesheets for '.date('jS M Y', strtotime($date_to));
+		}
+		
+		else if(!empty($date_from) && empty($date_to))
+		{
+			$where = ' AND schedule_date = \''.$date_from.'\'';
+			$title = 'Timesheets for '.date('jS M Y', strtotime($date_from));
+		}
+		
+		$this->session->set_userdata('timesheet_search', $where);
+		$this->session->set_userdata('timesheet_search_title', $title);
+		
+		redirect('doctor/dashboard');
+	}
+	
+	public function close_timesheet_search()
+	{
+		$this->session->unset_userdata('timesheet_search');
+		$this->session->unset_userdata('timesheet_search_title');
+		
+		redirect('doctor/dashboard');
+	}
+	
+	public function create_invoice()
+	{
+		$personnel_type_id = $this->session->userdata('personnel_type_id');
+		$personnel_id = $this->session->userdata('personnel_id');
+		$where = 'personnel_id = \''.$personnel_id.'\'';
+		$search = $this->session->userdata('timesheet_search');
+		$title = 'Invoice for all timesheets';
+		//echo $search; die();
+		
+		if(!empty($search))
+		{
+			$where .= $search;
+			$title = 'Invoice for '.$this->session->userdata('timesheet_search_title');
+		}
+		
+		//add new doctor invoice
+		$invoice_number = $this->doctor_model->create_invoice_number();
+		$invoice_data = array(
+			"doctor_invoice_description" => $title,
+			"doctor_invoice_number" => $invoice_number,
+			"personnel_id" => $personnel_id,
+			"created" => date('Y-m-d H:i:s'),
+			"created_by" => $personnel_id,
+			"modified_by" => $personnel_id,
+			"doctor_invoice_status" => 0,
+		);
+		
+		if($this->db->insert('doctor_invoice', $invoice_data))
+		{
+			$doctor_invoice_id = $this->db->insert_id();
+			
+			//create invoice items
+			$table = 'schedule_item';
+			$this->db->where($where);
+			$query = $this->db->get($table);
+			
+			if($query->num_rows() > 0)
+			{
+				foreach($query->result() as $row)
+				{
+					$personnel_id = $row->personnel_id;
+					$schedule_item_id = $row->schedule_item_id;
+					$schedule_date = $row->schedule_date;
+					$schedule_start_time = $row->schedule_start_time;
+					$schedule_end_time = $row->schedule_end_time;
+					$created_by = $row->created_by;
+					$created = $row->created;
+					
+					//consultant
+					if($personnel_type_id == 2)
+					{
+						$schedule_total = $this->reports_model->get_total_collected($personnel_id, $schedule_date, $schedule_date);
+						$units = 1;
+						$unit_cost = $schedule_total;
+					}
+					
+					//radiographer
+					elseif($personnel_type_id == 3)
+					{
+						$schedule_total = $this->reports_model->get_total_collected($personnel_id, $schedule_date, $schedule_date);
+						$units = 0.3;
+						$unit_cost = $schedule_total;
+					}
+					
+					//medical officer
+					elseif($personnel_type_id == 4)
+					{
+						$units = (strtotime($schedule_end_time) - strtotime($schedule_start_time)) / 3600;
+						$unit_cost = 500;
+					}
+					
+					//clinic officer
+					elseif($personnel_type_id == 5)
+					{
+						$units = 1;
+						$unit_cost = 1000;
+					}
+					
+					$total = $units * $unit_cost;
+					$item = date('jS M Y',strtotime($schedule_date)).' '.date('h:i a',strtotime($schedule_start_time)).' '.date('h:i a',strtotime($schedule_end_time));
+					
+					$item_data = array(
+						"doctor_invoice_item_description" => $item,
+						"doctor_invoice_item_cost" => $unit_cost,
+						"doctor_invoice_item_quantity" => $units,
+						"doctor_invoice_id" => $doctor_invoice_id,
+					);
+					
+					if($this->db->insert('doctor_invoice_item', $item_data))
+					{
+					}
+				}
+			}
+		
+			redirect('doctor/print_invoice/'.$doctor_invoice_id);
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Unable to create invoice. Please try again');
+			redirect('doctor/dashboard');
+		}
+	}
+	
+	public function print_invoice($doctor_invoice_id)
+	{
+		$data['contacts'] = $this->site_model->get_contacts();
+		
+		$invoice = $this->doctor_model->get_doctor_invoice($doctor_invoice_id);
+		$invoice_items = $this->doctor_model->get_doctor_invoice_items($doctor_invoice_id);
+		$data['invoice'] = $invoice;
+		$data['invoice_items'] = $invoice_items;
+		$this->load->view('invoice', $data);
 	}
 	
 	public function doctor_queue($page_name = NULL)
 	{
-		$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = \''.$this->session->userdata('personnel_id').'\'';
 		
 		$table = 'visit_department, visit, patients, visit_type';
 		$patient_visit_search = $this->session->userdata('patient_visit_search');
@@ -79,7 +328,7 @@ class Doctor  extends MX_Controller
 		}
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/doctor/doctor_queue/'.$page_name;
+		$config['base_url'] = site_url().'doctor/doctor_queue/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;

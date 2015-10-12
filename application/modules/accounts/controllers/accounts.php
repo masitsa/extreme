@@ -66,7 +66,7 @@ class Accounts extends MX_Controller
 		}
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/accounts/accounts_queue';
+		$config['base_url'] = site_url().'accounts/accounts_queue';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 3;
 		$config['per_page'] = 20;
@@ -242,7 +242,7 @@ class Accounts extends MX_Controller
 		}
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/accounts/accounts_unclosed_queue';
+		$config['base_url'] = site_url().'accounts/accounts_unclosed_queue';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 40;
@@ -312,7 +312,7 @@ class Accounts extends MX_Controller
 		}
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/accounts/accounts_closed_visits';
+		$config['base_url'] = site_url().'accounts/accounts_closed_visits';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -382,6 +382,7 @@ class Accounts extends MX_Controller
 	{
 		$v_data = array('visit_id'=>$visit_id);
 		
+		$v_data['cancel_actions'] = $this->accounts_model->get_cancel_actions();
 		$v_data['going_to'] = $this->accounts_model->get_going_to($visit_id);
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
 		$v_data['patient_type'] = $patient['patient_type'];
@@ -575,20 +576,59 @@ class Accounts extends MX_Controller
 		redirect('accounts/accounts_unclosed_queue/'.$page);
 	}
 	
-	public function send_to_department($visit_id)
+	public function send_to_department($visit_id, $department_id)
 	{
 		$data['accounts'] = 1;
 		$this->db->where('visit_department.visit_department_status = 1 AND visit_department.visit_id = '.$visit_id);
 		if($this->db->update('visit_department', $data))
 		{
-			$this->session->set_userdata('success_message', 'Patient has been sent');
-			redirect('accounts/accounts-queue');
+			$this->db->where('visit_id', $visit_id);
+			$query = $this->db->get('visit');
+			$row = $query->row();
+			$visit_type = $row->visit_type;
+			
+			if($this->reception_model->set_visit_department($visit_id, $department_id, $visit_type))
+			{
+				$this->session->set_userdata('success_message', 'Patient has been sent');
+				redirect('accounts/accounts-queue');
+			}
+			else
+			{
+				$this->session->set_userdata('error_message', 'Unable to send patient');
+				redirect('accounts/payments/'.$visit_id.'/1');
+			}
 		}
 		
 		else
 		{
 			$this->session->set_userdata('error_message', 'Patient could not be sent');
 			redirect('accounts/payments/'.$visit_id.'/1');
+		}
+	}
+	
+	public function cancel_payment($payment_id, $visit_id)
+	{
+		$this->form_validation->set_rules('cancel_description', 'Description', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('cancel_action_id', 'Action', 'trim|required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			// end of checker function
+			if($this->accounts_model->cancel_payment($payment_id))
+			{
+				$this->session->set_userdata("success_message", "Payment action saved successfully");
+			}
+			else
+			{
+				$this->session->set_userdata("error_message", "Oops something went wrong. Please try again");
+			}
+			redirect('accounts/payments/'.$visit_id);
+		}
+		else
+		{
+			$this->session->set_userdata("error_message", validation_errors());
+			redirect('accounts/payments/'.$visit_id);
 		}
 	}
 }

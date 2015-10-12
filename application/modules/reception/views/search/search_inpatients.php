@@ -16,9 +16,9 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Patient Type: </label>
+                        <label class="col-md-4 control-label">Patient Type: </label>
                         
-                        <div class="col-lg-8">
+                        <div class="col-md-8">
                             <select class="form-control" name="visit_type_id">
                             	<option value="">---Select Visit Type---</option>
                                 <?php
@@ -36,17 +36,17 @@
                     </div>
                     
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Patient number: </label>
+                        <label class="col-md-4 control-label">Patient number: </label>
                         
-                        <div class="col-lg-8">
+                        <div class="col-md-8">
                             <input type="text" class="form-control" name="patient_number" placeholder="Patient number">
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">I.D. No.: </label>
+                        <label class="col-md-4 control-label">I.D. No.: </label>
                         
-                        <div class="col-lg-8">
+                        <div class="col-md-8">
                             <input type="text" class="form-control" name="patient_national_id" placeholder="I.D. No.">
                         </div>
                     </div>
@@ -55,9 +55,9 @@
                 <div class="col-md-6">
                                 
                         <div class="form-group">
-                            <label class="col-lg-4 control-label">Ward: </label>
+                            <label class="col-md-4 control-label">Ward: </label>
                             
-                            <div class="col-lg-8">
+                            <div class="col-md-8">
                                 <select name="ward_id" id="ward_id" class="form-control" onchange="check_department_type()">
                                     <option value="">----Select a ward----</option>
                                     <?php
@@ -86,23 +86,23 @@
                         </div>
                     
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">First name: </label>
+                        <label class="col-md-4 control-label">First name: </label>
                         
-                        <div class="col-lg-8">
+                        <div class="col-md-8">
                             <input type="text" class="form-control" name="surname" placeholder="First name">
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Other Names: </label>
+                        <label class="col-md-4 control-label">Other Names: </label>
                         
-                        <div class="col-lg-8">
+                        <div class="col-md-8">
                             <input type="text" class="form-control" name="othernames" placeholder="Other Names">
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <div class="col-lg-8 col-lg-offset-4">
+                        <div class="col-md-8 col-md-offset-4">
                             <div class="center-align">
                                 <button type="submit" class="btn btn-info">Search</button>
                             </div>

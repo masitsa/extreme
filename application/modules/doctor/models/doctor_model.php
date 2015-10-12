@@ -376,5 +376,171 @@ class Doctor_model extends CI_Model
 
 		$this->fpdf->Output();
 	}
+	
+	/*
+	*	Retrieve schedule items
+	*	@param string $table
+	* 	@param string $where
+	*	@param int $per_page
+	* 	@param int $page
+	*
+	*/
+	public function get_all_schedule_items($table, $where, $per_page, $page, $order = NULL)
+	{
+		//retrieve all timesheet entries
+		$this->db->from($table);
+		$this->db->where($where);
+		$this->db->order_by('schedule_date','DESC');
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+	
+	public function get_total_due($table, $where)
+	{
+		$this->db->from($table);
+		$this->db->where($where);
+		$query = $this->db->get();
+		$grand_total = 0;
+		$personnel_type_id = $this->session->userdata('personnel_type_id');
+		
+		foreach ($query->result() as $row)
+		{
+			$personnel_id = $row->personnel_id;
+			$schedule_item_id = $row->schedule_item_id;
+			$schedule_date = $row->schedule_date;
+			$schedule_start_time = $row->schedule_start_time;
+			$schedule_end_time = $row->schedule_end_time;
+			$created_by = $row->created_by;
+			$created = $row->created;
+			
+			//consultant
+			if($personnel_type_id == 2)
+			{
+				$schedule_total = $this->reports_model->get_total_collected($personnel_id, $schedule_date, $schedule_date);
+				$units = 1;
+				$unit_cost = $schedule_total;
+			}
+			
+			//radiographer
+			elseif($personnel_type_id == 3)
+			{
+				$schedule_total = $this->reports_model->get_total_collected($personnel_id, $schedule_date, $schedule_date);
+				$units = 0.3;
+				$unit_cost = $schedule_total;
+			}
+			
+			//medical officer
+			elseif($personnel_type_id == 4)
+			{
+				$units = (strtotime($schedule_end_time) - strtotime($schedule_start_time)) / 3600;
+				$unit_cost = 500;
+			}
+			
+			//clinic officer
+			elseif($personnel_type_id == 5)
+			{
+				$units = 1;
+				$unit_cost = 1000;
+			}
+			
+			$total = $units * $unit_cost;
+			
+			$grand_total += $total;
+		}
+		
+		return $grand_total;
+	}
+
+	public function get_total_patients_seen($doctor_id, $search)
+	{
+		$search = str_replace("schedule_date", "visit_date", $search);
+		$table = 'visit';
+		
+		$where = 'visit.personnel_id = '.$doctor_id;
+		$where .= $search;
+		
+		$this->db->where($where);
+		$total = $this->db->count_all_results('visit');
+		
+		return $total;
+	}
+	
+	public function create_invoice_number()
+	{
+		$inv_preffix = $this->session->userdata('branch_code').'-DOCINV-';
+		$this->db->select('MAX(doctor_invoice_number) AS number');
+		$this->db->from('doctor_invoice');
+		$this->db->where('doctor_invoice_number LIKE \''.$inv_preffix.'%\'');
+		$query = $this->db->get();
+		
+		if($query->num_rows() > 0)
+		{
+			$result = $query->result();
+			$number =  $result[0]->number;
+			$real_number = str_replace($inv_preffix, "", $number);
+			$real_number++;//go to the next number
+			$number = $inv_preffix.sprintf('%03d', $real_number);
+		}
+		else{//start generating receipt numbers
+			$number = $inv_preffix.sprintf('%03d', 1);
+		}
+		
+		return $number;
+	}
+	
+	public function get_doctor_invoice($doctor_invoice_id)
+	{
+		$this->db->where('doctor_invoice_id', $doctor_invoice_id);
+		$query = $this->db->get('doctor_invoice');
+		
+		return $query;
+	}
+	
+	public function get_doctor_invoice_items($doctor_invoice_id)
+	{
+		$this->db->where('doctor_invoice_id', $doctor_invoice_id);
+		$query = $this->db->get('doctor_invoice_item');
+		
+		return $query;
+	}
+	
+	/*
+	*	Retrieve schedule items
+	*	@param string $table
+	* 	@param string $where
+	*	@param int $per_page
+	* 	@param int $page
+	*
+	*/
+	public function get_all_invoices()
+	{
+		$table = 'doctor_invoice';
+		$where = 'personnel_id = '.$this->session->userdata('personnel_id');
+		
+		//retrieve all timesheet entries
+		$this->db->from($table);
+		$this->db->where($where);
+		$this->db->order_by('created', 'DESC');
+		$query = $this->db->get('', 10);
+		
+		return $query;
+	}
+	
+	public function get_invoice_total($doctor_invoice_id)
+	{
+		$this->db->select('SUM(doctor_invoice_item_quantity * doctor_invoice_item_cost) AS total_cost');
+		$this->db->where('doctor_invoice_id', $doctor_invoice_id);
+		$query = $this->db->get('doctor_invoice_item');
+		
+		$total_cost = 0;
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$total_cost = $row->total_cost;
+		}
+		
+		return $total_cost;
+	}
 }
 ?>

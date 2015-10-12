@@ -41,11 +41,10 @@ if($num_rows > 0){
 	</div>
 	";
 	echo "
-	<br>
-	<div class='row'>
-			<div class='center-align '>
-				<a class='btn btn-info btn-sm' type='submit' onclick='save_plan(".$visit_id.")'>Update Plan</a>
-			</div>
+	<div class='row' style='margin-top:60px;'>
+		<div class='center-align '>
+			<a class='btn btn-info btn-sm' type='submit' onclick='save_plan(".$visit_id.")'>Update Plan</a>
+		</div>
 	</div>
 
 		";
@@ -61,18 +60,13 @@ else{
 	</div>
 	";
 	echo "
-	<br>
-	<div class='row'>
-			<div class='center-align '>
-				<a class='btn btn-info btn-sm' type='submit' onclick='save_plan(".$visit_id.")'>Save Plan</a>
-			</div>
+	<div class='row' style='margin-top:60px;'>
+		<div class='center-align '>
+			<a class='btn btn-info btn-sm' type='submit' onclick='save_plan(".$visit_id.")'>Save Plan</a>
+		</div>
 	</div>
 
 		";
 }
 
 ?>
-<script type="text/javascript">
-	
-	
-</script>
