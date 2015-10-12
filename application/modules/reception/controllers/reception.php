@@ -1774,5 +1774,9 @@ class Reception  extends MX_Controller
 		
 		$this->inpatients($page_name);
 	}
+	public function change_items()
+	{
+		$this->reception_model->changing_to_osh();
+	}
 }
 ?>

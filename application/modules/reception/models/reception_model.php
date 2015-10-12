@@ -2416,6 +2416,36 @@ class Reception_model extends CI_Model
 		
 		return $query;
 	}
+	// changing ksh to osh
 
+
+	public function changing_to_osh()
+	{
+		$this->db->where('branch_code = "OSH"');
+		$query = $this->db->get('patients');
+
+		if($query->num_rows() > 0)
+		{
+			// get the patient in a loop 
+
+			foreach ($query->result() as $key) {
+				# code...
+				$patient_number = $key->patient_number;
+				$patient_id = $key->patient_id;
+
+				$pieces = explode("-", $patient_number);
+				$prefix = $pieces[0]; // piece1
+				$postfix = $pieces[1]; // piece2
+
+				$new_prefix = "OSH-".$postfix."";
+
+				// create update statement
+				$data2 = array('patient_number' => $new_prefix);
+		    	$this->db->where('patient_id  ='.$patient_id);
+				$this->db->update('patients',$data2);
+			}
+
+		}
+	}
 }
 ?>

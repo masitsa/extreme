@@ -26,6 +26,13 @@
         $quantity = $product[0]->quantity;
         $product_pack_size = $product[0]->product_packsize;
         $product_unitprice = $product[0]->product_unitprice;
+
+        $unit_of_measure = $product[0]->unit_of_measure;
+        $reorder_level = $product[0]->reorder_level;
+        $brand_id = $product[0]->brand_id;
+        $generic_id = $product[0]->generic_id;
+        $class_id = $product[0]->class_id;
+        $drug_type_id = $product[0]->drug_type_id;
 		
         
         $validation_errors = validation_errors();
@@ -42,6 +49,13 @@
             $quantity = set_value('quantity');
             $product_pack_size = set_value('product_pack_size');
             $product_unitprice = set_value('product_unitprice');
+            $reorder_level = set_value('reorder_level');
+            $brand_id = set_value('brand_id');
+            $generic_id = set_value('generic_id');
+            $class_id = set_value('class_id');
+            $class_id = set_value('class_id');
+            $drug_type_id = set_value('drug_type_id');
+            $unit_of_measure = set_value('unit_of_measure');
         }
 		
 		
@@ -132,6 +146,41 @@
                         </select>
                     </div>
                 </div> 
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Drug Type: </label>
+                    
+                    <div class="col-lg-8">
+                        <select class="form-control" name="drug_type_id">
+                            <?php
+                                if(count($drug_types) > 0)
+                                {
+                                    foreach($drug_types as $res_drug_type)
+                                    {
+                                        $drug_type_name = $res_drug_type->drug_type_name;
+                                        
+                                        if($res_drug_type->drug_type_id == $drug_type_id)
+                                        {
+                                            echo '<option value="'.$res_drug_type->drug_type_id.'" selected>'.$drug_type_name.'</option>';
+                                        }
+                                        
+                                        else
+                                        {
+                                            echo '<option value="'.$res_drug_type->drug_type_id.'">'.$drug_type_name.'</option>';
+                                        }
+                                    }
+                                }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <!-- Activate checkbox -->
+             <div class="form-group">
+                <label class="col-lg-4 control-label">Unit of measure: </label>
+                
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" name="unit_of_measure" placeholder="Units of Measure" value="<?php echo $unit_of_measure;?>">
+                </div>
+            </div>
 
                 <!-- Activate checkbox -->
                 <div class="form-group">
@@ -165,7 +214,7 @@
                     <label class="col-lg-4 control-label">Unit Price: </label>
                     
                     <div class="col-lg-8">
-                        <input type="text" class="form-control" name="product_unitprice" placeholder="Unit Price" value="<?php echo set_value('product_unitprice');?>">
+                        <input type="text" class="form-control" name="product_unitprice" placeholder="Unit Price" value="<?php echo $product_unitprice;?>">
                     </div>
                 </div>
 
@@ -184,10 +233,94 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Batch Number: </label>
+                    <label class="col-lg-4 control-label">Re order Level: </label>
                     
                     <div class="col-lg-8">
-                        <input type="text" class="form-control" name="batch_no" placeholder="Batch Number" value="<?php echo $batch_no;?>">
+                        <input type="text" class="form-control" name="reorder_level" placeholder="Reorder Level" value="<?php echo $reorder_level;?>">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Brand: </label>
+                    
+                    <div class="col-lg-8">
+                        <select class="form-control" name="brand_id">
+                            <?php
+                                if(count($drug_brands) > 0)
+                                {
+                                    foreach($drug_brands as $res_brand)
+                                    {
+                                        $brand_name = $res_brand->brand_name;
+                                        
+                                        if($res_brand->brand_id == $brand_id)
+                                        {
+                                            echo '<option value="'.$res_brand->brand_id.'" selected>'.$brand_name.'</option>';
+                                        }
+                                        
+                                        else
+                                        {
+                                            echo '<option value="'.$res_brand->brand_id.'">'.$brand_name.'</option>';
+                                        }
+                                    }
+                                }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Class: </label>
+                    
+                    <div class="col-lg-8">
+                        <select class="form-control" name="class_id">
+                            <?php
+                                if(count($drug_classes) > 0)
+                                {
+                                    foreach($drug_classes as $res_class)
+                                    {
+                                        $class_name = $res_class->class_name;
+                                        
+                                        if($res_class->class_id == $class_id)
+                                        {
+                                            echo '<option value="'.$res_class->class_id.'" selected>'.$class_name.'</option>';
+                                        }
+                                        
+                                        else
+                                        {
+                                            echo '<option value="'.$res_class->class_id.'">'.$class_name.'</option>';
+                                        }
+                                    }
+                                }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Generic: </label>
+                    
+                    <div class="col-lg-8">
+                        <select class="form-control" name="generic_id">
+                            <?php
+                                if(count($drug_generics) > 0)
+                                {
+                                    foreach($drug_generics as $res_generic)
+                                    {
+                                        $generic_name = $res_generic->generic_name;
+                                        
+                                        if($res_generic->generic_id == $generic_id)
+                                        {
+                                            echo '<option value="'.$res_generic->generic_id.'" selected>'.$generic_name.'</option>';
+                                        }
+                                        
+                                        else
+                                        {
+                                            echo '<option value="'.$res_generic->generic_id.'">'.$generic_name.'</option>';
+                                        }
+                                    }
+                                }
+                            ?>
+                        </select>
                     </div>
                 </div>
                 

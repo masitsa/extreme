@@ -67,8 +67,7 @@
                                 <div class="col-md-12">
                                     <table border="0" class="table table-hover table-condensed">
                                         <thead> 
-                                            <th> Name</th>
-                                            <th>Class</th>
+                                            <th>Name</th>
                                             <th>Generic</th>
                                             <th>Brand</th>
                                             <th>In Stock</th>
@@ -83,17 +82,16 @@
                                         
                                         
 	                                       	$service_charge_id = $rs10->service_charge_id;
-											$drugname = $rs10->service_charge_name;
-											$drugsclass = $rs10->class_name;
-                                            $drugs_id = $rs10->drugs_id;
-											$drugscost = $rs10->service_charge_amount;
+											$service_charge_name = $rs10->service_charge_name;
+                                            $product_id = $rs10->product_id;
+											$productcost = $rs10->service_charge_amount;
 											$generic_name = $rs10->generic_name;
 											$brand_name = $rs10->brand_name;
 											$visit_type_idv = $rs10->visit_type_id;
                                             $quantity = $rs10->quantity;
-                                            $purchases = $this->pharmacy_model->item_purchases($drugs_id);
-                                            $sales = $this->pharmacy_model->get_drug_units_sold($drugs_id);
-                                            $deductions = $this->pharmacy_model->item_deductions($drugs_id);
+                                            $purchases = $this->inventory_management_model->item_purchases($product_id);
+                                            $sales = $this->inventory_management_model->get_product_units_sold($product_id);
+                                            $deductions = $this->inventory_management_model->item_deductions($product_id);
                                             $in_stock = ($quantity + $purchases) - $sales - $deductions;
                                         
                                         ?>
@@ -103,23 +101,21 @@
 									if($module == 1)
 									{
 										?> 
-							        		<td><a onClick="close_drug('<?php echo $drugname;?>', <?php echo $visit_id?>, <?php echo $service_charge_id;?>,<?php echo $module?>)" href="#"><?php echo $drugname?></a></td>
+							        		<td><a onClick="close_drug('<?php echo $service_charge_name;?>', <?php echo $visit_id?>, <?php echo $service_charge_id;?>,<?php echo $module?>)" href="#"><?php echo $service_charge_name?></a></td>
                                     	<?php
 									}
 									
 									else
 									{
 										?> 
-							        		<td><a onClick="close_drug_soap('<?php echo $drugname;?>', <?php echo $visit_id?>, <?php echo $service_charge_id;?>)" href="#"><?php echo $drugname?></a></td>
+							        		<td><a onClick="close_drug_soap('<?php echo $service_charge_name;?>', <?php echo $visit_id?>, <?php echo $service_charge_id;?>)" href="#"><?php echo $service_charge_name?></a></td>
                                     	<?php
 									}
 									?>
-							                <td><?php echo $drugsclass;?></td>
-							         
 							                <td><?php echo $generic_name;?></td>
 							                <td><?php echo $brand_name;?></td>
                                             <td><?php echo $in_stock;?></td>
-							                <td><?php echo $drugscost;?></td>
+							                <td><?php echo $productcost;?></td>
 							        	</tr>
                                         <?php endforeach;?>
                                     </table>
@@ -143,7 +139,7 @@
 function close_drug(val, visit_id, service_charge_id,module){
 	window.close(this);
 	var config_url = $('#config_url').val();
-	window.opener.location.href = config_url+"/pharmacy/prescription/"+visit_id+"/"+service_charge_id+"/"+module;
+	window.opener.location.href = config_url+"pharmacy/prescription/"+visit_id+"/"+service_charge_id+"/"+module;
 }
   
 function close_drug_soap(val, visit_id, service_charge_id){

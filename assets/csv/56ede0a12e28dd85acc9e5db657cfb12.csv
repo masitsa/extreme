@@ -1,0 +1,238 @@
+Drug Name,Brand Name,Drug Type (i.e Tablet),Unit Cost,Dose Unit,Admin Route
+Amoxicillin/Clavulinic acid,Augumentin,6,1050,457mg,1
+Amoxicillin/Clavulinic acid,Augumentin,12,1300,1.2g,2
+Amoxicillin/Clavulinic acid,Amoxi denk,14,,1g,1
+Cefuroxime ,Altacef,6,110,500mg,1
+Cefixime ,Gramocef-O,6,230,400mg,1
+Cefpodoxime ,Auropodox ,6,90,200mg,1
+Clarithromycin,Klacid,6,375,500mg,1
+Clarithromycin,Clith,6,65,500mg,1
+Ciprofloxacin ,Cipro-inta,6,10,500mg,1
+Ciprofloxacin ,Ciprro Denk,6,105,500mg,1
+Ciprofloxacin ,Ciflosin,6,50,500mg,1
+Prednisolone ,Pdn(Cosmos),6,5,5mg,1
+Prednisolone ,Pdn(loose),6,2,5mg,1
+Artemether/Lumefantrine,Coartem,6,100,20/120 mg,1
+Racecadotril ,Hidrasec ,14,90,10mg,1
+Racecadotril ,Hidrasec ,14,90,30mg,1
+Domperidone ,Vomitin,10,20,10mg,1
+Cetirizine ,Cetrizet,6,30,10mg,1
+Loratidine ,Lorhistina ,6,10,10mg,1
+Gabapentin,One Gaba,6,25,300mg,1
+"Vit B1,B6 and B12",Neurorubine  forte,6,,50/100/100ug,1
+Doxofylline,Bronchowin,6,30,400mg,1
+Ilaprazole,Ilapraz,6,75,10mg,1
+Glucsm/msn/Diacerein,Osteocerin,6,100,750/250/50mg,1
+Glucsm/msn/Diacerein,Cartil Super forte,6,70,750/250/50mg,1
+Ambroxol Hcl,Mucosolvan ,4,600,1 mg/ml,1
+Ambroxol Hcl,Mucosolvan ,6,35,30mg,1
+Aceclofenac/PCM,Zulu,6,30,100/500mg,1
+Normal Saline,Normal saline,15,70,500ml,3
+Dextose 5%,Dextose 5%,15,70,500Ml,3
+Dextose 10%,Dextose 10%,15,120,500Ml,3
+Dextose 50%,Dextose 50%,15,200,100Ml,3
+Meloxicam ,Muvera,6,30,7.5mg,1
+Meloxicam ,Muvera,6,40,15mg,1
+Tramadol ,Tramadol,16,20,100mg,1
+Tramadol ,Tramadol,16,15,50mg,1
+Tramadol/PCM,Tramacetal,6,40,37.5/500mg,1
+Serratiopeptidase ,Emanzenn Forte,6,35,10mg,1
+Diclofenac Na/Misoprostol,Arthrotec ,6,35,75mg /200mcg,1
+Aceclofenac/Thiocolchicoside,Neorelax-A,6,70,100mg/8mg,1
+PCM/Chlorzoloxazone,Myospaz/Myolgin,6,25,500mg/250mg,1
+Betamethasone/Neomycin ,Probeta-N,2,100,0.1%/0.5%(7.5Ml),4
+Neomycin/Polymixin B/Dexamethasone,Maxtrol ,2,480,5ml,4
+Ibuprofen/Paracetamol,Brustan,9,300,100mg/125mg,1
+Ibuprofen/Paracetamol,Brustan,6,15,400mg/325mg,1
+Zinc sulphate ,Zinc Sulphate,6,14,20mg,1
+Zinc sulphate ,Zincat-OD,4,150,20mg/5ml,1
+Multi Vitamins & minerals,Hovite ,6,30,00mg,1
+Multi Vitamins & minerals,Hovite ,4,300,100ml,1
+"Iron,FA,Omega-3,M/Vit,Minerals",Pregnasafe,7,50,600mg,1
+"Iron,FA,M/Vit,Minerals",Pregnacare,7,30,00mg,1
+Glucosamine/Chondroitin,Cartil forte,6,60,750mg/200mg,1
+Glucosamine/Chondroitin,Carticare forte,6,70,750mg/200mg,1
+Jasa,Ascard,6,5,75mg ,1
+Clopidogrel ,Freelet,6,50,75mg,1
+Clopidogrel ,Clopress,6,40,75mg,1
+Metoprolol ,Betaloc Zok ,6,35,50mg,1
+Letrozol,Letrozol,6,200,2.5mg,1
+Ipratropium/Salbutamol,Combivent Nebulizer,17,500,0.52mg/3.01mg,5
+Beclomethasone/Salbutamol,Aerovent,20,900,50mcg/50mcg,6
+Salbutamol,Ventolin ,17,500,5mg/ml,5
+Salmeterol/fluticasone,Seretide ,21,2000,50mcg/250mcg,6
+Bromelain/Crystallin Trypsin,Kontabs,6,35,50mg/1mg,1
+Sodium Valproate /Valproic Acid,Encorate Chrono ,6,60,500mg,1
+Cinarizine,Stugeron,6,20,25mg,1
+Donepezil ,Donecept,6,60,5mg,1
+"Lactobacillus acidophilus,bifidobacterium infantis,Enterococcus faecium",Linex,7,35,12000 CFU,1
+,Postinor,6,150,,1
+Loperamide ,Loperamide,6,50,2mg,1
+Loperamide ,Motilium,7,250,2mg,1
+"Iron,Folic acid Suppliments",Ranferon,4,400,200 Ml,1
+"Vitamin B1,B6,B12,Metopine,Lysine,Carnitine",Tres Orix Forte ,4,1000,250ml,1
+"Vitamin B1,B6,B12,Metopine,Lysine,Carnitine",Tres Orix Forte ,4,750,100Ml,1
+"Vitamin B1,B6,B12,Metopine,Lysine,Carnitine",Trimetabol,4,700,150ml,1
+Povidone iodine,Betadine Mouth wash,17,600,125Ml,1
+Tramadol ,Tramadol,12,100,100mg,7
+Metoclopropamide ,Plasil,12,100,10mg,2
+Lignocain Plain,Lignocain,12,150,30ml,7
+Lignocain & Adrenaline,Lignocain & Adrenaline,12,150,30Ml,7
+Ketamine ,Ketamine,12,200,10Ml,3
+Water For Inj,Water for Inj,12,0,10Ml,2
+Ceftriaxone ,Desefin,12,500,1g,2
+Ceftriaxone ,Ceftriaxone,12,150,1g,2
+Ceftriaxone ,Rocephine,12,2000,1g,2
+Levofloxacin ,Glevonix,18,700,500mg,3
+Levofloxacin ,Glevonix,6,120,500mg,1
+Levofloxacin,Levobact,6,130,750mg,1
+Paracetamol ,Perfalgan,18,600,1g,3
+Etamsylate,Sylate,12,200,250mg,3
+Etamsylate,Sylate,6,75,500mg,1
+Promethazine ,Promethazine,12,100,25mg,2
+Ephedrine ,Ephedrine,12,350,30mg,3
+Ephedrine ,Ephedrine,19,70,10ml,8
+Ondansetron,Emitino,12,750,4mg,2
+Ondansetron,Emitino,6,75,4mg,1
+Ondansetron,Emitino,9,670,2mg,1
+Meropenam,Inno-Mero,12,1500,1g,3
+Fluconazole 200mg,Syscan,18,450,200mg,3
+Piperacillin& Tazobactam,Aurotaz- P ,12,1650,4.5g,3
+Triamcinolone,Trinocort,12,600,40mg,7
+Clotrimazole Cream,Candid Cream,1,280,20gms,9
+Clotrimazole Pessaries,Candiid -V 3,23,380,200mg,10
+"Diclofenac ,methyl salicylate",Volin Gel,13,230,20Gms,9
+Ketoprofen,Fastum gel,13,800,50g,9
+Esomeprazole,Esose ,6,60,40mg,1
+Esomeprazole,Esose ,6,35,20mg,1
+Flucoconazole,Fluconacole ,9,670,35ml,1
+Diazepam,Valium,6,25,5mg,1
+Diazepam,Diazepam,6,5,5mg,1
+Diazepam ,Diazepam,12,100,10mg,2
+Bromazepam,Lexotanil ,6,25,1.5mg,1
+Morphine,Morphine ,12,300,10mg,7
+Pethidine ,Pethidine,12,300,100mg,7
+Pethadine,Pethadine,12,200,50mg,7
+Dihydrocodein,DF 118,6,70,30mg,1
+"Hydrocortisone Acetate,Lidocain,Zinc Oxide,&allantoin ",Anomex,10,40,"0.25%,3%,5%,0.5%",11
+"Diclofenac,Chlorzoxazone,Paracetamol",Doloact MR,6,30,"50mg,250mg,500mg",1
+Astamin SN,Astymin SN,18,1670,100ml,3
+Bandronic acid,Cadronate,6,1600,150mg,1
+Nosic ,Nosic,6,20,,1
+Bromocriptine,Bromodel,6,50,2.5mg,1
+Oxymetazoline & Saline,Nasivion-s,19,200,30ml,8
+Calcium Dobesilate Monohydrate,Dobesil,6,60,500mg,1
+Bupivacain ,Marcain 0.5% heavy,12,850,20ml,12
+Mebeverine,Duspatalin,6,55,200mg,1
+Losartan & HydrochlorThiazide,Losartan H,6,45,50& 12.5mg,1
+Amolodipine & Losartan,Amlozaar,6,45,5mg & 50mg,1
+AMolodipine & Losartan & HCTZ,Amlozaar H,6,55,5mg& 50mg& 12.5mg,1
+Oxybutinin,Oxinus,6,10,5mg,1
+"Lansoprazole,Amoxicillin,Clarithromycin",Pylotrip kit,6,2100,30mg/1g/500mg,1
+"Enomeprazole,Amoxicillin,Clarithromycin",Esclam,6,2800,30mg/500mg/500mg,1
+Halothane ,Halothane,24,0,200Ml,6
+Cefadoxil,Drox,9,530,250mg/5Ml,1
+Clarithromycin,Clarie Ds,9,800,250mg/5Ml,1
+ Spacers,A2A Spacers,24,800,,
+Baby Mask,Mask,24,1000,,
+Chlormpheniramine,Piriton,4,330,2mg/5ml,1
+Hyoscine butylbromide,Buscopan,12,100,20mg/Ml,2
+Hyoscine butylbromide & Paracetamol,Buscopan Plus,6,30,10mg & 500mg,1
+ Progesteron ,Susten,7,70,200mg,13
+"Fluconazole,Azithromycin,Secnidazole",Triokit,6,750,150mg/1g/2g,1
+Disodium hydrogencitrate,Cital,4,300,100Ml,1
+Nifedipine,Nifedi-Denk,6,20,20mg,1
+Diclofenac ,Diclo-Denk,6,10,50mg,1
+Diclofenac ,Diclofenac ,6,10,100mg,1
+Diclofenac ,Diclofenac ,12,100,75mg/3ml,7
+Merocaine lozenges,Merocain Lozenges,22,25,,1
+Diclofenac & Serratiopeptidase,Lyser-D,6,60,50mg/10mg,1
+Liquid Parafin,Liquid Parafin,17,100,100ml,8
+Silver Sulphadiazine,Dermazine ,1,450,250g,9
+Silver Sulphadiazine,Silver Sulphadiazine,1,70,20gms,9
+Silver Sulphadiazine &Chlorhexidine Gluconate ,Silverex,1,200,25gms,9
+Secnidazole ,Tegera forte,6,100,1g,1
+Albendazole,Zentel ,9,200,20Ml,1
+Albendazole,Zentel ,6,200,400mg,1
+Albendazole,Alben,9,100,10Ml,1
+Albendazole,Alben,6,100,400mg,1
+Albendazole,Albasol,6,80,400mg,1
+Spironolactone,Aldactone,6,30,25mg,1
+Spironolactone,Spirolac ,6,12,25mg,1
+Spironolactone,Aldactone,6,100,100mg,1
+Betapyn ,Betapyn,6,30,,1
+Nebivolol,Nebilong,6,45,5mg,1
+Nebivolol,Nebilet,6,75,5mg,1
+Lactulose,Lactulose,4,400,100ml,1
+Benylin,Benylin Chesty,4,500,100Ml,1
+Benylin,Benylin Dry,4,520,100Ml,1
+Benylin ,Benylin Paed,4,500,100Ml,1
+Rhinathiol ,Rhinathiol Infants,4,400,100Ml,1
+Microenema,Microenema,10,500,10ml,11
+Enema ,Enema,10,500,230ml,11
+Griseofulvin ,Griseofulvin,6,6,125mg,1
+Griseofulvin ,Griseofulvin,6,6,250mg,1
+Griseofulvin ,Griseofulvin,6,10,500mg,1
+"Soy Isoflavones,Ca,P& Vit D3",Estovon,6,40,"75mg,200mg,100mg,100iu",1
+"Calcium Citrate ,Vit D3,",Safcal,6,30,"1000mg,200I.U",1
+Metronidazole ,Metronidazole(flagyl) ,18,70,500mg/100ml,3
+"Iron , & Folic acid ",Saferon Plus,6,30,"100mg ,500mcg",1
+Clotrimazole & Hydrocortisone,Unistein-HC,1,180,20gms,9
+Acyclovir ,Acyclovir ,3,300,10gms,9
+Cromoglycate,Cusicrom ,2,500,4%10ml,8
+Ciprofloxacin ,Ciprolen,2,230,5 ml,8
+Cefuroxime ,Zinnat ,9,1440,250mg/5Ml,1
+Cefuroxime ,Altacef,9,600,125mg/5ml,1
+Fluticasone Furoate nasal spray,Avamys,8,1030,120doses,14
+Beclomethasone dipropionate nasal spray,Rhinocort Aqua,8,2180,64Ug,14
+Desloratadine,Aurius,4,500,60Ml,1
+"Methylcobalamin,Pregabalin,Folic acid,Vit 6,Alpha acid",Neurocare Plus,7,70,"750mcg,75mg,1.5mg,3mg,100mg",1
+Clindamycin,Dalacin C ,7,125,300mg,1
+Clindamycin,Clindamycin,7,20,300mg,1
+Tetanus Toxoid ,Tetanus Toxoid,12,100,0.5Mg,12
+Clindamycin,Dalacin C ,12,1200,600mg,3
+Metronidazole ,Flagyl ,6,10,400 Mg,1
+Metronidazole ,Flagyl ,9,570,200mg/5ml,1
+Metronidazole ,Metronidazole ,6,2,200mg,1
+Frusemide ,Frusemide,6,3,40mg,1
+Frusemide ,Lasix,6,50,40mg,1
+Frusemide ,Lasix,12,150,20mg/2ml,3
+Frusemide ,Frusemide,12,100,20mg/2ml,3
+Salbutamol,Ventolin Evh Inhaler,24,350,200D,6
+Salbutamol,Salbutamol ,6,2,4mg,1
+Salbutamol,Ventolin,4,220,2mg/5ml,1
+Anti-D ,Anti-D,12,5800,300mcg,7
+"Beclametasone ,Neomycin,Miconazole",Beclomin,3,200,20Gms,9
+"Flucloxacillin, Amoxicillin",Flamox,9,400,100Ml,1
+"Flucloxacillin, Amoxicillin",Flamox,7,20,250mg/250mg,1
+Mometasone ,Momecort,1,600,15gms,9
+Norash,Norash,1,250,20gms,9
+Drotaverine,No-spa,6,20,40mg,1
+Drotaverine/PCm/Codeine,Nospalgin,6,45,40mg/500mg/8mg,1
+Trimetazidine Dihydrochloride ,Vasterwl Mr,6,40,35mg,1
+"Salicylic acid,betamethasone,urea,lactic acid",Exavate MF,3,380,20gms,9
+Omeprazole & Sodium Bicarbonate,Aprazole Plus ,14,40,20mg,1
+Vildagliptin/ metformin,Galvus Met,6,135,50mg/850mg,1
+Cepime,Pozineg,12,900,1g,3
+Cepime,inno-pime,12,900,1g,3
+fexofenadine ,Xenadine,,,180mg,1
+Acyclovir ,Virux,6,35,400mg,1
+Acyclovir ,Azzir,6,,400mg,1
+Acyclovir ,Univir,6,30,200mg,1
+Etofenamate gel,Rheuma -denk,13,500,20gms,9
+Flucloxacillin,Flucloxacillin,6,20,500mg,1
+Flucloxacillin ,Flucloxacillin,12,200,500mg,3
+Flucloxacillin,Floxapen,12,380,500mg,3
+Amoxicillin,Amoxil,7,25,500mg,1
+Amoxicillin,Amoxicillin generic,7,7,500mg,1
+Amoxicillin,Amoxil forte,9,350,250mg/5ml,1
+Tamsulosin,Contiflo-OD,7,95,0.4mg,1
+Pioglitazone,Pioday,6,20,15mg,1
+Glimepiride,Amaryl,6,,1mg,1
+Glimepiride,Amaryl,6,52,2mg,1
+Glimepiride,Amaryl,6,90,4mg,1
+Bisacodyl,Dulcolax,6,15,5mg,1
+Metformin,Melmet SR ,6,20,1000mg,1
+Metformin,Glucomet,6,6,500mg,1
+Metformin ,Glucophage,6,14,500mg,1
+Levonorgestrel/ Ethinylestradiol,Femplan,6,50,0.15mg/0.03mg,1

@@ -10,7 +10,7 @@ foreach ($rs21 as $key):
 endforeach;
 
 $drug_dose ="";
-$dose_unit_id ="";
+$unit_of_measure ="";
 $drug_type_name ="";
 $admin_route ="";
 $dose_unit ="";
@@ -26,10 +26,10 @@ if(!empty($service_charge_id)){
 	foreach ($rs2 as $key2):
 		$drug_type_id = $key2->drug_type_id;
 		$admin_route_id = $key2->drug_administration_route_id;
-		$drug_dose = $key2->drugs_dose;
-		$dose_unit_id = $key2->drug_dose_unit_id;
-		$drug_size = $key2->drug_size;
-		$drug_size_type = $key2->drug_size_type;
+		// $drug_dose = $key2->drugs_dose;
+		$unit_of_measure = $key2->unit_of_measure;
+		// $drug_size = $key2->drug_size;
+		// $drug_size_type = $key2->drug_size_type;
 		$service_charge_name = $key2->service_charge_name;
 	endforeach;
 		
@@ -42,15 +42,15 @@ if(!empty($service_charge_id)){
 				endforeach;
 			}
 		}
-		if(!empty($dose_unit_id)){
-			$rs3 = $this->pharmacy_model->get_dose_unit2($dose_unit_id);
-			$num_rows3 = count($rs3);
-			if($num_rows3 > 0){
-				foreach ($rs3 as $key3):
-					$dose_unit = $key3->drug_dose_unit_name;
-				endforeach;
-			}
-		}
+		// if(!empty($dose_unit_id)){
+		// 	$rs3 = $this->pharmacy_model->get_dose_unit2($dose_unit_id);
+		// 	$num_rows3 = count($rs3);
+		// 	if($num_rows3 > 0){
+		// 		foreach ($rs3 as $key3):
+		// 			$dose_unit = $key3->drug_dose_unit_name;
+		// 		endforeach;
+		// 	}
+		// }
 		if(!empty($admin_route_id)){
 			$rs3 = $this->pharmacy_model->get_admin_route2($admin_route_id);
 			$num_rows3 = count($rs3);
@@ -280,10 +280,10 @@ $p = 0;
 				<div class="row">
 					<div class="col-md-2">
 						<div class="row">
-							<div class="col-lg-10">
+							<div class="col-lg-5">
 								<strong>First name:</strong>
 							</div>
-							<div class="col-lg-2">
+							<div class="col-lg-5">
 								<?php echo $patient_surname;?>
 							</div>
 						</div>
@@ -291,10 +291,10 @@ $p = 0;
 					
 					<div class="col-md-3">
 						<div class="row">
-							<div class="col-lg-10">
+							<div class="col-lg-5">
 								<strong>Other names:</strong>
 							</div>
-							<div class="col-lg-2">
+							<div class="col-lg-5">
 								<?php echo $patient_othernames;?>
 							</div>
 						</div>
@@ -302,10 +302,10 @@ $p = 0;
 					
 					<div class="col-md-2">
 						<div class="row">
-							<div class="col-lg-10">
+							<div class="col-lg-5">
 								<strong>Gender:</strong>
 							</div>
-							<div class="col-lg-2">
+							<div class="col-lg-5">
 								<?php echo $gender;?>
 							</div>
 						</div>
@@ -313,10 +313,10 @@ $p = 0;
 					
 					<div class="col-md-2">
 						<div class="row">
-							<div class="col-lg-10">
+							<div class="col-lg-5">
 								<strong>Age:</strong>
 							</div>
-							<div class="col-lg-2">
+							<div class="col-lg-5">
 								<?php echo $age;?>
 							</div>
 						</div>
@@ -324,10 +324,10 @@ $p = 0;
 					
 					<div class="col-md-3">
 						<div class="row">
-							<div class="col-lg-10">
+							<div class="col-lg-5">
 								<strong>Account balance:</strong>
 							</div>
-							<div class="col-lg-2">
+							<div class="col-lg-5">
 								Kes <?php echo number_format($account_balance, 2);?>
 							</div>
 						</div>
@@ -391,17 +391,10 @@ $p = 0;
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Dose: </label>
-                    
-                    <div class="col-lg-8">
-                        <?php echo $drug_dose?>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label class="col-lg-4 control-label">Dose Unit: </label>
                     
                     <div class="col-lg-8">
-                        <?php echo $dose_unit;?>
+                        <?php echo $unit_of_measure;?>
                     </div>
                 </div>
 			</div>
@@ -418,7 +411,7 @@ $p = 0;
             
             <div class="panel-body">
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">Form: </label>
+                    <label class="col-lg-4 control-label">Drug Type: </label>
                     
                     <div class="col-lg-8">
                         <?php echo $drug_type_name?>
@@ -536,18 +529,8 @@ $p = 0;
 
                         }
                         ?>
-                        <th>Dose</th>
                         <th>Dose Unit</th>
-                        <th>Method</th>
-                        <th>Quantity</th>
-                        <th>Times</th>
-                        <th>Duration</th>
-                        <th>Number of Days</th>
-                         <th>Allow Substitution</th>
-                        <th>Delete </th>
-                       
-                        <th></th>
-                         <th></th>
+                        <th colspan="3"> </th>
                     </tr>
                    <?php 
                    $rs = $this->pharmacy_model->select_prescription($visit_id);
@@ -557,7 +540,7 @@ $p = 0;
                     if($num_rows > 0){
                     foreach ($rs as $key_rs):
                         //var_dump($key_rs->prescription_substitution);
-                        $service_charge_id =$key_rs->drugs_id;
+                        $service_charge_id =$key_rs->product_id;
                         $frequncy = $key_rs->drug_times_name;
                         $id = $key_rs->prescription_id;
                         $date1 = $key_rs->prescription_startdate;
@@ -568,8 +551,8 @@ $p = 0;
                         $duration = $key_rs->drug_duration_name;
                         $consumption = $key_rs->drug_consumption_name;
                         $quantity = $key_rs->prescription_quantity;
-                        $medicine = $key_rs->drugs_name;
-                        $charge = $key_rs->drugs_charge;
+                        $medicine = $key_rs->product_name;
+                        $charge = $key_rs->product_charge;
                         $visit_charge_id = $key_rs->visit_charge_id;
                         $number_of_days = $key_rs->number_of_days;
                         $units_given = $key_rs->units_given;
@@ -583,7 +566,7 @@ $p = 0;
                             $in_stock = ($quantity + $purchases) - $sales - $deductions;
                         // end of checking stocks
                         
-                        $substitution = "<select name='substitution".$id."' class='form-control'>";
+                        $substitution = "<select id ='substitution".$id."' name='substitution".$id."' class='form-control'>";
                         if($sub == "No"){
                             $substitution = $substitution."<option selected>No</option><option>Yes</option>";
                         }
@@ -593,41 +576,19 @@ $p = 0;
                         $substitution = $substitution."</select>";
                         
                         //$drugs = new prescription();
-                        //$medicine = $drugs->get_drugs_name($service_charge_id);
+                        //$medicine = $drugs->get_product_name($service_charge_id);
                         
                         $rs2 = $this->pharmacy_model->get_drug($service_charge_id);
                         
                         foreach ($rs2 as $key_rs2 ):
                         $drug_type_id = $key_rs2->drug_type_id;
                         $admin_route_id = $key_rs2->drug_administration_route_id;
-                        $dose = $key_rs2->drugs_dose;
-                        $dose_unit_id = $key_rs2->drug_dose_unit_id;
+                        $doseunit = $key_rs2->unit_of_measure;
+                        $drug_type_name = $key_rs2->drug_type_name;
                         
                         endforeach;
 
-                        if(!empty($drug_type_id)){
-                            $rs3 = $this->pharmacy_model->get_drug_type_name($drug_type_id);
-                            $num_rows3 = count($rs3);
-                            if($num_rows3 > 0){
-                                foreach ($rs3 as $key_rs3):
-                                    $drug_type_name = $key_rs3->drug_type_name;
-                                endforeach;
-                            }
-                        }
-                        
-                        if(!empty($dose_unit_id)){
-
-                            $rs3 = $this->pharmacy_model->get_dose_unit2($dose_unit_id);
-                            $num_rows3 = count($rs3);
-                            if($num_rows3 > 0){
-                                foreach ($rs3 as $key_rs3):
-                                    $doseunit = $key_rs3->drug_dose_unit_name;
-                                endforeach;
-                            }
-                        }else
-                        {
-                            $doseunit = '';
-                        }
+                       
                         
                         
                         if(!empty($admin_route_id)){
@@ -640,7 +601,7 @@ $p = 0;
                             }
                         }
                         
-                        $time_list2 = "<select name = 'x".$id."' class='form-control'>";
+                        $time_list2 = "<select id = 'x".$id."' name = 'x".$id."' class='form-control'>";
                         
                             foreach ($times_rs as $key_items):
 
@@ -658,7 +619,7 @@ $p = 0;
                             endforeach;
                         $time_list2 = $time_list2."</select>";
                         
-                        $duration_list2 = "<select name = 'duration".$id."' class='form-control'>";
+                        $duration_list2 = "<select id = 'duration".$id."' name = 'duration".$id."' class='form-control'>";
                         
                         foreach ($duration_rs as $key_duration):
                             $durations = $key_duration->drug_duration_name;
@@ -675,7 +636,7 @@ $p = 0;
                         endforeach;
                         $duration_list2 = $duration_list2."</select>";
                         
-                        $cons_list2 = "<select name = 'consumption".$id."' class='form-control'>";
+                        $cons_list2 = "<select id = 'consumption".$id."' name = 'consumption".$id."' class='form-control'>";
                         
                         foreach ($rs_cons as $key_cons):
                             $con = $key_cons->drug_consumption_name;
@@ -738,41 +699,57 @@ $p = 0;
 
                         }
                         ?>
-                        <td><?php echo $dose;?></td>
                         <td><?php echo $doseunit;?></td>
-                        <td><?php echo $cons_list2; ?></td>
-                        <td><input type="text" name="quantity<?php echo $id?>" class='form-control' autocomplete="off" value="<?php echo $quantity?>" size="3"/></td>
-                        <td><?php echo $time_list2; ?></td>
-                        <td><?php echo $duration_list2; ?></td>
-                        <td><input type="text" id="datepicker3" name="days<?php echo $id?>" class='form-control' autocomplete="off" value="<?php echo  $number_of_days;?>" size="3"/></td>
-
-                        <td><?php echo $substitution?></td>
                         <td>
-                            <div class='btn-toolbar'>
-                                <div class='btn-group'>
-                                    <a class='btn btn-primary btn-sm' href='<?php echo site_url();?>/pharmacy/delete_prescription/<?php echo $id;?>/<?php echo $visit_id?>/<?php echo $visit_charge_id?>/<?php echo $module;?>' onclick="return confirm('Are you sure you want to remove this drug?');"><i class='fa fa-trash'></i></a>
-                                </div>
-                             </div>
-                         </td>
+							<a  class="btn btn-sm btn-primary" id="open_visit<?php echo $id;?>" onclick="get_visit_trail(<?php echo $id;?>);"> View Detail</a>
+							<a  class="btn btn-sm btn-warning " id="close_visit<?php echo $id;?>" style="display:none;" onclick="close_visit_trail(<?php echo $id;?>);"> Close Detail</a></td>
+						</td>
+                       
                          <td>
                           <?php
                             if($module == 1)
                             {
                                 ?>
-                                <input name="update" type="submit" value="Update & dispense" class="btn btn-sm btn-warning" />
+                                <input name="update" type="submit" value="Update & dispense" class="btn btn-sm btn-success" />
                                 <?php
                             }
                             else
                             {
                                 ?>
-                                <input name="update" type="submit" value="Update" class="btn btn-sm btn-warning" />
+                                <input name="update" type="submit" value="Update" class="btn btn-sm btn-success" />
                                 <?php
                             }
                             ?>
                             <input type="hidden" name="hidden_id" value="<?php echo $id?>" />
                             <input type="hidden" name="v_id" value="<?php echo $visit_id;?>"/>
                          </td>
+                         <td>
+                            <div class='btn-toolbar'>
+                                <div class='btn-group'>
+                                    <a class='btn btn-danger btn-sm' href='<?php echo site_url();?>/pharmacy/delete_prescription/<?php echo $id;?>/<?php echo $visit_id?>/<?php echo $visit_charge_id?>/<?php echo $module;?>' onclick="return confirm('Are you sure you want to remove this drug?');"><i class='fa fa-trash'></i></a>
+                                </div>
+                             </div>
+                         </td>
                     </tr>
+
+         
+                        
+                    <?php
+                    	 $v_data['prescription_id'] = $id;
+                    	 $v_data['substitution'] = $substitution;
+                    	 $v_data['duration_list2'] = $duration_list2;
+                    	 $v_data['cons_list2'] = $cons_list2;
+                    	 $v_data['time_list2'] = $time_list2;
+                    	 $v_data['doseunit'] = $doseunit;
+                    	 $v_data['quantity'] = $quantity;
+                    	 $v_data['visit_id'] = $visit_id;
+                    	 $v_data['visit_charge_id'] = $visit_charge_id;
+                    	 $v_data['module'] = $module;
+                   	?>
+
+					<tr id="visit_trail<?php echo $id;?>" style="display:none;">
+						<td colspan="10"><?php echo $this->load->view("prescription_detail", $v_data, TRUE);?></td>
+					</tr>
                     <?php echo form_close();?>
               <?php
               endforeach;
@@ -856,5 +833,66 @@ $p = 0;
 	}
 </script>
 
+
+
+<script type="text/javascript">
+
+	function get_visit_trail(visit_id){
+
+		var myTarget2 = document.getElementById("visit_trail"+visit_id);
+		var button = document.getElementById("open_visit"+visit_id);
+		var button2 = document.getElementById("close_visit"+visit_id);
+
+		myTarget2.style.display = '';
+		button.style.display = 'none';
+		button2.style.display = '';
+	}
+	function close_visit_trail(visit_id){
+
+		var myTarget2 = document.getElementById("visit_trail"+visit_id);
+		var button = document.getElementById("open_visit"+visit_id);
+		var button2 = document.getElementById("close_visit"+visit_id);
+
+		myTarget2.style.display = 'none';
+		button.style.display = '';
+		button2.style.display = 'none';
+	}
+
+	function update_prescription_values(visit_id,visit_charge_id,prescription_id,module)
+    {
+      
+       //var product_deductions_id = $(this).attr('href');
+       var quantity = $('#quantity'+prescription_id).val();
+       var x = $('#x'+prescription_id).val();
+       var duration = $('#duration'+prescription_id).val();
+       var consumption = $('#consumption'+prescription_id).val();
+
+
+       var url = "<?php echo base_url();?>pharmacy/update_prescription/"+visit_id+'/'+visit_charge_id+'/'+prescription_id+'/'+module;
+  
+        //window.alert(data_url);
+		  $.ajax({
+		  type:'POST',
+		  url: data_url,
+		  data:{quantity: quantity, x: x, duration: duration,consumption: consumption},
+		  dataType: 'text',
+           success:function(data){
+            
+            window.alert(data.result);
+            if(module == 1){
+				window.location.href = "<?php echo base_url();?>pharmacy/prescription1/"+visit_id+"/1'";
+			
+			}else{
+				window.location.href = "<?php echo base_url();?>pharmacy/prescription1/"+visit_id+"";
+			}
+           },
+           error: function(xhr, status, error) {
+            alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+           
+           }
+        });
+        return false;
+     }
+  </script>
 
                                         

@@ -6,10 +6,10 @@ class Pharmacy_model extends CI_Model
 	function get_drug($service_charge_id){
 		
 		
-		$table = "drugs, service_charge";
-		$where = "service_charge.drug_id = drugs.drugs_id AND service_charge.service_charge_id = ". $service_charge_id;
-		$items = "service_charge.service_charge_name,drugs.drug_type_id, drugs.drug_size,drugs.drug_size_type,drugs.drug_administration_route_id, drugs.drugs_dose, drugs.drug_dose_unit_id";
-		$order = "drugs.drugs_id";
+		$table = "product, service_charge,drug_type";
+		$where = "service_charge.product_id = product.product_id AND drug_type.drug_type_id = product.drug_type_id AND service_charge.service_charge_id = ". $service_charge_id;
+		$items = "service_charge.service_charge_name,product.drug_type_id,product.drug_administration_route_id, product.unit_of_measure, drug_type.drug_type_name";
+		$order = "product.product_id";
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
@@ -82,15 +82,15 @@ class Pharmacy_model extends CI_Model
 		// $items = "drugs.drugs_id AS checker_id,visit_charge.visit_charge_id, service_charge.service_charge_name AS drugs_name,service_charge.service_charge_amount  AS drugs_charge , drug_duration.drug_duration_name, pres.prescription_substitution, pres.prescription_id,pres.units_given, pres.visit_charge_id,pres.prescription_startdate, pres.prescription_finishdate, drug_times.drug_times_name, pres.prescription_startdate, pres.prescription_finishdate, pres.service_charge_id AS drugs_id, pres.prescription_substitution, drug_duration.drug_duration_name, pres.prescription_quantity, drug_consumption.drug_consumption_name, pres.number_of_days";
 		// $order = "`drugs`.drugs_id";
 
-		$table = "pres, drugs, drug_times, drug_duration, drug_consumption, service_charge";
+		$table = "pres, product, drug_times, drug_duration, drug_consumption, service_charge";
 		$where = "service_charge.service_charge_id = pres.service_charge_id 
-						AND service_charge.drug_id = drugs.drugs_id
+						AND service_charge.product_id = product.product_id
 						AND pres.drug_times_id = drug_times.drug_times_id 
 						AND pres.drug_duration_id = drug_duration.drug_duration_id
 						AND pres.drug_consumption_id = drug_consumption.drug_consumption_id
 						 AND pres.visit_id = ". $visit_id;
-		$items = "drugs.drugs_id AS checker_id, service_charge.service_charge_name AS drugs_name,service_charge.service_charge_amount  AS drugs_charge , drug_duration.drug_duration_name, pres.prescription_substitution, pres.prescription_id,pres.units_given, pres.visit_charge_id,pres.prescription_startdate, pres.prescription_finishdate, drug_times.drug_times_name, pres.prescription_startdate, pres.prescription_finishdate, pres.service_charge_id AS drugs_id, pres.prescription_substitution, drug_duration.drug_duration_name, pres.prescription_quantity, drug_consumption.drug_consumption_name, pres.number_of_days";
-		$order = "`drugs`.drugs_id";
+		$items = "product.product_id AS checker_id, service_charge.service_charge_name AS product_name,service_charge.service_charge_amount  AS product_charge , drug_duration.drug_duration_name, pres.prescription_substitution, pres.prescription_id,pres.units_given, pres.visit_charge_id,pres.prescription_startdate, pres.prescription_finishdate, drug_times.drug_times_name, pres.prescription_startdate, pres.prescription_finishdate, pres.service_charge_id AS product_id, pres.prescription_substitution, drug_duration.drug_duration_name, pres.prescription_quantity, drug_consumption.drug_consumption_name, pres.number_of_days";
+		$order = "`product`.product_id";
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
@@ -198,7 +198,7 @@ class Pharmacy_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from($table);
-		$this->db->select('service_charge.service_charge_id, service_charge.visit_type_id,generic.generic_name, brand.brand_name, service_charge.service_charge_amount, service_charge.drug_id , service_charge.service_charge_name, class.class_name,drugs.drugs_id,drugs.quantity');
+		$this->db->select('service_charge.service_charge_id, service_charge.visit_type_id,generic.generic_name, brand.brand_name, service_charge.service_charge_amount, service_charge.product_id , service_charge.service_charge_name,product.product_id,product.quantity');
 		$this->db->where($where);
 		$this->db->order_by($order,'asc');
 		$query = $this->db->get('', $per_page, $page);
@@ -274,16 +274,15 @@ class Pharmacy_model extends CI_Model
 	public function update_prescription($visit_id, $visit_charge_id, $prescription_id)
 	{
 		//$varpassed_value = $_POST['passed_value'];
-		$varsubstitution = $_POST['substitution'.$prescription_id];
+		// $varsubstitution = $_POST['substitution'.$prescription_id];
 		
-		if(empty($varsubstitution)){
-			$varsubstitution = "No";
-		}
+		// if(empty($varsubstitution)){
+		// 	$varsubstitution = "No";
+		// }
 		$date = date("Y-m-d"); 
 		$time = date("H:i:s");
 
 		$data2 = array(
-			'prescription_substitution'=>$varsubstitution,
 			'prescription_finishdate'=>$this->input->post('finishdate'.$prescription_id),
 			'drug_times_id'=>$this->input->post('x'.$prescription_id),
 			'drug_duration_id'=>$this->input->post('duration'.$prescription_id),
@@ -326,11 +325,11 @@ class Pharmacy_model extends CI_Model
 	public function dispense_drug($visit_id, $visit_charge_id, $prescription_id)
 	{
 		//$varpassed_value = $_POST['passed_value'];
-		$varsubstitution = $_POST['substitution'.$prescription_id];
+		// $varsubstitution = $_POST['substitution'.$prescription_id];
 		
-		if(empty($varsubstitution)){
-			$varsubstitution = "No";
-		}
+		// if(empty($varsubstitution)){
+		// 	$varsubstitution = "No";
+		// }
 		$date = date("Y-m-d"); 
 		$time = date("H:i:s");
 		
@@ -413,7 +412,6 @@ class Pharmacy_model extends CI_Model
 			
 
 		$data2 = array(
-			'prescription_substitution'=>$varsubstitution,
 			'prescription_finishdate'=>$this->input->post('finishdate'.$prescription_id),
 			'drug_times_id'=>$this->input->post('x'.$prescription_id),
 			'drug_duration_id'=>$this->input->post('duration'.$prescription_id),
@@ -1250,13 +1248,12 @@ class Pharmacy_model extends CI_Model
 		$count=1;
 		$row_count=0;
 		
-		$report[$row_count][0] = 'Drug Code';
-		$report[$row_count][1] = 'Drug Name';
+		$report[$row_count][0] = 'Drug Name';
+		$report[$row_count][1] = 'Brand Name';
 		$report[$row_count][2] = 'Drug Type (i.e Tablet)';
 		$report[$row_count][3] = 'Unit Cost';
-		$report[$row_count][4] = 'System quantity';
-		$report[$row_count][5] = 'Re order levels';
-		$report[$row_count][6] = 'Packed Quantity';
+		$report[$row_count][4] = 'Dose Unit';
+		$report[$row_count][5] = 'Admin Route';
 		
 		$row_count++;
 		
@@ -1320,14 +1317,14 @@ class Pharmacy_model extends CI_Model
 		$total_columns = count($array[0]);//var_dump($array);die();
 		
 		//if products exist in array
-		if(($total_rows > 0) && ($total_columns == 7))
+		if(($total_rows > 0) && ($total_columns == 6))
 		{
 			$response = '
 				<table class="table table-hover table-bordered ">
 					  <thead>
 						<tr>
 						  <th>#</th>
-						  <th>Surname</th>
+						  <th>Drug Name</th>
 						  <th>Other Names</th>
 						</tr>
 					  </thead>
@@ -1341,82 +1338,44 @@ class Pharmacy_model extends CI_Model
 				
 
 
-				$items['drug_code'] = $array[$r][0];
-				$items['drugs_name'] = ucwords(strtolower($array[$r][1]));
-				$drug_type_name = $array[$r][2];
-				$items['drugs_unitprice'] = $array[$r][3];
-				$items['quantity'] = $array[$r][4];
-				$items['reorder_level'] = $array[$r][5];
-				$items['drugs_packsize'] = $array[$r][6];
-				$items['drug_size_type'] = 1;
-				$items['batch_no'] = 0;
-				$items['brand_id'] = 20;
-				$items['generic_id'] = 9;
-				$items['class_id'] = 2;
-				$items['drugs_dose'] = 1;
-				$items['drug_type_id'] = 4;
-				$items['drug_administration_route_id'] = 3;
-				$items['drug_dose_unit_id'] = 2;
-				$items['drug_consumption_id'] = 2; 
+				$product_name_first = ucwords(strtolower($array[$r][0]));
+				$generic_name = $product_name_first;
+				$brand_name = $array[$r][1];
+				$items['drug_type_id'] = $array[$r][2];
+				$items['product_unitprice'] = $array[$r][3];
+				$items['unit_of_measure'] = $array[$r][4];
+				$unit_of_measure = $array[$r][4];
+				$items['drug_administration_route_id'] = $array[$r][5];
+				$items['store_id'] = 5;
+				$items['quantity'] = 0;
+				$items['category_id'] = 2;
+				$items['product_status'] = 1;
 				$items['branch_code'] = $this->session->userdata('branch_code');
 
+				$drug_type_name = $this->get_type_of_drug($items['drug_type_id']);
+
+				$items['product_name'] = "$product_name_first - $unit_of_measure ($drug_type_name)";
 				// check drug type if exist
 
-				$items['drug_type_id'] = $this->get_drug_type_id($drug_type_name);
+				$items['generic_id'] = $this->get_generic_id($generic_name);
+				$items['brand_id'] = $this->get_brand_id($brand_name);
 				$comment = '';
 				
 				
-				if(!empty($items['drugs_name']))
+				if(!empty($items['product_name']))
 				{
-					// check if the number already exists
-					if($this->check_if_code_exisits($items['drug_code']))
-					{
-						//number exists
-						$comment .= '<br/>Not saved ensure you have a different drug code entered'.$items['drugs_name'];
-						$class = 'danger';
-					}
-					else
-					{
+					
 						// number does not exisit
 						//save product in the db
-						if($this->db->insert('drugs', $items))
+						if($this->db->insert('product', $items))
 						{
 							//calculate the price of the drug
-							$drug_id = $this->db->insert_id();
+							$product_id = $this->db->insert_id();
+							// insert into store product
 							
-							$markup = round(($items['drugs_unitprice'] * 1.33), 0);
-							$markdown = $items['drugs_unitprice']; //$markup;//round(($markup * 0.9), 0);
-							
+							$data = array('product_id'=>$product_id,'store_id'=>6,'quantity'=>0);
+							$this->db->insert('store_product',$data);
 
-							//get the lab service id for the branch
-
-							$service_id = $this->get_pharmacy_service_id();
-
-							// get all the visit type
-
-							$visit_type_query = $this->get_all_visit_type();
-
-							if($visit_type_query->num_rows() > 0)
-							{
-								foreach ($visit_type_query->result() as $key) {
-								
-									$visit_type_id = $key->visit_type_id;
-									// service charge entry
-									$service_charge_insert = array(
-													"service_charge_name" => $items['drugs_name'],
-													"service_id" => $service_id,
-													"visit_type_id" => $visit_type_id,
-													"drug_id"=>$drug_id,
-													"created_by"=>$this->session->userdata('personnel_id'),
-													"created"=>date('Y-m-d H:i:s'),
-													"service_charge_status"=>1,
-													"service_charge_amount"=>$markdown,
-													"service_charge_delete"=>0
-												);
-
-									$this->database->insert_entry('service_charge', $service_charge_insert);
-								}
-							}
 							$comment .= '<br/>Patient successfully added to the database';
 							$class = 'success';
 						}
@@ -1426,10 +1385,10 @@ class Pharmacy_model extends CI_Model
 							$comment .= '<br/>Internal error. Could not add patient to the database. Please contact the site administrator. Product code '.$items['drugs_name'];
 							$class = 'warning';
 						}
-					}
+					
 				}else
 				{
-					$comment .= '<br/>Not saved ensure you have a patient number entered'.$items['drugs_name'];
+					$comment .= '<br/>Not saved ensure you have a patient number entered'.$items['product_name'];
 						$class = 'danger';
 				}
 				
@@ -1438,8 +1397,8 @@ class Pharmacy_model extends CI_Model
 					
 						<tr class="'.$class.'">
 							<td>'.$r.'</td>
-							<td>'.$items['drug_code'].'</td>
-							<td>'.$items['drugs_name'].'</td>
+							<td>'.$items['product_name'].'</td>
+							<td>'.$items['product_name'].'</td>
 						</tr> 
 				';
 			}
@@ -1453,7 +1412,7 @@ class Pharmacy_model extends CI_Model
 		//if no products exist
 		else
 		{
-			$return['response'] = 'Drugs data not found';
+			$return['response'] = 'Product data not found';
 			$return['check'] = FALSE;
 		}
 		
@@ -1505,25 +1464,64 @@ class Pharmacy_model extends CI_Model
 		return $department_id;
 	}
 
-	public function get_drug_type_id($drug_type_name)
+	public function get_generic_id($generic_name)
 	{
-		$this->db->where('(drug_type_name LIKE "'.$drug_type_name.'") ');
+		$this->db->where('(generic_name = "'.$generic_name.'") ');
+		$query = $this->db->get('generic');
+
+		if($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $key) {
+				# code...
+				$generic_id = $key->generic_id;
+			}
+		}else
+		{
+
+			$data = array('generic_name'=>$generic_name);
+			$this->db->insert('generic',$data);
+			$generic_id = $this->db->insert_id();
+		}
+		return $generic_id;
+	}
+	public function get_type_of_drug($drug_type_id)
+	{
+		$this->db->where('drug_type_id = '.$drug_type_id.'');
 		$query = $this->db->get('drug_type');
 
 		if($query->num_rows() > 0)
 		{
 			foreach ($query->result() as $key) {
 				# code...
-				$drug_type_id = $key->drug_type_id;
+				$drug_type_name = $key->drug_type_name;
+			}
+		}else
+		{
+			$drug_type_name = '';
+			
+		}
+		return $drug_type_name;
+	}
+
+	public function get_brand_id($brand_name)
+	{
+		$this->db->where('(brand_name = "'.$brand_name.'") ');
+		$query = $this->db->get('brand');
+
+		if($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $key) {
+				# code...
+				$brand_id = $key->brand_id;
 			}
 		}else
 		{
 
-			$data = array('drug_type_name'=>$drug_type_name,'created_on'=>date('Y-m-d H:i:s'),'created_by'=>$this->session->userdata('personnel_id'));
-			$this->db->insert('drug_type',$data);
-			$drug_type_id = $this->db->insert_id();
+			$data = array('brand_name'=>$brand_name);
+			$this->db->insert('brand',$data);
+			$brand_id = $this->db->insert_id();
 		}
-		return $drug_type_id;
+		return $brand_id;
 	}
 	public function get_all_visit_type()
 	{

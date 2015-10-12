@@ -420,17 +420,17 @@ class Services_model extends CI_Model
 	public function import_pharmacy_charges($service_id)
 	{
 		//get lab tests
-		$this->db->where('drugs_deleted', 0);
-		$tests = $this->db->get('drugs');
+		$this->db->where('product_status', 1);
+		$products = $this->db->get('product');
 		
-		if($tests->num_rows() > 0)
+		if($products->num_rows() > 0)
 		{
-			foreach($tests->result() as $res)
+			foreach($products->result() as $res)
 			{
-				$drugs_id = $res->drugs_id;
-				$drugs_name = $res->drugs_name;
-				$drugs_unitprice = $res->drugs_unitprice;
-				$markup = round(($drugs_unitprice * 1.33), 0);
+				$product_id = $res->product_id;
+				$product_name = $res->product_name;
+				$product_unitprice = $res->product_unitprice;
+				$markup = round(($product_unitprice * 1.2), 0);
 	
 				// get all the visit type
 				$this->db->where('visit_type_status', 1);
@@ -441,19 +441,36 @@ class Services_model extends CI_Model
 					foreach ($visit_type_query->result() as $key) {
 					
 						$visit_type_id = $key->visit_type_id;
-						// service charge entry
+						if($visit_type_id == 1)
+						{
+							// service charge entry
 						$service_charge_insert = array(
-										"service_charge_name" => $drugs_name,
+										"service_charge_name" => $product_name,
 										"service_id" => $service_id,
 										"visit_type_id" => $visit_type_id,
-										"drug_id" => $drugs_id,
+										"product_id" => $product_id,
+										"service_charge_amount" => $product_unitprice,
+										'service_charge_status' => 1,
+									);
+
+						}
+						else
+						{
+							// service charge entry
+						$service_charge_insert = array(
+										"service_charge_name" => $product_name,
+										"service_id" => $service_id,
+										"visit_type_id" => $visit_type_id,
+										"product_id" => $product_id,
 										"service_charge_amount" => $markup,
 										'service_charge_status' => 1,
 									);
+						}
 						
-						if($this->service_charge_exists($drugs_name, $visit_type_id))
+						
+						if($this->service_charge_exists($product_name, $visit_type_id))
 						{
-							$this->db->where(array('service_charge_name' => $drugs_name, 'visit_type_id' => $visit_type_id));
+							$this->db->where(array('service_charge_name' => $product_name, 'visit_type_id' => $visit_type_id));
 							if($this->db->update('service_charge', $service_charge_insert))
 							{
 							}
