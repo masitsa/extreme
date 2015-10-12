@@ -209,7 +209,13 @@ class Inventory_management_model extends CI_Model
 			'created'=>date('Y-m-d H:i:s'),
 			'created_by'=>$this->session->userdata('personnel_id'),
 			'modified_by'=>$this->session->userdata('personnel_id'),
-			'product_packsize'=>$this->input->post('product_pack_size')
+			'product_packsize'=>$this->input->post('product_pack_size'),
+			'unit_of_measure'=>$this->input->post('unit_of_measure'),
+			'reorder_level'=>$this->input->post('reorder_level'),
+			'brand_id'=>$this->input->post('brand_id'),
+			'class_id'=>$this->input->post('class_id'),
+			'generic_id'=>$this->input->post('generic_id'),
+			'class_id'=>$this->input->post('class_id')
 		);
 		//save product in the db
 		if($this->db->insert('product', $array))

@@ -16,6 +16,7 @@ class Pharmacy  extends MX_Controller
 		$this->load->model('admin/admin_model');
 		$this->load->model('reception/database');
 		$this->load->model('administration/personnel_model');
+		$this->load->model('inventory_management/inventory_management_model');
 
 		$this->csv_path = realpath(APPPATH . '../assets/csv');
 		
@@ -106,11 +107,11 @@ class Pharmacy  extends MX_Controller
 	}
 	
 	public function update_prescription($visit_id, $visit_charge_id, $prescription_id,$module = NULL){
-		$this->form_validation->set_rules('substitution'.$prescription_id, 'Substitution', 'trim|required|xss_clean');
+		// $this->form_validation->set_rules('substitution'.$prescription_id, 'Substitution', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('x'.$prescription_id, 'Times Per Day', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('duration'.$prescription_id, 'Duration', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('consumption'.$prescription_id, 'Consumption', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('quantity'.$prescription_id, 'Quantity', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('quantity'.$prescription_id, 'Quantity', 'required|xss_clean');
 
 		if($module == 1)
 		{
@@ -127,28 +128,25 @@ class Pharmacy  extends MX_Controller
 		{
 			if($this->pharmacy_model->update_prescription($visit_id, $visit_charge_id, $prescription_id))
 			{
+				$data['result'] = "Success";
 				$this->session->set_userdata('success_message', 'Prescription updated successfully');
 			}
 
 			else
 			{
+				$data['result'] = "Failed";
 				$this->session->set_userdata('error_message', 'Could not update the prescription. Please try again');
 			}
 		
 		}
-		if($module == 1){
-			redirect('pharmacy/prescription1/'.$visit_id.'/1');
-			
-		}else{
-			redirect('pharmacy/prescription/'.$visit_id);
-		}
+		echo json_encode($data);
 	}
 	public function dispense_prescription($visit_id, $visit_charge_id, $prescription_id,$module = NULL){
-		$this->form_validation->set_rules('substitution'.$prescription_id, 'Substitution', 'trim|required|xss_clean');
+		// $this->form_validation->set_rules('substitution'.$prescription_id, 'Substitution', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('x'.$prescription_id, 'Times Per Day', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('duration'.$prescription_id, 'Duration', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('consumption'.$prescription_id, 'Consumption', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('quantity'.$prescription_id, 'Quantity', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('quantity'.$prescription_id, 'Quantity', 'required|xss_clean');
 
 		if($module == 1)
 		{
@@ -228,17 +226,17 @@ class Pharmacy  extends MX_Controller
 
 
 		
-		$order = 'drugs.drugs_id';
+		$order = 'product.product_id';
 		
 	
-		$where = 'drugs.drugs_id = service_charge.drug_id AND drugs.generic_id = generic.generic_id AND drugs.brand_id = brand.brand_id AND class.class_id  = drugs.class_id AND service_charge.service_id = service.service_id AND (service.service_name = "Pharmacy" OR service.service_name = "pharmacy") AND service_charge.visit_type_id = '.$visit_t;
+		$where = 'product.product_id = service_charge.product_id AND product.generic_id = generic.generic_id AND product.brand_id = brand.brand_id AND service_charge.service_id = service.service_id AND (service.service_name = "Pharmacy" OR service.service_name = "pharmacy") AND service_charge.visit_type_id = '.$visit_t;
 		 
 		
-		$drugs_search = $this->session->userdata('drugs_search');
+		$product_search = $this->session->userdata('product_search');
 		
-		if(!empty($drugs_search))
+		if(!empty($product_search))
 		{
-			$where .= $drugs_search;
+			$where .= $product_search;
 		}
 		if($module != 1)
 		{
@@ -248,7 +246,7 @@ class Pharmacy  extends MX_Controller
 		{
 			$segment = 5;
 		}
-		$table = 'drugs, service_charge, generic, brand, class, service';
+		$table = 'product, service_charge, generic, brand, service';
 		//pagination
 		$this->load->library('pagination');
 		if($module != 1)

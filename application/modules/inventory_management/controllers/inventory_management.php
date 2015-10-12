@@ -9,6 +9,7 @@ class Inventory_management  extends MX_Controller
 		$this->load->model('inventory_management_model');
 		$this->load->model('products_model');
 		$this->load->model('reception/reception_model');
+		$this->load->model('pharmacy/pharmacy_model');
 		$this->load->model('nurse/nurse_model');
 		$this->load->model('accounts/accounts_model');
 		$this->load->model('admin/users_model');
@@ -100,6 +101,7 @@ class Inventory_management  extends MX_Controller
 		}
 		else
 		{
+			$v_data['type'] = 3;
 			$table = '';
 			$constant = '';
 			$addition = '';
@@ -192,7 +194,6 @@ class Inventory_management  extends MX_Controller
 		$this->form_validation->set_rules('products_pack_size', 'Pack Size', 'numeric|xss_clean');
 		$this->form_validation->set_rules('quantity', 'Opening Quantity', 'numeric|xss_clean');
 		$this->form_validation->set_rules('products_unitprice', 'Unit Price', 'numeric|xss_clean');
-		$this->form_validation->set_rules('batch_no', 'Batch Number', 'numeric|xss_clean');
 		
 		//if form conatins valid data
 		if ($this->form_validation->run())
@@ -221,6 +222,13 @@ class Inventory_management  extends MX_Controller
 		$v_data['title'] = 'Add product';
 		$v_data['all_stores'] = $this->stores_model->all_stores();
 		$v_data['all_categories'] = $this->categories_model->all_categories();
+		$v_data['drug_types'] = $this->pharmacy_model->get_drug_forms();
+		$v_data['drug_brands'] = $this->pharmacy_model->get_drug_brands();
+		$v_data['drug_classes'] = $this->pharmacy_model->get_drug_classes();
+		$v_data['drug_generics'] = $this->pharmacy_model->get_drug_generics();
+		$v_data['drug_dose_units'] = $this->pharmacy_model->get_drug_dose_units();
+		$v_data['admin_routes'] = $this->pharmacy_model->get_admin_route();
+		$v_data['consumption'] = $this->pharmacy_model->get_consumption();
 		$data['content'] = $this->load->view('products/add_product', $v_data, true);
 		
 		$this->load->view('admin/templates/general_page', $data);
@@ -270,7 +278,15 @@ class Inventory_management  extends MX_Controller
 			$v_data['product'] = $product_details;
 			$v_data['products_id'] = $products_id;
 			$v_data['all_stores'] = $this->stores_model->all_stores();
-		$v_data['all_categories'] = $this->categories_model->all_categories();
+			$v_data['all_categories'] = $this->categories_model->all_categories();
+			$v_data['drug_types'] = $this->pharmacy_model->get_drug_forms();
+			$v_data['drug_brands'] = $this->pharmacy_model->get_drug_brands();
+			$v_data['drug_classes'] = $this->pharmacy_model->get_drug_classes();
+			$v_data['drug_generics'] = $this->pharmacy_model->get_drug_generics();
+			$v_data['drug_dose_units'] = $this->pharmacy_model->get_drug_dose_units();
+			$v_data['admin_routes'] = $this->pharmacy_model->get_admin_route();
+			$v_data['consumption'] = $this->pharmacy_model->get_consumption();
+
 			$data['content'] = $this->load->view('products/edit_product', $v_data, true);
 		
 		$this->load->view('admin/templates/general_page', $data);
@@ -875,4 +891,5 @@ class Inventory_management  extends MX_Controller
 
 		echo json_encode($data);
     }
+    
 }
