@@ -9,7 +9,6 @@ echo"
 		 <tr>
 		 	<th>No.</th>
 			<th>Medicine:</th>
-			<th>Dose</th>
 			<th>Dose Unit</th>
 			<th>Method</th>
 			<th>Quantity</th>
@@ -21,7 +20,7 @@ echo"
 		</tr>";
 $s=0;
 foreach($rs as $key):
-	$service_charge_id = $key->drugs_id;
+	$service_charge_id = $key->product_id;
 	$frequncy = $key->drug_times_name;
 	$id = $key->prescription_id;
 	$date1 = $key->prescription_startdate;
@@ -30,7 +29,7 @@ foreach($rs as $key):
 	$duration = $key->drug_duration_name;
 	$consumption = $key->drug_consumption_name;
 	$quantity = $key->prescription_quantity;
-	$medicine = $key->drugs_name;
+	$medicine = $key->product_name;
 	$s++;
 	$rs2 = $this->pharmacy_model->get_drug($service_charge_id);
 	
@@ -91,7 +90,6 @@ foreach($rs as $key):
 		<tr>
 			<td>".($s)."</td>
 			<td>".$medicine."</td>
-			<td>".$dose."</td>
 			<td>".$doseunit."</td>
 			<td>".$consumption."</td>
 			<td>".$quantity."</td>

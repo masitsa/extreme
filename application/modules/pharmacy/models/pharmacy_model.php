@@ -82,15 +82,14 @@ class Pharmacy_model extends CI_Model
 		// $items = "drugs.drugs_id AS checker_id,visit_charge.visit_charge_id, service_charge.service_charge_name AS drugs_name,service_charge.service_charge_amount  AS drugs_charge , drug_duration.drug_duration_name, pres.prescription_substitution, pres.prescription_id,pres.units_given, pres.visit_charge_id,pres.prescription_startdate, pres.prescription_finishdate, drug_times.drug_times_name, pres.prescription_startdate, pres.prescription_finishdate, pres.service_charge_id AS drugs_id, pres.prescription_substitution, drug_duration.drug_duration_name, pres.prescription_quantity, drug_consumption.drug_consumption_name, pres.number_of_days";
 		// $order = "`drugs`.drugs_id";
 
-		$table = "pres, product, drug_times, drug_duration, drug_consumption, service_charge";
+		$table = "pres, drug_times, drug_duration, drug_consumption, service_charge";
 		$where = "service_charge.service_charge_id = pres.service_charge_id 
-						AND service_charge.product_id = product.product_id
 						AND pres.drug_times_id = drug_times.drug_times_id 
 						AND pres.drug_duration_id = drug_duration.drug_duration_id
 						AND pres.drug_consumption_id = drug_consumption.drug_consumption_id
 						 AND pres.visit_id = ". $visit_id;
-		$items = "product.product_id AS checker_id, service_charge.service_charge_name AS product_name,service_charge.service_charge_amount  AS product_charge , drug_duration.drug_duration_name, pres.prescription_substitution, pres.prescription_id,pres.units_given, pres.visit_charge_id,pres.prescription_startdate, pres.prescription_finishdate, drug_times.drug_times_name, pres.prescription_startdate, pres.prescription_finishdate, pres.service_charge_id AS product_id, pres.prescription_substitution, drug_duration.drug_duration_name, pres.prescription_quantity, drug_consumption.drug_consumption_name, pres.number_of_days";
-		$order = "`product`.product_id";
+		$items = "service_charge.product_id AS checker_id, service_charge.service_charge_name AS product_name,service_charge.service_charge_amount  AS product_charge , drug_duration.drug_duration_name, pres.prescription_substitution, pres.prescription_id,pres.units_given, pres.visit_charge_id,pres.prescription_startdate, pres.prescription_finishdate, drug_times.drug_times_name, pres.prescription_startdate, pres.prescription_finishdate, pres.service_charge_id AS product_id, pres.prescription_substitution, drug_duration.drug_duration_name, pres.prescription_quantity, drug_consumption.drug_consumption_name, pres.number_of_days";
+		$order = "product_name";
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		

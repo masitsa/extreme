@@ -442,6 +442,14 @@ class Services_model extends CI_Model
 					foreach ($visit_type_query->result() as $key) {
 					
 						$visit_type_id = $key->visit_type_id;
+						if(empty($product_unitprice))
+						{
+							$product_unitprice = 0;
+						}
+						if(empty($product_unitprice_insurance))
+						{
+							$product_unitprice_insurance = 0;
+						}
 						if($visit_type_id == 1)
 						{
 							// service charge entry
