@@ -88,7 +88,25 @@ class Pharmacy_model extends CI_Model
 						AND pres.drug_duration_id = drug_duration.drug_duration_id
 						AND pres.drug_consumption_id = drug_consumption.drug_consumption_id
 						 AND pres.visit_id = ". $visit_id;
-		$items = "service_charge.product_id AS checker_id, service_charge.service_charge_name AS product_name,service_charge.service_charge_amount  AS product_charge , drug_duration.drug_duration_name, pres.prescription_substitution, pres.prescription_id,pres.units_given, pres.visit_charge_id,pres.prescription_startdate, pres.prescription_finishdate, drug_times.drug_times_name, pres.prescription_startdate, pres.prescription_finishdate, pres.service_charge_id AS product_id, pres.prescription_substitution, drug_duration.drug_duration_name, pres.prescription_quantity, drug_consumption.drug_consumption_name, pres.number_of_days";
+		$items = "service_charge.product_id AS checker_id, 
+		service_charge.service_charge_name AS product_name,
+		service_charge.service_charge_amount  AS product_charge , 
+		drug_duration.drug_duration_name, 
+		pres.prescription_substitution, 
+		pres.prescription_id,
+		pres.units_given, 
+		pres.visit_charge_id,
+		pres.prescription_startdate, 
+		pres.prescription_finishdate, 
+		drug_times.drug_times_name, 
+		pres.prescription_startdate, 
+		pres.prescription_finishdate, 
+		pres.service_charge_id AS product_id, 
+		pres.prescription_substitution, 
+		drug_duration.drug_duration_name, 
+		pres.prescription_quantity, 
+		drug_consumption.drug_consumption_name, 
+		pres.number_of_days";
 		$order = "product_name";
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
@@ -198,6 +216,8 @@ class Pharmacy_model extends CI_Model
 		//retrieve all users
 		$this->db->from($table);
 		$this->db->select('service_charge.service_charge_id, service_charge.visit_type_id,generic.generic_name, brand.brand_name, service_charge.service_charge_amount, service_charge.product_id , service_charge.service_charge_name,product.product_id,product.quantity');
+		$this->db->join('generic', 'product.generic_id = generic.generic_id', 'left');
+		$this->db->join('brand', 'product.brand_id = brand.brand_id', 'left');
 		$this->db->where($where);
 		$this->db->order_by($order,'asc');
 		$query = $this->db->get('', $per_page, $page);

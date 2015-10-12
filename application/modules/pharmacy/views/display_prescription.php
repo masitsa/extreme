@@ -30,67 +30,25 @@ foreach($rs as $key):
 	$consumption = $key->drug_consumption_name;
 	$quantity = $key->prescription_quantity;
 	$medicine = $key->product_name;
+	// $dose = $key->unit_of_measure;
+	// $drug_type_name = $key->drug_type_name;
+
+
 	$s++;
 	$rs2 = $this->pharmacy_model->get_drug($service_charge_id);
 	
-	foreach ($rs2 as $key2):
-		$drug_type_id = $key2->drug_type_id;
-		$admin_route_id = $key2->drug_administration_route_id;
-		$dose = $key2->drugs_dose;
-		$dose_unit_id = $key2->drug_dose_unit_id;
-	endforeach;
+	foreach ($rs2 as $key2) {
+		$dose = $key2->unit_of_measure;
+	   // $drug_type_name = $key2->drug_type_name;
 
-	if(!empty($drug_type_id)){
+	}
+	
 
-		$rs3 = $this->pharmacy_model->get_drug_type_name($drug_type_id);
-		$num_rows3 = count($rs3);
-		if($num_rows3 > 0){
-			foreach ($rs3 as $key3):
-				$drug_type_name = $key3->drug_type_name;
-			endforeach;
-		}
-	}
-	
-	else
-	{
-		$drug_type_name = '';
-	}
-	
-	if(!empty($dose_unit_id)){
-
-		$rs3 = $this->pharmacy_model->get_dose_unit2($dose_unit_id);
-		$num_rows3 = count($rs3);
-		if($num_rows3 > 0){
-			foreach ($rs3 as $key3):
-				$doseunit = $key3->drug_dose_unit_name;
-			endforeach;
-		}
-	}
-	
-	else
-	{
-		$doseunit = '';
-	}
-	
-	if(!empty($admin_route_id)){
-		$rs3 = $this->pharmacy_model->get_admin_route2($admin_route_id);
-		$num_rows3 = count($rs3);
-		if($num_rows3 > 0){
-			foreach ($rs3 as $key3):
-				$admin_route = $key3->drug_administration_route_name;
-			endforeach;
-		}
-	}
-	
-	else
-	{
-		$admin_route = '';
-	}
 	echo"
 		<tr>
 			<td>".($s)."</td>
 			<td>".$medicine."</td>
-			<td>".$doseunit."</td>
+			<td>".$dose."</td>
 			<td>".$consumption."</td>
 			<td>".$quantity."</td>
 			<td>".$frequncy."</td>

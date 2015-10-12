@@ -226,10 +226,10 @@ class Pharmacy  extends MX_Controller
 
 
 		
-		$order = 'product.product_id';
+		$order = 'product.product_name';
 		
 	
-		$where = 'product.product_id = service_charge.product_id AND product.generic_id = generic.generic_id AND product.brand_id = brand.brand_id AND service_charge.service_id = service.service_id AND (service.service_name = "Pharmacy" OR service.service_name = "pharmacy") AND service_charge.visit_type_id = '.$visit_t;
+		$where = 'product.product_id = service_charge.product_id AND service_charge.service_id = service.service_id AND (service.service_name = "Pharmacy" OR service.service_name = "pharmacy") AND service_charge.visit_type_id = '.$visit_t;
 		 
 		
 		$product_search = $this->session->userdata('product_search');
@@ -246,16 +246,16 @@ class Pharmacy  extends MX_Controller
 		{
 			$segment = 5;
 		}
-		$table = 'product, service_charge, generic, brand, service';
+		$table = 'product, service_charge, service';
 		//pagination
 		$this->load->library('pagination');
 		if($module != 1)
 		{
-			$config['base_url'] = site_url().'/pharmacy/drugs/'.$visit_id;
+			$config['base_url'] = site_url().'pharmacy/drugs/'.$visit_id;
 		}
 		else
 		{
-			$config['base_url'] = site_url().'/pharmacy/drugs/'.$visit_id.'/'.$module;
+			$config['base_url'] = site_url().'pharmacy/drugs/'.$visit_id.'/'.$module;
 		}
 		
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
@@ -437,7 +437,7 @@ class Pharmacy  extends MX_Controller
 	{
 		redirect('nurse/send_to_accounts/'.$primary_key.'/3');
 	}
-	public function delete_prescription($prescription_id,$visit_id,$visit_charge_id,$module)
+	public function delete_prescription($prescription_id,$visit_id,$visit_charge_id,$module=NULL)
 	{
 		//  delete the visit charge
 
