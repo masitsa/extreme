@@ -430,6 +430,7 @@ class Services_model extends CI_Model
 				$product_id = $res->product_id;
 				$product_name = $res->product_name;
 				$product_unitprice = $res->product_unitprice;
+				$product_unitprice_insurance = $res->product_unitprice_insurance;
 				$markup = round(($product_unitprice * 1.2), 0);
 	
 				// get all the visit type
@@ -444,7 +445,7 @@ class Services_model extends CI_Model
 						if($visit_type_id == 1)
 						{
 							// service charge entry
-						$service_charge_insert = array(
+							$service_charge_insert = array(
 										"service_charge_name" => $product_name,
 										"service_id" => $service_id,
 										"visit_type_id" => $visit_type_id,
@@ -457,12 +458,12 @@ class Services_model extends CI_Model
 						else
 						{
 							// service charge entry
-						$service_charge_insert = array(
+							$service_charge_insert = array(
 										"service_charge_name" => $product_name,
 										"service_id" => $service_id,
 										"visit_type_id" => $visit_type_id,
 										"product_id" => $product_id,
-										"service_charge_amount" => $markup,
+										"service_charge_amount" => $product_unitprice_insurance,
 										'service_charge_status' => 1,
 									);
 						}

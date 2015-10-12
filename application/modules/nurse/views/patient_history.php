@@ -7,11 +7,10 @@
 
 		$where = 'visit.`close_card` = 1 AND visit.patient_id = patients.patient_id AND visit.`patient_id`='.$patient_id;
 		
-		
 		$table = 'visit,patients';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/nurse/patient_card/'.$visit_id;
+		$config['base_url'] = site_url().'nurse/patient_card/'.$visit_id;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 4;
 		$config['per_page'] = 20;

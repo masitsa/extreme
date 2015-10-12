@@ -1334,18 +1334,15 @@ class Pharmacy_model extends CI_Model
 			//retrieve the data from array
 			for($r = 1; $r < $total_rows; $r++)
 			{
-
-				
-
-
 				$product_name_first = ucwords(strtolower($array[$r][0]));
-				$generic_name = $product_name_first;
-				$brand_name = $array[$r][1];
-				$items['drug_type_id'] = $array[$r][2];
-				$items['product_unitprice'] = $array[$r][3];
-				$items['unit_of_measure'] = $array[$r][4];
-				$unit_of_measure = $array[$r][4];
-				$items['drug_administration_route_id'] = $array[$r][5];
+				//$generic_name = $product_name_first;
+				//$brand_name = $array[$r][1];
+				$items['drug_type_id'] = $array[$r][5];
+				$items['product_unitprice_insurance'] = $array[$r][3];
+				$items['product_unitprice'] = $array[$r][2];
+				$items['unit_of_measure'] = $array[$r][1];
+				$unit_of_measure = $array[$r][1];
+				$items['drug_administration_route_id'] = $array[$r][4];
 				$items['store_id'] = 5;
 				$items['quantity'] = 0;
 				$items['category_id'] = 2;
@@ -1357,8 +1354,8 @@ class Pharmacy_model extends CI_Model
 				$items['product_name'] = "$product_name_first - $unit_of_measure ($drug_type_name)";
 				// check drug type if exist
 
-				$items['generic_id'] = $this->get_generic_id($generic_name);
-				$items['brand_id'] = $this->get_brand_id($brand_name);
+				//$items['generic_id'] = $this->get_generic_id($generic_name);
+				//$items['brand_id'] = $this->get_brand_id($brand_name);
 				$comment = '';
 				
 				

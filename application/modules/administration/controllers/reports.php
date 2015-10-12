@@ -65,6 +65,22 @@ class Reports extends administration
 		{
 			$branch_code = $this->session->userdata('branch_code');
 		}
+		
+		$this->db->where('branch_code', $branch_code);
+		$query = $this->db->get('branch');
+		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$branch_name = $row->branch_name;
+		}
+		
+		else
+		{
+			$branch_name = '';
+		}
+		$v_data['branch_name'] = $branch_name;
+		
 		$where = 'visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type AND visit.visit_delete = 0 AND visit.branch_code = \''.$branch_code.'\'';
 		$table = 'visit, patients, visit_type';
 		$visit_search = $this->session->userdata('all_transactions_search');

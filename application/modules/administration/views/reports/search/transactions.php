@@ -1,5 +1,6 @@
         <section class="panel panel-featured panel-featured-info">
             <header class="panel-heading">
+            	<h2 class="panel-title pull-right">Active branch: <?php echo $branch_name;?></h2>
             	<h2 class="panel-title">Search</h2>
             </header>             
 

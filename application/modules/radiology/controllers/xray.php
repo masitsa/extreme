@@ -101,8 +101,8 @@ class Xray  extends MX_Controller
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
 		
-		$data['title'] = 'Lab Queue';
-		$v_data['title'] = 'Lab Queue';
+		$data['title'] = 'X-Ray Queue';
+		$v_data['title'] = 'X-Ray Queue';
 		$v_data['module'] = 0;
 		
 		$v_data['type'] = $this->reception_model->get_types();
