@@ -32,7 +32,7 @@ class Pharmacy  extends MX_Controller
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 5 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 5 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit.visit_date = \''.date('Y-m-d').'\'';
 		
 		$table = 'visit_department, visit, patients';
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 6, 0);
@@ -179,7 +179,7 @@ class Pharmacy  extends MX_Controller
 			redirect('pharmacy/prescription/'.$visit_id);
 		}
 	}
-	public function search_drugs($visit_id)
+	public function search_drugs($visit_id, $module = NULL)
 	{
 		// $this->form_validation->set_rules('search_item', 'Search', 'trim|required|xss_clean');
 
@@ -191,25 +191,23 @@ class Pharmacy  extends MX_Controller
 			 $generic_name = $this->input->post('generic_name');
 			if(!empty($search_item))
 			{
-				$search_item = ' AND drugs.drugs_name LIKE \'%'.$this->input->post('search_item').'%\'';
+				$search_item = ' AND (product.product_name LIKE \'%'.$search_item.'%\' OR brand.brand_name LIKE \'%'.$search_item.'%\')';
 			}
 			if(!empty($generic_name))
 			{
-				$generic_name = ' AND generic.generic_name LIKE \'%'.$this->input->post('generic_name').'%\'';
+				$generic_name = ' AND generic.generic_name LIKE \'%'.$generic_name.'%\'';
 			}
 			
-
-			
 			$search_items = $search_item.$generic_name;
-			$this->session->set_userdata('drugs_search', $search_items);
+			$this->session->set_userdata('product_search', $search_items);
 		// }
 		
-		$this->drugs($visit_id,0);
+		$this->drugs($visit_id,$module);
 	}
 	
 	public function close_drugs_search($visit_id)
 	{
-		$this->session->unset_userdata('drugs_search');
+		$this->session->unset_userdata('product_search');
 		$this->drugs($visit_id,0);
 	}
 	
@@ -223,14 +221,11 @@ class Pharmacy  extends MX_Controller
 			  $visit_t = $rs1->visit_type;
 		  }
 		}
-
-
 		
 		$order = 'product.product_name';
 		
 	
 		$where = 'product.product_id = service_charge.product_id AND service_charge.service_id = service.service_id AND (service.service_name = "Pharmacy" OR service.service_name = "pharmacy") AND service_charge.visit_type_id = '.$visit_t;
-		 
 		
 		$product_search = $this->session->userdata('product_search');
 		
@@ -258,7 +253,7 @@ class Pharmacy  extends MX_Controller
 			$config['base_url'] = site_url().'pharmacy/drugs/'.$visit_id.'/'.$module;
 		}
 		
-		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['total_rows'] = $this->pharmacy_model->count_drugs($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 15;
 		$config['num_links'] = 5;
@@ -312,8 +307,8 @@ class Pharmacy  extends MX_Controller
 	}
 	public function pharmacy_queue($page_name = NULL)
 	{
-		//$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 5 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\'';
-		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 5 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.visit_date = \''.date('Y-m-d').'\'';
+		//$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 5 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 5 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit_type.visit_type_id = visit.visit_type AND visit.visit_date = \''.date('Y-m-d').'\'';
 		
 		$table = 'visit_department, visit, patients, visit_type';
 		$visit_search = $this->session->userdata('patient_visit_search');
@@ -334,7 +329,7 @@ class Pharmacy  extends MX_Controller
 		}
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/pharmacy/pharmacy_queue/'.$page_name;
+		$config['base_url'] = site_url().'pharmacy/pharmacy_queue/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -389,7 +384,7 @@ class Pharmacy  extends MX_Controller
 	}
 	public function queue_cheker($page_name = NULL)
 	{
-		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 5 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 5 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$table = 'visit_department, visit, patients';
 		$items = "*";
 		$order = "visit.visit_id";
@@ -486,7 +481,7 @@ class Pharmacy  extends MX_Controller
 		$table = 'visit_department,visit, patients';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/pharmacy/prescription_history/'.$page_name;
+		$config['base_url'] = site_url().'pharmacy/prescription_history/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -542,10 +537,10 @@ class Pharmacy  extends MX_Controller
 	public function inventory()
 	{
 		$segment = 3;
-		$order = 'drugs.drugs_name';
-		//$where = 'drugs.brand_id = brand.brand_id AND class.class_id = drugs.class_id AND drugs.generic_id = generic.generic_id AND drugs.drug_type_id = drug_type.drug_type_id AND drugs.drug_administration_route_id = drug_administration_route.drug_administration_route_id AND drugs.drug_dose_unit_id = drug_dose_unit.drug_dose_unit_id AND drugs.drug_consumption_id = drug_consumption.drug_consumption_id';
+		$order = 'product.product_name';
+		//$where = 'drugs.brand_id = brand.brand_id AND class.class_id = drugs.class_id AND drugs.generic_id = generic.generic_id AND drugs.drug_type_id = drug_type.drug_type_id AND drugs.drug_administration_route_id = drug_administration_route.drug_administration_route_id AND drugs.drug_dose_unit_id = drug_dose_unit.drug_dose_unit_id AND drugs.drug_consumption_id = drug_consumption.drug_consumption_id AND branch_code = "'.$this->session->userdata('branch_code').'"';
 		
-		$where = 'drugs.brand_id = brand.brand_id AND class.class_id = drugs.class_id AND drugs.generic_id = generic.generic_id AND drugs.drug_type_id = drug_type.drug_type_id AND drugs.drug_administration_route_id = drug_administration_route.drug_administration_route_id AND drugs.drug_dose_unit_id = drug_dose_unit.drug_dose_unit_id AND drugs.drug_consumption_id = drug_consumption.drug_consumption_id AND branch_code = "'.$this->session->userdata('branch_code').'"';
+		$where = 'product.branch_code = "'.$this->session->userdata('branch_code').'"';
 		$drugs_inventory_search = $this->session->userdata('drugs_inventory_search');
 		
 		if(!empty($drugs_inventory_search))
@@ -553,12 +548,13 @@ class Pharmacy  extends MX_Controller
 			$where .= $drugs_inventory_search;
 		}
 		
-		$table = 'drugs, drug_type, generic, brand, class, drug_administration_route, drug_dose_unit, drug_consumption';
+		//$table = 'drugs, drug_type, generic, brand, class, drug_administration_route, drug_dose_unit, drug_consumption';
+		$table = 'product';
 		
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'pharmacy/inventory';
-		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['total_rows'] = $this->pharmacy_model->count_drugs($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
 		$config['num_links'] = 5;
@@ -664,13 +660,13 @@ class Pharmacy  extends MX_Controller
 	*	Edit Drug
 	*
 	*/
-	public function edit_drug($drugs_id)
+	public function edit_drug($product_id)
 	{
 		//form validation rules
-		$this->form_validation->set_rules('drugs_name', 'Drug Name', 'required|xss_clean');
+		$this->form_validation->set_rules('product_name', 'Drug Name', 'required|xss_clean');
 		$this->form_validation->set_rules('quantity', 'Opening Quantity', 'numeric|xss_clean');
-		$this->form_validation->set_rules('drugs_pack_size', 'Pack Size', 'numeric|xss_clean');
-		$this->form_validation->set_rules('drugs_unitprice', 'Unit Price', 'numeric|xss_clean');
+		$this->form_validation->set_rules('product_pack_size', 'Pack Size', 'numeric|xss_clean');
+		$this->form_validation->set_rules('product_unitprice', 'Unit Price', 'numeric|xss_clean');
 		$this->form_validation->set_rules('batch_no', 'Batch Number', 'numeric|xss_clean');
 		$this->form_validation->set_rules('brand_id', 'Brand', 'numeric|xss_clean');
 		$this->form_validation->set_rules('generic_id', 'Generic', 'numeric|xss_clean');
@@ -685,15 +681,15 @@ class Pharmacy  extends MX_Controller
 		if ($this->form_validation->run())
 		{
 
-			if($this->pharmacy_model->edit_drug($drugs_id))
+			if($this->pharmacy_model->edit_drug($product_id))
 			{
-				$this->session->userdata('success_message', 'Drug has been editted successfully');
+				$this->session->userdata('success_message', 'Product has been editted successfully');
 				redirect('pharmacy/inventory');
 			}
 			
 			else
 			{
-				$this->session->userdata('error_message', 'Unable to edit drug. Please try again');
+				$this->session->userdata('error_message', 'Unable to edit product. Please try again');
 			}
 		}
 		
@@ -703,9 +699,8 @@ class Pharmacy  extends MX_Controller
 		}
 		
 		//load the interface
-		$data['title'] = 'Edit Drug';
-		$v_data['title'] = 'Edit Drug';
-		$data['sidebar'] = 'pharmacy_sidebar';
+		$data['title'] = 'Edit product';
+		$v_data['title'] = 'Edit product';
 		$drug_details = $this->pharmacy_model->get_drug_details($drugs_id);
 		
 		if($drug_details->num_rows() > 0)
@@ -848,7 +843,7 @@ class Pharmacy  extends MX_Controller
 		
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/pharmacy/drug_purchases/'.$drugs_id;
+		$config['base_url'] = site_url().'pharmacy/drug_purchases/'.$drugs_id;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -1023,7 +1018,7 @@ class Pharmacy  extends MX_Controller
 		
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/pharmacy/drug_deductions/'.$drugs_id;
+		$config['base_url'] = site_url().'pharmacy/drug_deductions/'.$drugs_id;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -1085,7 +1080,7 @@ class Pharmacy  extends MX_Controller
 	public function brands()
 	{
 		// this is it
-		$where = 'brand_id > 0';
+		$where = 'brand_delete = 0';
 		$brands_search = $this->session->userdata('brands_search');
 		
 		if(!empty($brands_search))
@@ -1098,10 +1093,10 @@ class Pharmacy  extends MX_Controller
 		$table = 'brand';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/pharmacy/brands';
+		$config['base_url'] = site_url().'pharmacy/brands';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
-		$config['per_page'] = 10;
+		$config['per_page'] = 20;
 		$config['num_links'] = 5;
 		
 		$config['full_tag_open'] = '<ul class="pagination pull-right">';
@@ -1150,46 +1145,45 @@ class Pharmacy  extends MX_Controller
 		// end of it
 
 	} 
-	function add_brand($brand_id = NULL)
+	function add_brand($page, $brand_id = NULL)
 	{
 		if($brand_id > 0)
 		{
-			$v_data['title'] = "Edit laboratory test";
+			$v_data['title'] = "Edit brand";
 			$v_data['brand_details'] = $this->pharmacy_model->get_brands_details($brand_id);
 		}
 		else
 		{
-			$v_data['title'] = "Add new brand";
+			$v_data['title'] = "Add brand";
 			$v_data['brand_details'] = '';
 		}
 		
-		//$v_data['lab_test_classes'] = $this->lab_charges_model->get_lab_classes();
 		$v_data['brand_id'] = $brand_id;
+		$v_data['page'] = $page;
 		$data['content'] = $this->load->view('setup/add_brand', $v_data, true);
 		
-		$data['title'] = 'Add brand';
-		$data['sidebar'] = 'pharmacy_sidebar';
+		$data['title'] = $v_data['title'];
 		$this->load->view('admin/templates/general_page', $data);	
 	}
-	function create_new_brand()
+	function create_new_brand($page)
 	{
 		$this->form_validation->set_rules('brand_name', 'Brand name', 'is_numeric|xss_clean');
 
     	if ($this->form_validation->run() == FALSE)
 		{
 
-			$checker = $this->pharmacy_model->add_brand();
+			$checker = $this->pharmacy_model->add_brand($page);
 
 			if($checker == TRUE)
 			{
 
 				$this->session->set_userdata("success_message","You have successfully created the brand");
-				redirect('pharmacy/add_brand');	
+				redirect('pharmacy/add_brand/'.$page);	
 			}
 			else
 			{
 				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
-				redirect('pharmacy/add_brand');	
+				redirect('pharmacy/add_brand/'.$page);	
 			}
 
 		}
@@ -1198,7 +1192,7 @@ class Pharmacy  extends MX_Controller
 		{
 			
 			$this->session->set_userdata("error_message","Please enter the brand name then try again");
-			redirect('pharmacy/add_brand');					
+			redirect('pharmacy/add_brand/'.$page);					
 		}
 	}
 	public function search_brand()
@@ -1209,18 +1203,16 @@ class Pharmacy  extends MX_Controller
 		{
 			$brand_name = ' AND brand_name LIKE \'%'.$brand_name.'%\' ';
 		}
-	
-		
 		
 		$search = $brand_name;
 		$this->session->set_userdata('brands_search', $search);
 		
-		$this->brands();
+		redirect('pharmacy/brands');
 	}	
 	public function close_brand_search()
 	{
 		$this->session->unset_userdata('brands_search');
-		$this->brands();
+		redirect('pharmacy/brands');
 	}
 	public function close_inventory_search()
 	{
@@ -1228,39 +1220,35 @@ class Pharmacy  extends MX_Controller
 		$this->inventory();
 	}
 
-	 function update_brand($brand_id)
+	 function update_brand($brand_id, $page)
     {
-    	$this->form_validation->set_rules('brand_name', 'Brand name', 'is_numeric|xss_clean');
-    	if ($this->form_validation->run() == FALSE)
+    	$this->form_validation->set_rules('brand_name', 'Brand name', 'required|xss_clean');
+    	if ($this->form_validation->run())
 		{
-
 			$checker = $this->pharmacy_model->edit_brand($brand_id);
 
 			if($checker == TRUE)
 			{
 
-				$this->session->set_userdata("success_message","You have successfully created the lab test");
-				redirect('pharmacy/add_brand/'.$brand_id);	
+				$this->session->set_userdata("success_message", "You have successfully editted the brand");
 			}
 			else
 			{
-				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
-				redirect('pharmacy/add_brand/'.$brand_id);	
+				$this->session->set_userdata("error_message", "Seems like there is a duplicate name. Please try again");
 			}
 
 		}
 		
 		else
 		{
-			
-			$this->session->set_userdata("error_message","Please enter the class name then try again");
-			redirect('pharmacy/add_brand/'.$brand_id);			
+			$this->session->set_userdata("error_message", validation_errors());
 		}
+		redirect('pharmacy/add_brand/'.$page.'/'.$brand_id);	
     }
     public function generics()
 	{
 		// this is it
-		$where = 'generic_id > 0';
+		$where = 'delete_generic = 0';
 		$generics_search = $this->session->userdata('generics_search');
 		
 		if(!empty($generics_search))
@@ -1273,10 +1261,10 @@ class Pharmacy  extends MX_Controller
 		$table = 'generic';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/pharmacy/generics';
+		$config['base_url'] = site_url().'pharmacy/generics';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
-		$config['per_page'] = 10;
+		$config['per_page'] = 20;
 		$config['num_links'] = 5;
 		
 		$config['full_tag_open'] = '<ul class="pagination pull-right">';
@@ -1325,11 +1313,11 @@ class Pharmacy  extends MX_Controller
 		// end of it
 
 	} 
-	function add_generic($generic_id = NULL)
+	function add_generic($page, $generic_id = NULL)
 	{
 		if($generic_id > 0)
 		{
-			$v_data['title'] = "Edit laboratory test";
+			$v_data['title'] = "Edit generic";
 			$v_data['generic_details'] = $this->pharmacy_model->get_generics_details($generic_id);
 		}
 		else
@@ -1338,43 +1326,37 @@ class Pharmacy  extends MX_Controller
 			$v_data['generic_details'] = '';
 		}
 		
-		//$v_data['lab_test_classes'] = $this->lab_charges_model->get_lab_classes();
+		$v_data['page'] = $page;
 		$v_data['generic_id'] = $generic_id;
 		$data['content'] = $this->load->view('setup/add_generic', $v_data, true);
 		
 		$data['title'] = 'Add generic';
-		$data['sidebar'] = 'pharmacy_sidebar';
 		$this->load->view('admin/templates/general_page', $data);	
 	}
-	function create_new_generic()
+	function create_new_generic($page)
 	{
-		$this->form_validation->set_rules('generic_name', 'generic name', 'is_numeric|xss_clean');
+		$this->form_validation->set_rules('generic_name', 'generic name', 'required|xss_clean');
 
-    	if ($this->form_validation->run() == FALSE)
+    	if ($this->form_validation->run())
 		{
-
 			$checker = $this->pharmacy_model->add_generic();
 
 			if($checker == TRUE)
 			{
-
 				$this->session->set_userdata("success_message","You have successfully created the generic");
-				redirect('pharmacy/add_generic');	
 			}
 			else
 			{
 				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
-				redirect('pharmacy/add_generic');	
 			}
-
 		}
 		
 		else
 		{
-			
-			$this->session->set_userdata("error_message","Please enter the generic name then try again");
-			redirect('pharmacy/add_generic');					
+			$this->session->set_userdata("error_message",validation_errors());
 		}
+		
+		redirect('pharmacy/add_generic/'.$page);	
 	}
 	public function search_generic()
 	{
@@ -1397,34 +1379,29 @@ class Pharmacy  extends MX_Controller
 		$this->session->unset_userdata('generics_search');
 		$this->generics();
 	}
-	 function update_generic($generic_id)
+	
+	function update_generic($generic_id, $page)
     {
-    	$this->form_validation->set_rules('generic_name', 'generic name', 'is_numeric|xss_clean');
-    	if ($this->form_validation->run() == FALSE)
+    	$this->form_validation->set_rules('generic_name', 'generic name', 'required|xss_clean');
+    	if ($this->form_validation->run())
 		{
-
 			$checker = $this->pharmacy_model->edit_generic($generic_id);
 
 			if($checker == TRUE)
 			{
-
-				$this->session->set_userdata("success_message","You have successfully created the lab test");
-				redirect('pharmacy/add_generic/'.$generic_id);	
+				$this->session->set_userdata("success_message","You have successfully updated the generic name");
 			}
 			else
 			{
 				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
-				redirect('pharmacy/add_generic/'.$generic_id);	
 			}
-
 		}
 		
 		else
 		{
-			
-			$this->session->set_userdata("error_message","Please enter the class name then try again");
-			redirect('pharmacy/add_generic/'.$generic_id);			
+			$this->session->set_userdata("error_message",validation_errors());
 		}
+		redirect('pharmacy/add_generic/'.$page.'/'.$generic_id);	
     }
     public function classes()
 	{
@@ -1442,7 +1419,7 @@ class Pharmacy  extends MX_Controller
 		$table = 'class';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/pharmacy/classes';
+		$config['base_url'] = site_url().'pharmacy/classes';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 10;
@@ -1498,7 +1475,7 @@ class Pharmacy  extends MX_Controller
 	{
 		if($class_id > 0)
 		{
-			$v_data['title'] = "Edit laboratory test";
+			$v_data['title'] = "Edit class";
 			$v_data['class_details'] = $this->pharmacy_model->get_classes_details($class_id);
 		}
 		else
@@ -1567,10 +1544,8 @@ class Pharmacy  extends MX_Controller
 		
 		if(!empty($drug_name))
 		{
-			$drug_name = ' AND drugs.drugs_name LIKE \''.$drug_name.'%\' ';
+			$drug_name = ' AND (product.product_name LIKE \''.$drug_name.'%\' OR brand.brand_name LIKE \''.$drug_name.'%\' OR generic.generic_name LIKE \''.$drug_name.'%\')';
 		}
-	
-		
 		
 		$search = $drug_name;
 		$this->session->set_userdata('drugs_inventory_search', $search);
@@ -1614,7 +1589,7 @@ class Pharmacy  extends MX_Controller
     public function types()
 	{
 		// this is it
-		$where = 'drug_type_id > 0';
+		$where = 'drug_type_delete = 0';
 		$types_search = $this->session->userdata('types_search');
 		
 		if(!empty($types_search))
@@ -1627,7 +1602,7 @@ class Pharmacy  extends MX_Controller
 		$table = 'drug_type';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/pharmacy/types';
+		$config['base_url'] = site_url().'pharmacy/types';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 10;
@@ -1679,11 +1654,11 @@ class Pharmacy  extends MX_Controller
 		// end of it
 
 	} 
-	function add_type($drug_type_id = NULL)
+	function add_type($page, $drug_type_id = NULL)
 	{
 		if($drug_type_id > 0)
 		{
-			$v_data['title'] = "Edit laboratory test";
+			$v_data['title'] = "Edit type";
 			$v_data['type_details'] = $this->pharmacy_model->get_types_details($drug_type_id);
 		}
 		else
@@ -1692,33 +1667,28 @@ class Pharmacy  extends MX_Controller
 			$v_data['type_details'] = '';
 		}
 		
-		//$v_data['lab_test_classes'] = $this->lab_charges_model->get_lab_classes();
+		$v_data['page'] = $page;
 		$v_data['drug_type_id'] = $drug_type_id;
 		$data['content'] = $this->load->view('setup/add_type', $v_data, true);
 		
-		$data['title'] = 'Add type';
-		$data['sidebar'] = 'pharmacy_sidebar';
+		$data['title'] = $v_data['title'];
 		$this->load->view('admin/templates/general_page', $data);	
 	}
-	function create_new_type()
+	function create_new_type($page)
 	{
-		$this->form_validation->set_rules('drug_type_name', 'type name', 'is_numeric|xss_clean');
+		$this->form_validation->set_rules('drug_type_name', 'type name', 'required|xss_clean');
 
-    	if ($this->form_validation->run() == FALSE)
+    	if ($this->form_validation->run())
 		{
-
 			$checker = $this->pharmacy_model->add_type();
 
 			if($checker == TRUE)
 			{
-
 				$this->session->set_userdata("success_message","You have successfully created the type");
-				redirect('pharmacy/add_type');	
 			}
 			else
 			{
 				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
-				redirect('pharmacy/add_type');	
 			}
 
 		}
@@ -1726,9 +1696,9 @@ class Pharmacy  extends MX_Controller
 		else
 		{
 			
-			$this->session->set_userdata("error_message","Please enter the type name then try again");
-			redirect('pharmacy/add_type');					
+			$this->session->set_userdata("error_message",validation_errors());
 		}
+		redirect('pharmacy/add_type/'.$page);	
 	}
 	public function search_type()
 	{
@@ -1751,39 +1721,84 @@ class Pharmacy  extends MX_Controller
 		$this->session->unset_userdata('types_search');
 		$this->types();
 	}
-	 function update_type($drug_type_id)
+	 function update_type($drug_type_id, $page)
     {
-    	$this->form_validation->set_rules('drug_type_name', 'type name', 'is_numeric|xss_clean');
-    	if ($this->form_validation->run() == FALSE)
+    	$this->form_validation->set_rules('drug_type_name', 'type name', 'required|xss_clean');
+    	if ($this->form_validation->run())
 		{
-
 			$checker = $this->pharmacy_model->edit_type($drug_type_id);
 
 			if($checker == TRUE)
 			{
-
-				$this->session->set_userdata("success_message","You have successfully created the lab test");
-				redirect('pharmacy/add_type/'.$drug_type_id);	
+				$this->session->set_userdata("success_message","You have successfully updated the type");
 			}
 			else
 			{
 				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
-				redirect('pharmacy/add_type/'.$drug_type_id);	
+			}
+		}
+		
+		else
+		{
+			$this->session->set_userdata("error_message",validation_errors());
+		}
+		redirect('pharmacy/add_type/'.$page.'/'.$drug_type_id);	
+    }
+	function create_new_container_type($page)
+	{
+		$this->form_validation->set_rules('container_type_name', 'Container name', 'required|xss_clean');
+
+    	if ($this->form_validation->run())
+		{
+
+			$checker = $this->pharmacy_model->add_container();
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the container");
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
 			}
 
 		}
 		
 		else
 		{
-			
-			$this->session->set_userdata("error_message","Please enter the class name then try again");
-			redirect('pharmacy/add_type/'.$drug_type_id);			
+			$this->session->set_userdata("error_message",validation_errors());
 		}
+		
+		redirect('pharmacy/add_container_type/'.$page);	
+	}
+	 function update_container_type($container_type_id, $page)
+    {
+		$this->form_validation->set_rules('container_type_name', 'container name', 'required|xss_clean');
+    	if ($this->form_validation->run())
+		{
+			$checker = $this->pharmacy_model->edit_container($container_type_id);
+
+			if($checker == TRUE)
+			{
+				$this->session->set_userdata("success_message","You have successfully updated the container");
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+			}
+		}
+		
+		else
+		{
+			$this->session->set_userdata("error_message",validation_errors());
+		}
+		redirect('pharmacy/add_container_type/'.$page.'/'.$container_type_id);	
     }
     public function containers()
 	{
 		// this is it
-		$where = 'container_type_id > 0';
+		$where = 'container_type_delete = 0';
 		$containers_search = $this->session->userdata('containers_search');
 		
 		if(!empty($containers_search))
@@ -1796,7 +1811,7 @@ class Pharmacy  extends MX_Controller
 		$table = 'container_type';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/pharmacy/containers';
+		$config['base_url'] = site_url().'pharmacy/containers';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 10;
@@ -1837,68 +1852,33 @@ class Pharmacy  extends MX_Controller
 		$v_data['title'] = 'Drug containers';
 		$v_data['module'] = 0;
 		
-		
 		$data['content'] = $this->load->view('setup/drug_containers', $v_data, true);
-		
-		
-		$data['sidebar'] = 'pharmacy_sidebar';
-		
 		
 		$this->load->view('admin/templates/general_page', $data);
 		// end of it
 
 	} 
-	function add_container_type($container_type_id = NULL)
+	function add_container_type($page, $container_type_id = NULL)
 	{
 		if($container_type_id > 0)
 		{
-			$v_data['title'] = "Edit container types";
+			$v_data['title'] = "Edit container";
 			$v_data['container_type_details'] = $this->pharmacy_model->get_containers_details($container_type_id);
 		}
 		else
 		{
-			$v_data['title'] = "Add new container type";
+			$v_data['title'] = "Add new container";
 			$v_data['container_type_details'] = '';
 		}
 		
-		//$v_data['lab_test_classes'] = $this->lab_charges_model->get_lab_classes();
+		$v_data['page'] = $page;
 		$v_data['container_type_id'] = $container_type_id;
 		$data['content'] = $this->load->view('setup/add_container_type', $v_data, true);
 		
-		$data['title'] = 'Add type';
-		$data['sidebar'] = 'pharmacy_sidebar';
+		$data['title'] = $v_data['title'];
 		$this->load->view('admin/templates/general_page', $data);	
 	}
-	function create_new_container_type()
-	{
-		$this->form_validation->set_rules('container_type_name', 'type name', 'is_numeric|xss_clean');
-
-    	if ($this->form_validation->run() == FALSE)
-		{
-
-			$checker = $this->pharmacy_model->add_container_type();
-
-			if($checker == TRUE)
-			{
-
-				$this->session->set_userdata("success_message","You have successfully created the type");
-				redirect('pharmacy/add_container_type');	
-			}
-			else
-			{
-				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
-				redirect('pharmacy/add_container_type');	
-			}
-
-		}
-		
-		else
-		{
-			
-			$this->session->set_userdata("error_message","Please enter the type name then try again");
-			redirect('pharmacy/add_container_type');					
-		}
-	}
+	
 	public function search_container_type()
 	{
 		$container_type_name = $this->input->post('container_type_name');
@@ -1920,35 +1900,6 @@ class Pharmacy  extends MX_Controller
 		$this->session->unset_userdata('containers_search');
 		$this->containers();
 	}
-	 function update_container_type($container_type_id)
-    {
-    	$this->form_validation->set_rules('container_type_name', 'type name', 'is_numeric|xss_clean');
-    	if ($this->form_validation->run() == FALSE)
-		{
-
-			$checker = $this->pharmacy_model->edit_container_type($container_type_id);
-
-			if($checker == TRUE)
-			{
-
-				$this->session->set_userdata("success_message","You have successfully created the lab test");
-				redirect('pharmacy/add_container_type/'.$container_type_id);	
-			}
-			else
-			{
-				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
-				redirect('pharmacy/add_container_type/'.$container_type_id);	
-			}
-
-		}
-		
-		else
-		{
-			
-			$this->session->set_userdata("error_message","Please enter the class name then try again");
-			redirect('pharmacy/add_container_type/'.$container_type_id);			
-		}
-    }
 	
 	public function activation($type, $page, $id)
     {
@@ -2165,6 +2116,70 @@ class Pharmacy  extends MX_Controller
 		$data['title'] = 'Import drugs';
 		$data['content'] = $this->load->view('drugs/import_drugs', $v_data, true);
 		$this->load->view('admin/templates/general_page', $data);
+	}
+	
+	public function delete_brand($brand_id, $page)
+	{
+		$this->db->where('brand_id', $brand_id);
+		if($this->db->update('brand', array('brand_delete' => 1)))
+		{
+			$this->session->set_userdata('success_message', 'Band deleted successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Unable to delete brand. Please try again');
+		}
+		
+		redirect('pharmacy/brands/'.$page);
+	}
+	
+	public function delete_container_type($container_type_id, $page)
+	{
+		$this->db->where('container_type_id', $container_type_id);
+		if($this->db->update('container_type', array('container_type_delete' => 1)))
+		{
+			$this->session->set_userdata('success_message', 'Container deleted successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Unable to delete container. Please try again');
+		}
+		
+		redirect('pharmacy/containers/'.$page);
+	}
+	
+	public function delete_generic($generic_id, $page)
+	{
+		$this->db->where('generic_id', $generic_id);
+		if($this->db->update('generic', array('delete_generic' => 1)))
+		{
+			$this->session->set_userdata('success_message', 'Generic deleted successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Unable to delete generic. Please try again');
+		}
+		
+		redirect('pharmacy/generics/'.$page);
+	}
+	
+	public function delete_type($drug_type_id, $page)
+	{
+		$this->db->where('drug_type_id', $drug_type_id);
+		if($this->db->update('drug_type', array('drug_type_delete' => 1)))
+		{
+			$this->session->set_userdata('success_message', 'Type deleted successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Unable to delete type. Please try again');
+		}
+		
+		redirect('pharmacy/types/'.$page);
 	}
 }
 ?>

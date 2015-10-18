@@ -1,25 +1,15 @@
- <div class="row">
-    <div class="col-md-12">
-        <a href="<?php echo site_url();?>/pharmacy/brands" class="btn btn-primary pull-right">Back to brands</a>
-    </div>
-</div>
-<!-- Widget -->
-<div class="widget boxed">
-    <!-- Widget head -->
-    <div class="widget-head">
-        <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title?> </h4>
-        <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
+        
+<section class="panel">
+    <header class="panel-heading">
+        <h2 class="panel-title"><?php echo $title;?></h2>
+    </header>             
+    
+    <div class="panel-body">
+    	<div class="row" style="margin-bottom:10px;">
+            <div class="col-md-12">
+                <a href="<?php echo site_url();?>pharmacy/brands/<?php echo $page;?>" class="btn btn-primary pull-right btn-sm">Back to brands</a>
+            </div>
         </div>
-    
-    	<div class="clearfix"></div>
-    
-    </div>             
-    
-    <!-- Widget content -->
-    <div class="widget-content">
-    	<div class="padd">
 			<?php
             $error = $this->session->userdata('error_message');
             $success = $this->session->userdata('success_message');
@@ -37,7 +27,7 @@
             }
             if(!empty($brand_id))
             {
-                echo form_open("pharmacy/update_brand/".$brand_id, array("class" => "form-horizontal"));
+                echo form_open("pharmacy/update_brand/".$brand_id.'/'.$page, array("class" => "form-horizontal"));
 
                 if($brand_details->num_rows() > 0)
                 {
@@ -63,10 +53,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="center-align">
-                    <button type="submit" class="btn btn-info btn-lg">Update brand</button>
+                    <div class="col-md-2">
+                    	<div class="center-align">
+                            <button type="submit" class="btn btn-info btn-sm">Update brand</button>
+                        </div>
+                    </div>
                 </div>
                 
                 <?php
@@ -87,16 +78,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-2">
+                    	<div class="center-align">
+                            <button type="submit" class="btn btn-info btn-sm">Add new brand</button>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="center-align">
-                	<button type="submit" class="btn btn-info btn-lg">Add new brand</button>
-                </div>
+                
                 
                 <?php
             }
             echo form_close();
             ?>
-    	</div>
     </div>
-</div>
+</section>

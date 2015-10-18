@@ -1,5 +1,9 @@
- <section class="panel">
-   <div class="panel-body">
+<section class="panel">
+    <header class="panel-heading">
+        <h2 class="panel-title">Search drugs</h2>
+    </header>
+    
+    <div class="panel-body">
 
         <?php 
         $validation_error = validation_errors();
@@ -8,35 +12,36 @@
         {
             echo '<div class="alert alert-danger">'.$validation_error.'</div>';
         }
-        echo form_open('pharmacy/search_drugs/'.$visit_id, array('class'=>'form-inline'));
+        echo form_open('pharmacy/search_drugs/'.$visit_id.'/'.$module, array('class'=>'form-inline'));
         ?>
         
         
          <div class="row" style="margin-bottom:5px;">
-            <div class="center-align col-md-12">
+            <div class="col-md-6">
                 <div class="form-group">
-                    <label class="col-lg-12 control-label">Drug Name: </label>
+                    <label class="col-md-6 control-label">Drug Name: </label>
                     
-                    <div class="col-lg-12">
-                        <input type="text" class="col-lg-12 form-control" name="search_item" placeholder="Drug name">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="search_item" placeholder="Drug name">
                     </div>
                 </div>
+            </div>
+            <div class="col-md-6">
                  <div class="form-group">
-                    <label class="col-lg-12 control-label">Generic Name: </label>
+                    <label class="col-md-6 control-label">Generic Name: </label>
                     
-                    <div class="col-lg-12">
-                        <input type="text" class="col-lg-12 form-control" name="generic_name" placeholder="Generic name">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="generic_name" placeholder="Generic name">
                     </div>
                 </div>
             </div>
             
         </div>
-            
-            <input type="hidden" value="<?php echo $visit_id?>" name="visit_id">
+        <input type="hidden" value="<?php echo $visit_id?>" name="visit_id">
         <div class="center-align">
             <div class="form-group">
                 <?php
-                $search = $this->session->userdata('drugs_search');
+                $search = $this->session->userdata('product_search');
                 if(!empty($search))
                 {
                 ?>
@@ -49,16 +54,9 @@
     </div>
 </section>
 
-        <section class="panel">
-            <header class="panel-heading">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Drugs List</h4>
-                      <div class="widget-icons pull-right">
-                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                      </div>
-                      <div class="clearfix"></div>
-                    </header>             
-
+<section class="panel">
+    <header class="panel-heading">
+        <h2 class="panel-title">Drugs List</h2>
                 <!-- Widget content -->
                     <div class="panel-body">
                         <div class="padd">
@@ -144,10 +142,10 @@ function close_drug(val, visit_id, service_charge_id,module){
   
 function close_drug_soap(val, visit_id, service_charge_id){
 
+	window.close(this);
 	var config_url = $('#config_url').val();
-	window.open(config_url+"pharmacy/prescription/"+visit_id+"/"+service_charge_id,"Popup","height=1200,width=1300,,scrollbars=yes,"+ 
-						"directories=yes,location=yes,menubar=yes," + 
-						 "resizable=no status=no,history=no top = 50 left = 100");
+	window.opener.location.href = config_url+"pharmacy/prescription/"+visit_id+"/"+service_charge_id;
+	/*window.open(config_url+"pharmacy/prescription/"+visit_id+"/"+service_charge_id,"Popup","height=1200,width=1300,,scrollbars=yes,"+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");*/
 }
 function close_drug1(val, visit_id, service_charge_id){
 

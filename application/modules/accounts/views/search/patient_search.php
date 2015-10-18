@@ -1,5 +1,6 @@
  <section class="panel">
     <header class="panel-heading">
+        <h2 class="panel-title pull-right">Active branch: <?php echo $branch_name;?></h2>
         <h2 class="panel-title">Search Visits</h2>
     </header>
     
@@ -80,6 +81,25 @@
                         
                         <div class="col-lg-8">
                             <input type="text" class="form-control" name="othernames" placeholder="Other Names">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Branch: </label>
+                        
+                        <div class="col-lg-8">
+                            <select class="form-control" name="branch_code">
+                            	<option value="">---Select branch---</option>
+                                <?php
+									if($branches->num_rows() > 0){
+										foreach($branches->result() as $row):
+											$branch_name = $row->branch_name;
+											$branch_code = $row->branch_code;
+											echo "<option value=".$branch_code.">".$branch_name."</option>";
+										endforeach;
+									}
+								?>
+                            </select>
                         </div>
                     </div>
                 </div>

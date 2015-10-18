@@ -213,10 +213,10 @@ class Reports extends administration
 	public function search_transactions($module = NULL)
 	{
 		$visit_type_id = $this->input->post('visit_type_id');
-		$branch_code = $this->input->post('branch_code');
 		$personnel_id = $this->input->post('personnel_id');
 		$visit_date_from = $this->input->post('visit_date_from');
 		$visit_date_to = $this->input->post('visit_date_to');
+		$branch_code = $this->input->post('branch_code');
 		$this->session->set_userdata('search_branch_code', $branch_code);
 		
 		$search_title = 'Showing reports for: ';

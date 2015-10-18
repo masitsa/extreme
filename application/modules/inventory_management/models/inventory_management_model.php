@@ -235,6 +235,9 @@ class Inventory_management_model extends CI_Model
 	
 	public function edit_product($product_id)
 	{
+		$product_unitprice = $this->input->post('product_unitprice');
+		$product_unitprice_insurance = $product_unitprice * 1.2;
+		
 		$array = array(
 			'product_name'=>ucwords(strtolower($this->input->post('product_name'))),
 			'product_status'=>1,
@@ -242,7 +245,8 @@ class Inventory_management_model extends CI_Model
 			'category_id'=>$this->input->post('category_id'),
 			'quantity'=>$this->input->post('quantity'),
 			'batch_no'=>$this->input->post('batch_no'),
-			'product_unitprice'=>$this->input->post('product_unitprice'),
+			'product_unitprice'=>$product_unitprice,
+			'product_unitprice_insurance'=>$product_unitprice_insurance,
 			'store_id'=>$this->input->post('store_id'),
 			'created'=>date('Y-m-d H:i:s'),
 			'created_by'=>$this->session->userdata('personnel_id'),

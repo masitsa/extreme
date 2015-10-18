@@ -5,7 +5,7 @@
 <div class="row">
 
 	<?php if ($module == 0){?>
-        <div class="col-md-3">
+        <div class="col-md-2">
           <div class="center-align">
             <?php echo form_open("nurse/send_to_doctor/".$visit_id, array("class" => "form-horizontal"));?>
               <input type="submit" class="btn btn-large btn-primary" value="Send To Doctor" onclick="return confirm('Send to Doctor?');"/>
@@ -14,26 +14,42 @@
           
         </div>
     <?php } ?>
-        <div class="col-md-3">
+        <div class="col-md-2">
           <div class="center-align">
             <?php echo form_open("nurse/send_to_pharmacy/".$visit_id."/".$module, array("class" => "form-horizontal"));?>
               <input type="submit" class="btn btn-large btn-warning center-align" value="Send To Pharmacy" onclick="return confirm('Send to Pharmacy?');"/>
             <?php echo form_close();?>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
           <div class="center-align">
            <?php echo form_open("nurse/send_to_labs/".$visit_id."/".$module, array("class" => "form-horizontal"));?>
               <input type="submit" class="btn btn-large btn-success center-align" value="Send To Laboratory" onclick="return confirm('Send to Laboratory?');"/>
             <?php echo form_close();?>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
           <div class="center-align">
             <?php echo form_open("nurse/send_to_accounts/".$visit_id."/".$module, array("class" => "form-horizontal"));?>
               <input type="submit" class="btn btn-large btn-danger center-align" value="Send To Accounts" onclick="return confirm('Send to Accounts?');"/>
             <?php echo form_close();?>
           </div>
+        </div>
+        <div class="col-md-2">
+          <div class="center-align">
+            <?php echo form_open("nurse/send_to_xray/".$visit_id."/".$module, array("class" => "form-horizontal"));?>
+              <input type="submit" class="btn btn-large btn-primary" value="Send To Xray" onclick="return confirm('Send to X-Ray?');"/>
+            <?php echo form_close();?>
+          </div>
+          
+        </div>
+        <div class="col-md-2">
+          <div class="center-align">
+            <?php echo form_open("nurse/send_to_ultrasound/".$visit_id."/".$module, array("class" => "form-horizontal"));?>
+              <input type="submit" class="btn btn-large btn-default" value="Send To Ultrasound" onclick="return confirm('Send to Ultrasound?');"/>
+            <?php echo form_close();?>
+          </div>
+          
         </div>
 
     </div>
@@ -214,36 +230,52 @@
               }else{?>
               <div class="row">
                 <?php if ($module == 0){?>
-                        <div class="col-md-3">
-                          <div class="center-align">
-                            <?php echo form_open("nurse/send_to_doctor/".$visit_id, array("class" => "form-horizontal"));?>
-                              <input type="submit" class="btn btn-large btn-primary" value="Send To Doctor" onclick="return confirm('Send to Doctor?');"/>
-                            <?php echo form_close();?>
-                          </div>
-                          
-                        </div>
-                    <?php } ?>
-                        <div class="col-md-3">
-                          <div class="center-align">
-                            <?php echo form_open("nurse/send_to_pharmacy/".$visit_id."/".$module, array("class" => "form-horizontal"));?>
-                              <input type="submit" class="btn btn-large btn-warning center-align" value="Send To Pharmacy" onclick="return confirm('Send to Pharmacy?');"/>
-                            <?php echo form_close();?>
-                          </div>
-                        </div>
-                        <div class="col-md-3">
-                          <div class="center-align">
-                           <?php echo form_open("nurse/send_to_labs/".$visit_id."/".$module, array("class" => "form-horizontal"));?>
-                              <input type="submit" class="btn btn-large btn-success center-align" value="Send To Laboratory" onclick="return confirm('Send to Laboratory?');"/>
-                            <?php echo form_close();?>
-                          </div>
-                        </div>
-                        <div class="col-md-3">
-                          <div class="center-align">
-                            <?php echo form_open("nurse/send_to_accounts/".$visit_id."/".$module, array("class" => "form-horizontal"));?>
-                              <input type="submit" class="btn btn-large btn-danger center-align" value="Send To Accounts" onclick="return confirm('Send to Accounts?');"/>
-                            <?php echo form_close();?>
-                          </div>
-                        </div>
+                    <div class="col-md-2">
+                      <div class="center-align">
+                        <?php echo form_open("nurse/send_to_doctor/".$visit_id, array("class" => "form-horizontal"));?>
+                          <input type="submit" class="btn btn-large btn-primary" value="Send To Doctor" onclick="return confirm('Send to Doctor?');"/>
+                        <?php echo form_close();?>
+                      </div>
+                      
+                    </div>
+                <?php } ?>
+                    <div class="col-md-2">
+                      <div class="center-align">
+                        <?php echo form_open("nurse/send_to_pharmacy/".$visit_id."/".$module, array("class" => "form-horizontal"));?>
+                          <input type="submit" class="btn btn-large btn-warning center-align" value="Send To Pharmacy" onclick="return confirm('Send to Pharmacy?');"/>
+                        <?php echo form_close();?>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="center-align">
+                       <?php echo form_open("nurse/send_to_labs/".$visit_id."/".$module, array("class" => "form-horizontal"));?>
+                          <input type="submit" class="btn btn-large btn-success center-align" value="Send To Laboratory" onclick="return confirm('Send to Laboratory?');"/>
+                        <?php echo form_close();?>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="center-align">
+                        <?php echo form_open("nurse/send_to_accounts/".$visit_id."/".$module, array("class" => "form-horizontal"));?>
+                          <input type="submit" class="btn btn-large btn-danger center-align" value="Send To Accounts" onclick="return confirm('Send to Accounts?');"/>
+                        <?php echo form_close();?>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="center-align">
+                        <?php echo form_open("nurse/send_to_xray/".$visit_id."/".$module, array("class" => "form-horizontal"));?>
+                          <input type="submit" class="btn btn-large btn-primary" value="Send To Xray" onclick="return confirm('Send to X-Ray?');"/>
+                        <?php echo form_close();?>
+                      </div>
+                      
+                    </div>
+                    <div class="col-md-2">
+                      <div class="center-align">
+                        <?php echo form_open("nurse/send_to_ultrasound/".$visit_id."/".$module, array("class" => "form-horizontal"));?>
+                          <input type="submit" class="btn btn-large btn-default" value="Send To Ultrasound" onclick="return confirm('Send to Ultrasound?');"/>
+                        <?php echo form_close();?>
+                      </div>
+                      
+                    </div>
 
                     </div>
                  <?php } ?>

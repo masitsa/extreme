@@ -29,7 +29,7 @@ class Ultrasound  extends MX_Controller
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit.visit_date = \''.date('Y-m-d').'\'';
 		
 		$table = 'visit_department, visit, patients';
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 6, 0);
@@ -50,7 +50,7 @@ class Ultrasound  extends MX_Controller
 	
 	public function ultrasound_queue($page_name = 12)
 	{
-		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 11 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\' AND (service.service_name = "Ultrasound" OR service.service_name = "ultrasound") AND visit_department.department_id = service.department_id';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 11 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit_type.visit_type_id = visit.visit_type AND visit.visit_date = \''.date('Y-m-d').'\' AND (service.service_name = "Ultrasound" OR service.service_name = "ultrasound") AND visit_department.department_id = service.department_id';
 		
 		$table = 'visit_department, visit, patients, visit_type, service';
 		
@@ -118,7 +118,7 @@ class Ultrasound  extends MX_Controller
 	}
 	public function queue_cheker($page_name = NULL)
 	{
-		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$table = 'visit_department, visit, patients';
 		$items = "*";
 		$order = "visit.visit_id";

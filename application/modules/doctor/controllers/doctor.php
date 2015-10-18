@@ -38,7 +38,7 @@ class Doctor  extends MX_Controller
 		/*$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit.inpatient = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = \''.$this->session->userdata('personnel_id').'\'';
+		$where = 'visit.inpatient = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = \''.$this->session->userdata('personnel_id').'\'';
 		
 		$table = 'visit_department, visit, patients';
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 6, 0);
@@ -307,7 +307,7 @@ class Doctor  extends MX_Controller
 	
 	public function doctor_queue($page_name = NULL)
 	{
-		$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = \''.$this->session->userdata('personnel_id').'\'';
+		$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = \''.$this->session->userdata('personnel_id').'\'';
 		
 		$table = 'visit_department, visit, patients, visit_type';
 		$patient_visit_search = $this->session->userdata('patient_visit_search');

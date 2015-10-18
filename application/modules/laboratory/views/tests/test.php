@@ -1,10 +1,72 @@
 
     <section class="panel panel-featured panel-featured-info">
         <header class="panel-heading">
-            <h2 class="panel-title">Tests for <?php echo $patient;?></h2>
+            <h2 class="panel-title">Tests</h2>
         </header>
 
         <div class="panel-body">
+		
+            <div class="well well-sm info">
+                <h5 style="margin:0;">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <strong>First name:</strong>
+                                </div>
+                                <div class="col-lg-6">
+                                    <?php echo $patient_surname;?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <strong>Other names:</strong>
+                                </div>
+                                <div class="col-lg-6">
+                                    <?php echo $patient_othernames;?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <strong>Gender:</strong>
+                                </div>
+                                <div class="col-lg-6">
+                                    <?php echo $gender;?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <strong>Age:</strong>
+                                </div>
+                                <div class="col-lg-6">
+                                    <?php echo $age;?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <strong>Account balance:</strong>
+                                </div>
+                                <div class="col-lg-6">
+                                    Kes <?php echo number_format($account_balance, 2);?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </h5>
+            </div>
+            
             <div class="tabbable" style="margin-bottom: 18px;">
               <ul class="nav nav-tabs nav-justified">
                 <li class="active"><a href="#tests-pane" data-toggle="tab">Tests</a></li>
@@ -16,9 +78,22 @@
 						<div class="center-align">
 							<?php
 					        	if(($visit == 2)||(($visit == 3))||(($visit == 1))||(($visit == 4))){
-									echo "<input type='button' onClick='open_window_lab(8, ".$visit_id.")' value='Add Test' class='btn btn-large btn-primary'>";
+									echo "<input type='button' onClick='open_window_lab(8, ".$visit_id.")' value='Add Test' class='btn btn-primary'>";
 								}
-							
+								
+								if($close_card == 0)
+								{
+									?>
+									<a href="<?php echo site_url().'laboratory/hold_card/'.$visit_id;?>" class="btn btn-default">Hold card</a>
+									<?php
+								}
+								
+								else
+								{
+									?>
+									<a href="<?php echo site_url().'laboratory/release_card/'.$visit_id;?>" class="btn btn-warning">Release card</a>
+									<?php
+								}
 							?>
 						</div>
 					</div>

@@ -191,7 +191,7 @@ class Ultrasound_model extends CI_Model
 		$table = "visit_charge, service, service_charge";
 		$where = "(service.service_name = 'Ultrasound' OR service.service_name = 'ultrasound')
 		AND visit_charge.service_charge_id = service_charge.service_charge_id 
-		AND service_charge.service_id = service.service_id AND service.branch_code = '".$this->session->userdata('branch_code')."' AND visit_charge.visit_id = ". $visit_id;
+		AND service_charge.service_id = service.service_id AND visit_charge.visit_id = ". $visit_id;
 		$items = "visit_charge.visit_charge_id";
 		$order = "visit_charge.visit_charge_id";
 		
@@ -204,7 +204,7 @@ class Ultrasound_model extends CI_Model
 		$table = "visit_charge, service, service_charge";
 		$where = "visit_charge_delete = 0 AND (service.service_name = 'Ultrasound' OR service.service_name = 'ultrasound')
 		AND visit_charge.service_charge_id = service_charge.service_charge_id 
-		AND service_charge.service_id = service.service_id AND service.branch_code = '".$this->session->userdata('branch_code')."' AND visit_charge.visit_id = ". $visit_id;
+		AND service_charge.service_id = service.service_id AND visit_charge.visit_id = ". $visit_id;
 		$items = "*";
 		$order = "visit_charge.visit_id";
 		

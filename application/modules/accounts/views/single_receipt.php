@@ -264,7 +264,7 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
 									}
 									?>
 									<tr>
-										<td colspan="2"><?php echo $service_name;?></td>
+										<td colspan="2"><?php echo $service_name;?> <?php echo $payment_method;?> <?php echo $transaction_code;?></td>
 										<td><?php echo number_format($amount_paid, 2);?></td>
 									</tr>
 									<?php

@@ -33,7 +33,7 @@ class Reception  extends MX_Controller
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit.visit_delete = 0 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\' AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\' AND visit.visit_date = \''.date('Y-m-d').'\'';
 		
 		$table = 'visit, patients, visit_type';
 		$query = $this->reception_model->get_all_ongoing_visits2($table, $where, 10, 0);
@@ -203,7 +203,7 @@ class Reception  extends MX_Controller
 				}
 				else
 				{
-					$where .= ' AND visit.close_card = 0';	
+					$where .= ' AND (visit.close_card = 0 OR visit.close_card = 7)';	
 				}
 				
 				//visits of the current day
@@ -317,12 +317,12 @@ class Reception  extends MX_Controller
 	public function general_queue($page_name)
 	{
 		$segment = 4;
-		
-		$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
+		// AND visit.visit_date = \''.date('Y-m-d').'\'
+		$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
 		
 		if(($page_name == 'laboratory') || ($page_name == 'radiology') || ($page_name == 'pharmacy'))
 		{
-			$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit_type.visit_type_id = visit.visit_type';
+			$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit_type.visit_type_id = visit.visit_type';
 		}
 		
 		$table = 'visit_department, visit, patients, visit_type';
@@ -383,6 +383,8 @@ class Reception  extends MX_Controller
 			$v_data['title'] = 'General Queue';
 		}
 		
+		$v_data['wards'] = $this->reception_model->get_wards();
+		$v_data['doctor'] = $this->reception_model->get_doctor();
 		$v_data['page_name'] = $page_name;
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();
@@ -523,10 +525,10 @@ class Reception  extends MX_Controller
 	public function set_visit($primary_key)
 	{
 		$v_data["patient_id"] = $primary_key;
-		$v_data['wards'] = $this->reception_model->get_wards();
 		$v_data['visit_departments'] = $this->reception_model->get_visit_departments();
 		$v_data['visit_types'] = $this->reception_model->get_visit_types();
 		$v_data['charge'] = $this->reception_model->get_service_charges($primary_key);
+		$v_data['wards'] = $this->reception_model->get_wards();
 		$v_data['doctor'] = $this->reception_model->get_doctor();
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['patient_insurance'] = $this->reception_model->get_patient_insurance($primary_key);
@@ -551,7 +553,7 @@ class Reception  extends MX_Controller
 		$visit_type_id = $this->input->post("visit_type_id"); 
 		
 		if(isset($_POST['department_id'])){
-			if(($_POST['department_id'] == 7) || ($_POST['department_id'] == 14))
+			if(($_POST['department_id'] == 2) || ($_POST['department_id'] == 7) || ($_POST['department_id'] == 14))
 			{
 				//if nurse visit (7) or theatre (14) service must be selected
 				$this->form_validation->set_rules('personnel_id', 'Doctor', 'is_natural_no_zero');
@@ -618,7 +620,7 @@ class Reception  extends MX_Controller
 				$visit_id = $this->reception_model->create_visit($visit_date, $patient_id, $doctor_id, $insurance_limit, $insurance_number, $visit_type_id, $timepicker_start, $timepicker_end, $appointment_id, $close_card);
 				
 				//save consultation charge for nurse visit, counseling or theatre
-				if($_POST['department_id'] == 7 || $_POST['department_id'] == 12 || $_POST['department_id'] == 14)
+				if($_POST['department_id'] == 2 || $_POST['department_id'] == 7 || $_POST['department_id'] == 12 || $_POST['department_id'] == 14)
 				{
 					$this->reception_model->save_visit_consultation_charge($visit_id, $service_charge_id);	
 				}
@@ -1107,18 +1109,8 @@ class Reception  extends MX_Controller
 	
 	public function end_visit($visit_id, $page = NULL)
 	{
-		$data = array(
-        	"close_card" => 1,
-        	"visit_time_out" => date('Y-m-d H:i:s')
-    	);
-		$table = "visit";
-		$key = $visit_id;
-		$this->database->update_entry($table, $data, $key);
-		
-		//sync data
-		$response = $this->sync_model->syn_up_on_closing_visit($visit_id);
-		
-		if($response)
+		//check if card is held
+		if($this->reception_model->is_card_held($visit_id))
 		{
 			if($page == 0)
 			{
@@ -1148,29 +1140,71 @@ class Reception  extends MX_Controller
 		
 		else
 		{
-			if($page == 0)
-			{
-				redirect('reception/visit_list/0');
-			}
+			$data = array(
+				"close_card" => 1,
+				"visit_time_out" => date('Y-m-d H:i:s')
+			);
+			$table = "visit";
+			$key = $visit_id;
+			$this->database->update_entry($table, $data, $key);
 			
-			if($page == 1)
-			{
-				redirect('accounts/accounts_queue');
-			}
+			//sync data
+			$response = $this->sync_model->syn_up_on_closing_visit($visit_id);
 			
-			if($page == 2)
+			if($response)
 			{
-				redirect('accounts/accounts_unclosed_queue');
-			}
-			
-			if($page == 3)
-			{
-				redirect('accounts/accounts_closed_queue');
+				if($page == 0)
+				{
+					redirect('reception/visit_list/0');
+				}
+				
+				if($page == 1)
+				{
+					redirect('accounts/accounts_queue');
+				}
+				
+				if($page == 2)
+				{
+					redirect('accounts/accounts_unclosed_queue');
+				}
+				
+				if($page == 3)
+				{
+					redirect('reception/visit_list/3');
+				}
+				
+				else
+				{
+					redirect('reception/visit_list/'.$page);
+				}
 			}
 			
 			else
 			{
-				redirect('reception/visit_list/'.$page);
+				if($page == 0)
+				{
+					redirect('reception/visit_list/0');
+				}
+				
+				if($page == 1)
+				{
+					redirect('accounts/accounts_queue');
+				}
+				
+				if($page == 2)
+				{
+					redirect('accounts/accounts_unclosed_queue');
+				}
+				
+				if($page == 3)
+				{
+					redirect('accounts/accounts_closed_queue');
+				}
+				
+				else
+				{
+					redirect('reception/visit_list/'.$page);
+				}
 			}
 		}
 	}
@@ -1633,7 +1667,7 @@ class Reception  extends MX_Controller
 	{
 		$segment = 4;
 		
-		$where = 'visit.ward_id = ward.ward_id AND visit.inpatient = 1 AND visit.visit_delete = 0 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
+		$where = 'visit.ward_id = ward.ward_id AND visit.inpatient = 1 AND visit.visit_delete = 0 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
 		
 		$table = 'visit, patients, visit_type, ward';
 		
@@ -1788,6 +1822,51 @@ class Reception  extends MX_Controller
 	public function change_items()
 	{
 		$this->reception_model->changing_to_osh();
+	}
+	
+	public function change_patient_visit($visit_id, $visit_type_id)
+	{
+		$this->form_validation->set_rules('visit_date', 'Admission Date', 'required');
+		$this->form_validation->set_rules('ward_id', 'Ward', 'required|is_natural_no_zero');
+		$this->form_validation->set_rules('personnel_id', 'Doctor', 'required|is_natural_no_zero');
+		
+		$ward_id = $this->input->post("ward_id"); 
+		$doctor_id = $this->input->post("personnel_id");
+		
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->session->set_userdata('error_message', validation_errors());
+			redirect('reception/general-queue');
+		}
+		else
+		{
+			$visit_date = $this->input->post("visit_date");
+			//create visit
+			if($this->reception_model->change_patient_visit($visit_date, $doctor_id, $visit_id, $ward_id))
+			{
+				//save admission fee
+				if($this->reception_model->save_admission_fee($visit_type_id, $visit_id))
+				{
+					//save consultation fee
+					//$this->reception_model->save_visit_consultation_charge($visit_id, $service_charge_id);
+					
+					$this->session->set_userdata('success_message', 'Inpatient visit initiated successfully');
+					redirect('reception/inpatients');
+				}
+				
+				else
+				{
+					$this->session->set_userdata('error_message', 'Unable to save admission fee');
+					redirect('reception/general-queue');
+				}
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'Unable to change to inpatient. Please try again');
+				redirect('reception/general-queue');
+			}
+		}
 	}
 }
 ?>

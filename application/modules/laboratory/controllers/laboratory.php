@@ -29,7 +29,7 @@ class Laboratory  extends MX_Controller
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit.visit_date = \''.date('Y-m-d').'\'';
 		
 		$table = 'visit_department, visit, patients';
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 6, 0);
@@ -50,10 +50,10 @@ class Laboratory  extends MX_Controller
 	public function lab_queue($page_name = 12)
 	{
 		//with branch code
-		/*$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\' AND visit.visit_date = \''.date('Y-m-d').'\'';*/
+		/*$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\' AND visit.visit_date = \''.date('Y-m-d').'\'';*/
 		
 		//without branch code
-		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 18 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 18 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit_type.visit_type_id = visit.visit_type AND visit.visit_date = \''.date('Y-m-d').'\'';
 		
 		$table = 'visit_department, visit, patients, visit_type';
 		
@@ -122,7 +122,7 @@ class Laboratory  extends MX_Controller
 	}
 	public function queue_cheker($page_name = NULL)
 	{
-		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$table = 'visit_department, visit, patients';
 		$items = "*";
 		$order = "visit.visit_id";
@@ -141,18 +141,25 @@ class Laboratory  extends MX_Controller
 	}
 	public function test($visit_id)
 	{
+		$v_data = array('visit_id'=>$visit_id,'visit'=>1);
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
-		$visit_type = $patient['visit_type'];
-		$patient_type = $patient['patient_type'];
-		$patient_othernames = $patient['patient_othernames'];
-		$patient_surname = $patient['patient_surname'];
+		$v_data['patient_type'] = $patient['patient_type'];
+		$v_data['patient_othernames'] = $patient['patient_othernames'];
+		$v_data['patient_surname'] = $patient['patient_surname'];
+		$v_data['patient_type_id'] = $patient['visit_type_id'];
+		$v_data['account_balance'] = $patient['account_balance'];
+		$v_data['visit_type_name'] = $patient['visit_type_name'];
+		$v_data['patient_id'] = $patient['patient_id'];
+		$v_data['close_card'] = $patient['close_card'];
 		$patient_date_of_birth = $patient['patient_date_of_birth'];
 		$age = $this->reception_model->calculate_age($patient_date_of_birth);
+		$visit_date = $this->reception_model->get_visit_date($visit_id);
 		$gender = $patient['gender'];
+		$visit_date = date('jS M Y',strtotime($visit_date));
+		$v_data['age'] = $age;
+		$v_data['visit_date'] = $visit_date;
+		$v_data['gender'] = $gender;
 		
-		$patient = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
-		
-		$v_data = array('visit_id'=>$visit_id,'visit'=>1,'patient'=>$patient);
 		$data['content'] = $this->load->view('tests/test', $v_data, true);
 		$data['sidebar'] = 'lab_sidebar';
 		$data['title'] = 'Laboratory Test List';
@@ -749,6 +756,38 @@ class Laboratory  extends MX_Controller
 	{
 		$this->session->unset_userdata('patient_visit_search');
 		$this->lab_queue();
+	}
+	
+	public function hold_card($visit_id)
+	{
+		$this->db->where('visit_id', $visit_id);
+		if($this->db->update('visit', array('close_card' => 7, 'held_by' => $this->session->userdata('personnel_id'))))
+		{
+			$this->session->set_userdata('success_message', 'Card held successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Unable to hold card. Please try again');
+		}
+		
+		redirect('laboratory/test/'.$visit_id);
+	}
+	
+	public function release_card($visit_id)
+	{
+		$this->db->where('visit_id', $visit_id);
+		if($this->db->update('visit', array('close_card' => 0)))
+		{
+			$this->session->set_userdata('success_message', 'Card released successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Unable to release card. Please try again');
+		}
+		
+		redirect('laboratory/test/'.$visit_id);
 	}
 }
 ?>

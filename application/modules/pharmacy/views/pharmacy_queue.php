@@ -1,21 +1,12 @@
 <!-- search -->
 <?php echo $this->load->view('search/search_patients', '', TRUE);?>
 <!-- end search -->
- 
  <section class="panel">
     <header class="panel-heading">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> for <?php echo date('jS M Y',strtotime(date('Y-m-d')));?></h4>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-          </div>
-          <div class="clearfix"></div>
-        </header>             
-
-        <!-- Widget content -->
-        <div class="panel-body">
-          <div class="padd">
-          
+        <h2 class="panel-title"><?php echo $title;?> for <?php echo date('jS M Y',strtotime(date('Y-m-d')));?></h2>
+    </header>             
+    
+    <div class="panel-body">
 <?php
 		$search = $this->session->userdata('visit_search');
 		
@@ -68,16 +59,14 @@
 				$strath_no = $row->strath_no;
 				$visit_type_id = $row->visit_type_id;
 				$visit_type = $row->visit_type;
+				$visit_table_visit_type = $visit_type;
+				$patient_table_visit_type = $visit_type_id;
 				$coming_from = $this->reception_model->coming_from($visit_id);
-				$visit_created = date('H:i a',strtotime($row->visit_created));
-				
-				$patient = $this->reception_model->patient_names2($patient_id, $visit_id);
-				$visit_type = $patient['visit_type'];
-				$patient_type = $patient['patient_type'];
-				$patient_othernames = $patient['patient_othernames'];
-				$patient_surname = $patient['patient_surname'];
-				$patient_date_of_birth = $patient['patient_date_of_birth'];
-				$gender = $patient['gender'];
+				$sent_to = $this->reception_model->going_to($visit_id);
+				$visit_type_name = $row->visit_type_name;
+				$patient_othernames = $row->patient_othernames;
+				$patient_surname = $row->patient_surname;
+				$patient_date_of_birth = $row->patient_date_of_birth;
 				
 				//creators and editors
 				if($personnel_query->num_rows() > 0)
@@ -123,7 +112,7 @@
 						<tr>
 							<td>'.$count.'</td>
 							<td>'.$patient_surname.' '.$patient_othernames.'</td>
-							<td>'.$visit_type.'</td>
+							<td>'.$visit_type_name.'</td>
 							<td>'.$visit_time.'</td>
 							<td>'.$coming_from.'</td>
 							<td>'.$doctor.'</td>
@@ -153,11 +142,10 @@
           
           <div class="widget-foot">
                                 
-				<?php if(isset($links)){echo $links;}?>
-            
-                <div class="clearfix"></div> 
-            
-            </div>
+			<?php if(isset($links)){echo $links;}?>
+        
+            <div class="clearfix"></div> 
+        
         </div>
         <!-- Widget ends -->
 

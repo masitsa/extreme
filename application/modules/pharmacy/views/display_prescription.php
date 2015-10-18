@@ -36,11 +36,10 @@ foreach($rs as $key):
 
 	$s++;
 	$rs2 = $this->pharmacy_model->get_drug($service_charge_id);
-	
+	$dose = '';
 	foreach ($rs2 as $key2) {
 		$dose = $key2->unit_of_measure;
 	   // $drug_type_name = $key2->drug_type_name;
-
 	}
 	
 

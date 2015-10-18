@@ -34,9 +34,9 @@ class Reports_model extends CI_Model
 			$date = date('Y-m-d');
 		}
 		//select the user by email from the database
-		$this->db->select('SUM(visit_charge_units*visit_charge_amount) AS total_amount');
-		$this->db->where('visit_charge_timestamp LIKE \''.$date.'%\'');
-		$this->db->from('visit_charge');
+		$this->db->select('SUM(amount_paid) AS total_amount');
+		$this->db->where('payment_type = 1 AND payment_method_id = 2 AND payment_created = \''.$date.'\'');
+		$this->db->from('payments');
 		$query = $this->db->get();
 		
 		$result = $query->row();

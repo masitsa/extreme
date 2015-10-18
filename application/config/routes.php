@@ -248,7 +248,10 @@ $route['hospital-administration/deactivate-insurance-company/(:num)'] = 'hospita
 /*
 *	Accounts Routes
 */
+$route['accounts/hospital-accounts'] = 'accounts/hospital_accounts/index';
 $route['accounts/petty-cash'] = 'accounts/petty_cash/index';
+$route['accounts/petty-cash/(:any)/(:any)'] = 'accounts/petty_cash/index/$1/$2';
+$route['accounts/petty-cash/(:any)'] = 'accounts/petty_cash/index/$1';
 $route['accounts/change-branch'] = 'accounts/payroll/change_branch';
 $route['accounts/print-payroll/(:num)'] = 'accounts/payroll/print_payroll/$1';
 $route['accounts/export-payroll/(:num)'] = 'accounts/payroll/export_payroll/$1';
@@ -397,6 +400,7 @@ $route['microfinance/deactivate-individual-plan/(:num)/(:num)'] = 'microfinance/
 *	reception Routes
 */
 $route['reception'] = 'reception/index';
+$route['reception/unclosed-visits'] = 'reception/visit_list/3';
 $route['reception/dashboard'] = 'reception/index';
 $route['reception/patients-list'] = 'reception/patients';
 $route['reception/deleted-visits'] = 'reception/visit_list/2';
@@ -517,12 +521,13 @@ $route['pharmacy-setup/types'] = 'pharmacy/types';
 *	Inventory Routes
 */
 $route['cash-office'] = 'accounts/index';
+$route['accounts/accounts-queue'] = 'accounts/accounts_queue/12';
 $route['cash-office/dashboard'] = 'accounts/index';
 $route['cash-office/accounts-queue'] = 'accounts/accounts_queue/12';
 $route['cash-office/general-queue'] = 'reception/general_queue/accounts';
 $route['cash-office/closed-visits'] = 'accounts/accounts_closed_visits';
 $route['cash-office/inpatients'] = 'reception/inpatients/accounts';
-$route['cash-office/un-closed-visits'] = 'accounts/payroll/accounts_unclosed_queue';
+$route['cash-office/un-closed-visits'] = 'accounts/accounts_unclosed_queue';
 
 
 /*

@@ -2,7 +2,11 @@
     <header class="panel-heading">
         <h2 class="panel-title pull-left">Edit Product</h2>
         <div class="widget-icons pull-right">
+        	<?php if($module == 'a'){?>
+             <a href="<?php echo site_url().'pharmacy-setup/inventory';?>" class="btn btn-sm btn-info">Back to inventory</a>
+        	<?php }else{?>
              <a href="<?php echo site_url().'inventory/products';?>" class="btn btn-sm btn-info">Back to products</a>
+        	<?php }?>
         </div>
         <div class="clearfix"></div>
     </header>

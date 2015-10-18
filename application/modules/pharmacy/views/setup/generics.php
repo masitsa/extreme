@@ -2,34 +2,40 @@
 <!-- end search -->
  <div class="row">
 	<div class="col-md-12">
-		<a href="<?php echo site_url();?>/pharmacy/add_generic" class="btn btn-success pull-right">Add new generic</a>
+		<a href="<?php echo site_url();?>pharmacy/add_generic/<?php echo $page;?>" class="btn btn-success pull-right btn-sm">Add new generic</a>
 	</div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
-
-      <!-- Widget -->
-      <div class="widget boxed">
-        <!-- Widget head -->
-        <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-          </div>
-          <div class="clearfix"></div>
-        </div>             
-
-        <!-- Widget content -->
-        <div class="widget-content">
-          <div class="padd">
+        <section class="panel">
+            <header class="panel-heading">
+                <h2 class="panel-title"><?php echo $title;?></h2>
+            </header>             
+            
+            <div class="panel-body">
           
 <?php
 		$search = $this->session->userdata('generics_search');
 		
+		$error = $this->session->userdata('error_message');
+		$success = $this->session->userdata('success_message');
+		
+		if(!empty($error))
+		{
+			echo '<div class="alert alert-danger">'.$error.'</div>';
+			$this->session->unset_userdata('error_message');
+		}
+		
+		if(!empty($success))
+		{
+			echo '<div class="alert alert-success">'.$success.'</div>';
+			$this->session->unset_userdata('success_message');
+		}
+		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/pharmacy/close_generic_search" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'pharmacy/close_generic_search" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
 	
@@ -41,7 +47,7 @@
 			
 			$result .= 
 				'
-					<table class="table table-hover table-bordered ">
+					<table class="table table-hover table-bordered table-striped table-condensed">
 					  <thead>
 						<tr>
 						  <th>#</th>
@@ -52,37 +58,22 @@
 					  <tbody>
 				';
 			
-			$count = 1;
 			foreach ($query->result() as $row)
 			{
+				$count++;
 				$generic_id = $row->generic_id;
 				$generic_name = $row->generic_name;
 				$generic_delete = $row->delete_generic;
-				
-				// end of diagnosis
-				
-				if($generic_delete == 1)
-				{
-					$buttons = '<td><a href="'.site_url().'/pharmacy/delete_generic/'.$generic_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Send to accounts?\');">Deactivate generic</a></td>';
-				}
-				else
-				{
-					$buttons = '<td><a href="'.site_url().'/pharmacy/delete_generic/'.$generic_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Send to accounts?\');">Activate generic</a></td>';
-				}
-				
 				
 				$result .= 
 					'
 						<tr>
 							<td>'.$count.'</td>
 							<td>'.$generic_name.'</td>
-							<td><a href="'.site_url().'/pharmacy/add_generic/'.$generic_id.'" class="btn btn-sm btn-success">Edit</a></td>
-							
-							
-						
+							<td><a href="'.site_url().'pharmacy/add_generic/'.$page.'/'.$generic_id.'" class="btn btn-sm btn-success">Edit</a></td>
+							<td><a href="'.site_url().'pharmacy/delete_generic/'.$generic_id.'/'.$page.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Delete '.$generic_name.'?\');">Delete generic</a></td>
 						</tr> 
 					';
-				$count++;
 			}
 			
 			$result .= 
@@ -94,7 +85,7 @@
 		
 		else
 		{
-			$result .= "There are no previous prescriptions";
+			$result .= "There are no generics names";
 		}
 		
 		echo $result;
@@ -103,14 +94,11 @@
           
           <div class="widget-foot">
                                 
-				<?php if(isset($links)){echo $links;}?>
-            
-                <div class="clearfix"></div> 
-            
-            </div>
+			<?php if(isset($links)){echo $links;}?>
+        
+            <div class="clearfix"></div> 
+        
         </div>
-        <!-- Widget ends -->
-
-      </div>
+      </section>
     </div>
   </div>

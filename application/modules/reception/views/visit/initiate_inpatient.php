@@ -145,7 +145,7 @@
                                             <span class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </span>
-                                            <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="visit_date" placeholder="Visit Date" value="<?php echo date('Y-m-d');?>">
+                                            <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="visit_date" placeholder="Admission Date" value="<?php echo date('Y-m-d');?>">
                                         </div>
 									</div>
 								</div>

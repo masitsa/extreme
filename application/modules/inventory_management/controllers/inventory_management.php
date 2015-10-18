@@ -39,7 +39,7 @@ class Inventory_management  extends MX_Controller
 		if($store_priviledges->num_rows() > 0)
 		{
 			$count = 0;
-			 $number_rows = $store_priviledges->num_rows();
+			$number_rows = $store_priviledges->num_rows();
 
 			foreach ($store_priviledges->result() as $key) {
 				# code...
@@ -83,6 +83,7 @@ class Inventory_management  extends MX_Controller
 					$addition .= ''.$delimeter.'store.store_id = '.$store_id.'';
 				}
 			}
+			
 			if($store_parent > 0)
 			{
 				$v_data['type'] = 1;
@@ -96,8 +97,6 @@ class Inventory_management  extends MX_Controller
 				$table = '';
 				$constant  = ' AND product.store_id = store.store_id AND ';
 			}
-
-
 		}
 		else
 		{
@@ -109,7 +108,7 @@ class Inventory_management  extends MX_Controller
 
 		$where = 'product.category_id = category.category_id '.$constant.' '.$addition.' ';
 		$table = 'product, category, store'.$table;
-
+		
 		$product_search = $this->session->userdata('product_search');
 		
 		if(!empty($product_search))
@@ -238,7 +237,7 @@ class Inventory_management  extends MX_Controller
 	*	Edit product
 	*
 	*/
-	public function edit_product($products_id)
+	public function edit_product($products_id, $module = NULL)
 	{
 		//form validation rules
 		$this->form_validation->set_rules('product_name', 'product Name', 'required|xss_clean');
@@ -254,7 +253,16 @@ class Inventory_management  extends MX_Controller
 			if($this->inventory_management_model->edit_product($products_id))
 			{
 				$this->session->userdata('success_message', 'product has been editted successfully');
-				redirect('inventory/products');
+				
+				//back to pharmacy
+				if($module == 'a')
+				{
+					redirect('pharmacy-setup/inventory');
+				}
+				else
+				{
+					redirect('inventory/products');
+				}
 			}
 			
 			else
@@ -271,23 +279,22 @@ class Inventory_management  extends MX_Controller
 		//load the interface
 		$data['title'] = 'Edit product';
 		$v_data['title'] = 'Edit product';
-		$data['sidebar'] = 'pharmacy_sidebar';
+		$v_data['module'] = $module;
 		$product_details = $this->inventory_management_model->get_product_details($products_id);
 		
-		
-			$v_data['product'] = $product_details;
-			$v_data['products_id'] = $products_id;
-			$v_data['all_stores'] = $this->stores_model->all_stores();
-			$v_data['all_categories'] = $this->categories_model->all_categories();
-			$v_data['drug_types'] = $this->pharmacy_model->get_drug_forms();
-			$v_data['drug_brands'] = $this->pharmacy_model->get_drug_brands();
-			$v_data['drug_classes'] = $this->pharmacy_model->get_drug_classes();
-			$v_data['drug_generics'] = $this->pharmacy_model->get_drug_generics();
-			$v_data['drug_dose_units'] = $this->pharmacy_model->get_drug_dose_units();
-			$v_data['admin_routes'] = $this->pharmacy_model->get_admin_route();
-			$v_data['consumption'] = $this->pharmacy_model->get_consumption();
+		$v_data['product'] = $product_details;
+		$v_data['products_id'] = $products_id;
+		$v_data['all_stores'] = $this->stores_model->all_stores();
+		$v_data['all_categories'] = $this->categories_model->all_categories();
+		$v_data['drug_types'] = $this->pharmacy_model->get_drug_forms();
+		$v_data['drug_brands'] = $this->pharmacy_model->get_drug_brands();
+		$v_data['drug_classes'] = $this->pharmacy_model->get_drug_classes();
+		$v_data['drug_generics'] = $this->pharmacy_model->get_drug_generics();
+		$v_data['drug_dose_units'] = $this->pharmacy_model->get_drug_dose_units();
+		$v_data['admin_routes'] = $this->pharmacy_model->get_admin_route();
+		$v_data['consumption'] = $this->pharmacy_model->get_consumption();
 
-			$data['content'] = $this->load->view('products/edit_product', $v_data, true);
+		$data['content'] = $this->load->view('products/edit_product', $v_data, true);
 		
 		$this->load->view('admin/templates/general_page', $data);
 	}
@@ -866,7 +873,8 @@ class Inventory_management  extends MX_Controller
 		$this->db->select('quantity');
 		$this->db->where("product_id = ".$product_id." AND store_id = ".$store_id."");
 		$store_query = $this->db->get('store_product');
-
+		$store_quantity = 0;
+		
 		if($store_query->num_rows())
 		{
 			$data_store_query = $store_query->result();
@@ -875,11 +883,24 @@ class Inventory_management  extends MX_Controller
 		}
 		
 		$new_store_quantity = $store_quantity + $quantity;
-
-		$data2 = array('quantity' => $new_store_quantity);
-    	$this->db->where('product_id  ='.$product_id.' AND store_id = '.$store_id);
-		$this->db->update('store_product',$data2);
-
+		$where = 'product_id  ='.$product_id.' AND store_id = '.$store_id;
+		
+		//check if product exists in store product
+		$this->db->where($where);
+		$query = $this->db->get('store_product');
+		
+		//if exists
+		if($query->num_rows() > 0)
+		{
+			$data2 = array('quantity' => $new_store_quantity);
+			$this->db->where($where);
+			$this->db->update('store_product',$data2);
+		}
+		else
+		{
+			$data2 = array('quantity' => $new_store_quantity, 'product_id' => $product_id, 'store_id' => $store_id);
+			$this->db->insert('store_product',$data2);
+		}
 
     	// update child store 
     	$data3 = array('quantity_received' => $quantity,'received_by'=>$this->session->userdata('personnel_id'),'product_deductions_status'=>2);

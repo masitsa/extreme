@@ -6,18 +6,21 @@ class Accounts extends MX_Controller
 		parent:: __construct();
 		
 		$this->load->model('site/site_model');
+		$this->load->model('administration/reports_model');
 		$this->load->model('admin/users_model');
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
 		$this->load->model('payroll_model');
 		$this->load->model('hr/personnel_model');
 		$this->load->model('admin/branches_model');
+		$this->load->model('petty_cash_model');
 		$this->load->model('accounts_model');
 		$this->load->model('nurse/nurse_model');
 		$this->load->model('reception/reception_model');
 		$this->load->model('reception/database');
 		$this->load->model('medical_admin/medical_admin_model');
 		$this->load->model('pharmacy/pharmacy_model');
+		$this->load->model('hospital_accounts_model');
 		//$this->load->model('administration/personnel_model');
 		
 		$this->load->model('auth/auth_model');
@@ -54,7 +57,29 @@ class Accounts extends MX_Controller
 	
 	public function accounts_queue()
 	{
-		$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND (visit_department.department_id = 6 OR visit_department.accounts = 0) AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$branch_code = $this->session->userdata('search_branch_code');
+		
+		if(empty($branch_code))
+		{
+			$branch_code = $this->session->userdata('branch_code');
+		}
+		
+		$this->db->where('branch_code', $branch_code);
+		$query = $this->db->get('branch');
+		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$branch_name = $row->branch_name;
+		}
+		
+		else
+		{
+			$branch_name = '';
+		}
+		$v_data['branch_name'] = $branch_name;
+		$v_data['branches'] = $this->reports_model->get_all_active_branches();
+		$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND (visit_department.department_id = 6 OR visit_department.accounts = 0) AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$branch_code.'\'AND visit.visit_date = \''.date('Y-m-d').'\'';
 		
 		$table = 'visit_department, visit, patients, visit_type';
 		
@@ -126,6 +151,8 @@ class Accounts extends MX_Controller
 		$personnel_id = $this->input->post('personnel_id');
 		$visit_date = $this->input->post('visit_date');
 		$othernames = $this->input->post('othernames');
+		$branch_code = $this->input->post('branch_code');
+		$this->session->set_userdata('search_branch_code', $branch_code);
 		
 		if(!empty($visit_type_id))
 		{
@@ -188,19 +215,19 @@ class Accounts extends MX_Controller
 		$this->session->set_userdata('visit_accounts_search', $search);
 		if($pager == 1)
 		{
-			redirect('accounts/accounts-queue');
+			redirect('cash-office/accounts-queue');
 		}
 		else if($pager == 2)
 		{
-			redirect('accounts/un-closed-visits');
+			redirect('cash-office/un-closed-visits');
 		}
 		else if($pager == 3)
 		{
-			redirect('accounts/closed-visits');
+			redirect('cash-office/closed-visits');
 		}
 		else
 		{
-			redirect('accounts/accounts-queue');
+			redirect('cash-office/accounts-queue');
 		}
 		
 		
@@ -227,8 +254,30 @@ class Accounts extends MX_Controller
 	}
 	public function accounts_unclosed_queue()
 	{
-		//$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 6 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0';
-		$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
+		//$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 6 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7)';
+		$branch_code = $this->session->userdata('search_branch_code');
+		
+		if(empty($branch_code))
+		{
+			$branch_code = $this->session->userdata('branch_code');
+		}
+		
+		$this->db->where('branch_code', $branch_code);
+		$query = $this->db->get('branch');
+		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$branch_name = $row->branch_name;
+		}
+		
+		else
+		{
+			$branch_name = '';
+		}
+		$v_data['branch_name'] = $branch_name;
+		$v_data['branches'] = $this->reports_model->get_all_active_branches();
+		$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$branch_code.'\'';
 		
 		$table = 'visit_department, visit, patients, visit_type';
 		
@@ -297,8 +346,29 @@ class Accounts extends MX_Controller
 	}
 	public function accounts_closed_visits()
 	{
+		$branch_code = $this->session->userdata('search_branch_code');
+		
+		if(empty($branch_code))
+		{
+			$branch_code = $this->session->userdata('branch_code');
+		}
+		
+		$this->db->where('branch_code', $branch_code);
+		$query = $this->db->get('branch');
+		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$branch_name = $row->branch_name;
+		}
+		
+		else
+		{
+			$branch_name = '';
+		}
+		$v_data['branch_name'] = $branch_name;
 		$where = 'visit.visit_delete = 0  AND visit.patient_id = patients.patient_id AND visit.close_card = 1 ';
-		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 1 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 1 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$branch_code.'\'';
 		
 		$table = 'visit_department, visit, patients, visit_type';
 		
@@ -354,6 +424,7 @@ class Accounts extends MX_Controller
 		$v_data['title'] = 'Accounts closed Visits';
 		$v_data['module'] = 7;
 		$v_data['close_page'] = 3;
+		$v_data['branches'] = $this->reports_model->get_all_active_branches();
 		
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();
@@ -555,15 +626,22 @@ class Accounts extends MX_Controller
 			{	
 				$visit = $_POST['visit'];
 				$visit_id = $visit[$r]; 
-				
-				if($this->accounts_model->end_visit($visit_id))
+				//check if card is held
+				if($this->reception_model->is_card_held($visit_id))
 				{
-					$this->session->set_userdata('success_message', 'Visits ended successfully');
 				}
 				
 				else
 				{
-					$this->session->set_userdata('error_message', 'Unable to end visits');
+					if($this->accounts_model->end_visit($visit_id))
+					{
+						$this->session->set_userdata('success_message', 'Visits ended successfully');
+					}
+					
+					else
+					{
+						$this->session->set_userdata('error_message', 'Unable to end visits');
+					}
 				}
 			}
 		}

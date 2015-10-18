@@ -514,14 +514,14 @@ $p = 0;
                      <tr>
                         <th>No.</th>
                         <th>Medicine:</th>
+                        <th>Days:</th>
                         <?php
                         if($module == 1)
                         {
                             ?>
-                             <th>S. Units:</th>
                              <th>Unit Price:</th>
-                              <th>Total:</th>
-                              <th>Units given:</th>
+                             <th>Total:</th>
+                             <th>Units given:</th>
                             <?php
                         }
                         else
@@ -529,7 +529,6 @@ $p = 0;
 
                         }
                         ?>
-                        <th>Dose Unit</th>
                         <th colspan="3"> </th>
                     </tr>
                    <?php 
@@ -541,12 +540,17 @@ $p = 0;
                     foreach ($rs as $key_rs):
                         //var_dump($key_rs->prescription_substitution);
                         $service_charge_id =$key_rs->product_id;
+                        $checker_id = $key_rs->checker_id;
+						if(empty($checker_id))
+						{
+							$checker_id = $service_charge_id;
+						}
                         $frequncy = $key_rs->drug_times_name;
                         $id = $key_rs->prescription_id;
                         $date1 = $key_rs->prescription_startdate;
                         $date2 = $key_rs->prescription_finishdate;
                         $sub = $key_rs->prescription_substitution;
-                         $duration = $key_rs->drug_duration_name;
+                        $duration = $key_rs->drug_duration_name;
                         $sub = $key_rs->prescription_substitution;
                         $duration = $key_rs->drug_duration_name;
                         $consumption = $key_rs->drug_consumption_name;
@@ -556,7 +560,6 @@ $p = 0;
                         $visit_charge_id = $key_rs->visit_charge_id;
                         $number_of_days = $key_rs->number_of_days;
                         $units_given = $key_rs->units_given;
-                        $checker_id = $key_rs->checker_id;
 
 
                         // checking for the stocks in drugs
@@ -579,7 +582,7 @@ $p = 0;
                         //$medicine = $drugs->get_product_name($service_charge_id);
                         
                         $rs2 = $this->pharmacy_model->get_drug($service_charge_id);
-                        
+                        $doseunit = '';
                         foreach ($rs2 as $key_rs2 ):
                         $drug_type_id = $key_rs2->drug_type_id;
                         $admin_route_id = $key_rs2->drug_administration_route_id;
@@ -683,12 +686,12 @@ $p = 0;
                     <tr>
                         <td><?php echo $s; ?></td>
                         <td><?php echo $medicine;?></td>
+                        <td><?php echo $number_of_days;?></td>
                        
                         <?php
                         if($module == 1)
                         {
                             ?>
-                                <td><?php echo $in_stock;?></td>
                                 <td><?php echo $charge;?></td>
                                 <td><?php echo $amoun;?></td>
                                 <td><input type="text" name="units_given<?php echo $id?>" class='form-control' id="units_given<?php echo $id?>" required="required" placeholder="units given" value="<?php echo $sum_units; ?>"  /></td>
@@ -699,7 +702,6 @@ $p = 0;
 
                         }
                         ?>
-                        <td><?php echo $doseunit;?></td>
                         <td>
 							<a  class="btn btn-sm btn-primary" id="open_visit<?php echo $id;?>" onclick="get_visit_trail(<?php echo $id;?>);"> View Detail</a>
 							<a  class="btn btn-sm btn-warning " id="close_visit<?php echo $id;?>" style="display:none;" onclick="close_visit_trail(<?php echo $id;?>);"> Close Detail</a></td>
@@ -815,21 +817,30 @@ $p = 0;
 
 	function myPopup2(visit_id,module) {
 		var config_url = $('#config_url').val();
-		window.open(config_url+"pharmacy/drugs/"+visit_id+"/"+module,"Popup","height=1200,width=600,,scrollbars=yes,"+ 
+		var win_drugs = window.open(config_url+"pharmacy/drugs/"+visit_id+"/"+module,"Popup3","height=1200,width=1000,,scrollbars=yes,"+ 
 							"directories=yes,location=yes,menubar=yes," + 
 							 "resizable=no status=no,history=no top = 50 left = 100"); 
+  		win_drugs.focus();
 	}
 	
 	function myPopup2_soap(visit_id) {
 		var config_url = $('#config_url').val();
-		window.open(config_url+"pharmacy/drugs/"+visit_id,"Popup","height=1200,width=600,,scrollbars=yes,"+ 
+		var win_drugs = window.open(config_url+"pharmacy/drugs/"+visit_id,"Popup2","height=1200,width=1000,,scrollbars=yes,"+ 
 							"directories=yes,location=yes,menubar=yes," + 
 							 "resizable=no status=no,history=no top = 50 left = 100"); 
+  		win_drugs.focus();
 	}
 	
 	function send_to_pharmacy2(visit_id)
 	{
-		window.close(this);
+		var config_url = $('#config_url').val();
+		var url = config_url+"pharmacy/display_prescription/"+visit_id;
+	
+		$.get(url, function( data ) {
+			var obj = window.opener.document.getElementById("prescription");
+			obj.innerHTML = data;
+			window.close(this);
+		});
 	}
 </script>
 

@@ -33,7 +33,7 @@ class Nurse  extends MX_Controller
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$table = 'visit_department, visit, patients';
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 6, 0);
 		$v_data['query'] = $query;
@@ -53,7 +53,7 @@ class Nurse  extends MX_Controller
 	
 	public function nurse_queue($page_name = NULL)
 	{
-		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.accounts = 1 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'AND visit.visit_date = \''.date('Y-m-d').'\'';
 		
 		$table = 'visit_department, visit, patients, visit_type';
 		$patient_visit_search = $this->session->userdata('patient_visit_search');
@@ -141,11 +141,11 @@ class Nurse  extends MX_Controller
 		$table = 'visit_department, visit, patients';
 		if($module == 1)
 		{
-			$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = '.$this->session->userdata('personnel_id');
+			$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = '.$this->session->userdata('personnel_id');
 		}
 		else
 		{
-		 $where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		 $where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit.visit_date = \''.date('Y-m-d').'\'';
 	
 		}
 		$items = "*";
@@ -1260,6 +1260,7 @@ class Nurse  extends MX_Controller
 			FALSE;
 		}
 	}
+	
 	public function send_to_pharmacy($visit_id,$module)
 	{
 		$this->db->where('visit_id', $visit_id);
@@ -1267,6 +1268,46 @@ class Nurse  extends MX_Controller
 		$row = $query->row();
 		$visit_type = $row->visit_type;
 		if($this->reception_model->set_visit_department($visit_id, 5, $visit_type))
+		{
+			if($module == 1){
+				redirect('doctor/doctor_queue');
+			}else{
+				redirect('nurse/nurse_queue');
+			}
+		}
+		else
+		{
+			FALSE;
+		}
+	}
+	
+	public function send_to_xray($visit_id, $module)
+	{
+		$this->db->where('visit_id', $visit_id);
+		$query = $this->db->get('visit');
+		$row = $query->row();
+		$visit_type = $row->visit_type;
+		if($this->reception_model->set_visit_department($visit_id, 11, $visit_type))
+		{
+			if($module == 1){
+				redirect('doctor/doctor_queue');
+			}else{
+				redirect('nurse/nurse_queue');
+			}
+		}
+		else
+		{
+			FALSE;
+		}
+	}
+	
+	public function send_to_ultrasound($visit_id, $module)
+	{
+		$this->db->where('visit_id', $visit_id);
+		$query = $this->db->get('visit');
+		$row = $query->row();
+		$visit_type = $row->visit_type;
+		if($this->reception_model->set_visit_department($visit_id, 11, $visit_type))
 		{
 			if($module == 1){
 				redirect('doctor/doctor_queue');
@@ -1350,7 +1391,7 @@ class Nurse  extends MX_Controller
 		$date = date('Y-m-d');
 		
 		//get nurse total
-		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$table = 'visit_department, visit, patients';
 		$nurse_total = $this->nurse_model->get_queue_total($table, $where);
 		
@@ -1360,7 +1401,7 @@ class Nurse  extends MX_Controller
 		}
 		
 		//get doctor total
-		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$doctor_total = $this->nurse_model->get_queue_total($table, $where);
 		
 		if($doctor_total > $highest_bar)
@@ -1369,7 +1410,7 @@ class Nurse  extends MX_Controller
 		}
 		
 		//get lab total
-		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$lab_total = $this->nurse_model->get_queue_total($table, $where);
 		
 		if($lab_total > $highest_bar)
@@ -1378,7 +1419,7 @@ class Nurse  extends MX_Controller
 		}
 		
 		//get pharnacy total
-		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 5 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 5 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$pharmacy_total = $this->nurse_model->get_queue_total($table, $where);
 		
 		if($pharmacy_total > $highest_bar)
@@ -1418,7 +1459,7 @@ class Nurse  extends MX_Controller
 	function from_lab_queue($page_name = NULL){
 		// this is it
 
-		$where = 'visit.visit_delete = 0  AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND doc_visit=1 AND lab_visit=22 AND visit.nurse_visit = 1 AND visit.pharmarcy !=7 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0  AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND doc_visit=1 AND lab_visit=22 AND visit.nurse_visit = 1 AND visit.pharmarcy !=7 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$visit_search = $this->session->userdata('visit_search');
 		
 		if(!empty($visit_search))

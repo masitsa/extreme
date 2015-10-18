@@ -343,9 +343,10 @@
 	function check_department_type()
 	{
 		var myTarget = document.getElementById("department_id").value;
-		
+		var department_id = myTarget;
+		if(department_id == 2){department_id = 7;}
 		//get department services
-		$.get( "<?php echo site_url();?>reception/get_department_services/"+myTarget, function( data ) 
+		$.get( "<?php echo site_url();?>reception/get_department_services/"+department_id, function( data ) 
 		{
 			$( "#department_services" ).html( data );
 			
@@ -355,7 +356,7 @@
 			//var myTarget4 = document.getElementById("counseling_department");
 			// end of counseling department div
 			
-			if((myTarget==7) || (myTarget==14))
+			if((myTarget==7) || (myTarget==14) || (myTarget==2))
 			{
 				myTarget2.style.display = 'block';
 				//myTarget4.style.display = 'none';
@@ -417,6 +418,7 @@
 		var department_id = $("select#department_id").val();
 		
 		//get department services
+		//if(department_id == 2){department_id = 7}
 		$.get( "<?php echo site_url();?>reception/get_department_services/"+department_id, function( data ) 
 		{
 			$( "#department_services" ).html( data );

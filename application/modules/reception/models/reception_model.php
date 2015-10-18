@@ -52,7 +52,8 @@ class Reception_model extends CI_Model
 		$this->db->from($table);
 		$this->db->select('visit.*, visit_department.created AS visit_created, visit_department.accounts, patients.*, visit_type.visit_type_name');
 		$this->db->where($where);
-		$this->db->order_by('visit_department.created','ASC');
+		//$this->db->order_by('visit_department.created','ASC');
+		$this->db->order_by('visit.visit_time','ASC');
 		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
@@ -445,7 +446,7 @@ class Reception_model extends CI_Model
 		{
 			$table = "patients, visit";
 			$where = "patients.patient_id = visit.patient_id AND visit.visit_id = ".$visit_id;
-			$items = "patients.*, visit.visit_type, visit.ward_id, visit.patient_insurance_number, visit.inpatient";
+			$items = "patients.*, visit.visit_type, visit.ward_id, visit.patient_insurance_number, visit.inpatient, visit.close_card";
 			$order = "patient_surname";
 		}
 		
@@ -469,6 +470,7 @@ class Reception_model extends CI_Model
 			
 			$faculty ='';
 			$dependant_id = '';
+			$close_card = '';
 			if($gender_id == 1)
 			{
 				$gender = 'M';
@@ -494,6 +496,7 @@ class Reception_model extends CI_Model
 				$this->db->select('visit_type_name');
 				$query = $this->db->get('visit_type');
 				$visit_type_name = '';
+				$close_card = $row->close_card;
 				
 				if($query->num_rows() > 0)
 				{
@@ -522,6 +525,7 @@ class Reception_model extends CI_Model
 		$patient['patient_number'] = $patient_number;
 		$patient['faculty'] = $faculty;
 		$patient['staff_dependant_no'] = $dependant_id;
+		$patient['close_card'] = $close_card;
 		$patient['ward_id'] = $ward_id;
 		return $patient;
 	}
@@ -2449,6 +2453,55 @@ class Reception_model extends CI_Model
 				$this->db->update('patients',$data2);
 			}
 
+		}
+	}
+	
+	public function is_card_held($visit_id)
+	{
+		$this->db->where('visit_id', $visit_id);
+		$this->db->join('personnel', 'personnel.personnel_id = visit.held_by', 'left');
+		$query = $this->db->get('visit');
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$close_card = $row->close_card;
+			$held_by = $row->personnel_fname.' '.$row->personnel_onames;
+			
+			if($close_card == 7)
+			{
+				$this->session->set_userdata('error_message', 'You cannot close this card. It has been held by '.$held_by);
+				return TRUE;
+			}
+			
+			else
+			{
+				return FALSE;
+			}
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	public function change_patient_visit($visit_date, $doctor_id, $visit_id, $ward_id)
+	{
+		$visit_data = array(
+			"visit_date" => $visit_date,
+			"personnel_id" => $doctor_id,
+			"ward_id" => $ward_id,
+			"inpatient" => 1
+		);
+		$this->db->where('visit_id', $visit_id);
+		if($this->db->update('visit', $visit_data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
 		}
 	}
 }

@@ -1,3 +1,42 @@
+<?php
+$all_wards = '';
+if($wards->num_rows() > 0)
+{
+	foreach($wards->result() as $row):
+		$ward_name = $row->ward_name;
+		$ward_id = $row->ward_id;
+		
+		if($ward_id == set_value('ward_id'))
+		{
+			$all_wards .= "<option value='".$ward_id."' selected='selected'>".$ward_name."</option>";
+		}
+		
+		else
+		{
+			$all_wards .= "<option value='".$ward_id."'>".$ward_name."</option>";
+		}
+	endforeach;
+}
+
+$all_doctors = '';
+if(count($doctor) > 0){
+	foreach($doctor as $row):
+		$fname = $row->personnel_fname;
+		$onames = $row->personnel_onames;
+		$personnel_id = $row->personnel_id;
+		
+		if($personnel_id == set_value('personnel_id'))
+		{
+			$all_doctors .= "<option value='".$personnel_id."' selected='selected'>".$onames." ".$fname."</option>";
+		}
+		
+		else
+		{
+			$all_doctors .= "<option value='".$personnel_id."'>".$onames." ".$fname."</option>";
+		}
+	endforeach;
+}
+?>
 <!-- search -->
 <?php echo $this->load->view('search/search_patients', '', TRUE);?>
 <!-- end search -->
@@ -162,8 +201,8 @@
 
 					<td><a href="'.site_url().'nurse/patient_card/'.$visit_id.'/a/0" class="btn btn-sm btn-info">Patient Card</a></td>
 					<td><a href="'.site_url().'nurse/send_to_doctor/'.$visit_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Send to doctor?\');">To Doctor</a></td>
-					<td><a href="'.site_url().'nurse/send_to_labs/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to lab?\');">To Lab</a></td>
-					<td><a href="'.site_url().'nurse/send_to_pharmacy/'.$visit_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to pharmacy?\');">To Pharmacy</a></td>
+					<td><a href="'.site_url().'nurse/send_to_labs/'.$visit_id.'/0" class="btn btn-sm btn-success" onclick="return confirm(\'Send to lab?\');">To Lab</a></td>
+					<td><a href="'.site_url().'nurse/send_to_pharmacy/'.$visit_id.'/0" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to pharmacy?\');">To Pharmacy</a></td>
 					';
 				}
 				
@@ -177,7 +216,7 @@
 
 					<td><a href="'.site_url().'nurse/patient_card/'.$visit_id.'/a/1" class="btn btn-sm btn-info">Patient Card</a></td>
 					<td><a href="'.site_url().'nurse/send_to_labs/'.$visit_id.'/1" class="btn btn-sm btn-success" onclick="return confirm(\'Send to lab?\');">To Lab</a></td>
-					<td><a href="'.site_url().'doctor/send_to_pharmacy/'.$visit_id.'/1" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to pharmacy?\');">To Pharmacy</a></td>
+					<td><a href="'.site_url().'nurse/send_to_pharmacy/'.$visit_id.'/1" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to pharmacy?\');">To Pharmacy</a></td>
 					';
 				}
 				
@@ -269,6 +308,69 @@
 					<td>
 						<a  class="btn btn-sm btn-success" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
 						<a  class="btn btn-sm btn-success" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
+					</td>
+					<td>
+						<button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#create_inpatient">Inpatient</button>
+						
+						<div class="modal fade" id="create_inpatient" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<h4 class="modal-title" id="myModalLabel">Change to inpatient</h4>
+									</div>
+									<div class="modal-body">
+										'.form_open("reception/change_patient_visit/".$visit_id.'/'.$visit_type_id, array("class" => "form-horizontal")).'
+										<div class="form-group">
+											<label class="col-md-4 control-label">Ward: </label>
+											
+											<div class="col-md-8">
+												<select name="ward_id" id="ward_id" class="form-control" onchange="check_department_type()">
+													<option value="">----Select a ward----</option>
+													'.$all_wards.'
+												</select>
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-md-4 control-label">Doctor: </label>
+											
+											<div class="col-md-8">
+												 <select name="personnel_id" class="form-control">
+													<option value="">----Select a Doctor----</option>
+													'.$all_doctors.'
+												</select>
+											</div>
+										</div>
+                                
+										<div class="form-group">
+											<label class="col-lg-4 control-label">Admission date: </label>
+											
+											<div class="col-lg-8">
+												<div class="input-group">
+													<span class="input-group-addon">
+														<i class="fa fa-calendar"></i>
+													</span>
+													<input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="visit_date" placeholder="Admission Date" value="'.date('Y-m-d').'">
+												</div>
+											</div>
+										</div>
+										
+										<div class="row">
+											<div class="col-md-8 col-md-offset-4">
+												<div class="center-align">
+													<button type="submit" class="btn btn-primary">Create inpatient</button>
+												</div>
+											</div>
+										</div>
+										'.form_close().'
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+									</div>
+								</div>
+							</div>
+						</div>
 					</td>
 					<!--<td><a href="'.site_url().'reception/print-invoice/'.$visit_id.'/reception" target="_blank" class="btn btn-sm btn-warning fa fa-print"> Invoice </a></td>-->
 					<td><a href="'.site_url().'reception/end_visit/'.$visit_id.'" class="btn btn-sm btn-info" onclick="return confirm(\'Do you really want to end this visit ?\');">End Visit</a></td>
