@@ -323,7 +323,7 @@ class Ultrasound  extends MX_Controller
 	}
 	public function send_to_accounts($visit_id,$module= NULL)
 	{
-		redirect("nurse/send_to_accounts/".$visit_id."/2");
+		redirect("nurse/send_to_accounts/".$visit_id."/4");
 	}
 	public function test_history($visit_id,$page_name = NULL)
 	{
@@ -402,8 +402,18 @@ class Ultrasound  extends MX_Controller
 		// end of it
 
 	}
+	
+	public function print_ultrasound($visit_id)
+	{
+		$data = array('visit_id'=>$visit_id);
+		$data['contacts'] = $this->site_model->get_contacts();
+		
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$data['patient'] = $patient;
+		$this->load->view('print_ultrasound', $data);
+	}
 
-	function print_test($visit_id, $patient_id)
+	function print_test_old($visit_id, $patient_id)
 	{
 		$this->load->library('fpdf');
 		$this->fpdf->AliasNbPages();

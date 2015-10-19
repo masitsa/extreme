@@ -340,7 +340,7 @@ class Xray  extends MX_Controller
 	}
 	public function send_to_accounts($visit_id,$module= NULL)
 	{
-		redirect("nurse/send_to_accounts/".$visit_id."/2");
+		redirect("nurse/send_to_accounts/".$visit_id."/5");
 	}
 	public function test_history($visit_id,$page_name = NULL)
 	{
@@ -751,6 +751,16 @@ class Xray  extends MX_Controller
 	{
 		$this->session->unset_userdata('patient_visit_search');
 		$this->xray_queue();
+	}
+	
+	public function print_xray($visit_id)
+	{
+		$data = array('visit_id'=>$visit_id);
+		$data['contacts'] = $this->site_model->get_contacts();
+		
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$data['patient'] = $patient;
+		$this->load->view('print_xray', $data);
 	}
 }
 ?>

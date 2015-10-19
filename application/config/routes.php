@@ -452,8 +452,9 @@ $route['dental/patient-treatment'] = 'nurse/patient_treatment_statement/dental';
 */
 $route['hospital-reports'] = 'hospital-reports/index';
 $route['hospital-reports/patient-statements'] = 'administration/patient_statement';
-$route['hospital-reports/all-transactions'] = 'administration/reports/all_transactions/admin';
-$route['hospital-reports/cash-report'] = 'administration/reports/all_transactions/admin';
+$route['hospital-reports/all-transactions'] = 'administration/reports/all_reports/admin';
+$route['hospital-reports/cash-report'] = 'administration/reports/cash_report/admin';
+$route['hospital-reports/cash-report/(:num)'] = 'administration/reports/cash_report/$1';
 $route['hospital-reports/debtors-report'] = 'administration/reports/debtors_report/0';
 $route['hospital-reports/department-report'] = 'administration/reports/department_reports';
 $route['hospital-reports/doctors-report'] = 'administration/reports/doctor_reports';

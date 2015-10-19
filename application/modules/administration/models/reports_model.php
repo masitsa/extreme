@@ -403,11 +403,16 @@ class Reports_model extends CI_Model
 	*	Retrieve total revenue
 	*
 	*/
-	public function get_total_cash_collection($where, $table)
+	public function get_total_cash_collection($where, $table, $page = NULL)
 	{
 		//payments
 		$table_search = $this->session->userdata('all_transactions_tables');
-		if(!empty($table_search))
+		
+		if($page != 'cash')
+		{
+			$where .= ' AND visit.visit_id = payments.visit_id AND payments.cancel = 0';
+		}
+		if((!empty($table_search)) || ($page == 'cash'))
 		{
 			$this->db->from($table);
 		}
@@ -417,7 +422,7 @@ class Reports_model extends CI_Model
 			$this->db->from($table.', payments');
 		}
 		$this->db->select('SUM(payments.amount_paid) AS total_paid');
-		$this->db->where($where.' AND visit.visit_id = payments.visit_id AND payments.cancel = 0');
+		$this->db->where($where);
 		$query = $this->db->get();
 		
 		$cash = $query->row();
@@ -438,11 +443,15 @@ class Reports_model extends CI_Model
 	*	Retrieve total revenue
 	*
 	*/
-	public function get_normal_payments($where, $table)
+	public function get_normal_payments($where, $table, $page = NULL)
 	{
+		if($page != 'cash')
+		{
+			$where .= ' AND visit.visit_id = payments.visit_id AND payments.cancel = 0';
+		}
 		//payments
 		$table_search = $this->session->userdata('all_transactions_tables');
-		if(!empty($table_search))
+		if((!empty($table_search)) || ($page == 'cash'))
 		{
 			$this->db->from($table);
 		}
@@ -452,7 +461,7 @@ class Reports_model extends CI_Model
 			$this->db->from($table.', payments');
 		}
 		$this->db->select('*');
-		$this->db->where($where.' AND visit.visit_id = payments.visit_id AND payments.cancel = 0');
+		$this->db->where($where);
 		$query = $this->db->get();
 		
 		return $query;
@@ -1327,5 +1336,154 @@ class Reports_model extends CI_Model
 		}
 		
 		return $number;
+	}
+	
+	/*
+	*	Retrieve visits
+	*	@param string $table
+	* 	@param string $where
+	*	@param int $per_page
+	* 	@param int $page
+	*
+	*/
+	public function get_all_payments($table, $where, $per_page, $page, $order = NULL)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*, visit_type.visit_type_name, payments.*, payment_method.*, personnel.personnel_fname, personnel.personnel_onames');
+		$this->db->join('personnel', 'payments.payment_created_by = personnel.personnel_id', 'left');
+		$this->db->where($where);
+		$this->db->order_by('payments.time','DESC');
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+	
+	/*
+	*	Export Transactions
+	*
+	*/
+	function export_cash_report()
+	{
+		$this->load->library('excel');
+		
+		$branch_code = $this->session->userdata('search_branch_code');
+		
+		if(empty($branch_code))
+		{
+			$branch_code = $this->session->userdata('branch_code');
+		}
+		
+		$this->db->where('branch_code', $branch_code);
+		$query = $this->db->get('branch');
+		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$branch_name = $row->branch_name;
+		}
+		
+		else
+		{
+			$branch_name = '';
+		}
+		$v_data['branch_name'] = $branch_name;
+		
+		$where = 'payments.payment_method_id = payment_method.payment_method_id AND payments.visit_id = visit.visit_id AND payments.payment_type = 1 AND visit.visit_delete = 0 AND visit.branch_code = \''.$branch_code.'\' AND visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type AND payments.cancel = 0';
+		
+		$table = 'payments, visit, patients, visit_type, payment_method';
+		$visit_search = $this->session->userdata('cash_report_search');
+		
+		if(!empty($visit_search))
+		{
+			$where .= $visit_search;
+		}
+		
+		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*, visit_type.visit_type_name, payments.*, payment_method.*, personnel.personnel_fname, personnel.personnel_onames');
+		$this->db->join('personnel', 'payments.payment_created_by = personnel.personnel_id', 'left');
+		$this->db->where($where);
+		$this->db->order_by('payments.time','DESC');
+		$query = $this->db->get($table);
+		
+		$title = 'Cash report '.date('jS M Y H:i a',strtotime(date('Y-m-d H:i:s')));
+		$col_count = 0;
+		
+		if($query->num_rows() > 0)
+		{
+			$count = 0;
+			/*
+				-----------------------------------------------------------------------------------------
+				Document Header
+				-----------------------------------------------------------------------------------------
+			*/
+			$row_count = 0;
+			$report[$row_count][$col_count] = '#';
+			$col_count++;
+			$report[$row_count][$col_count] = 'Payment Date';
+			$col_count++;
+			$report[$row_count][$col_count] = 'Time recorded';
+			$col_count++;
+			$report[$row_count][$col_count] = 'Patient';
+			$col_count++;
+			$report[$row_count][$col_count] = 'Category';
+			$col_count++;
+			$report[$row_count][$col_count] = 'Amount';
+			$col_count++;
+			$report[$row_count][$col_count] = 'Method';
+			$col_count++;
+			$report[$row_count][$col_count] = 'Description';
+			$col_count++;
+			$report[$row_count][$col_count] = 'Recorded by';
+			$col_count++;
+			$current_column = $col_count ;
+			
+			foreach ($query->result() as $row)
+			{
+				$count++;
+				$row_count++;
+				$col_count = 0;
+				
+				$total_invoiced = 0;
+				$payment_created = date('jS M Y',strtotime($row->payment_created));
+				$time = date('H:i a',strtotime($row->time));
+				$visit_id = $row->visit_id;
+				$patient_id = $row->patient_id;
+				$personnel_id = $row->personnel_id;
+				$dependant_id = $row->dependant_id;
+				$visit_type_id = $row->visit_type_id;
+				$visit_type = $row->visit_type;
+				$visit_table_visit_type = $visit_type;
+				$patient_table_visit_type = $visit_type_id;
+				$visit_type_name = $row->visit_type_name;
+				$patient_othernames = $row->patient_othernames;
+				$patient_surname = $row->patient_surname;
+				$patient_date_of_birth = $row->patient_date_of_birth;
+				$payment_method = $row->payment_method;
+				$amount_paid = $row->amount_paid;
+				$transaction_code = $row->transaction_code;
+				$created_by = $row->personnel_fname.' '.$row->personnel_onames;
+				
+				$report[$row_count][$col_count] = $count;
+				$col_count++;
+				$report[$row_count][$col_count] = $payment_created;
+				$col_count++;
+				$report[$row_count][$col_count] = $patient_surname.' '.$patient_othernames;
+				$col_count++;
+				$report[$row_count][$col_count] = $visit_type_name;
+				$col_count++;
+				$report[$row_count][$col_count] = number_format($amount_paid, 2);
+				$col_count++;
+				$report[$row_count][$col_count] = $payment_method;
+				$col_count++;
+				$report[$row_count][$col_count] = $transaction_code;
+				$col_count++;
+				$report[$row_count][$col_count] = $created_by;
+				$col_count++;
+			}
+		}
+		
+		//create the excel document
+		$this->excel->addArray ( $report );
+		$this->excel->generateXML ($title);
 	}
 }

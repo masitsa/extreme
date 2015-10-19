@@ -8,7 +8,7 @@
 
         <section class="panel panel-featured panel-featured-info">
             <header class="panel-heading">
-            	 <h2 class="panel-title">Transactions</h2>
+            	 <h2 class="panel-title"><?php echo $title;?></h2>
             </header>             
 
           <!-- Widget content -->

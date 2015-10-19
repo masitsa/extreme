@@ -47,8 +47,8 @@
                                     <div class="col-md-8">
                                         <select class="form-control" name="transaction_type_id">
                                             <option value="">-- Select type --</option>
-                                            <option value="2">Deposit</option>
-                                            <option value="1">Expenditure</option>
+                                            <option value="1">Deposit</option>
+                                            <option value="2">Expenditure</option>
                                         </select>
                                     </div>
                                 </div>
@@ -204,7 +204,7 @@
 							<td style="text-align:center; font-weight:bold;">'.number_format($total_credit,2).'</td>
 						</tr> 
 					';
-					$balance =  $total_credit - $total_debit;
+					$balance =  $total_debit - $total_credit;
 						$result .= 
 						'
 							<tr>

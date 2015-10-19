@@ -41,7 +41,7 @@ if(!empty($coming_from)){
 	<div class='col-md-12'>
 		<section class='panel panel-featured panel-featured-info'>
         <header class='panel-heading'>
-            <h2 class='panel-title'>Laboratory tests</h2>
+            <h2 class='panel-title'>X Rays</h2>
         </header>
 
         <div class='panel-body'>
@@ -72,66 +72,14 @@ if(!empty($coming_from)){
 			$r++;
 			
 		endforeach;
-		//echo $xray_test.'<br/>';
-		if ($xray_test == 12){
-			echo"
-			<div class='center-align'>
-				<!--<input type='button' value='Print' name='std' class='btn btn-sm btn-info' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/>-->
-				<input type='button' value='Send to Doctor' name='std' class='btn btn-sm btn-warning' onClick='send_to_doc(".$visit_id.")'/>
-				<input type='button' class='btn btn-sm btn-success' value='Done' onclick='finish_xray_test(".$visit_id.")'/>
-			</div>
-		";
-		}
 		
-		elseif ($xray_test == 22){
-			echo"
-			<div class='center-align'>
-				<!--<input type='button' value='Print' name='std' class='btn btn-sm btn-info' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/>-->
-				<input type='button' value='Send to Doctor' name='std' class='btn btn-sm btn-warning' onClick='send_to_doc(".$visit_id.")'/>
-				<input type='button' class='btn btn-sm btn-success' value='Done' onclick='finish_xray_test(".$visit_id.")'/>
-			</div>
-		";
-		}
-		
-		/*else if($coming_from == ''){
 		echo"
 			<div class='center-align'>
-				<input type='button' value='Print' name='std' class='btn btn-sm btn-info' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/>
-				<input type='button' value='Send to Doctor' name='std' class='btn btn-sm btn-warning' onClick='send_to_doc(".$visit_id.")'/>
-				<input type='button' class='btn btn-sm btn-success' value='Done' onclick='finish_xray_test(".$visit_id.")'/>
-			</div>
-		";
-		}*/
-		
-		else if(($coming_from == 'Lab') || ($coming_from == 'Reception') || ($coming_from == 'Radiology')){
-		echo"
-			<div class='center-align'>
-				<!--<input type='button' value='Print' name='std' class='btn btn-sm btn-info' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/>
-				<a href='".site_url()."xray/send_to_accounts/".$visit_id."' class='btn btn-sm btn-success' onclick='return confirm(\'Send to accounts?\');'> Send to accounts</a>-->
+				<a href='".site_url()."radiology/xray/print_xray/".$visit_id."' class='btn btn-sm btn-info' target='_blank'> Print</a>
+				<a href='".site_url()."radiology/xray/send_to_accounts/".$visit_id."' class='btn btn-sm btn-success' onclick='return confirm(\'Send to accounts?\');'> Send to accounts</a>
 				<a href='".site_url()."radiology/xray/send_to_doctor/".$visit_id."' class='btn btn-sm btn-warning' onclick='return confirm(\'Send to doctor?\');'> Send to doctor</a>
 			</div>
 		";
-		}
-		else if($coming_from == 'Nurse')
-		{
-			echo"
-			<div class='center-align'>
-				<input type='button' value='Print' name='std' class='btn btn-sm btn-info' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/>-->
-				<a href='".site_url()."xray/send_to_doctor/".$visit_id."' class='btn btn-sm btn-info' onclick='return confirm(\'Send to doctor?\');'> Send to doctor </a>		
-				<a href='".site_url()."xray/send_to_accounts/".$visit_id."' class='btn btn-sm btn-success' onclick='return confirm(\'Send to accounts?\');'> Send to accounts </a>
-			</div>
-		";
-		}
-		
-		else{
-			echo"
-			<div class='center-align'>
-				<input type='button' value='Print' name='std' class='btn btn-sm btn-info' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/>
-				<input type='button' class='btn btn-sm btn-success' value='Done' onclick='finish_xray_test(".$visit_id.")'/>
-			</div>
-		";
-		}
-		
 	}
 }
 echo '

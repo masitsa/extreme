@@ -68,7 +68,7 @@
             </div>
             <div class="tabbable" style="margin-bottom: 18px;">
               <ul class="nav nav-tabs nav-justified">
-                <li class="active"><a href="#tests-pane" data-toggle="tab">Tests</a></li>
+                <li class="active"><a href="#tests-pane" data-toggle="tab">X Rays</a></li>
                 <li ><a href="#visit_trail" data-toggle="tab">Visit Trail</a></li>
               </ul>
               <div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">

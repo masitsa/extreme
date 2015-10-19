@@ -12,19 +12,6 @@ class Reports extends administration
 		$this->load->model('accounts/accounts_model');
 	}
 	
-	public function cash_report($module = NULL)
-	{
-		$search = ' AND payments.visit_id = visit.visit_id AND payments.payment_type = 1';
-		$table = ', payments';
-		$this->session->set_userdata('all_transactions_search', $search);
-		$this->session->set_userdata('all_transactions_tables', $table);
-		
-		$this->session->set_userdata('debtors', 'false');
-		$this->session->set_userdata('page_title', 'Cash Report');
-		
-		$this->all_transactions($module);
-	}
-	
 	public function all_reports($module = NULL)
 	{
 		$this->session->unset_userdata('all_transactions_search');
@@ -195,8 +182,12 @@ class Reports extends administration
 		$where2 = $where.' AND patients.inpatient = 1';
 		$v_data['inpatients'] = $this->reception_model->count_items($table, $where2);
 		
-		$data['title'] = $this->session->userdata('page_title');
-		$v_data['title'] = $this->session->userdata('page_title');
+		$page_title = $this->session->userdata('page_title');
+		if(empty($page_title))
+		{
+			$page_title = 'All transactions';
+		}
+		$data['title'] = $v_data['title'] = $page_title;
 		$v_data['debtors'] = $this->session->userdata('debtors');
 		
 		$v_data['branches'] = $this->reports_model->get_all_active_branches();
@@ -256,30 +247,68 @@ class Reports extends administration
 			}
 		}
 		
-		if(!empty($visit_date_from) && !empty($visit_date_to))
-		{
-			$visit_date = ' AND visit.visit_date BETWEEN \''.$visit_date_from.'\' AND \''.$visit_date_to.'\'';
-			$search_title .= 'Visit date from '.date('jS M Y', strtotime($visit_date_from)).' to '.date('jS M Y', strtotime($visit_date_to)).' ';
-		}
+		//date filter for cash report
+		$prev_search = '';
+		$prev_table = '';
 		
-		else if(!empty($visit_date_from))
-		{
-			$visit_date = ' AND visit.visit_date = \''.$visit_date_from.'\'';
-			$search_title .= 'Visit date of '.date('jS M Y', strtotime($visit_date_from)).' ';
-		}
+		$debtors = $this->session->userdata('debtors');
 		
-		else if(!empty($visit_date_to))
+		if($debtors == 'false')
 		{
-			$visit_date = ' AND visit.visit_date = \''.$visit_date_to.'\'';
-			$search_title .= 'Visit date of '.date('jS M Y', strtotime($visit_date_to)).' ';
+			$prev_search = ' AND payments.visit_id = visit.visit_id AND payments.payment_type = 1';
+			$prev_table = ', payments';
+			
+			if(!empty($visit_date_from) && !empty($visit_date_to))
+			{
+				$visit_date = ' AND payments.payment_created BETWEEN \''.$visit_date_from.'\' AND \''.$visit_date_to.'\'';
+				$search_title .= 'Payments from '.date('jS M Y', strtotime($visit_date_from)).' to '.date('jS M Y', strtotime($visit_date_to)).' ';
+			}
+			
+			else if(!empty($visit_date_from))
+			{
+				$visit_date = ' AND payments.payment_created = \''.$visit_date_from.'\'';
+				$search_title .= 'Payments of '.date('jS M Y', strtotime($visit_date_from)).' ';
+			}
+			
+			else if(!empty($visit_date_to))
+			{
+				$visit_date = ' AND payments.payment_created = \''.$visit_date_to.'\'';
+				$search_title .= 'Payments of '.date('jS M Y', strtotime($visit_date_to)).' ';
+			}
+			
+			else
+			{
+				$visit_date = '';
+			}
 		}
 		
 		else
 		{
-			$visit_date = '';
+			if(!empty($visit_date_from) && !empty($visit_date_to))
+			{
+				$visit_date = ' AND visit.visit_date BETWEEN \''.$visit_date_from.'\' AND \''.$visit_date_to.'\'';
+				$search_title .= 'Visit date from '.date('jS M Y', strtotime($visit_date_from)).' to '.date('jS M Y', strtotime($visit_date_to)).' ';
+			}
+			
+			else if(!empty($visit_date_from))
+			{
+				$visit_date = ' AND visit.visit_date = \''.$visit_date_from.'\'';
+				$search_title .= 'Visit date of '.date('jS M Y', strtotime($visit_date_from)).' ';
+			}
+			
+			else if(!empty($visit_date_to))
+			{
+				$visit_date = ' AND visit.visit_date = \''.$visit_date_to.'\'';
+				$search_title .= 'Visit date of '.date('jS M Y', strtotime($visit_date_to)).' ';
+			}
+			
+			else
+			{
+				$visit_date = '';
+			}
 		}
 		
-		$search = $visit_type_id.$visit_date.$personnel_id;
+		$search = $visit_type_id.$visit_date.$personnel_id.$prev_search;
 		$visit_search = $this->session->userdata('all_transactions_search');
 		
 		if(!empty($visit_search))
@@ -883,5 +912,202 @@ class Reports extends administration
 		redirect('administration/reports/debtors_report_data/'.$visit_type_id);
 	}
 	
+	public function cash_report()
+	{
+		$branch_code = $this->session->userdata('search_branch_code');
+		
+		if(empty($branch_code))
+		{
+			$branch_code = $this->session->userdata('branch_code');
+		}
+		
+		$this->db->where('branch_code', $branch_code);
+		$query = $this->db->get('branch');
+		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$branch_name = $row->branch_name;
+		}
+		
+		else
+		{
+			$branch_name = '';
+		}
+		$v_data['branch_name'] = $branch_name;
+		
+		$where = 'payments.payment_method_id = payment_method.payment_method_id AND payments.visit_id = visit.visit_id AND payments.payment_type = 1 AND visit.visit_delete = 0 AND visit.branch_code = \''.$branch_code.'\' AND visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type AND payments.cancel = 0';
+		
+		$table = 'payments, visit, patients, visit_type, payment_method';
+		$visit_search = $this->session->userdata('cash_report_search');
+		
+		if(!empty($visit_search))
+		{
+			$where .= $visit_search;
+		}
+		$segment = 3;
+		
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'hospital-reports/cash-report';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->reports_model->get_all_payments($table, $where, $config["per_page"], $page, 'ASC');
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['search'] = $visit_search;
+		$v_data['total_patients'] = $config['total_rows'];
+		$v_data['total_payments'] = $this->reports_model->get_total_cash_collection($where, $table, 'cash');
+		
+		//all normal payments
+		$where2 = $where.' AND payments.payment_type = 1';
+		$v_data['normal_payments'] = $this->reports_model->get_normal_payments($where2, $table, 'cash');
+		$v_data['payment_methods'] = $this->reports_model->get_payment_methods($where2, $table, 'cash');
+		
+		//normal payments
+		$where2 = $where.' AND payments.payment_type = 1';
+		$v_data['total_cash_collection'] = $this->reports_model->get_total_cash_collection($where2, $table, 'cash');
+		
+		//count outpatient visits
+		$where2 = $where.' AND patients.inpatient = 0';
+		$v_data['outpatients'] = $this->reception_model->count_items($table, $where2);
+		
+		//count inpatient visits
+		$where2 = $where.' AND patients.inpatient = 1';
+		$v_data['inpatients'] = $this->reception_model->count_items($table, $where2);
+		
+		$page_title = $this->session->userdata('cash_search_title');
+		
+		if(empty($page_title))
+		{
+			$page_title = 'Cash report';
+		}
+		
+		$data['title'] = $v_data['title'] = $page_title;
+		$v_data['debtors'] = $this->session->userdata('debtors');
+		
+		$v_data['branches'] = $this->reports_model->get_all_active_branches();
+		$v_data['services_query'] = $this->reports_model->get_all_active_services();
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['doctors'] = $this->reception_model->get_doctor();
+		
+		$data['content'] = $this->load->view('reports/cash_report', $v_data, true);
+		
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	
+	public function search_cash_reports()
+	{
+		$visit_type_id = $this->input->post('visit_type_id');
+		$personnel_id = $this->input->post('personnel_id');
+		$visit_date_from = $this->input->post('visit_date_from');
+		$visit_date_to = $this->input->post('visit_date_to');
+		$branch_code = $this->input->post('branch_code');
+		$this->session->set_userdata('search_branch_code', $branch_code);
+		
+		$search_title = 'Showing reports for: ';
+		
+		if(!empty($visit_type_id))
+		{
+			$visit_type_id = ' AND visit.visit_type = '.$visit_type_id.' ';
+			
+			$this->db->where('visit_type_id', $visit_type_id);
+			$query = $this->db->get('visit_type');
+			
+			if($query->num_rows() > 0)
+			{
+				$row = $query->row();
+				$search_title .= $row->visit_type_name.' ';
+			}
+		}
+		
+		if(!empty($personnel_id))
+		{
+			$personnel_id = ' AND visit.personnel_id = '.$personnel_id.' ';
+			
+			$this->db->where('personnel_id', $personnel_id);
+			$query = $this->db->get('personnel');
+			
+			if($query->num_rows() > 0)
+			{
+				$row = $query->row();
+				$search_title .= $row->personnel_fname.' '.$row->personnel_onames.' ';
+			}
+		}
+		
+		if(!empty($visit_date_from) && !empty($visit_date_to))
+		{
+			$visit_date = ' AND payments.payment_created BETWEEN \''.$visit_date_from.'\' AND \''.$visit_date_to.'\'';
+			$search_title .= 'Payments from '.date('jS M Y', strtotime($visit_date_from)).' to '.date('jS M Y', strtotime($visit_date_to)).' ';
+		}
+		
+		else if(!empty($visit_date_from))
+		{
+			$visit_date = ' AND payments.payment_created = \''.$visit_date_from.'\'';
+			$search_title .= 'Payments of '.date('jS M Y', strtotime($visit_date_from)).' ';
+		}
+		
+		else if(!empty($visit_date_to))
+		{
+			$visit_date = ' AND payments.payment_created = \''.$visit_date_to.'\'';
+			$search_title .= 'Payments of '.date('jS M Y', strtotime($visit_date_to)).' ';
+		}
+		
+		else
+		{
+			$visit_date = '';
+		}
+		
+		$search = $visit_type_id.$visit_date.$personnel_id;
+		$this->session->unset_userdata('cash_report_search');
+		
+		$this->session->set_userdata('cash_report_search', $search);
+		$this->session->set_userdata('cash_search_title', $search_title);
+		
+		redirect('hospital-reports/cash-report');
+	}
+	
+	public function close_cash_search()
+	{
+		$this->session->unset_userdata('cash_report_search');
+		$this->session->unset_userdata('cash_search_title');
+		
+		redirect('hospital-reports/cash-report');
+	}
+	
+	public function export_cash_report()
+	{
+		$this->reports_model->export_cash_report();
+	}
 }
 ?>

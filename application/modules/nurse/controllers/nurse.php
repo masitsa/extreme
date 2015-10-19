@@ -1447,6 +1447,10 @@ class Nurse  extends MX_Controller
 				redirect("laboratory/lab_queue");
 			}else if($module == 3){
 				redirect("pharmacy/pharmacy_queue");
+			}else if($module == 4){
+				redirect("radiology/ultrasound-outpatients");
+			}else if($module == 5){
+				redirect("radiology/x-ray-outpatients");
 			}else{
 				redirect("doctor/doctor_queue");
 			}
