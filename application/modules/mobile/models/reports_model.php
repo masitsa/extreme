@@ -224,7 +224,7 @@ class Reports_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from($table);
-		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*, visit_type.visit_type_name');
+		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*');
 		$this->db->where($where);
 		$this->db->order_by('visit.visit_date, visit.visit_time','DESC');
 		$this->db->group_by('visit.visit_id');
@@ -1350,7 +1350,7 @@ class Reports_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from($table);
-		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*, visit_type.visit_type_name, payments.*, payment_method.*, personnel.personnel_fname, personnel.personnel_onames');
+		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*, payments.*, payment_method.*, personnel.personnel_fname, personnel.personnel_onames');
 		$this->db->join('personnel', 'payments.payment_created_by = personnel.personnel_id', 'left');
 		$this->db->where($where);
 		$this->db->order_by('payments.time','DESC');
@@ -1398,7 +1398,6 @@ class Reports_model extends CI_Model
 		{
 			$where .= $visit_search;
 		}
-		
 		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*, visit_type.visit_type_name, payments.*, payment_method.*, personnel.personnel_fname, personnel.personnel_onames');
 		$this->db->join('personnel', 'payments.payment_created_by = personnel.personnel_id', 'left');
 		$this->db->where($where);

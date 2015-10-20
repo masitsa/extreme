@@ -71,7 +71,7 @@ class Reports extends MX_Controller
 		
 		if(empty($branch_code))
 		{
-			$branch_code = "KDPH";
+			$branch_code = "OSH";
 		}
 		
 		$this->db->where('branch_code', $branch_code);
@@ -89,8 +89,8 @@ class Reports extends MX_Controller
 		}
 		$v_data['branch_name'] = $branch_name;
 		
-		$where = 'visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type AND visit.visit_delete = 0 AND visit.branch_code = \''.$branch_code.'\'';
-		$table = 'visit, patients, visit_type';
+		$where = 'visit.patient_id = patients.patient_id AND visit.visit_delete = 0 AND visit.branch_code = \''.$branch_code.'\'';
+		$table = 'visit, patients';
 		$visit_search = $this->session->userdata('all_transactions_search');
 		$table_search = $this->session->userdata('all_transactions_tables');
 		
@@ -1018,9 +1018,9 @@ class Reports extends MX_Controller
 		}
 		$v_data['branch_name'] = $branch_name;
 		
-		$where = 'payments.payment_method_id = payment_method.payment_method_id AND payments.visit_id = visit.visit_id AND payments.payment_type = 1 AND visit.visit_delete = 0 AND visit.branch_code = \''.$branch_code.'\' AND visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type AND payments.cancel = 0';
+		$where = 'payments.payment_method_id = payment_method.payment_method_id AND payments.visit_id = visit.visit_id AND payments.payment_type = 1 AND visit.visit_delete = 0 AND visit.branch_code = \''.$branch_code.'\' AND visit.patient_id = patients.patient_id AND payments.cancel = 0';
 		
-		$table = 'payments, visit, patients, visit_type, payment_method';
+		$table = 'payments, visit, patients, payment_method';
 		$visit_search = $this->session->userdata('cash_report_search');
 		
 		if(!empty($visit_search))
