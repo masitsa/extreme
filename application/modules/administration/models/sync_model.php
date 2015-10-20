@@ -4,17 +4,17 @@ class Sync_model extends CI_Model
 	public function syn_up_on_closing_visit($visit_id)
 	{
 		// get the patient id and the branch id and patient
-		$patient_details = $this->get_table_details($visit_id);
+		$patient_details = $this->sync_model->get_table_details($visit_id);
 		
 		if(count($patient_details) > 0)
 		{
 			$url = 'http://159.203.78.242/cloud/save_cloud_data';
 			$test_url = 'http://159.203.78.242/cloud/test';
 			//Encode the array into JSON.
-
+			
 			//The JSON data.
 			$data_string = json_encode($patient_details);
-		
+			
 			try{                                                                                                         
 
 				$ch = curl_init($url);                                                                      
@@ -27,7 +27,7 @@ class Sync_model extends CI_Model
 				);                                                                                                                     
 				$result = curl_exec($ch);
 				curl_close($ch);
-				$response = $this->parse_sync_up_response($result);
+				$response = $this->sync_model->parse_sync_up_response($result);
 			}
 			catch(Exception $e)
 			{
@@ -46,7 +46,7 @@ class Sync_model extends CI_Model
 	
 	public function get_table_details($visit_id)
 	{
-		$table_sync_array = $this->get_all_tables_sync();
+		$table_sync_array = $this->sync_model->get_all_tables_sync();
 		
 		$patients = array();
 		$counter = $table_sync_array->num_rows();
@@ -152,7 +152,7 @@ class Sync_model extends CI_Model
 		var_dump($location->response);*/
 		
 		//get sync tables
-		$query = $this->get_all_tables_sync();
+		$query = $this->sync_model->get_all_tables_sync();
 		if($query->num_rows() > 0)
 		{
 			//initiate the response array
@@ -222,19 +222,19 @@ class Sync_model extends CI_Model
 	}
 	public function ondemand_sync_up()
 	{
-		$patient_details = $this->cron_up_sync();
-
+		$patient_details = $this->sync_model->cron_up_sync();
 
 		if(count($patient_details) > 0)
 		{
 			$test_url = 'http://159.203.78.242/cloud/test';
+			$url = 'http://159.203.78.242/cloud/save_cloud_data';
 			//Encode the array into JSON.
 
 			//The JSON data.
 			$data_string = json_encode($patient_details);
 			//var_dump($data_string);
 			try{                                                                                                         
-
+				
 				$ch = curl_init($url);                                                                      
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
@@ -242,12 +242,10 @@ class Sync_model extends CI_Model
 				curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
 				    'Content-Type: application/json',                                                                                
 				    'Content-Length: ' . strlen($data_string))                                                                       
-				);                                                                                                                   
-				                                                                                                                     
+				);                                                                                               
 				$result = curl_exec($ch);
 				curl_close($ch);
-
-				var_dump($result);
+				
 			}
 			catch(Exception $e)
 			{
@@ -288,9 +286,6 @@ class Sync_model extends CI_Model
 						array_push($arrayCron[$sync_table_name], $value);
 					}
 				}
-				
-
-
 			}
 		}
 		else
@@ -303,7 +298,7 @@ class Sync_model extends CI_Model
 
 	}
 
-	public function sync_data_down($branch_code = 'KA')
+	public function sync_data_down($branch_code = 'OSH')
 	{
 		// $json = file_get_contents('php://input');
 
@@ -996,8 +991,6 @@ class Sync_model extends CI_Model
 		$data['approved_by'] = $res->approved_by;
 		$data['date_approved'] = $res->date_approved;
 
-
-
 		if($query->num_rows() > 0)
 		{
 			//update patient
@@ -1072,5 +1065,4 @@ class Sync_model extends CI_Model
 			}
 		}
 	}
-
 }

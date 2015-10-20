@@ -1488,6 +1488,7 @@ class Nurse_model extends CI_Model
 	public function get_consultants()
 	{
 		$this->db->where('personnel.personnel_id = personnel_job.personnel_id AND personnel_job.job_title_id = 12');
+		$this->db->order_by('personnel.personnel_onames');
 		$query = $this->db->get('personnel, personnel_job');
 		
 		return $query;
@@ -1515,9 +1516,6 @@ class Nurse_model extends CI_Model
 			$row = $query->row();
 			$amount = $row->service_charge_amount;
 		}
-		
-		//get personnel
-		$this->db->where();
 		
 		$data = array(
 			'service_charge_id' => $service_charge_id,

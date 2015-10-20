@@ -128,11 +128,25 @@
 													$service_name = $key_items->service_name;
 													$units = $key_items->visit_charge_units;
 													$visit_total = $visit_charge_amount * $units;
+													$personnel_id = $key_items->personnel_id;
+													$doctor = '';
+													
+													if($personnel_id > 0)
+													{
+														$doctor_rs = $this->reception_model->get_personnel($personnel_id);
+														if($doctor_rs->num_rows() > 0)
+														{
+															$key_personnel = $doctor_rs->row();
+															$first_name = $key_personnel->personnel_fname;
+															$personnel_onames = $key_personnel->personnel_onames;
+															$doctor = ' : Dr. '.$personnel_onames.' '.$first_name;
+														}
+													}
 													?>
 													<tr>
 														<td><?php echo $s;?></td>
 														<td><?php echo $service_name;?></td>
-														<td><?php echo $service_charge_name;?></td>
+														<td><?php echo $service_charge_name.$doctor;?></td>
 														<td><?php echo $units;?></td>
 														<td><?php echo number_format($visit_charge_amount,2);?></td>
 														<td><?php echo number_format($visit_total,2);?></td>
