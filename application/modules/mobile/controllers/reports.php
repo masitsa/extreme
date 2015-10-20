@@ -378,7 +378,7 @@ class Reports extends MX_Controller
 		
 		$response['result'] = $newdata;
 		
-		echo json_encode($newdata
+		echo json_encode($newdata);
 	}
 
 	public function search_petty_cash($date_from = NULL, $date_to = NULL)
