@@ -2372,5 +2372,32 @@ class Nurse  extends MX_Controller
 		
 		redirect('nurse/inpatient_card/'.$visit_id.'/a/0');
 	}
+	
+	public function add_consultant($visit_id)
+	{
+		$this->form_validation->set_rules('personnel_id', 'Doctor', 'required|xss_clean');
+		$this->form_validation->set_rules('service_charge_id', 'Charge', 'required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			if($this->nurse_model->add_consultant($visit_id))
+			{
+				$this->session->userdata('success_message', 'Doctor added successfully');	
+			}
+			
+			else
+			{
+				$this->session->userdata('error_message', 'Unable to add doctor. Please try again');
+			}
+		}
+		
+		else
+		{
+			$this->session->userdata('error_message', validation_errors());
+		}
+		
+		redirect('nurse/inpatient_card/'.$visit_id.'/a/0');
+	}
 }
 ?>

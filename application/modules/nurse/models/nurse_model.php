@@ -1458,8 +1458,8 @@ class Nurse_model extends CI_Model
 
 	function get_visit_consultant_charges($v_id)
 	{
-		$table = "visit_charge, service_charge, service";
-		$where = "visit_charge.visit_charge_delete = 0 AND visit_charge.visit_id = $v_id AND visit_charge.service_charge_id = service_charge.service_charge_id AND service.service_id = service_charge.service_id AND service.service_name = 'Consultation'";
+		$table = "visit_charge, service_charge, service, personnel";
+		$where = "visit_charge.personnel_id = personnel.personnel_id AND visit_charge.visit_charge_delete = 0 AND visit_charge.visit_id = $v_id AND visit_charge.service_charge_id = service_charge.service_charge_id AND service.service_id = service_charge.service_id AND service.service_name = 'Doctor review'";
 		$items = "*";
 		$order = "visit_id";
 
@@ -1483,6 +1483,62 @@ class Nurse_model extends CI_Model
 		}
 		
 		return $personnel;
+	}
+	
+	public function get_consultants()
+	{
+		$this->db->where('personnel.personnel_id = personnel_job.personnel_id AND personnel_job.job_title_id = 12');
+		$query = $this->db->get('personnel, personnel_job');
+		
+		return $query;
+	}
+	
+	public function get_doctor_review_charges($visit_id)
+	{
+		$this->db->where('visit.visit_type = service_charge.visit_type_id AND service.service_id = service_charge.service_id AND service.service_name = \'Doctor review\' AND visit.visit_id = '.$visit_id);
+		$query = $this->db->get('visit, service_charge, service');
+		
+		return $query;
+	}
+	
+	public function add_consultant($visit_id)
+	{
+		$amount = 0;
+		$service_charge_id = $this->input->post('service_charge_id');
+		$personnel_id = $this->input->post('personnel_id');
+		
+		//get service charge amount
+		$this->db->where('service_charge_id', $service_charge_id);
+		$query = $this->db->get('service_charge');
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$amount = $row->service_charge_amount;
+		}
+		
+		//get personnel
+		$this->db->where();
+		
+		$data = array(
+			'service_charge_id' => $service_charge_id,
+			'personnel_id' => $personnel_id,
+			'visit_charge_qty' => 1,
+			'visit_charge_units' => 1,
+			'visit_charge_amount' => $amount,
+			'visit_id' => $visit_id,
+			'date' => date('Y-m-d'),
+			'time' => date('H:i:s'),
+			'created_by' => $this->session->userdata('personnel_id'),
+			'modified_by' => $this->session->userdata('personnel_id')
+		);
+		
+		if($this->db->insert('visit_charge', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
 	}
 }
 ?>
