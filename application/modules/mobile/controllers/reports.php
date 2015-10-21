@@ -71,7 +71,7 @@ class Reports extends MX_Controller
 		
 		if(empty($branch_code))
 		{
-			$branch_code = "KDPH";
+			$branch_code = "OSH";
 		}
 		
 		$this->db->where('branch_code', $branch_code);
@@ -89,8 +89,8 @@ class Reports extends MX_Controller
 		}
 		$v_data['branch_name'] = $branch_name;
 		
-		$where = 'visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type AND visit.visit_delete = 0 AND visit.branch_code = \''.$branch_code.'\'';
-		$table = 'visit, patients, visit_type';
+		$where = 'visit.patient_id = patients.patient_id AND visit.visit_delete = 0 AND visit.branch_code = \''.$branch_code.'\'';
+		$table = 'visit, patients';
 		$visit_search = $this->session->userdata('all_transactions_search');
 		$table_search = $this->session->userdata('all_transactions_tables');
 		

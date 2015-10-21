@@ -378,9 +378,9 @@ class Reports_model extends CI_Model
 	public function get_total_services_revenue($where, $table)
 	{
 		//invoiced
-		$this->db->from($table.', visit_charge, service_charge');
+		$this->db->from($table.', visit_charge');
 		$this->db->select('SUM(visit_charge.visit_charge_amount * visit_charge.visit_charge_units) AS total_invoiced');
-		$this->db->where($where.' AND visit.visit_id = visit_charge.visit_id AND visit_charge.service_charge_id = service_charge.service_charge_id');
+		$this->db->where($where.' AND visit.visit_id = visit_charge.visit_id');
 		$query = $this->db->get();
 		
 		$cash = $query->row();
@@ -507,7 +507,7 @@ class Reports_model extends CI_Model
 		
 		$this->db->where($where);
 		$this->db->order_by('visit_date', 'ASC');
-		$this->db->select('visit.*, patients.visit_type_id, patients.*, visit_type.visit_type_name');
+		$this->db->select('visit.*, patients.visit_type_id, patients.*');
 		$this->db->group_by('visit_id');
 		$visits_query = $this->db->get($table);
 		
@@ -1350,7 +1350,7 @@ class Reports_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from($table);
-		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*, visit_type.visit_type_name, payments.*, payment_method.*, personnel.personnel_fname, personnel.personnel_onames');
+		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*, payments.*, payment_method.*, personnel.personnel_fname, personnel.personnel_onames');
 		$this->db->join('personnel', 'payments.payment_created_by = personnel.personnel_id', 'left');
 		$this->db->where($where);
 		$this->db->order_by('payments.time','DESC');
@@ -1399,7 +1399,7 @@ class Reports_model extends CI_Model
 			$where .= $visit_search;
 		}
 		
-		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*, visit_type.visit_type_name, payments.*, payment_method.*, personnel.personnel_fname, personnel.personnel_onames');
+		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*, payments.*, payment_method.*, personnel.personnel_fname, personnel.personnel_onames');
 		$this->db->join('personnel', 'payments.payment_created_by = personnel.personnel_id', 'left');
 		$this->db->where($where);
 		$this->db->order_by('payments.time','DESC');

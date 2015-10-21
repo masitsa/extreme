@@ -98,7 +98,6 @@ class Sync_model extends CI_Model
 				}
 				else
 				{
-
 					$this->db->where('visit_id = '.$visit_id);
 					$query = $this->db->get($sync_table_name);
 
