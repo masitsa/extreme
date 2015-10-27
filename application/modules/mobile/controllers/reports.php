@@ -1134,12 +1134,6 @@ class Reports extends MX_Controller
 			}
 		}
 		
-		/*if(!empty($patient_number))
-		{
-			$patient_number = ' AND patients.patient_number LIKE \'%'.$patient_number.'%\' ';
-			
-			$search_title .= 'Patient number. '.$patient_number;
-		}*/
 		$personnel_id2 = "";
 		if(!empty($personnel_id) && $personnel_id != "_")
 		{

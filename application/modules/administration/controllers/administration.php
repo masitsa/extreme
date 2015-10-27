@@ -39,7 +39,7 @@ class Administration  extends MX_Controller
 	}
 	public function check()
 	{
-		$this->sync_model->syn_up_on_closing_visit(1);
+		$this->sync_model->syn_up_on_closing_visit(28);
 	}
 	public function sync_down_request()
 	{

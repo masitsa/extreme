@@ -31,25 +31,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="col-lg-4 control-label">Doctor: </label>
-                        
-                        <div class="col-lg-8">
-                            <select class="form-control" name="personnel_id">
-                            	<option value="">---Select Doctor---</option>
-                                <?php
-									if(count($doctors) > 0){
-										foreach($doctors as $row):
-											$fname = $row->personnel_fname;
-											$onames = $row->personnel_onames;
-											$personnel_id = $row->personnel_id;
-											echo "<option value=".$personnel_id.">".$onames." ".$fname."</option>";
-										endforeach;
-									}
-								?>
-                            </select>
-                        </div>
-                    </div>
+                  
                 </div>
                 
                 <div class="col-md-4">

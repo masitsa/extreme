@@ -44,8 +44,9 @@ class Lab_model extends CI_Model
 		$where = "visit_charge_id = ".$visit_charge_id;
 		$items = "*";
 		$order = "visit_charge_id";
+		$group_by = "lab_visit_result_format";
 		
-		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		$result = $this->database->select_entries_where($table, $where, $items,$group_by, $order);
 		
 		return $result;
 		
@@ -318,8 +319,20 @@ class Lab_model extends CI_Model
 			endforeach;
 			
 		}
-		$visit_data = array('visit_charge_id'=>$visit_lab_test_id,'lab_visit_result_format'=>$lab_test_format_id,'visit_id'=>$visit_id);
-		$this->db->insert('lab_visit_results', $visit_data);
+		$this->db->where('visit_charge_id = '.$visit_lab_test_id.' AND lab_visit_result_format = '.$lab_test_format_id.' AND visit_id = '.$visit_id);
+		$query = $this->db->get('lab_visit_results');
+
+		if($query->num_rows() == 0)
+		{
+			$visit_data = array('visit_charge_id'=>$visit_lab_test_id,'lab_visit_result_format'=>$lab_test_format_id,'visit_id'=>$visit_id);
+			$this->db->insert('lab_visit_results', $visit_data);
+		}
+		else
+		{
+			$visit_data = array('visit_charge_id'=>$visit_lab_test_id,'lab_visit_result_format'=>$lab_test_format_id,'visit_id'=>$visit_id);
+			$this->db->update('lab_visit_results', $visit_data);
+		}
+
 
 	}
 	

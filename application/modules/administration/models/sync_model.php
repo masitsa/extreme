@@ -50,9 +50,11 @@ class Sync_model extends CI_Model
 		
 		$patients = array();
 		$counter = $table_sync_array->num_rows();
+		// var_dump($counter); die();
 		if($table_sync_array->num_rows() > 0)
 		{
 			$patients['branch_code'] = $this->session->userdata('branch_code');
+
 			
 			// loop the tables
 			foreach ($table_sync_array->result() as $key)

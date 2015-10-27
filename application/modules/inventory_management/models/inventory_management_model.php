@@ -197,14 +197,32 @@ class Inventory_management_model extends CI_Model
 	}
 	public function save_product()
 	{
+		$name = ucwords(strtolower($this->input->post('product_name')));
+		$unit_of_measure = $this->input->post('unit_of_measure');
+
+		if($this->input->post('category_id') == 2)
+		{
+			// get the administration route nam
+			$this->db->where('drug_type_id = '.$this->input->post('drug_type_id'));
+			$query = $this->db->get('drug_type');
+
+			if($query->num_rows() > 0)
+			{
+				foreach ($query->result() as $key) {
+					# code...
+					$drug_type_name = $key->drug_type_name;
+				}
+			}
+		}
+		$product_name = $name.'-'.$unit_of_measure.'('.$drug_type_name.')';
 		$array = array(
-			'product_name'=>ucwords(strtolower($this->input->post('product_name'))),
+			'product_name'=>$product_name,
 			'product_status'=>1,
 			'product_description'=>$this->input->post('product_description'),
 			'category_id'=>$this->input->post('category_id'),
 			'quantity'=>$this->input->post('quantity'),
 			'batch_no'=>$this->input->post('batch_no'),
-			'product_unitprice'=>$this->input->post('product_unitprice'),
+			'product_unitprice'=> $this->input->post('product_unitprice'),
 			'store_id'=>$this->input->post('store_id'),
 			'created'=>date('Y-m-d H:i:s'),
 			'created_by'=>$this->session->userdata('personnel_id'),
@@ -215,7 +233,8 @@ class Inventory_management_model extends CI_Model
 			'brand_id'=>$this->input->post('brand_id'),
 			'class_id'=>$this->input->post('class_id'),
 			'generic_id'=>$this->input->post('generic_id'),
-			'class_id'=>$this->input->post('class_id')
+			'drug_type_id'=>$this->input->post('drug_type_id'),
+			'is_synced'=>0
 		);
 		//save product in the db
 		if($this->db->insert('product', $array))
@@ -235,23 +254,45 @@ class Inventory_management_model extends CI_Model
 	
 	public function edit_product($product_id)
 	{
-		$product_unitprice = $this->input->post('product_unitprice');
-		$product_unitprice_insurance = $product_unitprice * 1.2;
+		$name = ucwords(strtolower($this->input->post('product_name')));
+		$unit_of_measure = $this->input->post('unit_of_measure');
+
 		
+		if($this->input->post('category_id') == 2)
+		{
+			// get the administration route nam
+			$this->db->where('drug_type_id = '.$this->input->post('drug_type_id'));
+			$query = $this->db->get('drug_type');
+
+			if($query->num_rows() > 0)
+			{
+				foreach ($query->result() as $key) {
+					# code...
+					$drug_type_name = $key->drug_type_name;
+				}
+			}
+		}
+		$product_name = $name.' - '.$unit_of_measure.' ('.$drug_type_name.')';
 		$array = array(
-			'product_name'=>ucwords(strtolower($this->input->post('product_name'))),
+			'product_name'=>$product_name,
 			'product_status'=>1,
 			'product_description'=>$this->input->post('product_description'),
 			'category_id'=>$this->input->post('category_id'),
 			'quantity'=>$this->input->post('quantity'),
 			'batch_no'=>$this->input->post('batch_no'),
-			'product_unitprice'=>$product_unitprice,
-			'product_unitprice_insurance'=>$product_unitprice_insurance,
+			'product_unitprice'=> $this->input->post('product_unitprice'),
 			'store_id'=>$this->input->post('store_id'),
 			'created'=>date('Y-m-d H:i:s'),
 			'created_by'=>$this->session->userdata('personnel_id'),
 			'modified_by'=>$this->session->userdata('personnel_id'),
-			'product_packsize'=>$this->input->post('product_pack_size')
+			'product_packsize'=>$this->input->post('product_pack_size'),
+			'unit_of_measure'=>$this->input->post('unit_of_measure'),
+			'reorder_level'=>$this->input->post('reorder_level'),
+			'brand_id'=>$this->input->post('brand_id'),
+			'class_id'=>$this->input->post('class_id'),
+			'generic_id'=>$this->input->post('generic_id'),
+			'drug_type_id'=>$this->input->post('drug_type_id'),
+			'is_synced'=>0
 		);
 		
 		$this->db->where('product_id', $product_id);

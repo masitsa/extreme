@@ -180,6 +180,7 @@ $num_ultrasound_visit = count($ultrasound_rs);
             	<?php echo date('jS M Y H:i a'); ?> Thank you
             </div>
         </div>
+        
     </body>
     
 </html>

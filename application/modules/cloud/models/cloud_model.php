@@ -14,6 +14,8 @@ class Cloud_model extends CI_Model
 		{
 			//initiate the response array
 			
+			$visit_item_id = 0;
+			$patient_id = 0;
 			foreach($query->result() as $res)
 			{
 				$sync_table_id = $res->sync_table_id;
@@ -28,12 +30,42 @@ class Cloud_model extends CI_Model
 					//calculate total rows to be inserted of sync table
 					$total_rows = count($sync_data);
 					
+					$visit_id = 0;
 					for($r = 0; $r < $total_rows; $r++)
 					{
 						$patient_data = $sync_data[$r];
 						
+						if($function == "save_patients")
+						{
+							$table_key_value1 = $this->$function($patient_data,$branch_code,$patient_id);
+							
+							// $this->session->unset_userdata('patient_id');
+							// means that this is the first table
+							$patient_id = $table_key_value1;
+
+							$this->session->set_userdata('patient_id', $patient_id);
+						}
+
+						else if($function == "save_visits")
+						{
+							// means that this is the second table
+							$table_key_value1 = $this->$function($patient_data,$branch_code,$this->session->userdata('patient_id'));
+							
+							$this->session->unset_userdata('visit_id');
+							$visit_id = $table_key_value1;
+
+							$this->session->set_userdata('visit_id', $visit_id);
+						}
+						else
+						{
+							// other tables take the visit id 
+							$table_key_value1 = $this->$function($patient_data,$branch_code,$this->session->userdata('visit_id'));
+						}
+
+						$table_key_value = $table_key_value1;
+
 						//insert data into the sync table
-						$table_key_value = $this->$function($patient_data, $branch_code);
+						
 						
 						if($table_key_value > 0)
 						{
@@ -97,7 +129,7 @@ class Cloud_model extends CI_Model
 		return $query;
 	}
 
-	public function save_patients($patients, $branch_code)
+	public function save_patients($patients, $branch_code, $patient_id = NULL)
 	{
 		$res = $patients;
 
@@ -170,7 +202,7 @@ class Cloud_model extends CI_Model
 		}
 	}
 
-	public function save_visits($visits, $branch_code)
+	public function save_visits($visits, $branch_code, $patient_id)
 	{
 		$res = $visits;
 
@@ -199,7 +231,7 @@ class Cloud_model extends CI_Model
 		$data['time_end'] = $res->time_end;
 		$data['consultation_type_id'] = $res->consultation_type_id;
 		$data['visit_type'] = $res->visit_type;
-		$data['patient_id'] = $res->patient_id;
+		$data['patient_id'] = $patient_id;
 		$data['close_card'] = $res->close_card;
 		$data['vitals_alert'] = $res->vitals_alert;
 		$data['payment_insurance'] = $res->payment_insurance;
@@ -269,7 +301,7 @@ class Cloud_model extends CI_Model
 		}
 	}
 	
-	public function save_visit_charges($visit_charges, $branch_code)
+	public function save_visit_charges($visit_charges, $branch_code,$visit_id)
 	{
 		$res = $visit_charges;
 
@@ -279,7 +311,7 @@ class Cloud_model extends CI_Model
 		$this->db->where('visit_charge.visit_id = visit.visit_id AND visit_charge.visit_charge_id = '.$visit_charge_id.' AND visit.branch_code = \''.$branch_code.'\'');
 		$query = $this->db->get('visit_charge, visit');
 		
-		$data['visit_id'] = $res->visit_id;
+		$data['visit_id'] = $visit_id;
 		$data['service_charge_id'] = $res->service_charge_id;
 		$data['visit_charge_timestamp'] = $res->visit_charge_timestamp;
 		$data['visit_charge_amount'] = $res->visit_charge_amount;
@@ -325,7 +357,7 @@ class Cloud_model extends CI_Model
 		}
 	}
 	
-	public function save_visit_department($visit_department, $branch_code)
+	public function save_visit_department($visit_department, $branch_code,$visit_id)
 	{
 		$res = $visit_department;
 
@@ -335,7 +367,7 @@ class Cloud_model extends CI_Model
 		$this->db->where('visit_department.visit_id = visit.visit_id AND visit_department.visit_department_id = '.$visit_department_id.' AND visit.branch_code = \''.$branch_code.'\'');
 		$query = $this->db->get('visit_department, visit');
 		
-		$data['visit_id'] = $res->visit_id;
+		$data['visit_id'] = $visit_id;
 		$data['department_id'] = $res->department_id;
 		$data['visit_department_status'] = $res->visit_department_status;
 		$data['created_by'] = $res->created_by;
@@ -372,7 +404,7 @@ class Cloud_model extends CI_Model
 		}
 	}
 
-	public function save_visit_lab_test($visit_lab_test, $branch_code)
+	public function save_visit_lab_test($visit_lab_test, $branch_code,$visit_id)
 	{
 		$res = $visit_lab_test;
 
@@ -382,7 +414,7 @@ class Cloud_model extends CI_Model
 		$this->db->where('visit_lab_test.visit_id = visit.visit_id AND visit_lab_test.visit_lab_test_id = '.$visit_lab_test_id.' AND visit.branch_code = \''.$branch_code.'\'');
 		$query = $this->db->get('visit_lab_test, visit');
 		
-		$data['visit_id'] = $res->visit_id;
+		$data['visit_id'] = $visit_id;
 		$data['service_charge_id'] = $res->service_charge_id;
 		$data['units'] = $res->units;
 		$data['created_by'] = $res->created_by;
@@ -423,7 +455,7 @@ class Cloud_model extends CI_Model
 			}
 		}
 	}
-	public function save_visit_objective_findings($visit_objective_findings, $branch_code)
+	public function save_visit_objective_findings($visit_objective_findings, $branch_code,$visit_id)
 	{
 		$res = $visit_objective_findings;
 
@@ -433,7 +465,7 @@ class Cloud_model extends CI_Model
 		$this->db->where('visit_objective_findings.visit_id = visit.visit_id AND visit_objective_findings.visit_objective_findings_id = '.$visit_objective_findings_id.' AND visit.branch_code = \''.$branch_code.'\'');
 		$query = $this->db->get('visit_objective_findings, visit');
 		
-		$data['visit_id'] = $res->visit_id;
+		$data['visit_id'] = $visit_id;
 		$data['objective_findings_id'] = $res->objective_findings_id;
 		$data['description'] = $res->description;
 
@@ -465,7 +497,7 @@ class Cloud_model extends CI_Model
 			}
 		}
 	}
-	public function save_visit_procedure($visit_procedure, $branch_code)
+	public function save_visit_procedure($visit_procedure, $branch_code,$visit_id)
 	{
 		$res = $visit_procedure;
 
@@ -475,7 +507,7 @@ class Cloud_model extends CI_Model
 		$this->db->where('visit_procedure.visit_id = visit.visit_id AND visit_procedure.visit_procedure_id = '.$visit_procedure_id.' AND visit.branch_code = \''.$branch_code.'\'');
 		$query = $this->db->get('visit_procedure, visit');
 		
-		$data['visit_id'] = $res->visit_id;
+		$data['visit_id'] = $visit_id;
 		$data['procedure_id'] = $res->procedure_id;
 		$data['units'] = $res->units;
 		$data['created_by'] = $res->created_by;
@@ -515,7 +547,7 @@ class Cloud_model extends CI_Model
 	}
 
 
-	public function save_visit_symptoms($visit_symptoms, $branch_code)
+	public function save_visit_symptoms($visit_symptoms, $branch_code,$visit_id)
 	{
 		$res = $visit_symptoms;
 
@@ -525,7 +557,7 @@ class Cloud_model extends CI_Model
 		$this->db->where('visit_symptoms.visit_id = visit.visit_id AND visit_symptoms.symptoms_id = '.$symptoms_id.' AND visit.branch_code = \''.$branch_code.'\'');
 		$query = $this->db->get('visit_symptoms, visit');
 		
-		$data['visit_id'] = $res->visit_id;
+		$data['visit_id'] = $visit_id;
 		$data['visit_symptoms_id'] = $res->visit_symptoms_id;
 		$data['status_id'] = $res->status_id;
 		$data['description'] = $res->description;
@@ -560,7 +592,7 @@ class Cloud_model extends CI_Model
 		}
 	}
 
-	public function save_visit_vaccine($visit_vaccine, $branch_code)
+	public function save_visit_vaccine($visit_vaccine, $branch_code,$visit_id)
 	{
 		$res = $visit_vaccine;
 
@@ -570,7 +602,7 @@ class Cloud_model extends CI_Model
 		$this->db->where('visit_vaccine.visit_id = visit.visit_id AND visit_vaccine.visit_vaccine_id = '.$visit_vaccine_id.' AND visit.branch_code = \''.$branch_code.'\'');
 		$query = $this->db->get('visit_vaccine, visit');
 		
-		$data['visit_id'] = $res->visit_id;
+		$data['visit_id'] = $visit_id;
 		$data['vaccine_id'] = $res->vaccine_id;
 		$data['units'] = $res->units;
 		$data['created_by'] = $res->created_by;
@@ -937,7 +969,7 @@ class Cloud_model extends CI_Model
 			}
 		}
 	}
-	public function save_payments($payments, $branch_code)
+	public function save_payments($payments, $branch_code,$visit_id)
 	{
 		$res = $payments;
 
@@ -947,7 +979,7 @@ class Cloud_model extends CI_Model
 		$this->db->where('payments.visit_id = visit.visit_id AND payments.payment_id = '.$payment_id.' AND visit.branch_code = \''.$branch_code.'\'');
 		$query = $this->db->get('payments, visit');
 		
-		$data['visit_id'] = $res->visit_id;
+		$data['visit_id'] = $visit_id;
 		$data['personnel_id'] = $res->personnel_id;
 		$data['amount_paid'] = $res->amount_paid;
 		$data['time'] = $res->time;

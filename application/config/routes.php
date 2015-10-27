@@ -505,6 +505,8 @@ $route['pharmacy/dashboard'] = 'pharmacy/index';
 $route['pharmacy/pharmacy-queue'] = 'pharmacy/pharmacy_queue/12';
 $route['pharmacy/general-queue'] = 'reception/general_queue/pharmacy';
 $route['pharmacy/inpatients'] = 'reception/inpatients/pharmacy';
+$route['pharmacy/print-prescription/(:num)'] = 'pharmacy/print_prescription/$1';
+
 
 
 /*
@@ -606,6 +608,8 @@ $route['inventory/edit-product-deduction/(:num)/(:num)'] = 'inventory_management
 
 // pharmacy orders
 $route['pharmacy-setup/pharmacy-orders'] = 'inventory/orders/index';
+$route['inventory/search-products'] = 'inventory_management/search_inventory_product';
+$route['inventory/close-product-search'] = 'inventory_management/close_inventory_search';
 
 
 

@@ -44,6 +44,76 @@
 </div>
 <div class="row">
     <div class="col-md-12">
+	 <section class="panel">
+	    <header class="panel-heading">
+	        <h2 class="panel-title">Unsynced Drugs</h2>
+	    </header>     
+	     <!-- Widget content -->
+	    <div class="panel-body">
+		<?php
+		if($department_id == 5)
+		{
+			// get all unsyned products from pharmacy
+
+			$unsyned_rs = $this->services_model->get_unsynced_pharmacy_charges();
+			$result_two = '';
+			$counter = 0;
+			if ($unsyned_rs->num_rows() > 0)
+			{
+				
+				$result_two .= 
+					'
+						<table class="table table-hover table-bordered ">
+						  <thead>
+							<tr>
+							  <th>#</th>
+							  <th>Drug Name</th>
+							  <th>Quantity</th>
+							  <th>Unit Price</th>
+							</tr>
+						  </thead>
+						  <tbody>
+					';
+
+				foreach ($unsyned_rs->result() as $unsynced_row)
+				{
+					$product_id = $unsynced_row->product_id;
+					$product_name = $unsynced_row->product_name;
+					$quantity = $unsynced_row->quantity;
+					$product_unitprice = $unsynced_row->product_unitprice;
+					$counter++;
+					$result_two .= 
+					'
+						<tr>
+							<td>'.$counter.'</td>
+							<td>'.$product_name.'</td>
+							<td>'.$quantity.'</td>
+							<td>'.$product_unitprice.'</td>
+						</tr> 
+					';
+
+				}
+
+				$result_two .= 
+			'
+						  </tbody>
+						</table>
+			';
+		}
+		
+		else
+		{
+			$result_two .= "There are no service charges to be synced";
+		}
+	}
+		?>
+        <?php echo $result_two; ?>
+		</div>
+	</section>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
 
  <section class="panel">
     <header class="panel-heading">

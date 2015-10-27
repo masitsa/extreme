@@ -563,10 +563,10 @@ $p = 0;
 
 
                         // checking for the stocks in drugs
-                          $purchases = $this->pharmacy_model->item_purchases($checker_id);
-                            $sales = $this->pharmacy_model->get_drug_units_sold($checker_id);
-                            $deductions = $this->pharmacy_model->item_deductions($checker_id);
-                            $in_stock = ($quantity + $purchases) - $sales - $deductions;
+                        $purchases = $this->pharmacy_model->item_purchases($checker_id);
+                        $sales = $this->pharmacy_model->get_drug_units_sold($checker_id);
+                        $deductions = $this->pharmacy_model->item_deductions($checker_id);
+                        $in_stock = ($quantity + $purchases) - $sales - $deductions;
                         // end of checking stocks
                         
                         $substitution = "<select id ='substitution".$id."' name='substitution".$id."' class='form-control'>";
@@ -791,8 +791,11 @@ $p = 0;
 		if($module == 1){
 			?>
 			<br/>
+			
 			<div class="center-align">
 			<?php echo '<a href="'.site_url().'pharmacy/send_to_accounts/'.$visit_id.'" onclick="return confirm(\'Send to accounts?\');" class="btn btn-sm btn-success">Send to Accounts</a>';?>
+			<?php echo '<a href="'.site_url().'pharmacy/print-prescription/'.$visit_id.'" class="btn btn-sm btn-warning fa fa-print" target="_blank"> Print Prescription</a>';?>
+
 		 	</div>
 			<?php
 		}else{

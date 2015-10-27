@@ -225,7 +225,7 @@ else
                                                     <label class="col-lg-4 control-label">Unit Price: </label>
                                                     
                                                     <div class="col-lg-8">
-                                                        <input type="text" class="form-control" name="drugs_unitprice" placeholder="Pack Size" value="<?php echo set_value('product_unit_price');?>">
+                                                        <input type="text" class="form-control" name="product_unitprice" placeholder="Product Unit Price" value="<?php echo set_value('product_unit_price');?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">

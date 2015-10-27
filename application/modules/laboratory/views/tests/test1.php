@@ -74,9 +74,9 @@ if(!empty($coming_from)){
 
 			// get invoiced charge for this test
 				// parameters
-					$service_charge_id = $key->service_charge_id;
+			$service_charge_id = $key->service_charge_id;
 				// defined parameters
-					 $actual_visit_charge = $this->lab_model->check_visit_charge_lab_test($service_charge_id,$visit_id);
+			$actual_visit_charge = $this->lab_model->check_visit_charge_lab_test($service_charge_id,$visit_id);
 			// end of geting the actual charge id
 		
 			$format_rs = $this->lab_model->get_lab_visit_result($visit_charge_id);
@@ -108,7 +108,8 @@ if(!empty($coming_from)){
 			
 			//echo $_SESSION['test'];
 			//echo "hlkjasda".$this->session->userdata('test');
-			if($this->session->userdata('test') ==0){
+			if($this->session->userdata('test') == 0){
+
 				$test_format =$key2->lab_test_formatname;
 				$lab_test_format_id =$key2->lab_test_format_id;
 				$lab_test_format_units =$key2->lab_test_format_units;
@@ -119,6 +120,7 @@ if(!empty($coming_from)){
 				$lab_visit_result =$key2->lab_visit_results_result;
 			}
 			else{
+
 				$test_format ="-";
 			}
 						
@@ -145,7 +147,7 @@ if(!empty($coming_from)){
 			echo"
 				<td>".$test_format."</td>";
 					
-				if($this->session->userdata('test') ==0){
+				if($this->session->userdata('test') == 0){
 					echo"<td><input type='text' class='form-control' id='laboratory_result2".$lab_test_format_id."' size='10' onkeyup='save_result_format(".$visit_charge_id.",".$lab_test_format_id.", ".$visit_id.")' value='".$lab_visit_result."'/></td>";
 					
 					echo"
@@ -166,7 +168,7 @@ if(!empty($coming_from)){
 						<td id='result_space".$visit_charge_id."'></td>";
 				}
 				
-				if($this->session->userdata('test') ==0){
+				if($this->session->userdata('test') == 0){
 					echo"<td><div class='ui-widget' id='value2".$lab_test_format_id."'></div></td>";
 				}
 				else {
@@ -272,6 +274,7 @@ if(!empty($coming_from)){
 		
 	}
 }
+
 echo '
 	</div>
 </section>';

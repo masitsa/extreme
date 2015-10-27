@@ -109,11 +109,11 @@ class Inventory_management  extends MX_Controller
 		$where = 'product.category_id = category.category_id '.$constant.' '.$addition.' ';
 		$table = 'product, category, store'.$table;
 		
-		$product_search = $this->session->userdata('product_search');
+		$product_inventory_search = $this->session->userdata('product_inventory_search');
 		
-		if(!empty($product_search))
+		if(!empty($product_inventory_search))
 		{
-			$where .= $product_search;
+			$where .= $product_inventory_search;
 		}
 		$segment = 3;
 		//pagination
@@ -149,7 +149,7 @@ class Inventory_management  extends MX_Controller
 		$this->pagination->initialize($config);
 		
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
-        $data["links"] = $this->pagination->create_links();
+        $v_data["links"] = $this->pagination->create_links();
 		$query = $this->products_model->get_all_products($table, $where, $config["per_page"], $page);
 		
 		if ($query->num_rows() > 0)
@@ -192,7 +192,7 @@ class Inventory_management  extends MX_Controller
 		$this->form_validation->set_rules('product_name', 'product Name', 'required|xss_clean');
 		$this->form_validation->set_rules('products_pack_size', 'Pack Size', 'numeric|xss_clean');
 		$this->form_validation->set_rules('quantity', 'Opening Quantity', 'numeric|xss_clean');
-		$this->form_validation->set_rules('products_unitprice', 'Unit Price', 'numeric|xss_clean');
+		$this->form_validation->set_rules('product_unitprice', 'Unit Price', 'numeric|xss_clean');
 		
 		//if form conatins valid data
 		if ($this->form_validation->run())
@@ -727,7 +727,7 @@ class Inventory_management  extends MX_Controller
    	public function close_inventory_search()
 	{
 		$this->session->unset_userdata('product_inventory_search');
-		$this->inventory();
+		$this->index();
 	}
 
 	public function search_inventory_product()
@@ -736,7 +736,7 @@ class Inventory_management  extends MX_Controller
 		
 		if(!empty($product_name))
 		{
-			$product_name = ' AND product.product_name LIKE \''.$product_name.'%\' ';
+			$product_name = ' AND product.product_name LIKE \'%'.$product_name.'%\' ';
 		}
 	
 		
@@ -744,7 +744,7 @@ class Inventory_management  extends MX_Controller
 		$search = $product_name;
 		$this->session->set_userdata('product_inventory_search', $search);
 		
-		$this->inventory();
+		$this->index();
 	}	
 
 	public function make_order($store_id)

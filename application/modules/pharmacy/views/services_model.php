@@ -416,19 +416,11 @@ class Services_model extends CI_Model
 		
 		return TRUE;
 	}
-
-	public function get_unsynced_pharmacy_charges()
-	{
-		$this->db->where('product_status = 1 AND is_synced = 0');
-		$query = $this->db->get('product');
-		
-		return $query;
-	}
 	
 	public function import_pharmacy_charges($service_id)
 	{
 		//get lab tests
-		$this->db->where('product_status = 1 AND is_synced = 0');
+		$this->db->where('product_status', 1);
 		$products = $this->db->get('product');
 		
 		if($products->num_rows() > 0)
@@ -439,7 +431,7 @@ class Services_model extends CI_Model
 				$product_name = $res->product_name;
 				$product_unitprice = $res->product_unitprice;
 				$product_unitprice_insurance = $res->product_unitprice_insurance;
-				
+				$markup = round(($product_unitprice * 1.2), 0);
 	
 				// get all the visit type
 				$this->db->where('visit_type_status', 1);
@@ -454,13 +446,9 @@ class Services_model extends CI_Model
 						{
 							$product_unitprice = 0;
 						}
-						if(!empty($product_unitprice_insurance))
+						if(empty($product_unitprice_insurance))
 						{
-							$product_unitprice_insurance = $product_unitprice_insurance;
-						}
-						else
-						{
-							$product_unitprice_insurance = round(($product_unitprice * 1.2), 0);
+							$product_unitprice_insurance = 0;
 						}
 						if($visit_type_id == 1)
 						{
@@ -515,15 +503,8 @@ class Services_model extends CI_Model
 							{
 							}
 						}
-
-
 					}
 				}
-
-				$update_array = array('is_synced'=>1);
-				$this->db->where('product_id ='.$product_id);
-				$this->db->update('product',$update_array);
-
 			}
 			
 			$this->session->set_userdata('success_message', 'Charges created successfully');
