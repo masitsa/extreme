@@ -120,7 +120,7 @@ class Payroll extends accounts
 		$branch_id = $this->session->userdata('branch_id');
 		$branch_name = $this->session->userdata('branch_name');
 		$branches = $this->branches_model->all_branches();
-		if(($branch_id == FALSE) || (empty($branch_id)))
+		/*if(($branch_id == FALSE) || (empty($branch_id)))
 		{
 			if($branches->num_rows() > 0)
 			{
@@ -142,7 +142,8 @@ class Payroll extends accounts
 		else
 		{
 			$where = 'personnel_type_id = 1 AND personnel_status != 0 AND branch_id = '.$branch_id;
-		}
+		}*/
+		$where = 'personnel_type_id = 1 AND personnel_status != 0';
 		$table = 'personnel';
 		//pagination
 		$segment = 5;

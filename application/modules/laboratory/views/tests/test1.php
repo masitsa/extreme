@@ -5,20 +5,6 @@ $coming_from = $this->reception_model->coming_from($visit_id);
 
 if(!empty($coming_from))
 {
-	//coming from reception
-	if(($coming_from == 'Reception'))
-	{
-		echo "
-		<table align='center'>
-			<tr>
-				<td>
-					<input name='test' type='button' value='Check Test' onclick='open_window_laboratory(".$visit_id.",552)' />
-				</td>
-			</tr>
-		</table>
-		";
-	}
-	
 	$rs3 = $this->lab_model->get_comment($visit_id);
 	$num_rows3 = count($rs3);
 	$comment = '';
