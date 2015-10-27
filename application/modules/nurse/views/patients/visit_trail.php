@@ -280,13 +280,27 @@ else
                             $visit_total = $visit_charge_amount * $units;
                             $personell_rs = $this->reception_model->get_personnel_details($created_by);
                             $item_rs = $this->reception_model->get_service_charges_per_type($patient_type, $service_id);
+							$personnel_id = $key_items->personnel_id;
+							$doctor = '';
+							
+							if($personnel_id > 0)
+							{
+                            	$doctor_rs = $this->reception_model->get_personnel($personnel_id);
+								if($doctor_rs->num_rows() > 0)
+								{
+									$key_personnel = $doctor_rs->row();
+									$first_name = $key_personnel->personnel_fname;
+									$personnel_onames = $key_personnel->personnel_onames;
+									$doctor = ' : Dr. '.$personnel_onames.' '.$first_name;
+								}
+							}
                             if(empty($created_by))
                             {
                                 $created_by_name = " - ";
                             }
                             else
                             {
-                               if(count($personell_rs) > 0)
+                              if(count($personell_rs) > 0)
                               {
                                 foreach ($personell_rs as $key_personnel):
                                   # code...
@@ -311,30 +325,30 @@ else
                                   {
                                     ?>
                                     <select name="consultation_id" id="consultation_id<?php echo $visit_id;?>"   class="form-control">
-                                <?php
-                        if(count($item_rs) > 0){
-                                    foreach($item_rs as $row):
-                            $service_charge_id = $row->service_charge_id;
-                            $service_charge_name= $row->service_charge_name;
-                            
-                            if($service_charge_id == $service_charge_idd)
-                            {
-                              echo "<option value='".$service_charge_id."' selected='selected'>".$service_charge_name."</option>";
-                            }
-                            
-                            else
-                            {
-                              echo "<option value='".$service_charge_id."'>".$service_charge_name."</option>";
-                            }
-                          endforeach;
-                            }
-                          ?>
+									<?php
+                                    if(count($item_rs) > 0){
+                                        foreach($item_rs as $row):
+                                            $service_charge_id = $row->service_charge_id;
+                                            $service_charge_name= $row->service_charge_name;
+                                            
+                                            if($service_charge_id == $service_charge_idd)
+                                            {
+                                                echo "<option value='".$service_charge_id."' selected='selected'>".$service_charge_name."</option>";
+                                            }
+                                            
+                                            else
+                                            {
+                                                echo "<option value='".$service_charge_id."'>".$service_charge_name."</option>";
+                                            }
+                                        endforeach;
+                                    }
+                                    ?>
                                 </select>
                                     <?php
                                   }
                                   else
                                   {
-                                    echo $service_charge_name;
+                                    echo $service_charge_name.$doctor;
                                   }
                                   $units = $key_items->visit_charge_units;
                      $visit_total = $visit_charge_amount * $units;

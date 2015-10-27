@@ -2504,5 +2504,13 @@ class Reception_model extends CI_Model
 			return FALSE;
 		}
 	}
+	
+	public function get_personnel($personnel_id)
+	{
+		$this->db->where('personnel_id', $personnel_id);
+		$query = $this->db->get('personnel');
+		
+		return $query;
+	}
 }
 ?>

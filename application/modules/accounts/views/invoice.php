@@ -262,6 +262,20 @@ if($all_notes->num_rows() > 0)
 											$service_name = $key_items->service_name;
 											$units = $key_items->visit_charge_units;
 											$service_id = $key_items->service_id;
+											$personnel_id = $key_items->personnel_id;
+											$doctor = '';
+											
+											if($personnel_id > 0)
+											{
+												$doctor_rs = $this->reception_model->get_personnel($personnel_id);
+												if($doctor_rs->num_rows() > 0)
+												{
+													$key_personnel = $doctor_rs->row();
+													$first_name = $key_personnel->personnel_fname;
+													$personnel_onames = $key_personnel->personnel_onames;
+													$doctor = ' : Dr. '.$personnel_onames.' '.$first_name;
+												}
+											}
 											//var_dump($service_id);
 											//if lab check to see if drug is in pres
 											if($service_id == 4)
@@ -275,7 +289,7 @@ if($all_notes->num_rows() > 0)
 													<tr>
 														<td><?php echo $s;?></td>
 														<td><?php echo $service_name;?></td>
-														<td><?php echo $service_charge_name;?></td>
+														<td><?php echo $service_charge_name.$doctor;?></td>
 														<td><?php echo $units;?></td>
 														<td><?php echo number_format($visit_charge_amount,2);?></td>
 														<td><?php echo number_format($visit_total,2);?></td>
@@ -299,7 +313,7 @@ if($all_notes->num_rows() > 0)
 												<tr>
 													<td><?php echo $s;?></td>
 													<td><?php echo $service_name;?></td>
-													<td><?php echo $service_charge_name;?></td>
+													<td><?php echo $service_charge_name.$doctor;?></td>
                                                     <td><?php echo $units;?></td>
                                                     <td><?php echo number_format($visit_charge_amount,2);?></td>
 													<td><?php echo number_format($visit_total,2);?></td>

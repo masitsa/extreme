@@ -242,7 +242,7 @@ class Accounts_model extends CI_Model
 	{
 		$table = "visit_charge, service_charge, service";
 		$where = "service_charge.service_id = service.service_id AND visit_charge.visit_charge_delete = 0 AND visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_id =". $visit_id;
-		$items = "service.service_id,service.service_name,service_charge.service_charge_name,visit_charge.service_charge_id,visit_charge.visit_charge_units, visit_charge.visit_charge_amount, visit_charge.visit_charge_timestamp,visit_charge.visit_charge_id,visit_charge.created_by";
+		$items = "service.service_id,service.service_name,service_charge.service_charge_name,visit_charge.service_charge_id,visit_charge.visit_charge_units, visit_charge.visit_charge_amount, visit_charge.visit_charge_timestamp,visit_charge.visit_charge_id,visit_charge.created_by, visit_charge.personnel_id";
 		$order = "service.service_name";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
