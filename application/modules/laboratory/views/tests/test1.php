@@ -3,43 +3,19 @@
 $patient_id = $this->nurse_model->get_patient_id($visit_id);
 $coming_from = $this->reception_model->coming_from($visit_id);
 
-if(!empty($coming_from)){
-
-	$get_test_rs = $this->lab_model->get_lab_visit_test($visit_id);
-	$num_rows = count($get_test_rs);
-	
+if(!empty($coming_from))
+{
 	$rs3 = $this->lab_model->get_comment($visit_id);
 	$num_rows3 = count($rs3);
+	$comment = '';
 	
-	if($num_rows3 > 0){
+	if($num_rows3 > 0)
+	{
 		foreach ($rs3 as $key3):
 			$comment = $key3->lab_visit_comment;
 		endforeach;
 	}
 	
-	if ($num_rows >0 ){
-		foreach ($get_test_rs as $key_rs):
-			$lab_test = $key_rs->department_id;
-		endforeach;
-		//echo $lab_test;
-		
-		//coming from reception
-		if(($lab_test == 1)){
-			echo "
-			<table align='center'>
-			<tr><td>
-			<input name='test' type='button' value='Check Test' onclick='open_window_laboratory(".$visit_id.",552)' />
-			
-			</td></tr>
-			
-			</table>
-			
-			
-			";
-			
-		}else {}
-		
-	}
 	$lab_rs = $this->lab_model->get_lab_visit_item($visit_id);
 	$num_lab_visit = count($lab_rs);
 	

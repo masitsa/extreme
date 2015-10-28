@@ -203,7 +203,8 @@
 	  }
 	}
 
-	function save_result_format(id, format, visit_id){
+	function save_result_format(id, format, visit_id)
+	{
 		var config_url = $('#config_url').val();
 		
 		var res = document.getElementById("laboratory_result2"+format).value;
@@ -221,7 +222,6 @@
 				//alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
 				alert(error);
 			}
-
         });
 	}
 

@@ -235,7 +235,7 @@ class Lab_model extends CI_Model
 		//AND service_charge.service_id = service.service_id AND service.branch_code = '".$this->session->userdata('branch_code')."' AND visit_lab_test.visit_id = ". $visit_id;
 		$where = "(service.service_name LIKE 'Laboratory' OR service.service_name LIKE 'laboratory')
 		AND visit_lab_test.service_charge_id = service_charge.service_charge_id 
-		AND service_charge.service_id = service.service_id AND visit_lab_test.visit_id = ". $visit_id;
+		AND service_charge.service_id = service.service_id AND visit_lab_test.visit_id = ". $visit_id." AND visit_lab_test_status = 1";
 		$items = "visit_lab_test.visit_lab_test_id,visit_lab_test.service_charge_id";
 		$order = "visit_lab_test.visit_lab_test_id";
 		
@@ -547,7 +547,6 @@ class Lab_model extends CI_Model
 		
 		$data['lab_visit_results_result'] = $result;
 		$this->db->where(array('lab_visit_result_format' => $format, 'visit_id' => $visit_id));
-		
 		$this->db->update('lab_visit_results', $data);
 	}
 
