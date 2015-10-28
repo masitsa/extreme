@@ -59,6 +59,21 @@
          </section>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">Consumables</h2>
+            </header>
+            <div class="panel-body">
+                <div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Consumables' onclick='myPopup5(<?php echo $visit_id; ?>)'/></p></div>
+                <!-- visit Procedures from java script -->
+                <div id="consumables_to_patients"></div>
+                <!-- end of visit procedures -->
+            </div>
+         </section>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-12">
@@ -131,6 +146,7 @@ $(document).ready(function(){
 				get_vaccines(visit_id);
 				display_vaccines(visit_id);
 				display_visit_vaccines(visit_id);
+                display_visit_consumables(visit_id);
             }
         }
                 
@@ -448,6 +464,12 @@ function calculatevaccinetotal(amount, id, procedure_id, v_id)
 
     grand_vaccine_total(id, units, amount, v_id);
 }
+function calculateconsumabletotal(amount, id, procedure_id, v_id)
+{
+    var units = document.getElementById('units'+id).value;  
+
+    grand_consumable_total(id, units, amount, v_id);
+}
 
 function display_visit_vaccines(visit_id)
 {
@@ -481,6 +503,38 @@ function display_visit_vaccines(visit_id)
         XMLHttpRequestObject.send(null);
     }
 }
+function display_visit_consumables(visit_id)
+{
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    var url = config_url+"nurse/visit_consumables/"+visit_id;
+    
+    if(XMLHttpRequestObject) {
+                
+        var obj = document.getElementById("consumables_to_patients");
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) 
+            {
+                obj.innerHTML = XMLHttpRequestObject.responseText;
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
 
 function grand_vaccine_total(vaccine_id, units, amount, v_id){
     var XMLHttpRequestObject = false;
@@ -504,6 +558,34 @@ function grand_vaccine_total(vaccine_id, units, amount, v_id){
             
             if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
                 display_visit_vaccines(v_id);
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
+function grand_consumable_total(vaccine_id, units, amount, v_id){
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    var url = config_url+"nurse/consuamble_total/"+vaccine_id+"/"+units+"/"+amount;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                display_visit_consumables(v_id);
             }
         }
                 
@@ -736,6 +818,35 @@ function delete_vaccine(id, visit_id){
         XMLHttpRequestObject.send(null);
     }
 }
+function delete_consumable(id, visit_id){
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+     var config_url = document.getElementById("config_url").value;
+    var url = config_url+"nurse/delete_consumable/"+id;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+                display_visit_consumables(visit_id);
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
 
 
 
@@ -778,6 +889,11 @@ function myPopup4(visit_id) {
     var config_url = document.getElementById("config_url").value;
     var win = window.open( config_url+"nurse/vaccines_list/"+visit_id, "myWindow", "status = 1, height = auto, width = 600, resizable = 0" );
   	win.focus();
+}
+function myPopup5(visit_id) {
+    var config_url = document.getElementById("config_url").value;
+    var win = window.open( config_url+"nurse/consumables_list/"+visit_id, "myWindow", "status = 1, height = auto, width = 600, resizable = 0" );
+    win.focus();
 }
 // end of vaccine
 function save_medication(visit_id){

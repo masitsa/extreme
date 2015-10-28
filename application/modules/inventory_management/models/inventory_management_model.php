@@ -202,6 +202,7 @@ class Inventory_management_model extends CI_Model
 
 		if($this->input->post('category_id') == 2)
 		{
+
 			// get the administration route nam
 			$this->db->where('drug_type_id = '.$this->input->post('drug_type_id'));
 			$query = $this->db->get('drug_type');
@@ -213,8 +214,13 @@ class Inventory_management_model extends CI_Model
 					$drug_type_name = $key->drug_type_name;
 				}
 			}
+			$product_name = $name.'-'.$unit_of_measure.'('.$drug_type_name.')';
 		}
-		$product_name = $name.'-'.$unit_of_measure.'('.$drug_type_name.')';
+		else
+		{
+			$product_name = $name.'-'.$unit_of_measure;
+		}
+		
 		$array = array(
 			'product_name'=>$product_name,
 			'product_status'=>1,

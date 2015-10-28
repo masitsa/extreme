@@ -522,6 +522,27 @@ class Nurse  extends MX_Controller
 		redirect('nurse/vaccines_list/'.$visit_id);
 	}
 
+	public function search_consumable($visit_id)
+	{
+		$this->form_validation->set_rules('search_item', 'Search', 'trim|required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			$search = ' AND service_charge.service_charge_name LIKE \'%'.$this->input->post('search_item').'%\'';
+			$this->session->set_userdata('consumable_search', $search);
+		}
+		
+		redirect('nurse/consumables_list/'.$visit_id);
+	}
+	
+	public function close_consumable_search($visit_id)
+	{
+		$this->session->unset_userdata('consumable_search');
+		
+		redirect('nurse/consumables_list/'.$visit_id);
+	}
+
 	function vaccines_list($visit_id)
 	{
 		//check patient visit type
@@ -610,11 +631,34 @@ class Nurse  extends MX_Controller
 		$this->nurse_model->visit_charge_insert($visit_id,$vaccine_id,$suck);
 		$this->visit_vaccines($visit_id);	
 	}
+	function consumables($consumable_id,$visit_id,$suck)
+	{
+		$data = array('consumable_id'=>$consumable_id,'visit_id'=>$visit_id,'suck'=>$suck);
+		$this->nurse_model->submitvisitconsumable($consumable_id,$visit_id,$suck);
+
+		$visit_type_rs = $this->nurse_model->get_visit_type($visit_id);
+		
+		if(count($visit_type_rs) >0){
+			foreach ($visit_type_rs as $rs1 ) :
+				# code...
+				$visit_t = $rs1->visit_type;
+		
+			endforeach;
+		}
+		$this->nurse_model->visit_charge_insert($visit_id,$consumable_id,$suck);
+		$this->visit_consumables($visit_id);	
+	}
 
 	function visit_vaccines($visit_id)
 	{
 		$data = array('visit_id'=>$visit_id);
 		$this->load->view('visit_vaccines/vaccines_assigned',$data);	
+	}
+
+	function visit_consumables($visit_id)
+	{
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('visit_consumables/consumables_assigned',$data);
 	}
 	public function search_diseases($visit_id)
 	{
@@ -735,13 +779,20 @@ class Nurse  extends MX_Controller
 	}
 	function delete_vaccine($vaccine_id)
 	{
-		$visit_data = array('visit_charge_delete'=>1,'deleted_by'=>$this->session->userdata("personnel_id"),'deleted_on'=>date("Y-m-d"),'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
+		$visit_data = array('visit_charge_delete'=>0,'deleted_by'=>$this->session->userdata("personnel_id"),'deleted_on'=>date("Y-m-d"),'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
 
 		$this->db->where(array("visit_charge_id"=>$vaccine_id));
 		$this->db->update('visit_charge', $visit_data);
 		
 	}
+	public function delete_consumable($consumable_id)
+	{
+		$visit_data = array('visit_charge_delete'=>0,'deleted_by'=>$this->session->userdata("personnel_id"),'deleted_on'=>date("Y-m-d"),'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
 
+		$this->db->where(array("visit_charge_id"=>$consumable_id));
+		$this->db->update('visit_charge', $visit_data);
+		
+	}
 	function add_lifestyle($patient_id){
 
 	}
@@ -807,6 +858,13 @@ class Nurse  extends MX_Controller
 
 		$visit_data = array('visit_charge_units'=>$units,'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
 		$this->db->where(array("visit_charge_id"=>$vaccine_id));
+		$this->db->update('visit_charge', $visit_data);
+	}
+	public function consuamble_total($consumable_id,$units,$amount){
+		
+
+		$visit_data = array('visit_charge_units'=>$units,'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
+		$this->db->where(array("visit_charge_id"=>$consumable_id));
 		$this->db->update('visit_charge', $visit_data);
 	}
 
@@ -1768,6 +1826,80 @@ class Nurse  extends MX_Controller
 		
 		$this->load->view('admin/templates/general_page', $data);
 	}
+
+	public function consumables_list($visit_id)
+	{
+
+		$segment = 5;
+
+		$rs = $this->nurse_model->check_visit_type($visit_id);
+		if(count($rs)>0){
+		  foreach ($rs as $rs1) {
+			# code...
+			  $visit_t = $rs1->visit_type;
+		  }
+		}
+		// echo $visit_t; die();
+		$order = 'service_charge.service_charge_name';
+		//$where = 'drugs.brand_id = brand.brand_id AND class.class_id = drugs.class_id AND drugs.generic_id = generic.generic_id AND drugs.drug_type_id = drug_type.drug_type_id AND drugs.drug_administration_route_id = drug_administration_route.drug_administration_route_id AND drugs.drug_dose_unit_id = drug_dose_unit.drug_dose_unit_id AND drugs.drug_consumption_id = drug_consumption.drug_consumption_id';
+		
+		$where = 'service_charge.product_id = product.product_id AND category.category_id = product.category_id AND category.category_name = "Consumable" AND service_charge.visit_type_id = '.$visit_t;
+		$consumable_search = $this->session->userdata('consumable_search');
+		
+		if(!empty($consumable_search))
+		{
+			$where .= $consumable_search;
+		}
+		
+		$table = 'service_charge,product,category';
+		
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/nurse/consumables_list/'.$visit_id;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->nurse_model->get_vaccine_list($table, $where, $config["per_page"], $page, $order);
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['visit_id'] = $visit_id;
+		
+		$data['title'] = 'Consumables List';
+		$v_data['title'] = 'Consumables List';
+		$data['content'] = $this->load->view('consumables_list', $v_data, true);
+		
+		$this->load->view('admin/templates/general_page', $data);
+	}
+
 	/*
 	*	Add Drug
 	*

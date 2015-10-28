@@ -334,7 +334,11 @@ class Nurse_model extends CI_Model
 		$visit_data = array('vaccine_id'=>$vaccine_id,'visit_id'=>$visit_id,'units'=>$suck,'created_by'=>$this->session->userdata("personnel_id"),'created'=>date("Y-m-d"));
 		$this->db->insert('visit_vaccine', $visit_data);
 	}
-
+	public function submitvisitconsumable($consumable_id,$visit_id,$suck)
+	{
+		$visit_data = array('consumable_id'=>$consumable_id,'visit_id'=>$visit_id,'units'=>$suck,'created_by'=>$this->session->userdata("personnel_id"),'created'=>date("Y-m-d"));
+		$this->db->insert('visit_consumable', $visit_data);
+	}
 	function get_visit_type($visit_id){
 		$table = "visit";
 		$where = "visit_id = '$visit_id'";
@@ -381,6 +385,32 @@ class Nurse_model extends CI_Model
 	{
 		$table = "visit_charge, service_charge, service";
 		$where = "visit_charge.visit_charge_delete = 0 AND visit_charge.visit_id = $v_id AND visit_charge.service_charge_id = service_charge.service_charge_id AND service.service_id = service_charge.service_id AND service.service_name = 'Vaccination'";
+		$items = "*";
+		$order = "visit_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		return $result;
+	}
+	function get_visit_consumables_charges($v_id)
+	{
+		//check patient visit type
+		$rs = $this->check_visit_type($v_id);
+		if(count($rs)>0){
+		  foreach ($rs as $rs1) {
+			# code...
+			  $visit_t = $rs1->visit_type;
+		  }
+		}
+
+		$table = "visit_charge,service_charge,product,category";
+		$where = 
+				"service_charge.product_id = product.product_id
+				AND service_charge.service_charge_id = visit_charge.service_charge_id
+				AND category.category_id = product.category_id 
+				AND category.category_name = 'Consumable'
+				AND visit_charge.visit_charge_delete = 0 
+				AND visit_charge.visit_id = $v_id 
+				AND service_charge.visit_type_id = $visit_t";
 		$items = "*";
 		$order = "visit_id";
 
