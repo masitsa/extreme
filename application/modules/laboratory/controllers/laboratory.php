@@ -424,9 +424,46 @@ class Laboratory  extends MX_Controller
 		// end of it
 
 	}
+	public function get_doctor_data($visit_id)
+	{
+		# code...
+		
+	}
 
 	function print_test($visit_id, $patient_id)
 	{
+
+		$personnel_query = $this->personnel_model->get_all_personnel();
+
+		$personnel_id = $this->get_doctor_data($visit_id);
+
+		//creators and editors
+		if($personnel_query->num_rows() > 0)
+		{
+			$personnel_result = $personnel_query->result();
+			
+			foreach($personnel_result as $adm)
+			{
+				$personnel_id2 = $adm->personnel_id;
+				
+				if($personnel_id == $personnel_id2)
+				{
+					$doctor = $adm->personnel_fname;
+					break;
+				}
+				
+				else
+				{
+					$doctor = '-';
+				}
+			}
+		}
+		
+		else
+		{
+			$doctor = '-';
+		}
+				
 		$this->load->library('fpdf');
 		$this->fpdf->AliasNbPages();
 		$this->fpdf->AddPage();
@@ -471,7 +508,7 @@ class Laboratory  extends MX_Controller
 		//thickness of frame (mm)
 		//$this->fpdf->SetLineWidth(1);
 		//Logo
-		$this->fpdf->Image(base_url().'assets/logo/'.$contacts['logo'],90,3,0,30);
+		$this->fpdf->Image(base_url().'assets/logo/'.$contacts['logo'],65,3,0,30);
 		//font
 		$this->fpdf->SetFont('Arial', 'B', 12);
 		//title
@@ -486,6 +523,7 @@ class Laboratory  extends MX_Controller
 		
 		$this->session->set_userdata('patient_sex',$gender);
 		$this->fpdf->Cell(50,5,'Sex:'.$gender, 0, 1, 'L');
+		$this->fpdf->Cell(180,7,'Requesting Doctor : Dr.'.$doctor, 0, 1, 'C');
 		//$this->fpdf->Cell(-30);//move left
 		$this->fpdf->Cell(0,7,'Clinic Number:'.$patient_number, 'B', 1, 'L');
 		//line break

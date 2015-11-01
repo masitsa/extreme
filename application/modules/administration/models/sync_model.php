@@ -5,7 +5,7 @@ class Sync_model extends CI_Model
 	{
 		// get the patient id and the branch id and patient
 		$patient_details = $this->sync_model->get_table_details($visit_id);
-		
+		 // var_dump($patient_details) or die();
 		if(count($patient_details) > 0)
 		{
 			$url = 'http://159.203.78.242/cloud/save_cloud_data';
@@ -13,6 +13,7 @@ class Sync_model extends CI_Model
 			//Encode the array into JSON.
 			
 			//The JSON data.
+
 			$data_string = json_encode($patient_details);
 			
 			try{                                                                                                         
@@ -28,6 +29,9 @@ class Sync_model extends CI_Model
 				$result = curl_exec($ch);
 				curl_close($ch);
 				$response = $this->sync_model->parse_sync_up_response($result);
+
+				 // $response = $result;
+				 // echo json_encode($response);
 			}
 			catch(Exception $e)
 			{
