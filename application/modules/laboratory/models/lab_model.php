@@ -295,8 +295,6 @@ class Lab_model extends CI_Model
 
 		$visit_data = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'created'=>date("Y-m-d"),'visit_lab_test_status'=>1,'created_by'=>$this->session->userdata("personnel_id"));
 		$this->db->insert('visit_lab_test', $visit_data);
-
-		
 	}
 
 
@@ -342,9 +340,9 @@ class Lab_model extends CI_Model
 		$this->db->delete('visit_charge');
 	}
 
-	function delete_visit_lab_test($service_charge_id,$visit_id)
+	function delete_visit_lab_test($visit_lab_test_id,$visit_id)
 	{
-		$table = "visit_lab_test";
+		/*$table = "visit_lab_test";
 		$where = "visit_id = ". $visit_id. " AND service_charge_id = ". $service_charge_id;
 		$items = "visit_lab_test_id";
 		$order = "visit_id";
@@ -357,7 +355,8 @@ class Lab_model extends CI_Model
 				$visit_lab_test_id = $key->visit_lab_test_id;
 			endforeach;
 			
-		}
+		}*/
+		//var_dump($visit_lab_test_id); die();
 		$data['visit_lab_test_status'] = 0;
 	
 		$this->db->where('visit_lab_test_id', $visit_lab_test_id);

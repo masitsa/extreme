@@ -313,7 +313,7 @@ class Reports_model extends CI_Model
 		//retrieve all users
 		$this->db->from('visit_charge, service_charge');
 		$this->db->select('SUM(visit_charge.visit_charge_amount * visit_charge.visit_charge_units) AS total_invoiced');
-		$this->db->where('visit_charge.visit_id = '.$visit_id.' AND service_charge.service_id = '.$service_id.' AND visit_charge.service_charge_id = service_charge.service_charge_id');
+		$this->db->where('visit_charge.visit_id = '.$visit_id.' AND service_charge.service_id = '.$service_id.' AND visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_charge_delete = 0');
 		$query = $this->db->get();
 		
 		$cash = $query->row();
@@ -356,7 +356,7 @@ class Reports_model extends CI_Model
 		//retrieve all users
 		$this->db->from('payments');
 		$this->db->select('SUM(amount_paid) AS total_paid');
-		$this->db->where('visit_id = '.$visit_id.' AND payment_method_id = '.$payment_method_id.' AND payment_type = 1');
+		$this->db->where('payments.cancel = 0 AND visit_id = '.$visit_id.' AND payment_method_id = '.$payment_method_id.' AND payment_type = 1');
 		$query = $this->db->get();
 		
 		$cash = $query->row();
@@ -748,7 +748,7 @@ class Reports_model extends CI_Model
 						
 						$notes_difference = $service_debit_notes - $service_credit_notes;
 						
-						$report[$row_count][$current_column] = ($visit_charge + $notes_difference);
+						$report[$row_count][$current_column] = (intval($visit_charge) + intval($notes_difference));
 						
 						$current_column++;
 					}
@@ -1350,8 +1350,9 @@ class Reports_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from($table);
-		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*, visit_type.visit_type_name, payments.*, payment_method.*, personnel.personnel_fname, personnel.personnel_onames');
+		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*, visit_type.visit_type_name, payments.*, payment_method.*, personnel.personnel_fname, personnel.personnel_onames, service.service_name');
 		$this->db->join('personnel', 'payments.payment_created_by = personnel.personnel_id', 'left');
+		$this->db->join('service', 'payments.payment_service_id = service.service_id', 'left');
 		$this->db->where($where);
 		$this->db->order_by('payments.time','DESC');
 		$query = $this->db->get('', $per_page, $page);
@@ -1399,8 +1400,9 @@ class Reports_model extends CI_Model
 			$where .= $visit_search;
 		}
 		
-		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*, visit_type.visit_type_name, payments.*, payment_method.*, personnel.personnel_fname, personnel.personnel_onames');
+		$this->db->select('visit.*, (visit.visit_time_out - visit.visit_time) AS waiting_time, patients.*, visit_type.visit_type_name, payments.*, payment_method.*, personnel.personnel_fname, personnel.personnel_onames, service.service_name');
 		$this->db->join('personnel', 'payments.payment_created_by = personnel.personnel_id', 'left');
+		$this->db->join('service', 'payments.payment_service_id = service.service_id', 'left');
 		$this->db->where($where);
 		$this->db->order_by('payments.time','DESC');
 		$query = $this->db->get($table);
@@ -1426,6 +1428,8 @@ class Reports_model extends CI_Model
 			$report[$row_count][$col_count] = 'Patient';
 			$col_count++;
 			$report[$row_count][$col_count] = 'Category';
+			$col_count++;
+			$report[$row_count][$col_count] = 'Service';
 			$col_count++;
 			$report[$row_count][$col_count] = 'Amount';
 			$col_count++;
@@ -1460,6 +1464,7 @@ class Reports_model extends CI_Model
 				$patient_date_of_birth = $row->patient_date_of_birth;
 				$payment_method = $row->payment_method;
 				$amount_paid = $row->amount_paid;
+				$service_name = $row->service_name;
 				$transaction_code = $row->transaction_code;
 				$created_by = $row->personnel_fname.' '.$row->personnel_onames;
 				
@@ -1467,9 +1472,13 @@ class Reports_model extends CI_Model
 				$col_count++;
 				$report[$row_count][$col_count] = $payment_created;
 				$col_count++;
+				$report[$row_count][$col_count] = $time;
+				$col_count++;
 				$report[$row_count][$col_count] = $patient_surname.' '.$patient_othernames;
 				$col_count++;
 				$report[$row_count][$col_count] = $visit_type_name;
+				$col_count++;
+				$report[$row_count][$col_count] = $service_name;
 				$col_count++;
 				$report[$row_count][$col_count] = number_format($amount_paid, 2);
 				$col_count++;

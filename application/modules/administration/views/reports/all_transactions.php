@@ -44,6 +44,7 @@
 			
 						  <th>Invoice Total</th>
 						  <th>Balance</th>
+						  <th></th>
 						</tr>
 					  </thead>
 					  <tbody>
@@ -172,6 +173,7 @@
 					$result .= '
 								<td>'.$invoice_total.'</td>
 								<td>'.($balance).'</td>
+								<td><a href="'.site_url().'accounts/print_invoice_new/'.$visit_id.'" class="btn btn-sm btn-success" target="_blank">Invoice</a></td>
 							</tr> 
 					';
 				}

@@ -12,7 +12,7 @@ class Reports extends administration
 		$this->load->model('accounts/accounts_model');
 	}
 	
-	public function all_reports($module = NULL)
+	public function all_reports($module = '__')
 	{
 		$this->session->unset_userdata('all_transactions_search');
 		$this->session->unset_userdata('all_transactions_tables');
@@ -33,7 +33,7 @@ class Reports extends administration
 		$this->all_time_reports();
 	}
 	
-	public function debtors_report($module = NULL)
+	public function debtors_report($module = '__')
 	{
 		$this->session->unset_userdata('all_transactions_search');
 		$this->session->unset_userdata('all_transactions_tables');
@@ -44,7 +44,7 @@ class Reports extends administration
 		$this->all_transactions($module);
 	}
 	
-	public function all_transactions($module = NULL)
+	public function all_transactions($module = '__')
 	{
 		$branch_code = $this->session->userdata('search_branch_code');
 		
@@ -83,7 +83,7 @@ class Reports extends administration
 			}
 			
 		}
-		if($module == NULL)
+		if($module == '__')
 		{
 			$segment = 4;
 		}
@@ -201,7 +201,7 @@ class Reports extends administration
 		$this->load->view('admin/templates/general_page', $data);
 	}
 	
-	public function search_transactions($module = NULL)
+	public function search_transactions($module = '__')
 	{
 		$visit_type_id = $this->input->post('visit_type_id');
 		$personnel_id = $this->input->post('personnel_id');

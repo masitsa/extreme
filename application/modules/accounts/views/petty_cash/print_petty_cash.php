@@ -80,7 +80,7 @@ if ($query->num_rows() > 0)
 				<td style="text-align:center; font-weight:bold;">'.number_format($total_credit,2).'</td>
 			</tr> 
 		';
-		$balance =  $total_credit - $total_debit;
+		$balance =  $total_debit - $total_credit;
 			$result .= 
 			'
 				<tr>

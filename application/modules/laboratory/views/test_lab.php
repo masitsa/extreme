@@ -11,8 +11,8 @@ if ($this->session->userdata('nurse_lab') <> NULL){
 // 		 $lab_visit = $key->lab_visit;
 // 	endforeach;
 // }
-if(!empty($service_charge_id)){
-	
+if(!empty($service_charge_id))
+{	
 	 $lab_test_id_array = $this->lab_model->get_lab_test_id($service_charge_id);
 
 	foreach ($lab_test_id_array as $key_array):
@@ -29,13 +29,15 @@ if(!empty($service_charge_id)){
 		$rs = $this->lab_model->get_lab_visit($visit_id, $service_charge_id);
 		$num_visit = count($rs);
 		
+		//save lab test (may be multiple
+		$this->lab_model->save_lab_visit_trail($visit_id, $service_charge_id);
 		if($num_visit > 0){//if visit charge has been saved
 			/*$save= new doctor();
 			$save->update_lab_visit($visit_id,$service_charge_id);*/
 		}
 		else{
 
-			$this->lab_model->save_lab_visit_trail($visit_id, $service_charge_id);
+			//$this->lab_model->save_lab_visit_trail($visit_id, $service_charge_id);
 			// $this->lab_model->save_lab_visit($visit_id, $service_charge_id);
 		}
 	}
@@ -44,6 +46,9 @@ if(!empty($service_charge_id)){
 
 		$rs = $this->lab_model->get_lab_visit($visit_id, $service_charge_id);
 		$num_visit = count($rs);
+		
+		//save lab test (may be multiple
+		$this->lab_model->save_lab_visit_trail($visit_id, $service_charge_id);
 		//echo $num_visit;
 		if($num_visit > 0){//if visit charge has been saved
 			/*$save= new doctor();
@@ -51,7 +56,7 @@ if(!empty($service_charge_id)){
 		}
 		else{
 			
-			$this->lab_model->save_lab_visit_trail($visit_id, $service_charge_id);
+			//$this->lab_model->save_lab_visit_trail($visit_id, $service_charge_id);
 		}
 		
 		foreach ($get_lab_visit_rs as $key2 ): 		
@@ -79,7 +84,7 @@ $total = 0;
 $s=0;
 foreach ($rs as $key6):
 	
-	$visit_charge_id = $key6->visit_lab_test_id;
+	$visit_lab_test_id = $key6->visit_lab_test_id;
 	$test = $key6->service_charge_name;
 	$price = $key6->service_charge_amount;
 	$service_charge_id = $key6->service_charge_id;
@@ -93,7 +98,7 @@ foreach ($rs as $key6):
 			<td>
 				<div class='btn-toolbar'>
 					<div class='btn-group'>
-						<a class='btn btn-danger btn-sm' href='#' onclick='delete_cost(".$service_charge_id.", ".$visit_id.")'><i class='fa fa-trash'></i></a>
+						<a class='btn btn-danger btn-sm' href='#' onclick='delete_cost(".$visit_lab_test_id.", ".$visit_id.")'><i class='fa fa-trash'></i></a>
 					</div>
 				</div>
 			</td>
