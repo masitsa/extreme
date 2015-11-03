@@ -232,7 +232,7 @@ function delete_cost(visit_charge_id, visit_id){
 			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
 				
 				obj.innerHTML = XMLHttpRequestObject.responseText;
-				window.location.href = host+"data/doctor/laboratory.php?visit_id="+visit_id;
+				//window.location.href = config_url+"data/doctor/laboratory.php?visit_id="+visit_id;
 			}
 		}
 		XMLHttpRequestObject.send(null);

@@ -790,62 +790,74 @@ function delete_consultation(id, visit_id){
 }
 
 function delete_vaccine(id, visit_id){
-    var XMLHttpRequestObject = false;
-        
-    if (window.XMLHttpRequest) {
-    
-        XMLHttpRequestObject = new XMLHttpRequest();
-    } 
-        
-    else if (window.ActiveXObject) {
-        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-     var config_url = document.getElementById("config_url").value;
-    var url = config_url+"nurse/delete_vaccine/"+id;
-    
-    if(XMLHttpRequestObject) {
-                
-        XMLHttpRequestObject.open("GET", url);
-                
-        XMLHttpRequestObject.onreadystatechange = function(){
-            
-            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-
-                display_visit_vaccines(visit_id);
-            }
-        }
-                
-        XMLHttpRequestObject.send(null);
-    }
+	
+	var confirmation = confirm('Do you really want to delete this vaccine ?');
+	
+	if(confirmation)
+	{
+		var XMLHttpRequestObject = false;
+			
+		if (window.XMLHttpRequest) {
+		
+			XMLHttpRequestObject = new XMLHttpRequest();
+		} 
+			
+		else if (window.ActiveXObject) {
+			XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		 var config_url = document.getElementById("config_url").value;
+		var url = config_url+"nurse/delete_vaccine/"+id;
+		
+		if(XMLHttpRequestObject) {
+					
+			XMLHttpRequestObject.open("GET", url);
+					
+			XMLHttpRequestObject.onreadystatechange = function(){
+				
+				if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+	
+					display_visit_vaccines(visit_id);
+				}
+			}
+					
+			XMLHttpRequestObject.send(null);
+		}
+	}
 }
 function delete_consumable(id, visit_id){
-    var XMLHttpRequestObject = false;
-        
-    if (window.XMLHttpRequest) {
-    
-        XMLHttpRequestObject = new XMLHttpRequest();
-    } 
-        
-    else if (window.ActiveXObject) {
-        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-     var config_url = document.getElementById("config_url").value;
-    var url = config_url+"nurse/delete_consumable/"+id;
-    
-    if(XMLHttpRequestObject) {
-                
-        XMLHttpRequestObject.open("GET", url);
-                
-        XMLHttpRequestObject.onreadystatechange = function(){
-            
-            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-
-                display_visit_consumables(visit_id);
-            }
-        }
-                
-        XMLHttpRequestObject.send(null);
-    }
+	
+	var confirmation = confirm('Delete consumable?');
+	
+	if(confirmation)
+	{
+		var XMLHttpRequestObject = false;
+			
+		if (window.XMLHttpRequest) {
+		
+			XMLHttpRequestObject = new XMLHttpRequest();
+		} 
+			
+		else if (window.ActiveXObject) {
+			XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var config_url = document.getElementById("config_url").value;
+		var url = config_url+"nurse/delete_consumable/"+id;
+		
+		if(XMLHttpRequestObject) {
+					
+			XMLHttpRequestObject.open("GET", url);
+					
+			XMLHttpRequestObject.onreadystatechange = function(){
+				
+				if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+	
+					display_visit_consumables(visit_id);
+				}
+			}
+					
+			XMLHttpRequestObject.send(null);
+		}
+	}
 }
 
 

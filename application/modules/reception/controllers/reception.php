@@ -496,25 +496,41 @@ class Reception  extends MX_Controller
 		
 	}
 	
-	public function get_department_services($department_id)
+	public function get_department_services($department_id, $selected_service_id = NULL)
 	{
 		echo '<option value="0">--Select Service--</option>';
 		
 		$service_charge = $this->reception_model->get_services_per_department($department_id);
 		foreach($service_charge AS $key) 
-		{ 
-			echo '<option value="'.$key->service_id.'">'.$key->service_name.'</option>';
+		{
+			if($selected_service_id == $key->service_id)
+			{
+				echo '<option value="'.$key->service_id.'" selected="selected">'.$key->service_name.'</option>';
+			}
+			
+			else
+			{
+				echo '<option value="'.$key->service_id.'">'.$key->service_name.'</option>';
+			}
 		}
 	}
 	
-	public function get_services_charges($patient_type_id, $service_id)
+	public function get_services_charges($patient_type_id, $service_id, $selected_service_charge_id)
 	{
 		echo '<option value="0">--Select Consultation Charge--</option>';
 		
 		$service_charge = $this->reception_model->get_service_charges_per_type($patient_type_id, $service_id);
 		foreach($service_charge AS $key) 
 		{ 
-			echo '<option value="'.$key->service_charge_id.'">'.$key->service_charge_name.'</option>';
+			if($selected_service_charge_id == $key->service_charge_id)
+			{
+				echo '<option value="'.$key->service_charge_id.'" selected="selected">'.$key->service_charge_name.'</option>';
+			}
+			
+			else
+			{
+				echo '<option value="'.$key->service_charge_id.'">'.$key->service_charge_name.'</option>';
+			}
 		}
 	}
 	
@@ -542,6 +558,46 @@ class Reception  extends MX_Controller
 		$data['content'] = $this->load->view('visit/initiate_visit', $v_data, true);
 		
 		$data['title'] = 'Create Visit';
+		$this->load->view('admin/templates/general_page', $data);	
+	}
+	
+	/*
+	*	Add a visit
+	*
+	*/
+	public function edit_visit($visit_id)
+	{
+		$v_data["visit_id"] = $visit_id;
+		$v_data['visit_details'] = $this->reception_model->get_visit($visit_id);
+		$v_data['visit_depts'] = $this->reception_model->get_visit_depts($visit_id);
+		$v_data['visit_charges'] = $this->reception_model->get_visit_charges($visit_id);
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$v_data['patient_type'] = $patient['patient_type'];
+		$v_data['patient_othernames'] = $patient['patient_othernames'];
+		$v_data['patient_surname'] = $patient['patient_surname'];
+		$v_data['patient_type_id'] = $patient['visit_type_id'];
+		$v_data['account_balance'] = $patient['account_balance'];
+		$v_data['visit_type_name'] = $patient['visit_type_name'];
+		$v_data['patient_id'] = $patient['patient_id'];
+		$patient_date_of_birth = $patient['patient_date_of_birth'];
+		$age = $this->reception_model->calculate_age($patient_date_of_birth);
+		$visit_date = $this->reception_model->get_visit_date($visit_id);
+		$gender = $patient['gender'];
+		$visit_date = date('jS M Y',strtotime($visit_date));
+		$v_data['age'] = $age;
+		$v_data['visit_date'] = $visit_date;
+		$v_data['gender'] = $gender;
+		
+		$v_data['visit_departments'] = $this->reception_model->get_visit_departments();
+		$v_data['visit_types'] = $this->reception_model->get_visit_types();
+		$v_data['charge'] = $this->reception_model->get_service_charges2($visit_id);
+		$v_data['wards'] = $this->reception_model->get_wards();
+		$v_data['doctor'] = $this->reception_model->get_doctor();
+		$v_data['type'] = $this->reception_model->get_types();
+		
+		$data['content'] = $this->load->view('visit/edit_visit', $v_data, true);
+		
+		$data['title'] = 'Edit Visit';
 		$this->load->view('admin/templates/general_page', $data);	
 	}
 	
@@ -1874,6 +1930,109 @@ class Reception  extends MX_Controller
 		$response	= $this->reception_model->close_todays_visits();
 
 		echo $response."<br>";
+	}
+	
+	public function update_visit($visit_id)
+	{
+		$this->form_validation->set_rules('visit_date', 'Visit Date', 'required');
+		$this->form_validation->set_rules('department_id', 'Department', 'required|is_natural_no_zero');
+		$this->form_validation->set_rules('visit_type_id', 'Visit type', 'required|is_natural_no_zero');
+		$visit_type_id = $this->input->post("visit_type_id"); 
+		
+		if(isset($_POST['department_id'])){
+			if(($_POST['department_id'] == 2) || ($_POST['department_id'] == 7) || ($_POST['department_id'] == 14))
+			{
+				//if nurse visit (7) or theatre (14) service must be selected
+				$this->form_validation->set_rules('personnel_id', 'Doctor', 'is_natural_no_zero');
+				$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required|is_natural_no_zero');
+				$service_charge_id = $this->input->post("service_charge_name");
+				$doctor_id = $this->input->post('personnel_id');
+			}
+			else if($_POST['department_id'] == 12)
+			{
+				//if nurse visit doctor must be selected
+				$this->form_validation->set_rules('personnel_id2', 'Doctor', 'required|is_natural_no_zero');
+				$this->form_validation->set_rules('service_charge_name2', 'Consultation Type', 'required|is_natural_no_zero');
+				$service_charge_id = $this->input->post("service_charge_name2");
+				$doctor_id = $this->input->post('personnel_id2');
+			}
+			else 
+			{
+				$service_charge_id = 0;
+				$doctor_id = 0;
+			}
+		}
+		
+		if($visit_type_id != 1)
+		{
+			$this->form_validation->set_rules('insurance_limit', 'Insurance limit', 'required');
+			$this->form_validation->set_rules('insurance_number', 'Insurance number', 'required');
+		}
+		
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->edit_visit($visit_id);
+		}
+		else
+		{
+			$insurance_limit = $this->input->post("insurance_limit");
+			$insurance_number = $this->input->post("insurance_number");
+			
+			//$visit_type = $this->get_visit_type($type_name);
+			$visit_date = $this->input->post("visit_date");
+			$timepicker_start = $this->input->post("timepicker_start");
+			$timepicker_end = $this->input->post("timepicker_end");
+			
+			$appointment_id = $this->input->post("appointment_id");
+			if($appointment_id == 1)
+			{
+				$close_card = 2;
+			}
+			else
+			{		
+				$close_card = 0;
+			}
+			
+			//update visit
+			$visit_id = $this->reception_model->update_visit($visit_date, $visit_id, $doctor_id, $insurance_limit, $insurance_number, $visit_type_id, $timepicker_start, $timepicker_end, $appointment_id, $close_card);
+			
+			//save consultation charge for nurse visit, counseling or theatre
+			if($_POST['department_id'] == 2 || $_POST['department_id'] == 7 || $_POST['department_id'] == 12 || $_POST['department_id'] == 14)
+			{
+				//$this->reception_model->save_visit_consultation_charge($visit_id, $service_charge_id);	
+			}
+			
+			//set visit department if not appointment
+			if($appointment_id == 0)
+			{
+				//update patient last visit
+				$this->reception_model->set_last_visit_date($patient_id, $visit_date);
+				
+				$department_id = $this->input->post('department_id');
+				if($this->reception_model->set_visit_department($visit_id, $department_id, $visit_type_id))
+				{
+					if($appointment_id == 0)
+					{
+						$this->session->set_userdata('success_message', 'Visit has been updated');
+					}
+					else
+					{
+						$this->session->set_userdata('success_message', 'Appointment has been created');
+					}
+				}
+				else
+				{
+					$this->session->set_userdata('error_message', 'Internal error. Could not add the visit');
+				}
+			}
+			
+			else
+			{
+				$this->session->set_userdata('success_message', 'Visit has been updated');
+			}
+			
+			redirect('reception/general-queue');
+		}
 	}
 }
 ?>

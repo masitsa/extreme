@@ -54,7 +54,7 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label">Account</label>
+                                    <label class="col-md-4 control-label">Account *</label>
                                     
                                     <div class="col-md-8">
                                         <select class="form-control" name="account_id">
@@ -151,9 +151,54 @@
 					  <tbody>
 				';
 				
-				$total_debit = 0;
-				$total_credit = 0;
 				$count = 0;
+				if($balance_brought_forward > 0)
+				{
+					$debit = number_format($balance_brought_forward, 2);
+					$credit = '';
+					$total_debit = $balance_brought_forward;
+					$total_credit = 0;
+					$count++;
+				
+					$result .= 
+					'
+						<tr>
+							<td>'.$count.'</td>
+							<td style="text-align:center"></td>
+							<td></td>
+							<td>Balance brought forward</td>
+							<td style="text-align:center">'.$debit.'</td>
+							<td style="text-align:center">'.$credit.'</td>
+						</tr> 
+					';
+				}
+				
+				else if($balance_brought_forward < 0)
+				{
+					$balance_brought_forward *= -1;
+					$debit = '';
+					$credit = number_format($balance_brought_forward, 2);
+					$total_debit = 0;
+					$total_credit = $balance_brought_forward;
+					$count++;
+				
+					$result .= 
+					'
+						<tr>
+							<td>'.$count.'</td>
+							<td style="text-align:center"></td>
+							<td></td>
+							<td>Balance brought forward</td>
+							<td style="text-align:center">'.$debit.'</td>
+							<td style="text-align:center">'.$credit.'</td>
+						</tr> 
+					';
+				}
+				else
+				{
+					$total_debit = 0;
+					$total_credit = 0;
+				}
 				
 				foreach ($query->result() as $row)
 				{

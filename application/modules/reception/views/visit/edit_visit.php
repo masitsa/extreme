@@ -1,7 +1,96 @@
-						<style type="text/css">
+<?php
+$row = $visit_details->row();
+$visit_type = $row->visit_type;
+$doctor_id = $row->personnel_id;
+$insurance_limit = $row->insurance_limit;
+$patient_insurance_number = $row->patient_insurance_number;
+
+$row2 = $visit_depts->row();
+$dept_id = $row2->department_id;
+
+$row3 = $visit_charges->row();
+$selected_service_id = $row3->service_id;
+$selected_service_charge_id = $row3->service_charge_id;
+?>		
+		<style type="text/css">
+			#insured_company{display:none;}
+		</style>
+		<section class="panel">
+            <header class="panel-heading">
+                <h2 class="panel-title">Edit Visit</h2>
+            </header>
+		        <!-- Widget content -->
+		        <div class="panel-body">
+                	<a href="<?php echo site_url();?>reception/patients-list" class="btn btn-primary btn-sm pull-right">  <i class="fa fa-angle-left"></i> Patients list</a>
+                	
+                	<div class="well well-sm info" style="margin-top:30px;">
+                        <h5 style="margin:0;">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <strong>First name:</strong>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <?php echo $patient_surname;?>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-5">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>Other names:</strong>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <?php echo $patient_othernames;?>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <strong>Balance:</strong>
+                                        </div>
+                                        <div class="col-md-8">
+                                            Kes <?php echo number_format($account_balance, 2);?>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </h5>
+                    </div>
+                    
+					<?php 
+                        $validation_error = validation_errors();
+                        
+                        if(!empty($validation_error))
+                        {
+                            echo '<div class="alert alert-danger center-align">'.$validation_error.'</div>';
+                        }
+						
+						$error = $this->session->userdata('error_message');
+						$success = $this->session->userdata('success_message');
+						
+						if(!empty($error))
+						{
+							echo '<div class="alert alert-danger">'.$error.'</div>';
+							$this->session->unset_userdata('error_message');
+						}
+						
+						if(!empty($success))
+						{
+							echo '<div class="alert alert-success">'.$success.'</div>';
+							$this->session->unset_userdata('success_message');
+						}
+                    ?>
+                    
+					<style type="text/css">
 							#insured_company{display:none;}
 						</style>
-                        <?php echo form_open("reception/save_visit/".$patient_id, array("class" => "form-horizontal"));?>
+                        <?php echo form_open("reception/update_visit/".$visit_id, array("class" => "form-horizontal"));?>
                         <div class="row">
                         	<div class="col-md-6">
                             
@@ -21,7 +110,7 @@
 														$visit_type_name = $row->visit_type_name;
 														$visit_type_id = $row->visit_type_id;
 
-														if($visit_type_id == set_value('visit_type_id'))
+														if($visit_type_id == $visit_type)
 														{
 															echo "<option value='".$visit_type_id."' selected='selected'>".$visit_type_name."</option>";
 														}
@@ -42,14 +131,14 @@
 									<div class="form-group" style="margin-bottom: 15px;">
 										<label class="col-lg-4 control-label">Insurance Number: </label>
 										<div class="col-lg-8">
-											<input type="text" name="insurance_number" class="form-control">
+											<input type="text" name="insurance_number" class="form-control" value="<?php echo $patient_insurance_number;?>">
 										</div>
 									</div>
                                     
 									<div class="form-group" style="margin-bottom: 15px;">
 										<label class="col-lg-4 control-label">Insurance Limit: </label>
 										<div class="col-lg-8">
-											<input type="text" name="insurance_limit" class="form-control">
+											<input type="text" name="insurance_limit" class="form-control" value="<?php echo $insurance_limit?>">
 										</div>
 									</div>
 								</div>
@@ -68,7 +157,7 @@
 														$department_name = $row->department_name;
 														$department_id = $row->department_id;
 														
-														if($department_id == set_value('department_id'))
+														if($department_id == $dept_id)
 														{
 															echo "<option value='".$department_id."' selected='selected'>".$department_name."</option>";
 														}
@@ -97,7 +186,7 @@
                                                 <div class="col-lg-4">
                                                     <div class="radio">
                                                         <label>
-                                                            <input id="optionsRadios2" type="radio" name="visit_type" value="<?php echo $patient_type_id;?>" checked="checked" onclick="do_patient_type_function(<?php echo $visit_type_id;?>)">
+                                                            <input id="optionsRadios2" type="radio" name="visit_type" value="<?php echo $visit_type;?>" checked="checked" onclick="do_patient_type_function(<?php echo $visit_type_id;?>)">
                                                             <?php echo $visit_type_name;?>
                                                         </label>
                                                     </div>
@@ -122,7 +211,7 @@
 															$onames = $row->personnel_onames;
 															$personnel_id = $row->personnel_id;
 															
-															if($personnel_id == set_value('personnel_id'))
+															if($personnel_id == $doctor_id)
 															{
 																echo "<option value='".$personnel_id."' selected='selected'>".$onames." ".$fname."</option>";
 															}
@@ -159,7 +248,7 @@
 									</div>
 								
 							   </div>
-								<input type="hidden" name="patient_type_id" value="<?php echo $patient_type_id;?>">
+								<input type="hidden" name="patient_type_id" value="<?php echo $visit_type;?>">
 							</div>
 							<!--end left -->
 							<!-- start right -->
@@ -258,16 +347,38 @@
 						<div class="center-align">
 							<input type="submit" value="Initiate Visit" class="btn btn-info btn-sm"/>
 						</div>
-						<div class="center-align">
-							<div class="alert alert-info center-align">Note: For Appointments ensure that you have filled in both sections on this page.</div>
-						</div>
 					<?php echo form_close();?>
-					 <!-- end of form -->
-            
- <script type="text/javascript" charset="utf-8">
+                    
+                </div>
+        	</section>
+<script type="text/javascript" charset="utf-8">
  	$(document).ready(function(){
-      do_patient_type_function(<?php echo $patient_type_id;?>);
-      
+      	do_patient_type_function(<?php echo $visit_type;?>);
+      	check_department_type();
+	  	
+		//GET service charges
+		var patient_type_id = '<?php echo $visit_type;?>';
+		var service_id = '<?php echo $selected_service_id;?>';
+		var service_charge_id = '<?php echo $selected_service_charge_id;?>';
+		
+		//get department services
+		$.get( "<?php echo site_url();?>reception/get_services_charges/"+patient_type_id+"/"+service_id+"/"+service_charge_id, function( data ) 
+		{
+			$( "#services_charges" ).html( data );
+		});
+		
+		var visit_type_id = $('select#visit_type_id').val();
+		
+		if(visit_type_id != '1')
+		{
+			$('#insured_company').css('display', 'block');
+			// $('#consultation').css('display', 'block');
+		}
+		else
+		{
+			$('#insured_company').css('display', 'none');
+			// $('#consultation').css('display', 'block');
+		}
   	});
 	 function check_date(){
 	     var datess=document.getElementById("datepicker").value;
@@ -346,7 +457,7 @@
 		var department_id = myTarget;
 		if(department_id == 2){department_id = 7;}
 		//get department services
-		$.get( "<?php echo site_url();?>reception/get_department_services/"+department_id, function( data ) 
+		$.get( "<?php echo site_url();?>reception/get_department_services/"+department_id+"/<?php echo $selected_service_id;?>", function( data ) 
 		{
 			$( "#department_services" ).html( data );
 			
@@ -378,7 +489,7 @@
 	
 	$(document).on("change","select#patient_insurance_id",function(e)
 	{
-		var patient_type_id = '<?php echo $patient_type_id;?>';
+		var patient_type_id = '<?php echo $visit_type;?>';
 		var service_id = $(this).val();
 		
 		//get department services

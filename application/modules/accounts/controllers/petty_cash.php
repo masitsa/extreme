@@ -16,7 +16,8 @@ class Petty_cash extends accounts
 		
 		if(!empty($date_from) && !empty($date_to))
 		{
-			$where .= ' AND (petty_cash.petty_cash_date >= \''.$date_from.'\' OR \'petty_cash.petty_cash_date <= '.$date_to.'\')';
+			$where .= ' AND (petty_cash.petty_cash_date >= \''.$date_from.'\' AND petty_cash.petty_cash_date <= \''.$date_to.'\')';
+			//$where .= ' AND petty_cash.petty_cash_date BETWEEN \''.$date_from.'\' AND \'petty_cash.petty_cash_date <= '.$date_to.'\')';
 			$search_title = 'Petty cash from '.date('jS M Y', strtotime($date_from)).' to '.date('jS M Y', strtotime($date_to)).' ';
 		}
 		
@@ -34,9 +35,12 @@ class Petty_cash extends accounts
 		
 		else
 		{
+			$date_from = date('Y-m-d');
 			$where .= ' AND DATE_FORMAT(petty_cash.petty_cash_date, \'%m\') = \''.date('m').'\' AND DATE_FORMAT(petty_cash.petty_cash_date, \'%Y\') = \''.date('Y').'\'';
 			$search_title = 'Petty cash for the month of '.date('M Y').' ';
 		}
+		
+		$v_data['balance_brought_forward'] = $this->petty_cash_model->calculate_balance_brought_forward($date_from);
 		
 		$v_data['date_from'] = $date_from;
 		$v_data['date_to'] = $date_to;
@@ -52,20 +56,13 @@ class Petty_cash extends accounts
 	public function record_petty_cash()
 	{
 		$this->form_validation->set_rules('transaction_type_id', 'Type', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('account_id', 'Account', 'required|xss_clean');
 		$this->form_validation->set_rules('petty_cash_description', 'Description', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('petty_cash_amount', 'Amount', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('petty_cash_date', 'Transaction date', 'required|xss_clean');
 		
 		// credit or debit
 		$transaction_type_id = $this->input->post('transaction_type_id');
-		
-		if($transaction_type_id == 1)
-		{
-			$this->form_validation->set_rules('account_id', 'Account', 'required|xss_clean');
-		}
-		else
-		{
-			$this->form_validation->set_rules('account_id', 'Account', 'xss_clean');
-		}
 		
 		if ($this->form_validation->run())
 		{

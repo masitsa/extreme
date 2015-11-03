@@ -21,11 +21,12 @@ class Nurse  extends MX_Controller
 		$this->load->model('radiology/ultrasound_model');
 		$this->load->model('theatre/theatre_model');
 		
-		$this->load->model('auth/auth_model');
+		//removed because doctors loose notes
+		/*$this->load->model('auth/auth_model');
 		if(!$this->auth_model->check_login())
 		{
 			redirect('login');
-		}
+		}*/
 	}
 	
 	public function index()
@@ -74,7 +75,7 @@ class Nurse  extends MX_Controller
 		}
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/nurse/nurse_queue/'.$page_name;
+		$config['base_url'] = site_url().'nurse/nurse_queue/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -522,7 +523,7 @@ class Nurse  extends MX_Controller
 		redirect('nurse/vaccines_list/'.$visit_id);
 	}
 
-	public function search_consumable($visit_id)
+	public function search_consumables($visit_id)
 	{
 		$this->form_validation->set_rules('search_item', 'Search', 'trim|required|xss_clean');
 		
@@ -567,7 +568,7 @@ class Nurse  extends MX_Controller
 		$table = 'service_charge,visit_type,service';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/nurse/vaccines/'.$visit_id;
+		$config['base_url'] = site_url().'nurse/vaccines/'.$visit_id;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 4;
 		$config['per_page'] = 15;
@@ -709,7 +710,7 @@ class Nurse  extends MX_Controller
 		$table = 'service_charge,visit_type,service, departments';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/nurse/procedures/'.$visit_id;
+		$config['base_url'] = site_url().'nurse/procedures/'.$visit_id;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 4;
 		$config['per_page'] = 15;
@@ -779,7 +780,7 @@ class Nurse  extends MX_Controller
 	}
 	function delete_vaccine($vaccine_id)
 	{
-		$visit_data = array('visit_charge_delete'=>0,'deleted_by'=>$this->session->userdata("personnel_id"),'deleted_on'=>date("Y-m-d"),'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
+		$visit_data = array('visit_charge_delete'=>1,'deleted_by'=>$this->session->userdata("personnel_id"),'deleted_on'=>date("Y-m-d"),'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
 
 		$this->db->where(array("visit_charge_id"=>$vaccine_id));
 		$this->db->update('visit_charge', $visit_data);
@@ -787,7 +788,7 @@ class Nurse  extends MX_Controller
 	}
 	public function delete_consumable($consumable_id)
 	{
-		$visit_data = array('visit_charge_delete'=>0,'deleted_by'=>$this->session->userdata("personnel_id"),'deleted_on'=>date("Y-m-d"),'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
+		$visit_data = array('visit_charge_delete'=>1,'deleted_by'=>$this->session->userdata("personnel_id"),'deleted_on'=>date("Y-m-d"),'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
 
 		$this->db->where(array("visit_charge_id"=>$consumable_id));
 		$this->db->update('visit_charge', $visit_data);
@@ -908,7 +909,7 @@ class Nurse  extends MX_Controller
 		$table = 'symptoms';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/nurse/symptoms_list/'.$visit_id;
+		$config['base_url'] = site_url().'nurse/symptoms_list/'.$visit_id;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 4;
 		$config['per_page'] = 15;
@@ -1168,7 +1169,7 @@ class Nurse  extends MX_Controller
 		$table = 'diseases';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/nurse/disease/'.$visit_id;
+		$config['base_url'] = site_url().'nurse/disease/'.$visit_id;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 4;
 		$config['per_page'] = 10;
@@ -1541,7 +1542,7 @@ class Nurse  extends MX_Controller
 		$table = 'visit, patients';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/nurse/from_lab_queue/'.$page_name;
+		$config['base_url'] = site_url().'nurse/from_lab_queue/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -1782,7 +1783,7 @@ class Nurse  extends MX_Controller
 		
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/nurse/inventory';
+		$config['base_url'] = site_url().'nurse/inventory';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -1824,13 +1825,13 @@ class Nurse  extends MX_Controller
 		$data['sidebar'] = 'nurse_sidebar';
 		$data['content'] = $this->load->view('vaccine_list', $v_data, true);
 		
-		$this->load->view('admin/templates/general_page', $data);
+		$this->load->view('admin/templates/no_sidebar', $data);
 	}
 
 	public function consumables_list($visit_id)
 	{
 
-		$segment = 5;
+		$segment = 4;
 
 		$rs = $this->nurse_model->check_visit_type($visit_id);
 		if(count($rs)>0){
@@ -1855,10 +1856,10 @@ class Nurse  extends MX_Controller
 		
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/nurse/consumables_list/'.$visit_id;
+		$config['base_url'] = site_url().'nurse/consumables_list/'.$visit_id;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
-		$config['per_page'] = 20;
+		$config['per_page'] = 10;
 		$config['num_links'] = 5;
 		
 		$config['full_tag_open'] = '<ul class="pagination pull-right">';
@@ -1897,7 +1898,7 @@ class Nurse  extends MX_Controller
 		$v_data['title'] = 'Consumables List';
 		$data['content'] = $this->load->view('consumables_list', $v_data, true);
 		
-		$this->load->view('admin/templates/general_page', $data);
+		$this->load->view('admin/templates/no_sidebar', $data);
 	}
 
 	/*
@@ -1920,6 +1921,7 @@ class Nurse  extends MX_Controller
 			if($this->nurse_model->save_vaccine())
 			{
 				$this->session->userdata('success_message', 'Drug has been added successfully');
+
 				redirect('nurse/inventory');
 			}
 			
@@ -2021,7 +2023,7 @@ class Nurse  extends MX_Controller
 		
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/nurse/vaccine_purchases/'.$vaccine_id;
+		$config['base_url'] = site_url().'nurse/vaccine_purchases/'.$vaccine_id;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -2191,7 +2193,7 @@ class Nurse  extends MX_Controller
 		$table = 'patients';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/nurse/patient_treatment_statement/'.$module;
+		$config['base_url'] = site_url().'nurse/patient_treatment_statement/'.$module;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -2337,7 +2339,7 @@ class Nurse  extends MX_Controller
 		$table = 'visit,patients';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/nurse/treatment_statement/'.$patient_id.'/'.$module;
+		$config['base_url'] = site_url().'nurse/treatment_statement/'.$patient_id.'/'.$module;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 4;
 		$config['per_page'] = 20;

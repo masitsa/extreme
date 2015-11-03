@@ -372,7 +372,7 @@ if(count($doctor) > 0){
 							</div>
 						</div>
 					</td>
-					<!--<td><a href="'.site_url().'reception/print-invoice/'.$visit_id.'/reception" target="_blank" class="btn btn-sm btn-warning fa fa-print"> Invoice </a></td>-->
+					<td><a href="'.site_url().'reception/edit_visit/'.$visit_id.'" class="btn btn-sm btn-primary"> Edit </a></td>
 					<td><a href="'.site_url().'reception/end_visit/'.$visit_id.'" class="btn btn-sm btn-info" onclick="return confirm(\'Do you really want to end this visit ?\');">End Visit</a></td>
 					<td><a href="'.site_url().'reception/delete_visit/'.$visit_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this visit?\');">Delete</a></td>';
 					$buttons .= '<td></td>';

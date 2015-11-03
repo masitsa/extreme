@@ -313,7 +313,7 @@ class Reports_model extends CI_Model
 		//retrieve all users
 		$this->db->from('visit_charge, service_charge');
 		$this->db->select('SUM(visit_charge.visit_charge_amount * visit_charge.visit_charge_units) AS total_invoiced');
-		$this->db->where('visit_charge.visit_id = '.$visit_id.' AND service_charge.service_id = '.$service_id.' AND visit_charge.service_charge_id = service_charge.service_charge_id');
+		$this->db->where('visit_charge.visit_id = '.$visit_id.' AND service_charge.service_id = '.$service_id.' AND visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_charge_delete = 0');
 		$query = $this->db->get();
 		
 		$cash = $query->row();
@@ -748,7 +748,7 @@ class Reports_model extends CI_Model
 						
 						$notes_difference = $service_debit_notes - $service_credit_notes;
 						
-						$report[$row_count][$current_column] = ($visit_charge + $notes_difference);
+						$report[$row_count][$current_column] = (intval($visit_charge) + intval($notes_difference));
 						
 						$current_column++;
 					}

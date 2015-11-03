@@ -272,7 +272,6 @@ class Laboratory  extends MX_Controller
 		
 		$data['title'] = 'Laboratory Test List';
 		$this->load->view('admin/templates/no_sidebar', $data);	
-
 	}
 
 	public function delete_cost($service_charge_id, $visit_id)

@@ -39,7 +39,7 @@ foreach ($visit__rs1 as $key1):
 							<a class='btn btn-sm btn-primary' href='#' onclick='calculateconsumabletotal(" . $visit_charge_amount . "," . $v_vaccine_id . ", " . $vaccine_id . "," . $visit_id . ")'><i class='fa fa-pencil'></i></a>
 						</td>
 						<td>
-							<a class='btn btn-sm btn-danger' href='#' onclick='delete_vaccine(" . $v_vaccine_id . ", " . $visit_id . ")'><i class='fa fa-trash'></i></a>
+							<a class='btn btn-sm btn-danger' href='#' onclick='delete_consumable(" . $v_vaccine_id . ", " . $visit_id . ")'><i class='fa fa-trash'></i></a>
 						</td>
 					</tr>	
 			";
@@ -47,7 +47,7 @@ endforeach;
 echo "
 <tr bgcolor='#D9EDF7'>
 	<th colspan='4'>Grand Total: </th>
-	<th colspan='3'><div id='grand_total'>" . number_format($total) . "</div></th>
+	<th colspan='3'><div id='grand_total'>" . number_format($total, 2) . "</div></th>
 </tr>
  </table>
 ";

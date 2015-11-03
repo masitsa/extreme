@@ -371,6 +371,19 @@ class Reception_model extends CI_Model
 		
 		return $result;
 	}
+	
+	public function get_service_charges2($visit_id)
+	{
+		$table = "service_charge";
+		$where = "service_charge.service_id = 1 AND service_charge.visit_type_id = (SELECT visit_type FROM visit WHERE visit_id = $visit_id)";
+		$items = "service_charge.service_charge_name, service_charge_id";
+		$order = "service_charge_name";
+		
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
 	public function get_service_charge($id)
 	{
 		$table = "service_charge";
@@ -2534,6 +2547,68 @@ class Reception_model extends CI_Model
 			$response = 'data not found';
 		}
 		return $response;
+	}
+	/*
+	*	Retrieve a single dependant
+	*	@param int $strath_no
+	*
+	*/
+	public function get_visit($visit_id)
+	{
+		$this->db->from('visit');
+		$this->db->select('*');
+		$this->db->where('visit_id', $visit_id);
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	/*
+	*	Retrieve a single dependant
+	*	@param int $strath_no
+	*
+	*/
+	public function get_visit_depts($visit_id)
+	{
+		$this->db->from('visit_department');
+		$this->db->select('*');
+		$this->db->where('visit_id', $visit_id);
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	/*
+	*	Retrieve a single dependant
+	*	@param int $strath_no
+	*
+	*/
+	public function get_visit_charges($visit_id)
+	{
+		$this->db->from('visit_charge, service_charge');
+		$this->db->select('*');
+		$this->db->where('visit_charge.service_charge_id = service_charge.service_charge_id AND visit_id = '.$visit_id);
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	
+	public function update_visit($visit_date, $visit_id, $doctor_id, $insurance_limit, $insurance_number, $visit_type_id, $timepicker_start, $timepicker_end, $appointment_id, $close_card, $visit_id)
+	{
+		$visit_data = array(
+			"branch_code" => $this->session->userdata('branch_code'),
+			"visit_date" => $visit_date,
+			"personnel_id" => $doctor_id,
+			"insurance_limit" => $insurance_limit,
+			"patient_insurance_number" => $insurance_number,
+			"visit_type" => $visit_type_id,
+			"time_start"=>$timepicker_start,
+			"time_end"=>$timepicker_end,
+			"appointment_id"=>$appointment_id,
+			"close_card"=>$close_card,
+		);
+		$this->db->where('visit_id', $visit_id);
+		$this->db->update('visit', $visit_data);
+		
+		return $visit_id;
 	}
 }
 ?>
