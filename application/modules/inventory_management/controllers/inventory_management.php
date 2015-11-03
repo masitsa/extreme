@@ -151,12 +151,14 @@ class Inventory_management  extends MX_Controller
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
 		$query = $this->products_model->get_all_products($table, $where, $config["per_page"], $page);
-		
+		$v_data['all_generics'] = $this->inventory_management_model->get_all_generics();
+		$v_data['all_brands'] = $this->inventory_management_model->get_all_brands();
 		if ($query->num_rows() > 0)
 		{
 			$v_data['query'] = $query;
 			$v_data['page'] = $page;
 			$v_data['title'] = 'All Products';
+		
 			$v_data['all_categories'] = $this->categories_model->all_categories();
 
 			$data['content'] = $this->load->view('products/all_products', $v_data, true);
@@ -192,7 +194,7 @@ class Inventory_management  extends MX_Controller
 		$this->form_validation->set_rules('product_name', 'product Name', 'required|xss_clean');
 		$this->form_validation->set_rules('products_pack_size', 'Pack Size', 'numeric|xss_clean');
 		$this->form_validation->set_rules('quantity', 'Opening Quantity', 'numeric|xss_clean');
-		$this->form_validation->set_rules('product_unitprice', 'Unit Price', 'numeric|xss_clean');
+		$this->form_validation->set_rules('products_unitprice', 'Unit Price', 'numeric|xss_clean');
 		
 		//if form conatins valid data
 		if ($this->form_validation->run())
@@ -724,7 +726,7 @@ class Inventory_management  extends MX_Controller
 
     }
 
-   	public function close_inventory_search()
+   public function close_inventory_search()
 	{
 		$this->session->unset_userdata('product_inventory_search');
 		$this->index();
@@ -733,15 +735,38 @@ class Inventory_management  extends MX_Controller
 	public function search_inventory_product()
 	{
 		$product_name = $this->input->post('product_name');
+		$brand_id = $this->input->post('brand_id');
+		$generic_id = $this->input->post('generic_id');
 		
 		if(!empty($product_name))
 		{
 			$product_name = ' AND product.product_name LIKE \'%'.$product_name.'%\' ';
 		}
+		else
+		{
+			$product_name = '';
+		}
+		if(!empty($generic_id))
+		{
+			$generic_id = ' AND product.generic_id = '.$generic_id;
+		}
+		else
+		{
+			$generic_id = '';
+		}
+		
+		if(!empty($brand_id))
+		{
+			$brand_id = ' AND product.brand_id = '.$brand_id;
+		}
+		else
+		{
+			$brand_id = '';
+		}
 	
 		
 		
-		$search = $product_name;
+		$search = $product_name.$generic_id.$brand_id;
 		$this->session->set_userdata('product_inventory_search', $search);
 		
 		$this->index();

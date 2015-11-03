@@ -37,11 +37,20 @@ class Administration  extends MX_Controller
 		$data['sidebar'] = 'admin_sidebar';
 		$this->load->view('admin/templates/general_page', $data);
 	}
-	public function check()
+	public function check($visit_id)
 	{
 		// $this->sync_model->syn_up_on_closing_visit(673);
 
-		 $response = $this->sync_model->syn_up_on_closing_visit(18);
+		 $response = $this->sync_model->syn_up_on_closing_visit($visit_id);
+		
+		// echo $response;
+	}
+
+	public function pass_patient_bookings($visit_id)
+	{
+		// $this->sync_model->syn_up_on_closing_visit(673);
+
+		 $response = $this->sync_model->sync_patient_bookings($visit_id);
 		
 		// echo $response;
 	}

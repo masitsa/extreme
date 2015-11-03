@@ -7,6 +7,9 @@
         
               <!-- Widget content -->
               <div class="panel-body">
+			  <div class="pull-right">
+                	<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#search_cash_reports"><i class="fa fa-plus"></i> Filter Records</button>
+                </div>
                 <h5>Visit Breakdown</h5>
                 <table class="table table-striped table-hover table-condensed">
                 	<thead>
@@ -52,8 +55,10 @@
                             <tbody>
 								<?php
 								$total_cash_breakdown = 0;
+								
                                 if($payment_methods->num_rows() > 0)
                                 {
+									//var_dump($payment_methods->result()); die();
                                     foreach($payment_methods->result() as $res)
                                     {
                                         $method_name = $res->payment_method;

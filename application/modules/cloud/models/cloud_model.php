@@ -1,11 +1,91 @@
 <?php
 class Cloud_model extends CI_Model 
 {
-	public function save_visit_data($json)
+	public function save_booking_data($json)
 	{
-		//decode the json data
 		$decoded = json_decode($json);
 		//var_dump($decoded); die();
+		if(isset($decoded->bookings))
+		{
+			$sync_data = $decoded->bookings;
+			
+			//calculate total rows to be inserted of sync table
+			$total_rows = count($sync_data);
+			
+			$visit_id = 0;
+			for($r = 0; $r < $total_rows; $r++)
+			{
+				$patient_data = $sync_data[$r];
+				
+				$res = $patient_data;
+
+				$patient_id = $res->patient_id;
+				$visit_id = $res->visit_id;
+				
+				//check if patient number exists
+				$this->db->where('patient_id = '.$patient_id.' AND visit_id ='.$visit_id);
+				$query = $this->db->get('bookings');
+
+				$data['patient_surname'] = $res->patient_surname;
+				$data['patient_other_names'] = $res->patient_othernames;
+				$data['patient_id'] = $res->patient_id;
+				$data['visit_id'] = $res->visit_id;
+				$data['patient_number'] = $res->patient_number;
+				$data['branch_code'] = $res->branch_code;
+				$data['booking_date'] = $res->visit_date;
+				$data['collected_amount'] = $res->amount;
+				$data['booking_datetime'] = $res->visit_time;
+
+				if($query->num_rows() > 0)
+				{
+					$row = $query->row();
+					//update patient
+					$this->db->where('patient_id = '.$res->patient_id.' AND visit_id ='.$res->visit_id);
+					if($this->db->update('bookings', $data))
+					{
+						$response[$sync_table_name]['response'] = 'success';
+						$response[$sync_table_name]['message'] = 'data does not exist';
+					}
+					else
+					{
+						$response[$sync_table_name]['response'] = 'false';
+						$response[$sync_table_name]['message'] = 'data does not exist';
+					}
+				}
+
+				//add new patient
+				else
+				{
+					if($this->db->insert('bookings', $data))
+					{
+						$response[$sync_table_name]['response'] = 'success';
+						$response[$sync_table_name]['message'] = 'data does not exist';
+					}
+					else
+					{
+						$response[$sync_table_name]['response'] = 'false';
+						$response[$sync_table_name]['message'] = 'data does not exist';
+					}
+				}
+					
+
+			}
+
+			
+		}
+		
+		else
+		{
+			$response[$sync_table_name]['response'] = 'false';
+			$response[$sync_table_name]['message'] = 'data does not exist';
+		}
+	}
+	public function save_visit_data($json)
+	{  
+	    //var_dump($json); die();
+		//decode the json data
+		$decoded = json_decode($json);
+		
 		$branch_code = $decoded->branch_code;
 		
 		//get sync tables
@@ -22,11 +102,11 @@ class Cloud_model extends CI_Model
 				$sync_table_name = $res->sync_table_name;
 				$table_key_name = $res->table_key_name;
 				$function = $res->sync_table_cloud_save_function;
-				
+				//var_dump($decoded); die();
 				if(isset($decoded->$sync_table_name))
 				{
 					$sync_data = $decoded->$sync_table_name;
-					//var_dump($sync_data); die();
+					
 					//calculate total rows to be inserted of sync table
 					$total_rows = count($sync_data);
 					
@@ -35,72 +115,74 @@ class Cloud_model extends CI_Model
 					{
 						$patient_data = $sync_data[$r];
 						
-						if($function == "save_patients")
-						{
-							$table_key_value1 = $this->$function($patient_data,$branch_code,$patient_id);
+							if($function == "save_patients")
+							{
+								$table_key_value1 = $this->$function($patient_data,$branch_code,$patient_id);
+								
+								 $this->session->unset_userdata('patient_id');
+								// means that this is the first table
+								$patient_id = $table_key_value1;
+
+								$this->session->set_userdata('patient_id', $table_key_value1);
+							}
+
+							else if($function == "save_visits")
+							{
+								// means that this is the second table
+								$table_key_value1 = $this->$function($patient_data,$branch_code,$this->session->userdata('patient_id'));
+								
+								$this->session->unset_userdata('visit_id');
+								$visit_id = $table_key_value1;
+
+								$this->session->set_userdata('visit_id', $visit_id);
+							}
+							else
+							{
+								// other tables take the visit id 
+								$table_key_value1 = $this->$function($patient_data,$branch_code,$this->session->userdata('visit_id'));
+							}
+
+							$table_key_value = $table_key_value1;
 							
-							// $this->session->unset_userdata('patient_id');
-							// means that this is the first table
-							$patient_id = $table_key_value1;
-
-							$this->session->set_userdata('patient_id', $patient_id);
-						}
-
-						else if($function == "save_visits")
-						{
-							// means that this is the second table
-							$table_key_value1 = $this->$function($patient_data,$branch_code,$this->session->userdata('patient_id'));
+							//insert data into the sync table
 							
-							$this->session->unset_userdata('visit_id');
-							$visit_id = $table_key_value1;
-
-							$this->session->set_userdata('visit_id', $visit_id);
-						}
-						else
-						{
-							// other tables take the visit id 
-							$table_key_value1 = $this->$function($patient_data,$branch_code,$this->session->userdata('visit_id'));
-						}
-
-						$table_key_value = $table_key_value1;
-
-						//insert data into the sync table
+							
+							if($table_key_value > 0)
+							{
+								$response[$sync_table_name][$r] = array(
+											'response' => 'true',
+											'remote_pk' => $table_key_value,
+											'local_pk' => $patient_data->$table_key_name
+								);
+								
+								$save_data = array(
+									'branch_code'=>$branch_code,
+									'sync_status'=>1,
+									'sync_type'=>0,
+									'sync_table_id'=>$sync_table_id,
+									'sync_table_key'=>$table_key_value,
+									'created'=>date('Y-m-d H:i:s')
+								);
+								$this->db->insert('sync', $save_data);
+							}
+							
+							else
+							{
+								$save_data = array(
+									'branch_code'=>$branch_code,
+									'sync_status'=>0,
+									'sync_type'=>0,
+									'sync_table_id'=>$sync_table_id,
+									'sync_table_key'=>$table_key_value,
+									'created'=>date('Y-m-d H:i:s')
+								);
+								$this->db->insert('sync', $save_data);
+								
+								$response[$sync_table_name][$r]['response'] = 'false';
+								$response[$sync_table_name][$r]['local_pk'] = $patient_data->$table_key_name;
+							}
 						
-						
-						if($table_key_value > 0)
-						{
-							$response[$sync_table_name][$r] = array(
-										'response' => 'true',
-										'remote_pk' => $table_key_value,
-										'local_pk' => $patient_data->$table_key_name
-							);
-							
-							$save_data = array(
-								'branch_code'=>$branch_code,
-								'sync_status'=>1,
-								'sync_type'=>0,
-								'sync_table_id'=>$sync_table_id,
-								'sync_table_key'=>$table_key_value,
-								'created'=>date('Y-m-d H:i:s')
-							);
-							$this->db->insert('sync', $save_data);
-						}
-						
-						else
-						{
-							$save_data = array(
-								'branch_code'=>$branch_code,
-								'sync_status'=>0,
-								'sync_type'=>0,
-								'sync_table_id'=>$sync_table_id,
-								'sync_table_key'=>$table_key_value,
-								'created'=>date('Y-m-d H:i:s')
-							);
-							$this->db->insert('sync', $save_data);
-							
-							$response[$sync_table_name][$r]['response'] = 'false';
-							$response[$sync_table_name][$r]['local_pk'] = $patient_data->$table_key_name;
-						}
+
 					}
 				}
 				

@@ -2,23 +2,6 @@
 
 class Reports_model extends CI_Model 
 {
-	/*
-	*	Count all items from a table
-	*	@param string $table
-	* 	@param string $where
-	*
-	*/
-	public function count_items($table, $where, $limit = NULL)
-	{
-		if($limit != NULL)
-		{
-			$this->db->limit($limit);
-		}
-		$this->db->from($table);
-		$this->db->where($where);
-		$this->db->group_by('payments.visit_id');
-		return $this->db->count_all_results();
-	}
 	public function get_queue_total($date = NULL, $where = NULL)
 	{
 		if($date == NULL)

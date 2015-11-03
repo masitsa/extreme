@@ -1,36 +1,15 @@
 <?php   if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-// require_once "./application/modules/administration/controllers/administration.php";
+require_once "./application/modules/administration/controllers/administration.php";
 
-class Reports extends MX_Controller
+class Reports extends administration
 {	
 	function __construct()
 	{
 		parent:: __construct();
-		// Allow from any origin
-		if (isset($_SERVER['HTTP_ORIGIN'])) {
-			header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-			header('Access-Control-Allow-Credentials: true');
-			header('Access-Control-Max-Age: 86400');    // cache for 1 day
-		}
-	
-		// Access-Control headers are received during OPTIONS requests
-		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-	
-			if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
-				header("Access-Control-Allow-Methods: GET, POST, OPTIONS");         
-	
-			if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
-				header("Access-Control-Allow-Headers:        {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
-	
-			exit(0);
-		}
-
 		$this->load->model('reception/reception_model');
 		$this->load->model('reports_model');
 		$this->load->model('accounts/accounts_model');
-		$this->load->model('accounts/petty_cash_model');
-		$this->load->model('reception/database');
 	}
 	
 	public function all_reports($module = NULL)
@@ -71,7 +50,7 @@ class Reports extends MX_Controller
 		
 		if(empty($branch_code))
 		{
-			$branch_code = "OSH";
+			$branch_code = $this->session->userdata('branch_code');
 		}
 		
 		$this->db->where('branch_code', $branch_code);
@@ -88,7 +67,6 @@ class Reports extends MX_Controller
 			$branch_name = '';
 		}
 		$v_data['branch_name'] = $branch_name;
-		
 		
 		$where = 'visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type AND visit.visit_delete = 0 AND visit.branch_code = \''.$branch_code.'\'';
 		$table = 'visit, patients, visit_type';
@@ -218,26 +196,25 @@ class Reports extends MX_Controller
 		$v_data['doctors'] = $this->reception_model->get_doctor();
 		$v_data['module'] = $module;
 		
-		$newdata = $this->load->view('reports/all_transactions', $v_data, true);
+		$data['content'] = $this->load->view('reports/all_transactions', $v_data, true);
 		
-		$response['result'] = $newdata;
-		
-		echo json_encode($newdata);
+		$this->load->view('admin/templates/general_page', $data);
 	}
 	
-	public function search_transactions($visit_type_id = NULL,$personnel_id = NULL, $visit_date_from = NULL, $visit_date_to = NULL,  $branch_code = NULL, $module = NULL)
+	public function search_transactions($module = NULL)
 	{
-		if(!empty($branch_code) AND $branch_code != "_")
-		{
-			$this->session->set_userdata('search_branch_code', $branch_code);
-
-		}
+		$visit_type_id = $this->input->post('visit_type_id');
+		$personnel_id = $this->input->post('personnel_id');
+		$visit_date_from = $this->input->post('visit_date_from');
+		$visit_date_to = $this->input->post('visit_date_to');
+		$branch_code = $this->input->post('branch_code');
+		$this->session->set_userdata('search_branch_code', $branch_code);
 		
 		$search_title = 'Showing reports for: ';
-		$visit_type_id2 = "";
-		if(!empty($visit_type_id) && $visit_type_id != "_")
+		
+		if(!empty($visit_type_id))
 		{
-			$visit_type_id2 = ' AND visit.visit_type = '.$visit_type_id.' ';
+			$visit_type_id = ' AND visit.visit_type = '.$visit_type_id.' ';
 			
 			$this->db->where('visit_type_id', $visit_type_id);
 			$query = $this->db->get('visit_type');
@@ -255,10 +232,10 @@ class Reports extends MX_Controller
 			
 			$search_title .= 'Patient number. '.$patient_number;
 		}*/
-		$personnel_id2 = "";
-		if(!empty($personnel_id) && $personnel_id != "_")
+		
+		if(!empty($personnel_id))
 		{
-			$personnel_id2 = ' AND visit.personnel_id = '.$personnel_id.' ';
+			$personnel_id = ' AND visit.personnel_id = '.$personnel_id.' ';
 			
 			$this->db->where('personnel_id', $personnel_id);
 			$query = $this->db->get('personnel');
@@ -281,19 +258,19 @@ class Reports extends MX_Controller
 			$prev_search = ' AND payments.visit_id = visit.visit_id AND payments.payment_type = 1';
 			$prev_table = ', payments';
 			
-			if(!empty($visit_date_from) && !empty($visit_date_to) AND $visit_date_from != "_" AND $visit_date_to != "_")
+			if(!empty($visit_date_from) && !empty($visit_date_to))
 			{
 				$visit_date = ' AND payments.payment_created BETWEEN \''.$visit_date_from.'\' AND \''.$visit_date_to.'\'';
 				$search_title .= 'Payments from '.date('jS M Y', strtotime($visit_date_from)).' to '.date('jS M Y', strtotime($visit_date_to)).' ';
 			}
 			
-			else if(!empty($visit_date_from) AND $visit_date_from != "_" )
+			else if(!empty($visit_date_from))
 			{
 				$visit_date = ' AND payments.payment_created = \''.$visit_date_from.'\'';
 				$search_title .= 'Payments of '.date('jS M Y', strtotime($visit_date_from)).' ';
 			}
 			
-			else if(!empty($visit_date_to) AND $visit_date_to != "_")
+			else if(!empty($visit_date_to))
 			{
 				$visit_date = ' AND payments.payment_created = \''.$visit_date_to.'\'';
 				$search_title .= 'Payments of '.date('jS M Y', strtotime($visit_date_to)).' ';
@@ -307,19 +284,19 @@ class Reports extends MX_Controller
 		
 		else
 		{
-			if(!empty($visit_date_from) && !empty($visit_date_to) AND $visit_date_from != "_" AND $visit_date_to != "_")
+			if(!empty($visit_date_from) && !empty($visit_date_to))
 			{
 				$visit_date = ' AND visit.visit_date BETWEEN \''.$visit_date_from.'\' AND \''.$visit_date_to.'\'';
 				$search_title .= 'Visit date from '.date('jS M Y', strtotime($visit_date_from)).' to '.date('jS M Y', strtotime($visit_date_to)).' ';
 			}
 			
-			else if(!empty($visit_date_from) AND $visit_date_from != "_")
+			else if(!empty($visit_date_from))
 			{
 				$visit_date = ' AND visit.visit_date = \''.$visit_date_from.'\'';
 				$search_title .= 'Visit date of '.date('jS M Y', strtotime($visit_date_from)).' ';
 			}
 			
-			else if(!empty($visit_date_to) AND $visit_date_to != "_")
+			else if(!empty($visit_date_to))
 			{
 				$visit_date = ' AND visit.visit_date = \''.$visit_date_to.'\'';
 				$search_title .= 'Visit date of '.date('jS M Y', strtotime($visit_date_to)).' ';
@@ -330,82 +307,20 @@ class Reports extends MX_Controller
 				$visit_date = '';
 			}
 		}
-
-		$search = $visit_type_id2.$visit_date.$personnel_id2;
-
 		
+		$search = $visit_type_id.$visit_date.$personnel_id.$prev_search;
 		$visit_search = $this->session->userdata('all_transactions_search');
+		
+		if(!empty($visit_search))
+		{
+			$search .= $visit_search;
+		}
 		$this->session->set_userdata('all_transactions_search', $search);
 		$this->session->set_userdata('search_title', $search_title);
 		
 		$this->all_transactions($module);
 	}
-	public function petty_cash($date_from = NULL, $date_to = NULL)
-	{
-		$where = 'petty_cash.transaction_type_id = transaction_type.transaction_type_id';
-		$table = 'petty_cash, transaction_type';
-		
-		if(!empty($date_from) && !empty($date_to) AND $date_from != "_" AND $date_to != "_")
-		{
-			$where .= ' AND (petty_cash.petty_cash_date >= \''.$date_from.'\' OR \'petty_cash.petty_cash_date <= '.$date_to.'\')';
-			$search_title = 'Petty cash from '.date('jS M Y', strtotime($date_from)).' to '.date('jS M Y', strtotime($date_to)).' ';
-		}
-		
-		else if(!empty($date_from) AND $date_from != "_")
-		{
-			$where .= ' AND petty_cash.petty_cash_date = \''.$date_from.'\'';
-			$search_title = 'Petty cash of '.date('jS M Y', strtotime($date_from)).' ';
-		}
-		
-		else if(!empty($date_to) AND $date_to != "_")
-		{
-			$where .= ' AND petty_cash.petty_cash_date = \''.$date_to.'\'';
-			$search_title = 'Petty cash of '.date('jS M Y', strtotime($date_to)).' ';
-		}
-		
-		else
-		{
-			$where .= ' AND DATE_FORMAT(petty_cash.petty_cash_date, \'%m\') = \''.date('m').'\' AND DATE_FORMAT(petty_cash.petty_cash_date, \'%Y\') = \''.date('Y').'\'';
-			$search_title = 'Petty cash for the month of '.date('M Y').' ';
-		}
-		
-		$v_data['date_from'] = $date_from;
-		$v_data['date_to'] = $date_to;
-		$v_data['accounts'] = $this->petty_cash_model->get_accounts();
-		$v_data['query'] = $this->petty_cash_model->get_petty_cash($where, $table);
-		$v_data['title'] = $search_title;
-		$data['title'] = 'Petty cash';
-		$newdata = $this->load->view('petty_cash/statement', $v_data, TRUE);
-		
-		$response['result'] = $newdata;
-		
-		echo json_encode($newdata);
-	}
-
-	public function search_petty_cash($date_from = NULL, $date_to = NULL)
-	{
-		
-		
-		if(!empty($date_from) && !empty($date_to) AND $date_from != "_" AND $date_to != "_")
-		{
-			redirect('mobile/reports/petty_cash/'.$date_from.'/'.$date_to);
-		}
-		
-		else if(!empty($date_from) AND $date_from != "_")
-		{
-			redirect('mobile/reports/petty_cash/'.$date_from);
-		}
-		
-		else if(!empty($date_to) AND $date_to != "_")
-		{
-			redirect('mobile/reports/petty_cash/'.$date_to);
-		}
-		
-		else
-		{
-			redirect('mobile/reports/petty_cash');
-		}
-	}
+	
 	public function export_transactions()
 	{
 		$this->reports_model->export_transactions();
@@ -448,29 +363,31 @@ class Reports extends MX_Controller
 		$data['title'] = 'Department Reports';
 		$v_data['title'] = 'Department Reports';
 		
-		$newdata = $this->load->view('reports/department_reports', $v_data, true);
+		$data['content'] = $this->load->view('reports/department_reports', $v_data, true);
 		
 		
-		$response['result'] = $newdata;
+		$data['sidebar'] = 'admin_sidebar';
 		
-		echo json_encode($newdata);
+		
+		$this->load->view('admin/templates/general_page', $data);
 	}
 	
-	public function search_departments($visit_date_from = NULL, $visit_date_to = NULL)
+	public function search_departments()
 	{
+		$visit_date_from = $this->input->post('visit_date_from');
+		$visit_date_to = $this->input->post('visit_date_to');
 		
-		
-		if(!empty($visit_date_from) && !empty($visit_date_to) AND $visit_date_from != "_" AND $visit_date_to != "_")
+		if(!empty($visit_date_from) && !empty($visit_date_to))
 		{
 			$visit_date = ' AND visit.visit_date BETWEEN \''.$visit_date_from.'\' AND \''.$visit_date_to.'\'';
 		}
 		
-		else if(!empty($visit_date_from) AND $visit_date_from != "_")
+		else if(!empty($visit_date_from))
 		{
 			$visit_date = ' AND visit.visit_date = \''.$visit_date_from.'\'';
 		}
 		
-		else if(!empty($visit_date_to) AND $visit_date_to != "_")
+		else if(!empty($visit_date_to))
 		{
 			$visit_date = ' AND visit.visit_date = \''.$visit_date_to.'\'';
 		}
@@ -568,11 +485,13 @@ class Reports extends MX_Controller
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();
 		
-		$newdata = $this->load->view('reports/time_reports', $v_data, true);
+		$data['content'] = $this->load->view('reports/time_reports', $v_data, true);
 		
-		$response['result'] = $newdata;
 		
-		echo json_encode($newdata);
+		$data['sidebar'] = 'admin_sidebar';
+		
+		
+		$this->load->view('admin/templates/general_page', $data);
 	}
 	
 	public function search_time()
@@ -672,11 +591,9 @@ class Reports extends MX_Controller
 		$v_data['title'] = $title;
 		$data['title'] = 'Doctor Reports';
 		
-		$newdata = $this->load->view('reports/doctor_reports', $v_data, true);
+		$data['content'] = $this->load->view('reports/doctor_reports', $v_data, true);
 		
-		$response['result'] = $newdata;
-		
-		echo json_encode($newdata);
+		$this->load->view('admin/templates/general_page', $data);
 	}
 	public function search_doctors()
 	{
@@ -1001,7 +918,7 @@ class Reports extends MX_Controller
 		
 		if(empty($branch_code))
 		{
-			$branch_code = 'OSH';
+			$branch_code = $this->session->userdata('branch_code');
 		}
 		
 		$this->db->where('branch_code', $branch_code);
@@ -1019,7 +936,7 @@ class Reports extends MX_Controller
 		}
 		$v_data['branch_name'] = $branch_name;
 		
-		$where = 'payments.payment_method_id = payment_method.payment_method_id AND payments.visit_id = visit.visit_id AND payments.payment_type = 1 AND visit.visit_delete = 0 AND visit.branch_code = \''.$branch_code.'\' AND visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type AND payments.cancel = 0 AND payments.payment_created = "'.date('Y-m-d').'"';
+		$where = 'payments.payment_method_id = payment_method.payment_method_id AND payments.visit_id = visit.visit_id AND payments.payment_type = 1 AND visit.visit_delete = 0 AND visit.branch_code = \''.$branch_code.'\' AND visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type AND payments.cancel = 0';
 		
 		$table = 'payments, visit, patients, visit_type, payment_method';
 		$visit_search = $this->session->userdata('cash_report_search');
@@ -1069,7 +986,7 @@ class Reports extends MX_Controller
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
 		$v_data['search'] = $visit_search;
-		
+		$v_data['total_patients'] = $config['total_rows'];
 		$v_data['total_payments'] = $this->reports_model->get_total_cash_collection($where, $table, 'cash');
 		
 		//all normal payments
@@ -1083,13 +1000,11 @@ class Reports extends MX_Controller
 		
 		//count outpatient visits
 		$where2 = $where.' AND patients.inpatient = 0';
-		$v_data['outpatients'] = $this->reports_model->count_items($table, $where2);
+		$v_data['outpatients'] = $this->reception_model->count_items($table, $where2);
 		
 		//count inpatient visits
 		$where2 = $where.' AND patients.inpatient = 1';
-		$v_data['inpatients'] = $this->reports_model->count_items($table, $where2);
-
-		$v_data['total_patients'] = $v_data['inpatients'] + $v_data['outpatients'];
+		$v_data['inpatients'] = $this->reception_model->count_items($table, $where2);
 		
 		$page_title = $this->session->userdata('cash_search_title');
 		
@@ -1106,26 +1021,25 @@ class Reports extends MX_Controller
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();
 		
-		$newdata = $this->load->view('reports/cash_report', $v_data, true);
+		$data['content'] = $this->load->view('reports/cash_report', $v_data, true);
 		
-		$response['result'] = $newdata;
-		
-		echo json_encode($newdata);
+		$this->load->view('admin/templates/general_page', $data);
 	}
 	
-	public function search_cash_reports($visit_type_id = NULL,$personnel_id = NULL, $visit_date_from = NULL, $visit_date_to = NULL,  $branch_code = NULL, $module = NULL)
+	public function search_cash_reports()
 	{
-		if(!empty($branch_code) AND $branch_code != "_")
-		{
-			$this->session->set_userdata('search_branch_code', $branch_code);
-
-		}
+		$visit_type_id = $this->input->post('visit_type_id');
+		$personnel_id = $this->input->post('personnel_id');
+		$visit_date_from = $this->input->post('visit_date_from');
+		$visit_date_to = $this->input->post('visit_date_to');
+		$branch_code = $this->input->post('branch_code');
+		$this->session->set_userdata('search_branch_code', $branch_code);
 		
 		$search_title = 'Showing reports for: ';
-		$visit_type_id2 = "";
-		if(!empty($visit_type_id) && $visit_type_id != "_")
+		
+		if(!empty($visit_type_id))
 		{
-			$visit_type_id2 = ' AND visit.visit_type = '.$visit_type_id.' ';
+			$visit_type_id = ' AND visit.visit_type = '.$visit_type_id.' ';
 			
 			$this->db->where('visit_type_id', $visit_type_id);
 			$query = $this->db->get('visit_type');
@@ -1137,16 +1051,9 @@ class Reports extends MX_Controller
 			}
 		}
 		
-		/*if(!empty($patient_number))
+		if(!empty($personnel_id))
 		{
-			$patient_number = ' AND patients.patient_number LIKE \'%'.$patient_number.'%\' ';
-			
-			$search_title .= 'Patient number. '.$patient_number;
-		}*/
-		$personnel_id2 = "";
-		if(!empty($personnel_id) && $personnel_id != "_")
-		{
-			$personnel_id2 = ' AND visit.personnel_id = '.$personnel_id.' ';
+			$personnel_id = ' AND visit.personnel_id = '.$personnel_id.' ';
 			
 			$this->db->where('personnel_id', $personnel_id);
 			$query = $this->db->get('personnel');
@@ -1158,75 +1065,36 @@ class Reports extends MX_Controller
 			}
 		}
 		
-		//date filter for cash report
-		$prev_search = '';
-		$prev_table = '';
-		
-		$debtors = $this->session->userdata('debtors');
-		
-		if($debtors == 'false')
+		if(!empty($visit_date_from) && !empty($visit_date_to))
 		{
-			$prev_search = ' AND payments.visit_id = visit.visit_id AND payments.payment_type = 1';
-			$prev_table = ', payments';
-			
-			if(!empty($visit_date_from) && !empty($visit_date_to) AND $visit_date_from != "_" AND $visit_date_to != "_")
-			{
-				$visit_date = ' AND payments.payment_created BETWEEN \''.$visit_date_from.'\' AND \''.$visit_date_to.'\'';
-				$search_title .= 'Payments from '.date('jS M Y', strtotime($visit_date_from)).' to '.date('jS M Y', strtotime($visit_date_to)).' ';
-			}
-			
-			else if(!empty($visit_date_from) AND $visit_date_from != "_" )
-			{
-				$visit_date = ' AND payments.payment_created = \''.$visit_date_from.'\'';
-				$search_title .= 'Payments of '.date('jS M Y', strtotime($visit_date_from)).' ';
-			}
-			
-			else if(!empty($visit_date_to) AND $visit_date_to != "_")
-			{
-				$visit_date = ' AND payments.payment_created = \''.$visit_date_to.'\'';
-				$search_title .= 'Payments of '.date('jS M Y', strtotime($visit_date_to)).' ';
-			}
-			
-			else
-			{
-				$visit_date = '';
-			}
+			$visit_date = ' AND payments.payment_created BETWEEN \''.$visit_date_from.'\' AND \''.$visit_date_to.'\'';
+			$search_title .= 'Payments from '.date('jS M Y', strtotime($visit_date_from)).' to '.date('jS M Y', strtotime($visit_date_to)).' ';
+		}
+		
+		else if(!empty($visit_date_from))
+		{
+			$visit_date = ' AND payments.payment_created = \''.$visit_date_from.'\'';
+			$search_title .= 'Payments of '.date('jS M Y', strtotime($visit_date_from)).' ';
+		}
+		
+		else if(!empty($visit_date_to))
+		{
+			$visit_date = ' AND payments.payment_created = \''.$visit_date_to.'\'';
+			$search_title .= 'Payments of '.date('jS M Y', strtotime($visit_date_to)).' ';
 		}
 		
 		else
 		{
-			if(!empty($visit_date_from) && !empty($visit_date_to) AND $visit_date_from != "_" AND $visit_date_to != "_")
-			{
-				$visit_date = ' AND visit.visit_date BETWEEN \''.$visit_date_from.'\' AND \''.$visit_date_to.'\'';
-				$search_title .= 'Visit date from '.date('jS M Y', strtotime($visit_date_from)).' to '.date('jS M Y', strtotime($visit_date_to)).' ';
-			}
-			
-			else if(!empty($visit_date_from) AND $visit_date_from != "_")
-			{
-				$visit_date = ' AND visit.visit_date = \''.$visit_date_from.'\'';
-				$search_title .= 'Visit date of '.date('jS M Y', strtotime($visit_date_from)).' ';
-			}
-			
-			else if(!empty($visit_date_to) AND $visit_date_to != "_")
-			{
-				$visit_date = ' AND visit.visit_date = \''.$visit_date_to.'\'';
-				$search_title .= 'Visit date of '.date('jS M Y', strtotime($visit_date_to)).' ';
-			}
-			
-			else
-			{
-				$visit_date = '';
-			}
+			$visit_date = '';
 		}
-
-		$search = $visit_type_id2.$visit_date.$personnel_id2;
-
+		
+		$search = $visit_type_id.$visit_date.$personnel_id;
 		$this->session->unset_userdata('cash_report_search');
 		
 		$this->session->set_userdata('cash_report_search', $search);
 		$this->session->set_userdata('cash_search_title', $search_title);
 		
-		$this->cash_report();
+		redirect('hospital-reports/cash-report');
 	}
 	
 	public function close_cash_search()

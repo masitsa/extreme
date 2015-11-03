@@ -10,8 +10,9 @@ class Cloud  extends MX_Controller
 	
 	public function save_cloud_data()
 	{
-		$json = file_get_contents('php://input');
 		
+		$json = file_get_contents('php://input');
+
 	   	$response = $this->cloud_model->save_visit_data($json);
 
 	    /*$decoded = json_decode($json);
