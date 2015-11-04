@@ -5,7 +5,7 @@ class Sync_model extends CI_Model
 	{
 		// get the patient id and the branch id and patient
 		$patient_details = $this->sync_model->get_table_details($visit_id);
-		
+		 // var_dump($patient_details) or die();
 		if(count($patient_details) > 0)
 		{
 			$url = 'http://159.203.78.242/cloud/save_cloud_data';
@@ -13,6 +13,7 @@ class Sync_model extends CI_Model
 			//Encode the array into JSON.
 			
 			//The JSON data.
+
 			$data_string = json_encode($patient_details);
 			
 			try{                                                                                                         
@@ -28,6 +29,140 @@ class Sync_model extends CI_Model
 				$result = curl_exec($ch);
 				curl_close($ch);
 				$response = $this->sync_model->parse_sync_up_response($result);
+
+				 // $response = $result;
+				 // echo json_encode($response);
+			}
+			catch(Exception $e)
+			{
+				$response = "something went wrong";
+				echo json_encode($response.' '.$e);
+			}
+		}
+		else
+		{
+			$response = "no data to sync";
+			echo json_encode($response);
+		}
+		
+		return $response;
+	}
+
+	public function get_doctor_fee($personnel_id,$visit_id)
+	{
+		$this->db->select('visit_charge.visit_charge_amount');
+		$this->db->where('visit_charge.service_charge_id = service_charge.service_charge_id AND service_charge.service_id = service.service_id AND service.service_name = "Consultation" AND visit_charge.visit_id = '.$visit_id);
+		$query = $this->db->get('visit_charge, service_charge, service');
+
+		if($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $key) {
+				# code...
+				$visit_charge_amount = $key->visit_charge_amount;
+			}
+			$this->db->select('personnel_type.personnel_type_id');
+			$this->db->where('personnel.personnel_type_id = personnel_type.personnel_type_id AND personnel.personnel_id = '.$personnel_id);
+			$personnel = $this->db->get('personnel,personnel_type');
+			if($personnel->num_rows() > 0)
+			{
+				foreach ($personnel->result() as $key_result) {
+					# code...
+					$personnel_type_id = $key_result->personnel_type_id;
+				}
+			}
+			else
+			{
+				$personnel_type_id = 0;
+			}
+			//consultant
+				if($personnel_type_id == 2)
+				{
+					$charge_amount = $visit_charge_amount;
+					
+				}
+				
+				//radiographer
+				elseif($personnel_type_id == 3)
+				{
+					$charge_amount = 0.3 * $visit_charge_amount;
+					
+				}
+				
+				//medical officer
+				elseif($personnel_type_id == 4)
+				{
+					$hours_worked = $this->reports_model->calculate_hours_worked($personnel_id, $date_from = date('Y-m-d'), $date_to = date('Y-m-d'));
+					$charge_amount = 500 * $hours_worked;
+					
+				}
+				
+				//clinic officer
+				elseif($personnel_type_id == 5)
+				{
+					$days_worked = $this->reports_model->calculate_days_worked($personnel_id, $date_from = date('Y-m-d'), $date_to = date('Y-m-d'));
+					$charge_amount = 1000 * $days_worked;
+					
+				}
+			// pud the doctors calculations
+
+		}
+		else
+		{
+			$charge_amount = 0;
+		}
+		return $charge_amount;
+	}
+	public function sync_patient_bookings($visit_id)
+	{
+		$where = 'visit.patient_id = patients.patient_id AND visit.branch_code = "'.$this->session->userdata('branch_code').'" AND visit.visit_id = '.$visit_id;
+
+		$this->db->where($where);
+		$this->db->select('patients.*,visit.visit_date,visit.visit_time,visit.personnel_id AS doctor_id');
+		$query_patients = $this->db->get('patients,visit');
+		$patients['bookings'] = array();
+
+		if($query_patients->num_rows() > 0)
+		{
+			foreach ($query_patients->result() as $value) {
+				$personnel_id = $value->doctor_id;
+				$amount = $this->get_doctor_fee($personnel_id,$visit_id);
+				$value['amount'] = $amount;
+				$value['visit_id'] = $visit_id;
+				$value['branch_code'] = $this->session->userdata('branch_code');
+				// get doctors figure 
+			 	array_push($patients['bookings'], $value);
+			}
+		}
+
+		$patient_details = $patients;
+
+		 // var_dump($patient_details) or die();
+		if(count($patient_details) > 0)
+		{
+			$url = 'http://159.203.78.242/cloud/save_booking_data';
+			// $test_url = 'http://159.203.78.242/cloud/test';
+			//Encode the array into JSON.
+			
+			//The JSON data.
+
+			$data_string = json_encode($patient_details);
+			
+			try{                                                                                                         
+
+				$ch = curl_init($url);                                                                      
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+					'Content-Type: application/json',                                                                                
+					'Content-Length: ' . strlen($data_string))                                                                       
+				);                                                                                                                     
+				$result = curl_exec($ch);
+				curl_close($ch);
+				// $response = $this->sync_model->parse_sync_up_response($result);
+
+				 // $response = $result;
+				 // echo json_encode($response);
 			}
 			catch(Exception $e)
 			{

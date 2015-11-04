@@ -1,12 +1,20 @@
 <div class="row statistics">
+	
     <div class="col-md-2 col-sm-12">
     	 <section class="panel panel-featured panel-featured-info">
+			
             <header class="panel-heading">
+				
                 <h2 class="panel-title">Visits</h2>
-              </header>             
+					
+              </header> 
+      		   
         
               <!-- Widget content -->
               <div class="panel-body">
+				<div class="pull-right">
+                	<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#record_petty_cash"><i class="fa fa-plus"></i> Filter Records</button>
+                </div>
                 <h5>Visit Breakdown</h5>
                 <table class="table table-striped table-hover table-condensed">
                 	<thead>

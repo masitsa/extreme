@@ -1,5 +1,7 @@
 <?php 
 $v_data['all_categories'] = $all_categories;
+$v_data['all_brands'] = $all_brands;
+$v_data['all_generics'] = $all_generics;
 $v_data['store_priviledges'] = $store_priviledges;
 echo $this->load->view('search_products', $v_data, TRUE); 
 

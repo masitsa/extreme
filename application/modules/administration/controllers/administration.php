@@ -39,11 +39,20 @@ class Administration  extends MX_Controller
 	}
 	public function check($visit_id)
 	{
-		$this->sync_model->syn_up_on_closing_visit(28);
+		// $this->sync_model->syn_up_on_closing_visit(673);
 
-		$response = $this->sync_model->syn_up_on_closing_visit($visit_id);
+		 $response = $this->sync_model->syn_up_on_closing_visit($visit_id);
 		
-		echo $response;
+		// echo $response;
+	}
+
+	public function pass_patient_bookings($visit_id)
+	{
+		// $this->sync_model->syn_up_on_closing_visit(673);
+
+		 $response = $this->sync_model->sync_patient_bookings($visit_id);
+		
+		// echo $response;
 	}
 	public function sync_down_request()
 	{

@@ -2525,6 +2525,29 @@ class Reception_model extends CI_Model
 		
 		return $query;
 	}
+	public function close_todays_visits()
+	{
+		$date = date('Y-m-d');
+
+		$this->db->select('visit_id');
+		$this->db->where('visit_date = "'.$date.'"');
+		$query = $this->db->get('visit');
+
+		if($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $key) {
+				# code...
+				$visit_id = $key->visit_id;
+
+				$response = $this->sync_model->syn_up_on_closing_visit($visit_id);
+			}
+		}
+		else
+		{
+			$response = 'data not found';
+		}
+		return $response;
+	}
 	/*
 	*	Retrieve a single dependant
 	*	@param int $strath_no
