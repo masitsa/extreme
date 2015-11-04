@@ -35,7 +35,7 @@ class Petty_cash extends accounts
 		
 		else
 		{
-			$date_from = date('Y-m-d');
+			$date_from = date('Y-m-01');
 			$where .= ' AND DATE_FORMAT(petty_cash.petty_cash_date, \'%m\') = \''.date('m').'\' AND DATE_FORMAT(petty_cash.petty_cash_date, \'%Y\') = \''.date('Y').'\'';
 			$search_title = 'Petty cash for the month of '.date('M Y').' ';
 		}

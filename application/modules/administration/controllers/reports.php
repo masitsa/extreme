@@ -656,8 +656,8 @@ class Reports extends administration
 			$where = 'debtor_invoice.visit_type_id = '.$visit_type_id;
 			$table = 'debtor_invoice';
 			
-			$visit_search = $this->session->userdata('all_transactions_search');
-			$table_search = $this->session->userdata('all_transactions_tables');
+			$visit_search = $this->session->userdata('debtors_invoice_search');
+			$table_search = $this->session->userdata('debtors_invoice_tables');
 			
 			if(!empty($visit_search))
 			{
@@ -791,7 +791,7 @@ class Reports extends administration
 		$table = ', debtor_invoice_item';
 		
 		//create title
-		$this->db->where('visit_type.visit_type = debtor_invoice.visit_type_id AND debtor_invoice.debtor_invoice_id = '.$debtor_invoice_id);
+		$this->db->where('visit_type.visit_type_id = debtor_invoice.visit_type_id AND debtor_invoice.debtor_invoice_id = '.$debtor_invoice_id);
 		$this->db->select('visit_type_name, date_from, date_to');
 		$query = $this->db->get('debtor_invoice, visit_type');
 		
@@ -1108,6 +1108,13 @@ class Reports extends administration
 	public function export_cash_report()
 	{
 		$this->reports_model->export_cash_report();
+	}
+	
+	public function select_debtor()
+	{
+		$visit_type_id = $this->input->post('visit_type_id');
+		
+		redirect('accounts/insurance-invoices/'.$visit_type_id);
 	}
 }
 ?>

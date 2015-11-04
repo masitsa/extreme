@@ -681,7 +681,6 @@ class Reports_model extends CI_Model
 						$service_id = $service->service_id;
 						$visit_charge = $this->reports_model->get_all_visit_charges($visit_id, $service_id);
 						$total_invoiced += $visit_charge;
-						
 						//get debit notes for that service
 						$service_debit_notes = $this->reports_model->get_service_notes($visit_id, $service_id, 2);
 						
@@ -690,7 +689,7 @@ class Reports_model extends CI_Model
 						
 						$notes_difference = $service_debit_notes - $service_credit_notes;
 						
-						$report[$row_count][$current_column] = ($visit_charge + $notes_difference);
+						$report[$row_count][$current_column] = (intval($visit_charge) + intval($notes_difference));
 						$current_column++;
 					}
 					/*$report[$row_count][$current_column] = $debit_note_amount;

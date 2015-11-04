@@ -686,7 +686,7 @@
 											<label class="col-lg-4 control-label">Amount: </label>
 										  
 											<div class="col-lg-8">
-												<input type="text" class="form-control" name="amount_paid" placeholder="">
+												<input type="text" class="form-control" name="amount_paid" placeholder="" autocomplete="off">
 											</div>
 										</div>
 										
