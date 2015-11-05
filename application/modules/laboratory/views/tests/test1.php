@@ -47,25 +47,25 @@ if(!empty($coming_from))
 		
 		foreach ($lab_rs as $key):
 			
-			$visit_charge_id = $key->visit_lab_test_id;
+			$visit_lab_test_id = $key->visit_lab_test_id;
 
 			// get invoiced charge for this test
 				// parameters
 			$service_charge_id = $key->service_charge_id;
 				// check if test is in visit charge
-			$actual_visit_charge = $this->lab_model->check_visit_charge_lab_test($service_charge_id,$visit_id);
+			$actual_visit_charge = $this->lab_model->check_visit_charge_lab_test($visit_lab_test_id,$visit_id);
 			// end of geting the actual charge id
 			
-			$format_rs = $this->lab_model->get_lab_visit_result($visit_charge_id);
+			$format_rs = $this->lab_model->get_lab_visit_result($visit_lab_test_id);
 			$num_format = count($format_rs);
 			
 			if($num_format > 0){
-				$rs = $this->lab_model->get_test($visit_charge_id);
+				$rs = $this->lab_model->get_test($visit_lab_test_id);
 				$num_lab = count($rs);
 			}
 			
 			else{
-				$rs = $this->lab_model->get_m_test($visit_charge_id);//die();
+				$rs = $this->lab_model->get_m_test($visit_lab_test_id);//die();
 				$num_lab = count($rs);
 			}
 			

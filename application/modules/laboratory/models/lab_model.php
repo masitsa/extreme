@@ -39,9 +39,15 @@ class Lab_model extends CI_Model
 		
 	}
 
-	function get_lab_visit_result($visit_charge_id){
-		$table = "lab_visit_results";
+	function get_lab_visit_result($visit_lab_test_id){
+		/*$table = "lab_visit_results";
 		$where = "visit_charge_id = ".$visit_charge_id;
+		$items = "*";
+		$order = "visit_charge_id";
+		$group_by = "lab_visit_result_format";*/
+		
+		$table = "lab_visit_results, visit_lab_test,visit_charge";
+		$where = "visit_lab_test.visit_lab_test_id = visit_charge.visit_lab_test_id AND visit_charge.visit_charge_id = lab_visit_results.visit_charge_id AND visit_lab_test.visit_lab_test_id = ".$visit_lab_test_id;
 		$items = "*";
 		$order = "visit_charge_id";
 		$group_by = "lab_visit_result_format";
