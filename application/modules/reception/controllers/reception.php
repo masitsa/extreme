@@ -674,7 +674,7 @@ class Reception  extends MX_Controller
 			{
 				//create visit
 				$visit_id = $this->reception_model->create_visit($visit_date, $patient_id, $doctor_id, $insurance_limit, $insurance_number, $visit_type_id, $timepicker_start, $timepicker_end, $appointment_id, $close_card);
-				$this->sync_model->pass_patient_bookings($visit_id);
+				$this->sync_model->sync_patient_bookings($visit_id);
 				//save consultation charge for nurse visit, counseling or theatre
 				if($_POST['department_id'] == 2 || $_POST['department_id'] == 7 || $_POST['department_id'] == 12 || $_POST['department_id'] == 14)
 				{

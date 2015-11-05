@@ -82,14 +82,14 @@ class Cloud_model extends CI_Model
 	}
 	public function save_visit_data($json)
 	{  
-	    //var_dump($json); die();
+	   
 		//decode the json data
 		$decoded = json_decode($json);
-		
 		$branch_code = $decoded->branch_code;
 		
 		//get sync tables
-		$query = $this->get_sync_tables();
+		$query = $this->get_sync_tables($branch_code);
+		$this->session->unset_userdata('patient_id');
 		if($query->num_rows() > 0)
 		{
 			//initiate the response array
@@ -111,47 +111,66 @@ class Cloud_model extends CI_Model
 					$total_rows = count($sync_data);
 					
 					$visit_id = 0;
+
 					for($r = 0; $r < $total_rows; $r++)
 					{
 						$patient_data = $sync_data[$r];
 						
 							if($function == "save_patients")
 							{
-								$table_key_value1 = $this->$function($patient_data,$branch_code,$patient_id);
+								$table_key_value_one = $this->$function($patient_data,$branch_code,$sync_table_id,$patient_id);
 								
-								 $this->session->unset_userdata('patient_id');
+								$table_key_value = explode('.',$table_key_value_one);
+								
+								
+								// get the local pk and the remote pk
+								$local_pk = $table_key_value[0];
+								$remote_pk = $table_key_value[1];
+								// end of getting the pk's
+								
 								// means that this is the first table
-								$patient_id = $table_key_value1;
+								$patient_id = $remote_pk;
 
-								$this->session->set_userdata('patient_id', $table_key_value1);
+								$this->session->set_userdata('patient_id', $patient_id);
 							}
 
 							else if($function == "save_visits")
 							{
 								// means that this is the second table
-								$table_key_value1 = $this->$function($patient_data,$branch_code,$this->session->userdata('patient_id'));
+								$table_key_value_one = $this->$function($patient_data,$branch_code,$sync_table_id,$this->session->userdata('patient_id'));
 								
 								$this->session->unset_userdata('visit_id');
-								$visit_id = $table_key_value1;
+								// get the local pk and the remote pk
+								$table_key_value = explode('.',$table_key_value_one);
+	
+								// get the local pk and the remote pk
+								$local_pk = $table_key_value[0];
+								$remote_pk = $table_key_value[1];
+								// end of getting the pk's
+
+								$visit_id = $remote_pk;
 
 								$this->session->set_userdata('visit_id', $visit_id);
 							}
 							else
 							{
 								// other tables take the visit id 
-								$table_key_value1 = $this->$function($patient_data,$branch_code,$this->session->userdata('visit_id'));
+								$table_key_value_one = $this->$function($patient_data,$branch_code,$sync_table_id,$this->session->userdata('visit_id'));
+								$table_key_value = explode('.',$table_key_value_one);
+								// get the local pk and the remote pk
+								$local_pk = $table_key_value[0];
+								$remote_pk = $table_key_value[1];
 							}
-
-							$table_key_value = $table_key_value1;
+							
+							//$table_key_value = $table_key_value1;
 							
 							//insert data into the sync table
 							
-							
-							if($table_key_value > 0)
+							if($remote_pk > 0)
 							{
 								$response[$sync_table_name][$r] = array(
 											'response' => 'true',
-											'remote_pk' => $table_key_value,
+											'remote_pk' => $remote_pk,
 											'local_pk' => $patient_data->$table_key_name
 								);
 								
@@ -160,10 +179,14 @@ class Cloud_model extends CI_Model
 									'sync_status'=>1,
 									'sync_type'=>0,
 									'sync_table_id'=>$sync_table_id,
-									'sync_table_key'=>$table_key_value,
+									'sync_table_key'=>$table_key_name,
+									'remote_pk'=>$remote_pk,
+									'local_pk'=>$local_pk,
 									'created'=>date('Y-m-d H:i:s')
 								);
 								$this->db->insert('sync', $save_data);
+								$response[$sync_table_name][$r]['response'] = 'false';
+								$response[$sync_table_name][$r]['local_pk'] = $patient_data->$table_key_name;
 							}
 							
 							else
@@ -173,10 +196,13 @@ class Cloud_model extends CI_Model
 									'sync_status'=>0,
 									'sync_type'=>0,
 									'sync_table_id'=>$sync_table_id,
-									'sync_table_key'=>$table_key_value,
+									'sync_table_key'=>$table_key_name,
+									'remote_pk'=>$remote_pk,
+									'local_pk'=>$local_pk,
 									'created'=>date('Y-m-d H:i:s')
 								);
 								$this->db->insert('sync', $save_data);
+								
 								
 								$response[$sync_table_name][$r]['response'] = 'false';
 								$response[$sync_table_name][$r]['local_pk'] = $patient_data->$table_key_name;
@@ -203,19 +229,21 @@ class Cloud_model extends CI_Model
 		return $response;
 	}
 
-	public function get_sync_tables()
+	public function get_sync_tables($branch_code)
 	{
-		$this->db->where('sync_table_status', 1);
+		$this->db->where('branch_code =  "'.$branch_code.'" AND sync_table_status = 1');
 		$query = $this->db->get('sync_table');
 
 		return $query;
 	}
 
-	public function save_patients($patients, $branch_code, $patient_id = NULL)
+	public function save_patients($patients, $branch_code, $sync_table_id,$patient_id = NULL)
 	{
 		$res = $patients;
 
 		$patient_number = $res->patient_number;
+
+		$local_pk = $res->patient_id;
 		
 		//check if patient number exists
 		$this->db->where('patient_number', $patient_number);
@@ -252,16 +280,19 @@ class Cloud_model extends CI_Model
 		$data['deleted_by'] = $res->deleted_by;
 		$data['date_deleted'] = $res->date_deleted;
 		$data['branch_code'] = $res->branch_code;
-
+		$patient_response = array();
 		if($query->num_rows() > 0)
 		{
 			$row = $query->row();
 			$patient_id = $row->patient_id;
+			$items = $local_pk.'.'.$patient_id;
+			// $patient_response['local_pk']  = $local_pk;
+			// $patient_response['remote_pk']  = $patient_id;
 			//update patient
 			$this->db->where('patient_number', $patient_number);
 			if($this->db->update('patients', $data))
 			{
-				return $patient_id;
+				return $items;
 			}
 			else
 			{
@@ -275,7 +306,9 @@ class Cloud_model extends CI_Model
 			if($this->db->insert('patients', $data))
 			{
 				$patient_id = $this->db->insert_id();
-				return $patient_id;
+				$items = $local_pk.'.'.$patient_id;
+
+				return $items;
 			}
 			else
 			{
@@ -284,14 +317,33 @@ class Cloud_model extends CI_Model
 		}
 	}
 
-	public function save_visits($visits, $branch_code, $patient_id)
+	public function save_visits($visits, $branch_code, $sync_table_id, $patient_id)
 	{
 		$res = $visits;
 
-		$visit_id = $res->visit_id;
+
+
+		$local_pk = $res->visit_id;
+
+
+		$this->db->where('local_pk = '.$local_pk.' AND branch_code = "'.$branch_code.'" AND sync_table_id = '.$sync_table_id.'');
+		$get_query = $this->db->get('sync');
+		// get the remote key
+		if($get_query->num_rows() > 0)
+		{
+			foreach ($get_query->result() as $key_remote) {
+				# code...
+				$exit_remote = $key_remote->remote_pk;
+			}
+		}
+		else
+		{
+			$exit_remote = 0;
+		}
+
 		
 		//check if patient number exists
-		$this->db->where(array('visit_id' => $visit_id, 'branch_code' => $branch_code));
+		$this->db->where(array('visit_id' => $exit_remote, 'branch_code' => $branch_code));
 		$query = $this->db->get('visit');
 		
 		$data['visit_date'] = $res->visit_date;
@@ -351,16 +403,20 @@ class Cloud_model extends CI_Model
 		$data['clinic_meds'] = $res->clinic_meds;
 		$data['branch_code'] = $res->branch_code;
 		$data['insurance_limit'] = $res->insurance_limit;
-
+		$patient_response = array();
 		if($query->num_rows() > 0)
 		{
 			$row = $query->row();
-			$patient_id = $row->patient_id;
+			$visit_id = $row->visit_id;
 			//update patient
-			$this->db->where('visit_id', $visit_id);
+			$items = $local_pk.'.'.$visit_id;
+			// $patient_response['local_pk']  = $local_pk;
+			// $patient_response['remote_pk']  = $visit_id;
+
+			$this->db->where('visit_id', $exit_remote);
 			if($this->db->update('visit', $data))
 			{
-				return $visit_id;
+				return $items;
 			}
 			else
 			{
@@ -374,7 +430,11 @@ class Cloud_model extends CI_Model
 			if($this->db->insert('visit', $data))
 			{
 				$visit_id = $this->db->insert_id();
-				return $visit_id;
+				$items = $local_pk.'.'.$visit_id;
+				// $patient_response['local_pk']  = $local_pk;
+				// $patient_response['remote_pk']  = $visit_id;
+
+				return $items;
 			}
 			else
 			{
@@ -383,14 +443,28 @@ class Cloud_model extends CI_Model
 		}
 	}
 	
-	public function save_visit_charges($visit_charges, $branch_code,$visit_id)
+	public function save_visit_charges($visit_charges, $branch_code,$sync_table_id,$visit_id)
 	{
 		$res = $visit_charges;
 
-		$visit_charge_id = $res->visit_charge_id;
+		$local_pk = $res->visit_charge_id;
+		$this->db->where('local_pk = '.$local_pk.' AND branch_code = "'.$branch_code.'" AND sync_table_id = '.$sync_table_id.'');
+		$get_query = $this->db->get('sync');
+		// get the remote key
+		if($get_query->num_rows() > 0)
+		{
+			foreach ($get_query->result() as $key_remote) {
+				# code...
+				$exit_remote = $key_remote->remote_pk;
+			}
+		}
+		else
+		{
+			$exit_remote = 0;
+		}
 		
 		//check if patient number exists
-		$this->db->where('visit_charge.visit_id = visit.visit_id AND visit_charge.visit_charge_id = '.$visit_charge_id.' AND visit.branch_code = \''.$branch_code.'\'');
+		$this->db->where('visit_charge.visit_id = visit.visit_id AND visit_charge.visit_charge_id = '.$exit_remote.' AND visit.branch_code = \''.$branch_code.'\'');
 		$query = $this->db->get('visit_charge, visit');
 		
 		$data['visit_id'] = $visit_id;
@@ -409,14 +483,21 @@ class Cloud_model extends CI_Model
 		$data['created_by'] = $res->created_by;
 		$data['modified_by'] = $res->modified_by;
 		$data['date_modified'] = $res->date_modified;
-
+		$patient_response = array();
 		if($query->num_rows() > 0)
 		{
+
+			$row = $query->row();
+			$visit_charge_id = $row->visit_charge_id;
+			$items = $local_pk.'.'.$visit_charge_id;
+			// $patient_response['local_pk']  = $local_pk;
+			// $patient_response['remote_pk']  = $visit_charge_id;
+
 			//update patient
-			$this->db->where('visit_charge_id', $visit_charge_id);
+			$this->db->where('visit_charge_id', $exit_remote);
 			if($this->db->update('visit_charge', $data))
 			{
-				return $visit_charge_id;
+				return $items;
 			}
 			else
 			{
@@ -430,7 +511,11 @@ class Cloud_model extends CI_Model
 			if($this->db->insert('visit_charge', $data))
 			{
 				$visit_charge_id = $this->db->insert_id();
-				return $visit_charge_id;
+				$items = $local_pk.'.'.$visit_charge_id;
+				// $patient_response['local_pk']  = $local_pk;
+				// $patient_response['remote_pk']  = $visit_charge_id;
+
+				return $items;
 			}
 			else
 			{
@@ -439,14 +524,29 @@ class Cloud_model extends CI_Model
 		}
 	}
 	
-	public function save_visit_department($visit_department, $branch_code,$visit_id)
+	public function save_visit_department($visit_department, $branch_code, $sync_table_id, $visit_id)
 	{
 		$res = $visit_department;
 
-		$visit_department_id = $res->visit_department_id;
+		$local_pk = $res->visit_department_id;
+
+		$this->db->where('local_pk = '.$local_pk.' AND branch_code = "'.$branch_code.'" AND sync_table_id = '.$sync_table_id.'');
+		$get_query = $this->db->get('sync');
+		// get the remote key
+		if($get_query->num_rows() > 0)
+		{
+			foreach ($get_query->result() as $key_remote) {
+				# code...
+				$exit_remote = $key_remote->remote_pk;
+			}
+		}
+		else
+		{
+			$exit_remote = 0;
+		}
 		
 		//check if patient number exists
-		$this->db->where('visit_department.visit_id = visit.visit_id AND visit_department.visit_department_id = '.$visit_department_id.' AND visit.branch_code = \''.$branch_code.'\'');
+		$this->db->where('visit_department.visit_id = visit.visit_id AND visit_department.visit_department_id = '.$exit_remote.' AND visit.branch_code = \''.$branch_code.'\'');
 		$query = $this->db->get('visit_department, visit');
 		
 		$data['visit_id'] = $visit_id;
@@ -456,14 +556,20 @@ class Cloud_model extends CI_Model
 		$data['modified_by'] = $res->modified_by;
 		$data['date_modified'] = $res->date_modified;
 		$data['created'] = date("Y-m-d H:i:s");
-
+		$patient_response = array();
 		if($query->num_rows() > 0)
 		{
+			$row = $query->row();
+			$visit_department_id = $row->visit_department_id;
+			$items = $local_pk.'.'.$visit_department_id;
+			// $patient_response['local_pk']  = $local_pk;
+			// $patient_response['remote_pk']  = $visit_department_id;
 			//update patient
-			$this->db->where('visit_department_id', $visit_department_id);
+			$this->db->where('visit_department_id', $exit_remote);
 			if($this->db->update('visit_department', $data))
 			{
-				return $visit_charge_id;
+
+				return $items;
 			}
 			else
 			{
@@ -477,7 +583,11 @@ class Cloud_model extends CI_Model
 			if($this->db->insert('visit_department', $data))
 			{
 				$visit_department_id = $this->db->insert_id();
-				return $visit_department_id;
+				$items = $local_pk.'.'.$visit_department_id;
+				// $patient_response['local_pk']  = $local_pk;
+				// $patient_response['remote_pk']  = $visit_department_id;
+
+				return $patient_response;
 			}
 			else
 			{
@@ -486,14 +596,29 @@ class Cloud_model extends CI_Model
 		}
 	}
 
-	public function save_visit_lab_test($visit_lab_test, $branch_code,$visit_id)
+	public function save_visit_lab_test($visit_lab_test, $branch_code,$sync_table_id,$visit_id)
 	{
 		$res = $visit_lab_test;
 
-		$visit_lab_test_id = $res->visit_lab_test_id;
+		$local_pk = $res->visit_lab_test_id;
 		
+		$this->db->where('local_pk = '.$local_pk.' AND branch_code = "'.$branch_code.'" AND sync_table_id = '.$sync_table_id.'');
+		$get_query = $this->db->get('sync');
+		// get the remote key
+		if($get_query->num_rows() > 0)
+		{
+			foreach ($get_query->result() as $key_remote) {
+				# code...
+				$exit_remote = $key_remote->remote_pk;
+			}
+		}
+		else
+		{
+			$exit_remote = 0;
+		}
+
 		//check if patient number exists
-		$this->db->where('visit_lab_test.visit_id = visit.visit_id AND visit_lab_test.visit_lab_test_id = '.$visit_lab_test_id.' AND visit.branch_code = \''.$branch_code.'\'');
+		$this->db->where('visit_lab_test.visit_id = visit.visit_id AND visit_lab_test.visit_lab_test_id = '.$exit_remote.' AND visit.branch_code = \''.$branch_code.'\'');
 		$query = $this->db->get('visit_lab_test, visit');
 		
 		$data['visit_id'] = $visit_id;
@@ -508,14 +633,19 @@ class Cloud_model extends CI_Model
 		$data['date_modified'] = $res->date_modified;
 		$data['created'] = date("Y-m-d H:i:s");
 
-
+		$patient_response = array();
 		if($query->num_rows() > 0)
 		{
+			$row = $query->row();
+			$visit_lab_test_id = $row->visit_lab_test_id;
+			$items = $local_pk.'.'.$visit_lab_test_id;
+			// $patient_response['local_pk']  = $local_pk;
+			// $patient_response['remote_pk']  = $visit_lab_test_id;
 			//update patient
-			$this->db->where('visit_lab_test_id', $visit_lab_test_id);
+			$this->db->where('visit_lab_test_id', $exit_remote);
 			if($this->db->update('visit_lab_test', $data))
 			{
-				return $visit_charge_id;
+				return $items;
 			}
 			else
 			{
@@ -529,7 +659,10 @@ class Cloud_model extends CI_Model
 			if($this->db->insert('visit_lab_test', $data))
 			{
 				$visit_lab_test_id = $this->db->insert_id();
-				return $visit_lab_test_id;
+				$items = $local_pk.'.'.$visit_lab_test_id;
+				// $patient_response['local_pk']  = $local_pk;
+				// $patient_response['remote_pk']  = $visit_lab_test_id;
+				return $items;
 			}
 			else
 			{
@@ -537,27 +670,47 @@ class Cloud_model extends CI_Model
 			}
 		}
 	}
-	public function save_visit_objective_findings($visit_objective_findings, $branch_code,$visit_id)
+	public function save_visit_objective_findings($visit_objective_findings, $branch_code, $sync_table_id ,$visit_id)
 	{
 		$res = $visit_objective_findings;
 
-		$visit_objective_findings_id = $res->visit_objective_findings_id;
+		$local_pk = $res->visit_objective_findings_id;
+
+		$this->db->where('local_pk = '.$local_pk.' AND branch_code = "'.$branch_code.'" AND sync_table_id = '.$sync_table_id.'');
+		$get_query = $this->db->get('sync');
+		// get the remote key
+		if($get_query->num_rows() > 0)
+		{
+			foreach ($get_query->result() as $key_remote) {
+				# code...
+				$exit_remote = $key_remote->remote_pk;
+			}
+		}
+		else
+		{
+			$exit_remote = 0;
+		}
 		
 		//check if patient number exists
-		$this->db->where('visit_objective_findings.visit_id = visit.visit_id AND visit_objective_findings.visit_objective_findings_id = '.$visit_objective_findings_id.' AND visit.branch_code = \''.$branch_code.'\'');
+		$this->db->where('visit_objective_findings.visit_id = visit.visit_id AND visit_objective_findings.visit_objective_findings_id = '.$exit_remote.' AND visit.branch_code = \''.$branch_code.'\'');
 		$query = $this->db->get('visit_objective_findings, visit');
 		
 		$data['visit_id'] = $visit_id;
 		$data['objective_findings_id'] = $res->objective_findings_id;
 		$data['description'] = $res->description;
-
+		$patient_response = array();
 		if($query->num_rows() > 0)
 		{
+			$row = $query->row();
+			$visit_objective_findings_id = $row->visit_objective_findings_id;
+
+			$patient_response['local_pk']  = $local_pk;
+			$patient_response['remote_pk']  = $visit_objective_findings_id;
 			//update patient
-			$this->db->where('visit_objective_findings_id', $visit_objective_findings_id);
+			$this->db->where('visit_objective_findings_id', $exit_remote);
 			if($this->db->update('visit_objective_findings', $data))
 			{
-				return $visit_charge_id;
+				return $patient_response;
 			}
 			else
 			{
@@ -571,7 +724,9 @@ class Cloud_model extends CI_Model
 			if($this->db->insert('visit_objective_findings', $data))
 			{
 				$visit_objective_findings_id = $this->db->insert_id();
-				return $visit_objective_findings_id;
+				$patient_response['local_pk']  = $local_pk;
+				$patient_response['remote_pk']  = $visit_objective_findings_id;
+				return $patient_response;
 			}
 			else
 			{
@@ -579,14 +734,29 @@ class Cloud_model extends CI_Model
 			}
 		}
 	}
-	public function save_visit_procedure($visit_procedure, $branch_code,$visit_id)
+	public function save_visit_procedure($visit_procedure, $branch_code,$sync_table_id,$visit_id)
 	{
 		$res = $visit_procedure;
 
-		$visit_procedure_id = $res->visit_procedure_id;
+		$local_pk = $res->visit_procedure_id;
+		$this->db->where('local_pk = '.$local_pk.' AND branch_code = "'.$branch_code.'" AND sync_table_id = '.$sync_table_id.'');
+		$get_query = $this->db->get('sync');
+		// get the remote key
+		if($get_query->num_rows() > 0)
+		{
+			foreach ($get_query->result() as $key_remote) {
+				# code...
+				$exit_remote = $key_remote->remote_pk;
+			}
+		}
+		else
+		{
+			$exit_remote = 0;
+		}
+
 		
 		//check if patient number exists
-		$this->db->where('visit_procedure.visit_id = visit.visit_id AND visit_procedure.visit_procedure_id = '.$visit_procedure_id.' AND visit.branch_code = \''.$branch_code.'\'');
+		$this->db->where('visit_procedure.visit_id = visit.visit_id AND visit_procedure.visit_procedure_id = '.$exit_remote.' AND visit.branch_code = \''.$branch_code.'\'');
 		$query = $this->db->get('visit_procedure, visit');
 		
 		$data['visit_id'] = $visit_id;
@@ -601,11 +771,16 @@ class Cloud_model extends CI_Model
 
 		if($query->num_rows() > 0)
 		{
+			$row = $query->row();
+			$visit_procedure_id = $row->visit_procedure_id;
+
+			$patient_response['local_pk']  = $local_pk;
+			$patient_response['remote_pk']  = $visit_procedure_id;
 			//update patient
-			$this->db->where('visit_procedure_id', $visit_procedure_id);
+			$this->db->where('visit_procedure_id', $exit_remote);
 			if($this->db->update('visit_procedure', $data))
 			{
-				return $visit_charge_id;
+				return $patient_response;
 			}
 			else
 			{
@@ -619,7 +794,9 @@ class Cloud_model extends CI_Model
 			if($this->db->insert('visit_procedure', $data))
 			{
 				$visit_procedure_id = $this->db->insert_id();
-				return $visit_procedure_id;
+				$patient_response['local_pk']  = $local_pk;
+				$patient_response['remote_pk']  = $visit_procedure_id;
+				return $patient_response;
 			}
 			else
 			{
@@ -629,7 +806,7 @@ class Cloud_model extends CI_Model
 	}
 
 
-	public function save_visit_symptoms($visit_symptoms, $branch_code,$visit_id)
+	public function save_visit_symptoms($visit_symptoms, $branch_code,$sync_table_id,$visit_id)
 	{
 		$res = $visit_symptoms;
 
@@ -674,7 +851,7 @@ class Cloud_model extends CI_Model
 		}
 	}
 
-	public function save_visit_vaccine($visit_vaccine, $branch_code,$visit_id)
+	public function save_visit_vaccine($visit_vaccine, $branch_code,$sync_table_id,$visit_id)
 	{
 		$res = $visit_vaccine;
 
@@ -722,7 +899,7 @@ class Cloud_model extends CI_Model
 			}
 		}
 	}
-	public function save_visit_vital($visit_vital, $branch_code)
+	public function save_visit_vital($visit_vital, $branch_code,$sync_table_id,$visit_id)
 	{
 		$res = $visit_vital;
 
@@ -770,7 +947,7 @@ class Cloud_model extends CI_Model
 		}
 	}
 	
-	public function save_pres($pres, $branch_code)
+	public function save_pres($pres, $branch_code,$sync_table_id,$visit_id)
 	{
 		$res = $pres;
 
@@ -830,7 +1007,7 @@ class Cloud_model extends CI_Model
 		}
 	}
 
-	public function save_lab_visit_results($lab_visit_results, $branch_code)
+	public function save_lab_visit_results($lab_visit_results, $branch_code,$sync_table_id,$visit_id)
 	{
 		$res = $lab_visit_results;
 
@@ -876,7 +1053,7 @@ class Cloud_model extends CI_Model
 		}
 	}
 
-	public function save_doctor_notes($doctor_notes, $branch_code)
+	public function save_doctor_notes($doctor_notes, $branch_code,$sync_table_id,$visit_id)
 	{
 		$res = $doctor_notes;
 
@@ -917,7 +1094,7 @@ class Cloud_model extends CI_Model
 			}
 		}
 	}
-	public function save_nurse_notes($nurse_notes, $branch_code)
+	public function save_nurse_notes($nurse_notes, $branch_code,$sync_table_id,$visit_id)
 	{
 		$res = $nurse_notes;
 
@@ -961,7 +1138,7 @@ class Cloud_model extends CI_Model
 			}
 		}
 	}
-	public function save_doctor_patient_notes($doctor_patient_notes, $branch_code)
+	public function save_doctor_patient_notes($doctor_patient_notes, $branch_code,$sync_table_id,$visit_id)
 	{
 		$res = $doctor_patient_notes;
 
@@ -1006,7 +1183,7 @@ class Cloud_model extends CI_Model
 			}
 		}
 	}
-	public function save_nurse_patient_notes($nurse_patient_notes, $branch_code)
+	public function save_nurse_patient_notes($nurse_patient_notes, $branch_code,$sync_table_id,$visit_id)
 	{
 		$res = $nurse_patient_notes;
 
@@ -1051,14 +1228,30 @@ class Cloud_model extends CI_Model
 			}
 		}
 	}
-	public function save_payments($payments, $branch_code,$visit_id)
+	public function save_payments($payments, $branch_code,$sync_table_id,$visit_id)
 	{
 		$res = $payments;
 
-		$payment_id = $res->payment_id;
+		$local_pk = $res->payment_id;
+
+		$this->db->where('local_pk = '.$local_pk.' AND branch_code = "'.$branch_code.'" AND sync_table_id = '.$sync_table_id.'');
+		$get_query = $this->db->get('sync');
+		// get the remote key
+		if($get_query->num_rows() > 0)
+		{
+			foreach ($get_query->result() as $key_remote) {
+				# code...
+				$exit_remote = $key_remote->remote_pk;
+			}
+		}
+		else
+		{
+			$exit_remote = 0;
+		}
+
 		
 		//check if patient number exists
-		$this->db->where('payments.visit_id = visit.visit_id AND payments.payment_id = '.$payment_id.' AND visit.branch_code = \''.$branch_code.'\'');
+		$this->db->where('payments.visit_id = visit.visit_id AND payments.payment_id = '.$exit_remote.' AND visit.branch_code = \''.$branch_code.'\'');
 		$query = $this->db->get('payments, visit');
 		
 		$data['visit_id'] = $visit_id;
@@ -1080,15 +1273,22 @@ class Cloud_model extends CI_Model
 		$data['approved_by'] = $res->approved_by;
 		$data['date_approved'] = $res->date_approved;
 
-
+		$patient_response = array();
 
 		if($query->num_rows() > 0)
 		{
+			$row = $query->row();
+			$payment_id = $row->payment_id;
 			//update patient
-			$this->db->where('payment_id', $payment_id);
+			$items = $local_pk.'.'.$payment_id;
+			// $patient_response['local_pk']  = $local_pk;
+			// $patient_response['remote_pk']  = $payment_id;
+
+			//update patient
+			$this->db->where('payment_id', $exit_remote);
 			if($this->db->update('payments', $data))
 			{
-				return $visit_charge_id;
+				return $items;
 			}
 			else
 			{
@@ -1102,7 +1302,10 @@ class Cloud_model extends CI_Model
 			if($this->db->insert('payments', $data))
 			{
 				$payment_id = $this->db->insert_id();
-				return $payment_id;
+				$items = $local_pk.'.'.$payment_id;
+				// $patient_response['local_pk']  = $local_pk;
+				// $patient_response['remote_pk']  = $payment_id;
+				return $items;
 			}
 			else
 			{
@@ -1112,7 +1315,7 @@ class Cloud_model extends CI_Model
 	}
 
 
-	public function save_surgery($surgery, $branch_code)
+	public function save_surgery($surgery, $branch_code,$table_key_value,$visit_id)
 	{
 		$res = $surgery;
 
