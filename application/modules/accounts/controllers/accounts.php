@@ -21,6 +21,7 @@ class Accounts extends MX_Controller
 		$this->load->model('medical_admin/medical_admin_model');
 		$this->load->model('pharmacy/pharmacy_model');
 		$this->load->model('hospital_accounts_model');
+		$this->load->model('administration/sync_model');
 		//$this->load->model('administration/personnel_model');
 		
 		$this->load->model('auth/auth_model');
@@ -542,6 +543,8 @@ class Accounts extends MX_Controller
 				$this->accounts_model->receipt_payment($visit_id);
 			}
 			
+			//sync data
+			$response = $this->sync_model->syn_up_on_closing_visit($visit_id);
 			
 			redirect('accounts/payments/'.$visit_id.'/'.$close_page);
 		}
