@@ -56,11 +56,16 @@ if(!empty($coming_from))
 			$actual_visit_charge = $this->lab_model->check_visit_charge_lab_test($visit_lab_test_id,$visit_id);
 			// end of geting the actual charge id
 			
-			$format_rs = $this->lab_model->get_lab_visit_result($visit_lab_test_id);
-			$num_format = count($format_rs);
+			//get test
+			$test = $this->lab_model->get_test_details($service_charge_id);
 			
-			if($num_format > 0){
-				$rs = $this->lab_model->get_test($visit_lab_test_id);
+			$test_formats = $this->lab_model->get_lab_formats($service_charge_id);
+			$num_formats = $test_formats->num_rows();
+			
+			if($num_formats > 0)
+			{
+				//$format_rs = $this->lab_model->get_lab_visit_result($visit_lab_test_id);
+				$rs = $this->lab_model->get_format_test_results($visit_lab_test_id);
 				$num_lab = count($rs);
 			}
 			
