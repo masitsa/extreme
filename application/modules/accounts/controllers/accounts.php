@@ -541,6 +541,8 @@ class Accounts extends MX_Controller
 			else
 			{
 				$this->accounts_model->receipt_payment($visit_id);
+
+				$this->sync_model->syn_up_on_closing_visit($visit_id);
 			}
 			
 			//sync data

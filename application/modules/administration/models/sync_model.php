@@ -5,10 +5,12 @@ class Sync_model extends CI_Model
 	{
 		// get the patient id and the branch id and patient
 		$patient_details = $this->sync_model->get_table_details($visit_id);
-		 // var_dump($patient_details) or die();
+		
 		if(count($patient_details) > 0)
 		{
-			$url = 'http://159.203.78.242/cloud/save_cloud_data';
+			// $url = 'http://localhost/erp/cloud/save_cloud_data';
+			  // var_dump(json_encode($patient_details)) or die();
+			$url = 'http://159.203.78.242/cloud/save_cloud_data';			
 			$test_url = 'http://159.203.78.242/cloud/test';
 			//Encode the array into JSON.
 			
@@ -126,6 +128,7 @@ class Sync_model extends CI_Model
 			foreach ($query_patients->result() as $value) {
 				$personnel_id = $value->doctor_id;
 				$amount = $this->get_doctor_fee($personnel_id,$visit_id);
+				$value = array();
 				$value['amount'] = $amount;
 				$value['visit_id'] = $visit_id;
 				$value['branch_code'] = $this->session->userdata('branch_code');
@@ -161,7 +164,7 @@ class Sync_model extends CI_Model
 				curl_close($ch);
 				// $response = $this->sync_model->parse_sync_up_response($result);
 
-				 // $response = $result;
+				  $response = $result;
 				 // echo json_encode($response);
 			}
 			catch(Exception $e)
