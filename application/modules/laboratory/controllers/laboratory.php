@@ -283,13 +283,18 @@ class Laboratory  extends MX_Controller
 	}
 	public function remove_cost($visit_charge_id, $visit_id)
 	{
-		$this->lab_model->delete_cost($visit_charge_id);
-
-		redirect("laboratory/test/".$visit_id);
+		if($this->lab_model->delete_cost($visit_charge_id))
+		{
+			redirect("laboratory/test/".$visit_id);
+		}
+		else
+		{
+			redirect("laboratory/test/".$visit_id);
+		}
 	}
-	public function add_lab_cost($service_charge_id,$visit_id)
+	public function add_lab_cost($visit_lab_test_id,$visit_id)
 	{
-		if($this->lab_model->save_lab_visit($visit_id,$service_charge_id))
+		if($this->lab_model->save_lab_visit($visit_id,$visit_lab_test_id))
 		{
 			redirect("laboratory/test/".$visit_id);
 		}
@@ -303,10 +308,16 @@ class Laboratory  extends MX_Controller
 		$data = array('service_charge_id' => $service_charge_id, 'visit_id' => $visit_id);
 		$this->load->view('test_lab', $data);
 	}
-	public function remove_lab_test($service_charge_id,$visit_id)
+	public function remove_lab_test($visit_lab_test_id,$visit_id)
 	{
-		$this->lab_model->delete_visit_lab_test($service_charge_id,$visit_id);
-		redirect("laboratory/test/".$visit_id);
+		if($this->lab_model->delete_visit_lab_test($visit_lab_test_id,$visit_id))
+		{
+			redirect("laboratory/test/".$visit_id);
+		}
+		else
+		{
+			redirect("laboratory/test/".$visit_id);
+		}
 	}
 
 	public function confirm_lab_test_charge($visit_id, $service_charge_id=NULL){
@@ -825,6 +836,27 @@ class Laboratory  extends MX_Controller
 		}
 		
 		redirect('laboratory/test/'.$visit_id);
+	}
+	
+	public function update_visit_lab_tests()
+	{
+		$query = $this->db->get('visit_lab_test');
+		
+		if($query->num_rows() > 0)
+		{
+			foreach($query->result() as $res)
+			{
+				$visit_lab_test_id = $res->visit_lab_test_id;
+				$visit_id = $res->visit_id;
+				$service_charge_id = $res->service_charge_id;
+				
+				$data['visit_lab_test_id'] = $visit_lab_test_id;
+				$this->db->where(array('visit_id' => $visit_id, 'service_charge_id' => $service_charge_id,));
+				if($this->db->update('visit_charge', $data))
+				{
+				}
+			}
+		}
 	}
 }
 ?>

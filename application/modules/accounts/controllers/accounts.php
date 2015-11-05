@@ -545,6 +545,8 @@ class Accounts extends MX_Controller
 				$this->sync_model->syn_up_on_closing_visit($visit_id);
 			}
 			
+			//sync data
+			$response = $this->sync_model->syn_up_on_closing_visit($visit_id);
 			
 			redirect('accounts/payments/'.$visit_id.'/'.$close_page);
 		}

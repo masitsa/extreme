@@ -178,7 +178,7 @@
 	  else if ((page == 75) || (page == 100)){
 	    url = config_url+"laboratory/test1/"+visit_id;
 	  }
-	// alert(url);
+	//alert(url);
 	  if(XMLHttpRequestObject) {
 	    if((page == 75) || (page == 85)){
 	      var obj = window.opener.document.getElementById("test_results");

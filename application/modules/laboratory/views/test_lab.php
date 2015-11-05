@@ -12,7 +12,8 @@ if ($this->session->userdata('nurse_lab') <> NULL){
 // 	endforeach;
 // }
 if(!empty($service_charge_id))
-{	
+{
+	//get lab test id from service charge
 	 $lab_test_id_array = $this->lab_model->get_lab_test_id($service_charge_id);
 
 	foreach ($lab_test_id_array as $key_array):
@@ -20,17 +21,16 @@ if(!empty($service_charge_id))
 		$lab_test_id = $key_array->lab_test_id;
 	endforeach;
 	
+	//get lab test formats
 	$get_lab_visit_rs = $this->lab_model->get_visits_lab_result($visit_id, $lab_test_id);
 	$num_rows = count($get_lab_visit_rs);
 	
 	if ($num_rows == 0 ){//if no formats
-
-
 		$rs = $this->lab_model->get_lab_visit($visit_id, $service_charge_id);
 		$num_visit = count($rs);
 		
-		//save lab test (may be multiple
-		$this->lab_model->save_lab_visit_trail($visit_id, $service_charge_id);
+		//save lab test into the lab billing table(may be multiple)
+		$visit_lab_test_id = $this->lab_model->save_lab_visit_trail($visit_id, $service_charge_id);
 		if($num_visit > 0){//if visit charge has been saved
 			/*$save= new doctor();
 			$save->update_lab_visit($visit_id,$service_charge_id);*/
@@ -47,8 +47,8 @@ if(!empty($service_charge_id))
 		$rs = $this->lab_model->get_lab_visit($visit_id, $service_charge_id);
 		$num_visit = count($rs);
 		
-		//save lab test (may be multiple
-		$this->lab_model->save_lab_visit_trail($visit_id, $service_charge_id);
+		//save lab test into the lab billing table(may be multiple)
+		$visit_lab_test_id = $this->lab_model->save_lab_visit_trail($visit_id, $service_charge_id);
 		//echo $num_visit;
 		if($num_visit > 0){//if visit charge has been saved
 			/*$save= new doctor();
@@ -59,11 +59,14 @@ if(!empty($service_charge_id))
 			//$this->lab_model->save_lab_visit_trail($visit_id, $service_charge_id);
 		}
 		
-		foreach ($get_lab_visit_rs as $key2 ): 		
-			$lab_format_id = $key2->lab_test_format_id;
-		
-			$this->lab_model->save_lab_visit_format($visit_id, $service_charge_id, $lab_format_id);
-		endforeach;
+		if($visit_lab_test_id != FALSE)
+		{
+			foreach ($get_lab_visit_rs as $key2 ): 		
+				$lab_format_id = $key2->lab_test_format_id;
+			
+				$this->lab_model->save_lab_visit_format($visit_id, $service_charge_id, $lab_format_id, $visit_lab_test_id);
+			endforeach;
+		}
 	}
 }
 $rs = $this->lab_model->get_lab_visit2($visit_id);

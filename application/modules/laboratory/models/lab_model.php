@@ -198,7 +198,9 @@ class Lab_model extends CI_Model
 		return $result;
 		
 	}
-	function get_lab_visit($visit_id, $service_charge_id=NULL){
+	
+	function get_lab_visit($visit_id, $service_charge_id=NULL)
+	{
 		$table = "visit_lab_test";
 		if($service_charge_id != NULL){
 				$where = "visit_lab_test_status = 1 AND visit_id = ". $visit_id ." AND service_charge_id = ". $service_charge_id;
@@ -244,33 +246,41 @@ class Lab_model extends CI_Model
 		return $result;
 	}
 
-	function save_lab_visit($visit_id, $service_charge_id){
-		
-		$table = "service_charge";
-		$where = "service_charge_id = ". $service_charge_id;
-		$items = "service_charge_amount";
-		$order = "service_charge_id";
-		
-		$result = $this->database->select_entries_where($table, $where, $items, $order);
+	function save_lab_visit($visit_id, $visit_lab_test_id)
+	{
+		//get service charge details
+		$this->db->select('service_charge.service_charge_amount, service_charge.service_charge_id');
+		$this->db->where('visit_lab_test.service_charge_id = service_charge.service_charge_id AND visit_lab_test.visit_lab_test_id = '.$visit_lab_test_id);
+		$query = $this->db->get('service_charge, visit_lab_test');
 
-		if(count($result) > 0){
-			foreach ($result as $key): 
-				# code...
-				$service_charge_amount = $key->service_charge_amount;
-			endforeach;
+		if($query->num_rows() > 0)
+		{
+			$key = $query->row();
+			$service_charge_amount = $key->service_charge_amount;
+			$service_charge_id = $key->service_charge_id;
+			$visit_data = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'visit_lab_test_id'=>$visit_lab_test_id,'visit_charge_amount'=>$service_charge_amount,'created_by'=>$this->session->userdata("personnel_id"));
+			if($this->db->insert('visit_charge', $visit_data))
+			{
+				return TRUE;
+			}
 			
+			else
+			{
+				return FALSE;
+			}
 		}
-
-		$visit_data = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'visit_charge_amount'=>$service_charge_amount,'created_by'=>$this->session->userdata("personnel_id"));
-		$this->db->insert('visit_charge', $visit_data);
-
 		
+		else
+		{
+			return FALSE;
+		}
 	}
 	
 
-	public function check_visit_charge_lab_test($service_charge_id,$visit_id){
+	public function check_visit_charge_lab_test($visit_lab_test_id)
+	{
 		$table = "visit_charge";
-		$where = "visit_charge_delete = 0 AND visit_id = ".$visit_id." AND service_charge_id = ". $service_charge_id;
+		$where = "visit_charge_delete = 0 AND visit_lab_test_id = ".$visit_lab_test_id;
 		$items = "*";
 		$order = "service_charge_id";
 		
@@ -289,34 +299,23 @@ class Lab_model extends CI_Model
 	}
 	// this will ensure that the lab test shall only be authorised by the relevant laboratory technician
 
-	function save_lab_visit_trail($visit_id, $service_charge_id){
-	
+	function save_lab_visit_trail($visit_id, $service_charge_id)
+	{
 		// this should be the service charge from the service charge table same to the lab test id
-
 		$visit_data = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'created'=>date("Y-m-d"),'visit_lab_test_status'=>1,'created_by'=>$this->session->userdata("personnel_id"));
-		$this->db->insert('visit_lab_test', $visit_data);
+		if($this->db->insert('visit_lab_test', $visit_data))
+		{
+			return $this->db->insert_id();
+		}
+		
+		else
+		{
+			return FALSE;
+		}
 	}
 
-
-	
-
-
-	function save_lab_visit_format($visit_id, $service_charge_id, $lab_test_format_id){
-		$table = "visit_lab_test";
-		$where = "visit_id = ". $visit_id. " AND service_charge_id = ". $service_charge_id;
-		$items = "visit_lab_test_id";
-		$order = "visit_id";
-
-
-		$result = $this->database->select_entries_where($table, $where, $items, $order);
-
-		if(count($result) > 0){
-			foreach ($result as $key): 
-				# code...
-				$visit_lab_test_id = $key->visit_lab_test_id;
-			endforeach;
-			
-		}
+	function save_lab_visit_format($visit_id, $service_charge_id, $lab_test_format_id, $visit_lab_test_id)
+	{
 		$this->db->where('visit_charge_id = '.$visit_lab_test_id.' AND lab_visit_result_format = '.$lab_test_format_id.' AND visit_id = '.$visit_id);
 		$query = $this->db->get('lab_visit_results');
 
@@ -330,37 +329,36 @@ class Lab_model extends CI_Model
 			$visit_data = array('visit_charge_id'=>$visit_lab_test_id,'lab_visit_result_format'=>$lab_test_format_id,'visit_id'=>$visit_id);
 			$this->db->update('lab_visit_results', $visit_data);
 		}
-
-
 	}
 	
 	function delete_cost($visit_charge_id)
 	{
 		$this->db->where('visit_charge_id', $visit_charge_id);
-		$this->db->delete('visit_charge');
+		if($this->db->delete('visit_charge'))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
 	}
 
 	function delete_visit_lab_test($visit_lab_test_id,$visit_id)
 	{
-		/*$table = "visit_lab_test";
-		$where = "visit_id = ". $visit_id. " AND service_charge_id = ". $service_charge_id;
-		$items = "visit_lab_test_id";
-		$order = "visit_id";
-
-		$result = $this->database->select_entries_where($table, $where, $items, $order);
-
-		if(count($result) > 0){
-			foreach ($result as $key): 
-				# code...
-				$visit_lab_test_id = $key->visit_lab_test_id;
-			endforeach;
-			
-		}*/
-		//var_dump($visit_lab_test_id); die();
 		$data['visit_lab_test_status'] = 0;
 	
 		$this->db->where('visit_lab_test_id', $visit_lab_test_id);
-		$this->db->update('visit_lab_test', $data);
+		if($this->db->update('visit_lab_test', $data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
 	}
 
 	function get_lab_test($visit_id){
