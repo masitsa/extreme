@@ -229,6 +229,8 @@ class Cloud_model extends CI_Model
 		return $response;
 	}
 
+
+
 	public function get_sync_tables($branch_code)
 	{
 		$this->db->where('branch_code =  "'.$branch_code.'" AND sync_table_status = 1');
@@ -1272,6 +1274,12 @@ class Cloud_model extends CI_Model
 		$data['modified_on'] = $res->modified_on;
 		$data['approved_by'] = $res->approved_by;
 		$data['date_approved'] = $res->date_approved;
+		
+		$data['cancel'] = $res->cancel;
+		$data['cancel_action_id'] = $res->cancel_action_id;
+		$data['cancel_description'] = $res->cancel_description;
+		$data['cancelled_by'] = $res->cancelled_by;
+		$data['cancelled_date'] = $res->cancelled_date;
 
 		$patient_response = array();
 
@@ -1464,5 +1472,367 @@ class Cloud_model extends CI_Model
 				echo json_encode($response.' '.$e);
 			}
 	}
+
+	// save petty cash data...
+	public function get_all_petty_cash_tables_sync($branch_code)
+	{
+		$this->db->where('branch_code ="'.$branch_code.'" AND petty_cash_sync_table_status = 1');
+		$query = $this->db->get('petty_cash_sync_table');
+
+		return $query;
+
+	}
+
+	public function save_petty_cash_data($json)
+	{
+		//decode the json data
+		$decoded = json_decode($json);
+		$branch_code = $decoded->branch_code;
+		
+		//get sync tables
+		$query = $this->get_all_petty_cash_tables_sync($branch_code);
+		$this->session->unset_userdata('account_id');
+		if($query->num_rows() > 0)
+		{
+			//initiate the response array
+			
+			$petty_cash_id = 0;
+			$account_id = 0;
+			foreach($query->result() as $res)
+			{
+				$sync_table_id = $res->petty_cash_sync_table_id;
+				$sync_table_name = $res->petty_cash_sync_table_name;
+				$table_key_name = $res->petty_cash_sync_table_name;
+				$function = $res->petty_cash_sync_table_cloud_save_function;
+				
+				//var_dump($decoded); die();
+				if(isset($decoded->$sync_table_name))
+				{
+					$sync_data = $decoded->$sync_table_name;
+					
+					//calculate total rows to be inserted of sync table
+					$total_rows = count($sync_data);
+					
+					$visit_id = 0;
+
+					for($r = 0; $r < $total_rows; $r++)
+					{
+						$account_data = $sync_data[$r];
+							if($function == "account")
+							{
+								$table_key_value_one = $this->$function($account_data,$branch_code,$sync_table_id);
+								
+								$table_key_value = explode('.',$table_key_value_one);
+								
+								
+								// get the local pk and the remote pk
+								$local_pk = $table_key_value[0];
+								$remote_pk = $table_key_value[1];
+								// end of getting the pk's
+								
+								// means that this is the first table
+								$account_id = $remote_pk;
+
+							}
+
+							
+							else
+							{
+								// means that this is the second table
+								$table_key_value_one = $this->$function($account_data,$branch_code,$sync_table_id);
+								
+								// get the local pk and the remote pk
+								$table_key_value = explode('.',$table_key_value_one);
+	
+								// get the local pk and the remote pk
+								$local_pk = $table_key_value[0];
+								$remote_pk = $table_key_value[1];
+								// end of getting the pk's
+
+								$account_id = $remote_pk;
+
+							}
+							
+							//$table_key_value = $table_key_value1;
+							
+							//insert data into the sync table
+							
+							if($remote_pk > 0)
+							{
+								$response[$sync_table_name][$r] = array(
+											'response' => 'true',
+											'remote_pk' => $remote_pk,
+											'local_pk' => 3
+								);
+								//$account_data->$table_key_name
+								$save_data = array(
+									'branch_code'=>$branch_code,
+									'petty_cash_sync_status'=>1,
+									'petty_cash_sync_type'=>0,
+									'petty_cash_sync_table_id'=>$sync_table_id,
+									'petty_cash_sync_table_key'=>$table_key_name,
+									'remote_pk'=>$remote_pk,
+									'local_pk'=>$local_pk,
+									'created'=>date('Y-m-d H:i:s')
+								);
+								
+								$this->db->where('local_pk = '.$local_pk.' AND remote_pk = '.$remote_pk.' AND branch_code = "'.$branch_code.'"');
+								$get_query = $this->db->get('petty_cash_sync');
+								// get the remote key
+								if($get_query->num_rows() > 0)
+								{
+									$this->db->where('local_pk = '.$local_pk.' AND remote_pk = '.$remote_pk.' AND branch_code = "'.$branch_code.'"');
+									$this->db->update('petty_cash_sync', $save_data);
+								}
+								else
+								{
+									$this->db->insert('petty_cash_sync', $save_data);
+								}
+								$response[$sync_table_name][$r]['response'] = 'false';
+								$response[$sync_table_name][$r]['local_pk'] = $local_pk;
+							}
+							
+							else
+							{
+
+								$save_data = array(
+									'branch_code'=>$branch_code,
+									'petty_cash_sync_status'=>0,
+									'petty_cash_sync_type'=>0,
+									'petty_cash_sync_table_id'=>$sync_table_id,
+									'petty_cash_sync_table_key'=>$table_key_name,
+									'remote_pk'=>$remote_pk,
+									'local_pk'=>$local_pk,
+									'created'=>date('Y-m-d H:i:s')
+								);
+
+								$this->db->where('local_pk = '.$local_pk.' AND remote_pk = '.$remote_pk.' AND branch_code = "'.$branch_code.'"');
+								$get_query = $this->db->get('petty_cash_sync');
+								// get the remote key
+								if($get_query->num_rows() > 0)
+								{
+									$this->db->where('local_pk = '.$local_pk.' AND remote_pk = '.$remote_pk.' AND branch_code = "'.$branch_code.'"');
+									$this->db->update('petty_cash_sync', $save_data);
+								}
+								else
+								{
+									$this->db->insert('petty_cash_sync', $save_data);
+								}
+								
+								
+								$response[$sync_table_name][$r]['response'] = 'false';
+								$response[$sync_table_name][$r]['local_pk'] = 2;//$account_data->$table_key_name;
+							}
+						
+
+					}
+				}
+				
+				else
+				{
+					$response[$sync_table_name]['response'] = 'false';
+					$response[$sync_table_name]['message'] = $sync_table_name.' data does not exist';
+				}
+			}
+		}
+
+		else
+		{
+			$response['response'] = 'false';
+			$response['message'] = 'No sync tables are set';
+		}
+
+		return $response;
+	}
+
+	function save_account($account_data,$branch_code,$sync_table_id)
+	{
+
+		$res = $account_data;
+		if(count($res) > 0)
+		{
+			$local_pk = $res->account_id;
+
+
+		$this->db->where('local_pk = '.$local_pk.' AND branch_code = "'.$branch_code.'" AND petty_cash_sync_table_id = '.$sync_table_id.'');
+		$get_query = $this->db->get('petty_cash_sync');
+		// get the remote key
+		if($get_query->num_rows() > 0)
+		{
+			foreach ($get_query->result() as $key_remote) {
+				# code...
+				$exit_remote = $key_remote->remote_pk;
+			}
+		}
+		else
+		{
+			$exit_remote = 0;
+		}
+
+		
+		//check if patient number exists
+		$this->db->where('account_id = '.$exit_remote.' AND branch_code = \''.$branch_code.'\'');
+		$query = $this->db->get('account');
+		
+		$data['account_name'] = $res->account_name;
+		$data['account_status'] = $res->account_status;
+		$data['branch_code'] = $branch_code;
+
+		$account_response = array();
+
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$account_id = $row->account_id;
+			//update patient
+			$items = $local_pk.'.'.$account_id;
+
+			//update patient
+			$this->db->where('account_id', $exit_remote);
+			if($this->db->update('account', $data))
+			{
+				return $items;
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+
+		//add new patient
+		else
+		{
+			if($this->db->insert('account', $data))
+			{
+				$account_id = $this->db->insert_id();
+				$items = $local_pk.'.'.$account_id;
+				// $patient_response['local_pk']  = $local_pk;
+				// $patient_response['remote_pk']  = $payment_id;
+				return $items;
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		}
+		else
+		{
+			return FALSE;
+		}
+		
+
+	}
+	function save_petty_cash($petty_cash_data,$branch_code,$sync_table_id)
+	{
+
+		$res = $petty_cash_data;
+
+		$local_pk = $res->petty_cash_id;
+		$local_account_id = $res->account_id;
+
+		$this->db->where('local_pk = '.$local_pk.' AND branch_code = "'.$branch_code.'" AND petty_cash_sync_table_id = '.$sync_table_id.'');
+		$get_query = $this->db->get('petty_cash_sync');
+		// get the remote key
+		if($get_query->num_rows() > 0)
+		{
+			foreach ($get_query->result() as $key_remote) {
+				# code...
+				$exit_remote = $key_remote->remote_pk;
+			}
+		}
+		else
+		{
+			$exit_remote = 0;
+		}
+
+		if($branch_code == 'OSH')
+		{
+			$account_sync_table_id = 1;
+		}
+		else if($branch_code == 'KDP')
+		{
+			$account_sync_table_id = 3;
+		}
+		else
+		{
+			$account_sync_table_id = 5;
+		}
+
+		// local account data 
+
+		$this->db->where('local_pk = '.$local_account_id.' AND branch_code = "'.$branch_code.'" AND petty_cash_sync_table_id = '.$account_sync_table_id);
+		$remote_query = $this->db->get('petty_cash_sync');
+		// get the remote key
+		if($remote_query->num_rows() > 0)
+		{
+			foreach ($remote_query->result() as $account_remote) {
+				# code...
+				$remote_account_id = $account_remote->remote_pk;
+			}
+		}
+		else
+		{
+			$remote_account_id = 0;
+		}
+		
+		//check if patient number exists
+		$this->db->where('petty_cash_id = '.$exit_remote.' AND branch_code = \''.$branch_code.'\'');
+		$query = $this->db->get('petty_cash');
+		
+		
+		$data['petty_cash_description'] = $res->petty_cash_description;
+		$data['petty_cash_amount'] = $res->petty_cash_amount;
+		$data['branch_code'] = $branch_code;
+		$data['petty_cash_date'] = $res->petty_cash_date;
+		$data['petty_cash_status'] = $res->petty_cash_status;
+		$data['account_id'] = $remote_account_id;
+		$data['transaction_type_id'] = $res->transaction_type_id;
+		$data['created'] = $res->created;
+		$data['created_by'] = $res->created_by;
+
+		$data['last_modified'] = $res->last_modified;
+		$data['modified_by'] = $res->modified_by;
+
+		$account_response = array();
+
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$petty_cash_id = $row->petty_cash_id;
+			//update patient
+			$items = $local_pk.'.'.$petty_cash_id;
+
+			//update patient
+			$this->db->where('petty_cash_id', $exit_remote);
+			if($this->db->update('petty_cash', $data))
+			{
+				return $items;
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+
+		//add new patient
+		else
+		{
+			if($this->db->insert('petty_cash', $data))
+			{
+				$petty_cash_id = $this->db->insert_id();
+				$items = $local_pk.'.'.$petty_cash_id;
+				// $patient_response['local_pk']  = $local_pk;
+				// $patient_response['remote_pk']  = $payment_id;
+				return $items;
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+
+	}
+	
 }
 ?>

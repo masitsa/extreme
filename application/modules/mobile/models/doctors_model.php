@@ -1,8 +1,8 @@
 <?php
 
-class Doctors_model extends CI_Model 
+class Reports_model extends CI_Model 
 {
-	/*
+/*
 	*	Retrieve visits
 	*	@param string $table
 	* 	@param string $where
@@ -10,24 +10,14 @@ class Doctors_model extends CI_Model
 	* 	@param int $page
 	*
 	*/
-	public function count_items($table, $where, $limit = NULL)
-	{
-		if($limit != NULL)
-		{
-			$this->db->limit($limit);
-		}
-		$this->db->from($table);
-		$this->db->where($where);
-		return $this->db->count_all_results();
-	}
 	public function get_all_bookings($table, $where, $per_page, $page, $order = NULL)
 	{
 		//retrieve all users
 		$this->db->from($table);
-		$this->db->select('*');
+		$this->db->select('bookings');
 		$this->db->where($where);
-		$this->db->order_by('bookings.booking_date, bookings.booking_datetime','DESC');
-		$this->db->group_by('bookings.visit_id');
+		$this->db->order_by('bookings.booking_date, bookings.booking_time','DESC');
+		$this->db->group_by('visit.visit_id');
 		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;

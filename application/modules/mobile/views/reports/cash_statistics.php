@@ -2,7 +2,8 @@
     <div class="col-md-2 col-sm-12">
     	 <section class="panel panel-featured panel-featured-info">
             <header class="panel-heading">
-                <h2 class="panel-title">Visits</h2>
+                <h2 class="panel-title">Visits for <?php echo  date('jS M Y',strtotime(date('Y-m-d')));?></h2>
+				
               </header>             
         
               <!-- Widget content -->
@@ -41,7 +42,7 @@
     <div class="col-md-10 col-sm-12">
     	 <section class="panel panel-featured panel-featured-info">
             <header class="panel-heading">
-            	<h2 class="panel-title">Transaction breakdown</h2>
+            	<h2 class="panel-title">Transaction breakdown for <?php echo  date('jS M Y',strtotime(date('Y-m-d')));?></h2>
             </header>             
         
               <!-- Widget content -->

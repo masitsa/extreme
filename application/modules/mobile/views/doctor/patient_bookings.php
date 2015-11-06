@@ -1,7 +1,7 @@
 <!-- search -->
  <section class="panel panel-default">
     <header class="panel-heading">
-        <h2 class="panel-title">Patient Bookings Search for <?php echo date('jS M Y',strtotime(date('Y-m-d')));?></h2>
+        <h2 class="panel-title">Patient Bookings Search</h2>
     </header>
     <div class="panel-body">
         <div class="row">
@@ -55,7 +55,7 @@
                             </div>
                             <div class="widget-summary-col">
                                 <div class="summary">
-                                    <h4 class="title">Patients Booked</h4>
+                                    <h4 class="title">Patients seen</h4>
                                     <div class="info">
                                         <strong class="amount"><?php echo number_format($total_patients, 0);?></strong>
                                     </div>

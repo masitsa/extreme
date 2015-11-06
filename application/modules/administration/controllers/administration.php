@@ -45,6 +45,16 @@ class Administration  extends MX_Controller
 		
 		// echo $response;
 	}
+	public function sync_app_petty_cash()
+	{
+		// $this->sync_model->syn_up_on_closing_visit(673);
+
+		 $response = $this->sync_model->syn_up_petty_cash();
+		
+		// echo $response;
+	}
+
+
 
 	public function pass_patient_bookings($visit_id)
 	{

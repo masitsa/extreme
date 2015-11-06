@@ -1082,11 +1082,11 @@ class Reports extends MX_Controller
 		$v_data['total_cash_collection'] = $this->reports_model->get_total_cash_collection($where2, $table, 'cash');
 		
 		//count outpatient visits
-		$where2 = $where.' AND patients.inpatient = 0';
+		$where2 = $where.' AND visit.inpatient = 0';
 		$v_data['outpatients'] = $this->reports_model->count_items($table, $where2);
 		
 		//count inpatient visits
-		$where2 = $where.' AND patients.inpatient = 1';
+		$where2 = $where.' AND visit.inpatient = 1';
 		$v_data['inpatients'] = $this->reports_model->count_items($table, $where2);
 
 		$v_data['total_patients'] = $v_data['inpatients'] + $v_data['outpatients'];

@@ -26,8 +26,7 @@ class Doctors extends MX_Controller
 			exit(0);
 		}
 
-		$this->load->model('doctors_model');
-		// $this->load->model('reception/reception_model');
+		$this->load->model('doctors_model.php');
 	}
     public function get_doctors_bokings()
     {
@@ -48,7 +47,7 @@ class Doctors extends MX_Controller
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/mobile/doctors/get_doctors_bokings';
-		$config['total_rows'] = $this->doctors_model->count_items($table, $where);
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
 		$config['num_links'] = 5;
@@ -83,7 +82,7 @@ class Doctors extends MX_Controller
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
-		$v_data['search'] = $booking_search;
+		$v_data['search'] = $visit_search;
 		$v_data['total_patients'] = $config['total_rows'];
 		$v_data['total_due'] = $this->doctors_model->get_total_collections_due();
 		//$v_data['visit_departments'] = $this->reports_model->get_visit_departments($where, $table);
@@ -92,8 +91,8 @@ class Doctors extends MX_Controller
 		
 		$data['title'] = $this->session->userdata('page_title');
 		$v_data['title'] = $this->session->userdata('page_title');
-		// $v_data['type'] = $this->reception_model->get_types();
-		// $v_data['doctors'] = $this->reception_model->get_doctor();
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['doctors'] = $this->reception_model->get_doctor();
 		
 		$newdata = $this->load->view('doctor/patient_bookings', $v_data, true);
 		

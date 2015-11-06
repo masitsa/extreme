@@ -1204,4 +1204,165 @@ class Sync_model extends CI_Model
 			}
 		}
 	}
+
+	
+
+	// petty cash sync
+
+	public function syn_up_petty_cash()
+	{
+
+		// get the data to sync up from petty cash
+
+		$petty_cash_response = $this->sync_model->get_petty_cash_table_details();
+		// var_dump(json_encode($petty_cash_response)); die();
+		if(count($petty_cash_response) > 0)
+		{
+			$url = 'http://159.203.78.242/cloud/sync_up_petty_cash';	
+			//Encode the array into JSON.
+			
+			//The JSON data.
+
+			$data_string = json_encode($petty_cash_response);
+			
+			try{                                                                                                         
+
+				$ch = curl_init($url);                                                                      
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+					'Content-Type: application/json',                                                                                
+					'Content-Length: ' . strlen($data_string))                                                                       
+				);                                                                                                                     
+				$result = curl_exec($ch);
+				curl_close($ch);
+				// $response = $this->sync_model->parse_sync_up_response($result);
+
+				  $response = $result;
+				 // echo json_encode($response);
+			}
+			catch(Exception $e)
+			{
+				$response = "something went wrong";
+				echo json_encode($response.' '.$e);
+			}
+		}
+		else
+		{
+			$response = "no data to sync";
+			echo json_encode($response);
+		}
+		
+		return $response;
+	}
+	public function get_all_petty_cash_tables_sync()
+	{
+		$this->db->where('branch_code ="'.$this->session->userdata('branch_code').'" AND petty_cash_sync_table_status = 1');
+		$query = $this->db->get('petty_cash_sync_table');
+
+		return $query;
+
+	}
+	public function get_petty_cash_table_details()
+	{
+		$table_sync_array = $this->sync_model->get_all_petty_cash_tables_sync();
+		
+		$petty_cash = array();
+		$counter = $table_sync_array->num_rows();
+		// var_dump($counter); die();
+		if($table_sync_array->num_rows() > 0)
+		{
+			$petty_cash['branch_code'] = $this->session->userdata('branch_code');
+
+			
+			// loop the tables
+			foreach ($table_sync_array->result() as $key)
+			{
+				// get the table sync items
+				$sync_table_name = $key->petty_cash_sync_table_name;
+				$sync_table_id = $key->petty_cash_sync_table_id;
+				$branch_code = $key->branch_code;
+				$table_key_name = $key->petty_cash_table_key;
+				
+				if($sync_table_name == 'account')
+				{
+					$where = 'branch_code = "'.$this->session->userdata('branch_code').'"';
+
+					$this->db->where($where);
+					$this->db->select('*');
+					$query_petty_cash = $this->db->get('account');
+
+					$petty_cash[$sync_table_name] = array();
+
+					if($query_petty_cash->num_rows() > 0)
+					{
+						foreach ($query_petty_cash->result() as $value) {
+							# code...
+							$table_key = $key->petty_cash_table_key;
+							
+							$sync_data = array(
+								'branch_code'=>$this->session->userdata('branch_code'),
+								'petty_cash_sync_status'=>0,
+								'petty_cash_sync_type'=>0,
+								'petty_cash_sync_table_id'=>$sync_table_id,
+								'petty_cash_sync_table_key'=>$table_key,
+								'created'=>date('Y-m-d H:i:s'),
+								'created_by'=>$this->session->userdata('personnel_id'),
+								'last_modified_by'=>$this->session->userdata('personnel_id'),
+								//'sync_data' => $value
+							);
+							$this->db->insert('petty_cash_sync', $sync_data);
+						 	array_push($petty_cash[$sync_table_name], $value);
+						}
+					}
+					
+				}
+				else
+				{
+					$where = 'branch_code = "'.$this->session->userdata('branch_code').'" AND is_synced = 0';
+					$this->db->where($where);
+					$query = $this->db->get($sync_table_name);
+
+					$petty_cash[$sync_table_name] = array();
+					
+					if($query->num_rows() > 0)
+					{
+						foreach ($query->result() as $key) {
+							# code...
+							// save item instruction to the sync table
+
+
+							$date = date("Y-m-d H:i:s");
+							$sync_data = array(
+								'branch_code'=>$this->session->userdata('branch_code'),
+								'petty_cash_sync_status'=>0,
+								'petty_cash_sync_type'=>0,
+								'petty_cash_sync_table_id'=>$sync_table_id,
+								'petty_cash_sync_table_key'=>$table_key,
+								'created'=>date('Y-m-d H:i:s'),
+								'created_by'=>$this->session->userdata('personnel_id'),
+								'last_modified_by'=>$this->session->userdata('personnel_id'),
+								//'sync_data' => $key
+							);
+							$this->db->insert('petty_cash_sync', $sync_data);
+							array_push($petty_cash[$sync_table_name], $key);
+						}
+						
+					}
+
+				}
+			}
+
+
+		}
+		else
+		{
+
+		}
+
+		return $petty_cash;
+
+	}
 }
+

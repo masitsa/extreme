@@ -16,7 +16,7 @@ class Reports_model extends CI_Model
 		}
 		$this->db->from($table);
 		$this->db->where($where);
-		$this->db->group_by('payments.visit_id');
+		//$this->db->group_by('payments.visit_id');
 		return $this->db->count_all_results();
 	}
 	public function get_queue_total($date = NULL, $where = NULL)

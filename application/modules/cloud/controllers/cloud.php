@@ -22,6 +22,15 @@ class Cloud  extends MX_Controller
 
 		echo json_encode($response);
 	}
+	public function sync_up_petty_cash()
+	{
+		$json = file_get_contents('php://input');
+
+	   	$response = $this->cloud_model->save_petty_cash_data($json);
+
+		echo json_encode($response);
+
+	}
 	
 	public function cron_sync_up()
 	{
