@@ -440,7 +440,17 @@ class Laboratory  extends MX_Controller
 		
 	}
 
-	function print_test($visit_id, $patient_id)
+	function print_test($visit_id)
+	{
+		$data = array('visit_id'=>$visit_id);
+		$data['contacts'] = $this->site_model->get_contacts();
+		
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$data['patient'] = $patient;
+		$this->load->view('print_test', $data);
+	}
+
+	function print_test_old($visit_id, $patient_id)
 	{
 
 		$personnel_query = $this->personnel_model->get_all_personnel();
