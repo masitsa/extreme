@@ -172,7 +172,7 @@ class Theatre  extends MX_Controller
 			$this->load->view('admin/templates/general_page', $data);	
 		}
 	}
-	public function search_theatre_billing($visit_id)
+	public function search_surgery($visit_id)
 	{
 		$this->form_validation->set_rules('search_item', 'Search', 'trim|required|xss_clean');
 		
@@ -180,10 +180,10 @@ class Theatre  extends MX_Controller
 		if ($this->form_validation->run())
 		{
 			$search = ' AND service_charge_name LIKE \'%'.$this->input->post('search_item').'%\'';
-			$this->session->set_userdata('billing_search', $search);
+			$this->session->set_userdata('surgery_search', $search);
 		}
 		
-		$this->theatre_services($visit_id);
+		redirect('theatre/surgery_list/0/'.$visit_id);
 	}
 	public function close_theatre_billing_search($visit_id)
 	{
@@ -330,7 +330,7 @@ class Theatre  extends MX_Controller
 		$order = 'service_charge_name';
 		
 		$where = 'service_charge.service_id = service.service_id AND service.branch_code = "'.$this->session->userdata('branch_code').'" AND (service.service_name = "Surgery" OR service.service_name = "surgery") AND  service_charge.visit_type_id = '.$visit_t;
-		$test_search = $this->session->userdata('ultrasound_search');
+		$test_search = $this->session->userdata('surgery_search');
 		
 		if(!empty($test_search))
 		{

@@ -425,20 +425,8 @@ class Lab_model extends CI_Model
 		}
 	}
 
-	function save_comment($comment, $visit_charge_id){
-
-		$table = "visit_lab_test";
-		$where = "visit_lab_test_id = ".$visit_charge_id;
-		$items = "visit_id";
-		$order = "visit_id";
-		
-		$result = $this->database->select_entries_where($table, $where, $items, $order);
-
-		if(count($result) > 0){
-			foreach($result as $rs):
-				$visit_id = $rs->visit_id;
-			endforeach;
-		}
+	function save_comment($comment, $visit_id)
+	{
 		$data['lab_visit_comment'] = $comment;
 		
 		$this->db->where('visit_id', $visit_id);
@@ -560,7 +548,49 @@ class Lab_model extends CI_Model
 		$this->db->where(array('lab_visit_result_format' => $format, 'visit_id' => $visit_id));
 		$this->db->update('lab_visit_results', $data);
 	}
-
+	
+	
+	
+	function save_tests_format_inpatients($visit_id)
+	{
+		$visit_lab_test_id = $this->input->post('visit_lab_test_id');
+		$visit_charge_id = NULL;
+		//echo $visit_lab_test_id;
+		//get visit_charge_id
+		$this->db->select('visit_charge_id');
+		$this->db->where('visit_lab_test_id', $visit_lab_test_id);
+		$query = $this->db->get('visit_charge');
+		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$visit_charge_id = $row->visit_charge_id;
+		}
+		$result = $this->input->post('res');
+		$format = $this->input->post('format');
+		
+		//check if exists
+		$this->db->where(array('lab_visit_result_format' => $format, 'visit_id' => $visit_id, 'visit_charge_id' => $visit_charge_id));
+		$query = $this->db->get('lab_visit_results');
+		
+		if($query->num_rows() > 0)
+		{
+			$data['lab_visit_results_result'] = $result;
+			$row = $query->row();
+			$lab_visit_result_id = $row->lab_visit_result_id;
+			$this->db->where('lab_visit_results_id', $lab_visit_results_id);
+			$this->db->update('lab_visit_results', $data);
+		}
+		
+		else
+		{
+			$data['lab_visit_results_result'] = $result;
+			$data['lab_visit_result_format'] = $format;
+			$data['visit_id'] = $visit_id;
+			$data['visit_charge_id'] = $visit_charge_id;
+			$this->db->insert('lab_visit_results', $data);
+		}
+	}
 	
 	function get_lab_comments($visit_charge_id)
 	{
@@ -629,13 +659,10 @@ class Lab_model extends CI_Model
 		}
 	}
 	
-	function get_format_test_results($visit_lab_test_id)
+	function get_format_test_results($lab_test_format_id, $visit_id)
 	{
-		// $_SESSION['test'] = 0;
-		//$this->session->set_userdata('test',0);
-
 		$table = "lab_visit_results";
-		$where = "lab_visit_results.visit_id = visit.visit_id AND visit.visit_lab_test_id = ".$visit_lab_test_id;
+		$where = "lab_visit_result_format = $lab_test_format_id AND visit_id = $visit_id";
 		$items = "*";
 		
 		$this->db->where($where);
@@ -646,27 +673,39 @@ class Lab_model extends CI_Model
 	
 	function get_test_details($service_charge_id)
 	{
-		$table = "lab_test, visit_charge, lab_test_class, lab_test_format, lab_visit_results, service_charge";
-		$where = "visit_charge.service_charge_id = service_charge.service_charge_id 
+		$table = "lab_test, visit_lab_test, lab_test_class, service_charge";
+		$where = "visit_lab_test.service_charge_id = service_charge.service_charge_id 
 		AND service_charge.lab_test_id = lab_test.lab_test_id 
-		AND lab_test.lab_test_class_id = lab_test_class.lab_test_class_id 
-		AND lab_test_format.lab_test_id = lab_test.lab_test_id 
-		AND visit_charge.visit_charge_id = lab_visit_results.visit_charge_id 
-		AND lab_visit_results.lab_visit_result_format = lab_test_format.lab_test_format_id AND visit_charge.visit_charge_id = ".$visit_charge_id;
-		$items = "service_charge.service_charge_name AS lab_test_name, lab_test_class.lab_test_class_name, lab_test.lab_test_units, lab_test.lab_test_malelowerlimit, lab_test.lab_test_malelupperlimit, lab_test.lab_test_femalelowerlimit, lab_test.lab_test_femaleupperlimit,lab_test_format.lab_test_format_id, visit_charge.visit_charge_id AS lab_visit_id,  visit_charge.visit_charge_results AS lab_visit_result, lab_test_format.lab_test_formatname, lab_test_format.lab_test_format_units, lab_test_format.lab_test_format_malelowerlimit, lab_test_format.lab_test_format_maleupperlimit, lab_test_format.lab_test_format_femalelowerlimit, lab_test_format.lab_test_format_femaleupperlimit, lab_visit_results.lab_visit_results_result, visit_charge.visit_charge_comment";
-		$order = "visit_charge.visit_charge_id";
+		AND visit_lab_test.visit_lab_test_status = 1 
+		AND lab_test.lab_test_class_id = lab_test_class.lab_test_class_id
+		AND visit_lab_test.service_charge_id = ".$service_charge_id;
+		$items = "service_charge.service_charge_name AS lab_test_name, lab_test_class.lab_test_class_name, lab_test.*, visit_lab_test.visit_lab_test_id AS lab_visit_id, visit_lab_test.visit_lab_test_results AS lab_visit_result, visit_lab_test.visit_lab_test_comment";
+		$order = "lab_test.lab_test_name";
 		
+		$this->db->select($items);
+		$this->db->where($where);
+		$this->db->order_by($order);
+		$result = $this->db->get($table);
+		
+		return $result;
+	}
+	
+	function get_format_test_details($service_charge_id)
+	{
 		$table = "lab_test, visit_lab_test, lab_test_class, lab_test_format, service_charge";
-		$where = "visit_charge.service_charge_id = service_charge.service_charge_id 
+		$where = "visit_lab_test.service_charge_id = service_charge.service_charge_id 
 		AND service_charge.lab_test_id = lab_test.lab_test_id 
 		AND visit_lab_test.visit_lab_test_status = 1 
 		AND lab_test.lab_test_class_id = lab_test_class.lab_test_class_id 
 		AND lab_test_format.lab_test_id = lab_test.lab_test_id 
 		AND visit_lab_test.service_charge_id = ".$service_charge_id;
-		$items = "service_charge.service_charge_name AS lab_test_name, lab_test_class.lab_test_class_name, lab_test.*,lab_test_format.lab_test_format_id, visit_lab_test.visit_lab_test_id AS lab_visit_id,  visit_lab_test.visit_lab_test_results AS lab_visit_result, lab_test_format.lab_test_formatname, lab_test_format.lab_test_format_units, lab_test_format.lab_test_format_malelowerlimit, lab_test_format.lab_test_format_maleupperlimit, lab_test_format.lab_test_format_femalelowerlimit, lab_test_format.lab_test_format_femaleupperlimit, lab_visit_results.lab_visit_results_result, visit_lab_test.visit_lab_test_comment";
-		$order = "visit_lab_test.visit_lab_test_id";
+		$items = "service_charge.service_charge_name AS lab_test_name, lab_test_class.lab_test_class_name, lab_test.*,lab_test_format.*, visit_lab_test.visit_lab_test_id AS lab_visit_id, visit_lab_test.visit_lab_test_results AS lab_visit_result, visit_lab_test.visit_lab_test_comment";
+		$order = "lab_test.lab_test_name";
 		
-		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		$this->db->select($items);
+		$this->db->where($where);
+		$this->db->order_by($order);
+		$result = $this->db->get($table);
 		
 		return $result;
 	}

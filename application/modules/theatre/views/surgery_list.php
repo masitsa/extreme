@@ -14,7 +14,7 @@
                         {
                             echo '<div class="alert alert-danger">'.$validation_error.'</div>';
                         }
-                        echo form_open('radiology/surgery/search_surgerys/'.$visit_id, array('class'=>'form-inline'));
+                        echo form_open('theatre/search_surgery/'.$visit_id, array('class'=>'form-inline'));
                         ?>
                         <div class="form-group">
                                 <?php
@@ -22,7 +22,7 @@
                                 if(!empty($search))
                                 {
                                 ?>
-                                <a href="<?php echo site_url().'radiology/surgery/close_surgery_search/'.$visit_id;?>" class="btn btn-warning pull-right">Close Search</a>
+                                <a href="<?php echo site_url().'theatre/close_surgery_search/'.$visit_id;?>" class="btn btn-warning pull-right">Close Search</a>
                                 <?php }?>
                                 <input type="submit" class="btn btn-info pull-right" value="Search" name="search"/>
                                 
@@ -177,7 +177,7 @@ function get_test_results(page, visit_id){
   var config_url = $('#config_url').val();
   if((page == 1) || (page == 65) || (page == 85)){
     
-    url = config_url+"radiology/surgery/test/"+visit_id;
+    url = config_url+"theatre/test/"+visit_id;
   }
   
   else if ((page == 75)){
@@ -185,7 +185,7 @@ function get_test_results(page, visit_id){
   }
   
   else if ((page == 100)){
-    url = config_url+"radiology/surgery/test2/"+visit_id;
+    url = config_url+"theatre/test2/"+visit_id;
   }
   if(XMLHttpRequestObject) {
     if((page == 75) || (page == 85)){
@@ -261,7 +261,7 @@ function reload_opener_confirmation(visit_id){
 	else if (window.ActiveXObject) {
 		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	var url = "<?php echo site_url();?>radiology/surgery/confirm_surgery_charge/"+visit_id;
+	var url = "<?php echo site_url();?>theatre/confirm_surgery_charge/"+visit_id;
 	
 	if(XMLHttpRequestObject) {
 				

@@ -203,17 +203,17 @@
 	  }
 	}
 
-	function save_result_format(id, format, visit_id)
+	function save_result_format(visit_lab_test_id, lab_test_format_id, visit_id)
 	{
 		var config_url = $('#config_url').val();
 		
-		var res = document.getElementById("laboratory_result2"+format).value;
+		var res = document.getElementById("laboratory_result2"+lab_test_format_id).value;
 		var data_url = config_url+"laboratory/save_result_lab";
          	
         $.ajax({
 			type:'POST',
 			url: data_url,
-			data:{id: id, res: res, format: format, visit_id: visit_id},
+			data:{res: res, format: lab_test_format_id, visit_id: visit_id, visit_lab_test_id: visit_lab_test_id},
 			dataType: 'text',
 			success:function(data){
 				//$("#result_space"+format).val(data);
