@@ -36,6 +36,11 @@ class Inpatient extends MX_Controller {
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
 		$this->load->model('administration/personnel_model');
+		$this->load->model('laboratory/lab_model');
+		$this->load->model('radiology/xray_model');
+		$this->load->model('radiology/ultrasound_model');
+		$this->load->model('theatre/theatre_model');
+		$this->load->model('pharmacy/pharmacy_model');
 		$this->load->model('administration/sync_model');
 	}
 	
@@ -198,6 +203,8 @@ class Inpatient extends MX_Controller {
 		$v_data['account_balance'] = $patient['account_balance'];
 		$v_data['visit_type_name'] = $patient['visit_type_name'];
 		$v_data['patient_id'] = $patient['patient_id'];
+		$v_data['visit_ward_id'] = $patient['ward_id'];
+		
 		$patient_date_of_birth = $patient['patient_date_of_birth'];
 		$age = $this->reception_model->calculate_age($patient_date_of_birth);
 		$visit_date = $this->reception_model->get_visit_date($visit_id);
@@ -206,6 +213,9 @@ class Inpatient extends MX_Controller {
 		$v_data['age'] = $age;
 		$v_data['visit_date'] = $visit_date;
 		$v_data['gender'] = $gender;
+		$v_data['wards'] = $this->reception_model->get_wards();
+		$v_data['ward_rooms'] = $this->nurse_model->get_ward_rooms($v_data['visit_ward_id']);
+		$v_data['visit_bed'] = $this->nurse_model->get_visit_bed($visit_id);
 		
 		$v_data['module'] = $module;
 		$v_data['mike'] = $mike;
@@ -213,9 +223,10 @@ class Inpatient extends MX_Controller {
 		$v_data['dental'] = 0;
 		
 		$newdata = $this->load->view('inpatient/patient_card', $v_data, true);
+		$response['message'] = 'success';
 		$response['result'] = $newdata;
 
-		echo json_encode($newdata);
+		echo json_encode($response);
 	}
 
 
