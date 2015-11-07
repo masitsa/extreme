@@ -5,7 +5,7 @@
 			
             <header class="panel-heading">
 				
-                <h2 class="panel-title">Visits</h2>
+                <h2 class="panel-title">Patients</h2>
 					
               </header> 
       		   
@@ -46,7 +46,7 @@
     <div class="col-md-10 col-sm-12">
     	 <section class="panel panel-featured panel-featured-info">
             <header class="panel-heading">
-            	<h2 class="panel-title">Transaction breakdown</h2>
+            	<h2 class="panel-title">Transactions <?php echo $title;?></h2>
             </header>             
         
               <!-- Widget content -->

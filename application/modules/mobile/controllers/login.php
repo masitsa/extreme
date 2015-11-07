@@ -46,9 +46,11 @@ class Login extends MX_Controller {
 		echo json_encode($newdata);
 	}
 	
-	public function login_member($member_no = '', $member_password = '') 
+	public function login_member() 
 	{
-	
+		$member_no = $this->input->post('personnel_username');
+		$member_password = $this->input->post('personnel_password');
+		
 		if(($member_no == 'amasitsa') && ($member_password == 'r6r5bb!!'))
 		{
 			$newdata = array(
