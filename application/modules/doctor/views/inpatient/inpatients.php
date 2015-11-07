@@ -117,7 +117,7 @@
 					<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
 				</td>
 
-				<td><a href="patient-card.html?id='.$visit_id.'" class="btn btn-sm btn-info" onclick="get_patient_card_items('.$visit_id.');">Patient Card</a></td>
+				<td><a href="patient-card.html?id='.$visit_id.'" class="btn btn-sm btn-info">Patient Card</a></td>
 				';
 				
 								
