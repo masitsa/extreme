@@ -223,6 +223,8 @@ class Reception  extends MX_Controller
 		{
 			$where = 'visit.visit_delete = '.$delete.' AND visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
 		}
+
+		
 		$table = 'visit, patients, visit_type';
 		
 		$visit_search = $this->session->userdata('visit_search');
