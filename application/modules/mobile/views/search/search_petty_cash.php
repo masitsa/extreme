@@ -17,7 +17,7 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </span>
-                                <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="date_from" placeholder="Date from">
+                                <input type="date" class="form-control" name="date_from" placeholder="Date from">
                             </div>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </span>
-                                <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="date_to" placeholder="Date to">
+                                <input type="date" class="form-control" name="date_to" placeholder="Date to">
                             </div>
                         </div>
                     </div>

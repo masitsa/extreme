@@ -353,19 +353,20 @@ class Reports extends MX_Controller
 		$where = 'petty_cash.transaction_type_id = transaction_type.transaction_type_id';
 		$table = 'petty_cash, transaction_type';
 		
-		if(!empty($date_from) && !empty($date_to) AND $date_from != "_" AND $date_to != "_")
+		if(!empty($date_from) && !empty($date_to))
 		{
-			$where .= ' AND (petty_cash.petty_cash_date >= \''.$date_from.'\' OR \'petty_cash.petty_cash_date <= '.$date_to.'\')';
+			$where .= ' AND (petty_cash.petty_cash_date >= \''.$date_from.'\' AND petty_cash.petty_cash_date <= \''.$date_to.'\')';
+			//$where .= ' AND petty_cash.petty_cash_date BETWEEN \''.$date_from.'\' AND \'petty_cash.petty_cash_date <= '.$date_to.'\')';
 			$search_title = 'Petty cash from '.date('jS M Y', strtotime($date_from)).' to '.date('jS M Y', strtotime($date_to)).' ';
 		}
 		
-		else if(!empty($date_from) AND $date_from != "_")
+		else if(!empty($date_from))
 		{
 			$where .= ' AND petty_cash.petty_cash_date = \''.$date_from.'\'';
 			$search_title = 'Petty cash of '.date('jS M Y', strtotime($date_from)).' ';
 		}
 		
-		else if(!empty($date_to) AND $date_to != "_")
+		else if(!empty($date_to))
 		{
 			$where .= ' AND petty_cash.petty_cash_date = \''.$date_to.'\'';
 			$search_title = 'Petty cash of '.date('jS M Y', strtotime($date_to)).' ';
@@ -373,9 +374,12 @@ class Reports extends MX_Controller
 		
 		else
 		{
+			$date_from = date('Y-m-01');
 			$where .= ' AND DATE_FORMAT(petty_cash.petty_cash_date, \'%m\') = \''.date('m').'\' AND DATE_FORMAT(petty_cash.petty_cash_date, \'%Y\') = \''.date('Y').'\'';
 			$search_title = 'Petty cash for the month of '.date('M Y').' ';
 		}
+		
+		$v_data['balance_brought_forward'] = $this->petty_cash_model->calculate_balance_brought_forward($date_from);
 		
 		$v_data['date_from'] = $date_from;
 		$v_data['date_to'] = $date_to;
@@ -386,6 +390,7 @@ class Reports extends MX_Controller
 		$newdata = $this->load->view('petty_cash/statement', $v_data, TRUE);
 		
 		$response['result'] = $newdata;
+		$response['title'] = 'Petty cash';
 		
 		echo json_encode($newdata);
 	}

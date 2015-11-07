@@ -45,7 +45,7 @@
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>
-											<input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="visit_date_from" placeholder="Visit Date From">
+											<input type="date" class="form-control" name="visit_date_from" placeholder="Visit Date From">
 										</div>
 									</div>
 								</div>
@@ -58,7 +58,7 @@
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>
-											<input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="visit_date_to" placeholder="Visit Date To">
+											<input type="date" class="form-control" name="visit_date_to" placeholder="Visit Date To">
 										</div>
 									</div>
 								</div>

@@ -1238,7 +1238,7 @@ class Sync_model extends CI_Model
 				curl_close($ch);
 				// $response = $this->sync_model->parse_sync_up_response($result);
 
-				  $response = $result;
+				return  $response = $result;
 				 // echo json_encode($response);
 			}
 			catch(Exception $e)
