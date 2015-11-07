@@ -8,11 +8,32 @@
         <div class="padd">
             <form id="petty_cash_search" method="post">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-sm-4">
                     <div class="form-group">
-                        <label class="col-md-4 control-label">Date from: </label>
+                        <label class="col-sm-4 control-label">Branch: </label>
                         
-                        <div class="col-md-8">
+                        <div class="col-sm-8">
+                            <select class="form-control" name="branch_code">
+                                <option value="_">---Select branch---</option>
+                                <?php
+                                    if($branches->num_rows() > 0){
+                                        foreach($branches->result() as $row):
+                                            $branch_name = $row->branch_name;
+                                            $branch_code = $row->branch_code;
+                                            echo "<option value=".$branch_code.">".$branch_name."</option>";
+                                        endforeach;
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Date from: </label>
+                        
+                        <div class="col-sm-8">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
@@ -23,12 +44,12 @@
                     </div>
                 </div>
                 
-                <div class="col-md-6">
+                <div class="col-sm-4">
                     
                     <div class="form-group">
-                        <label class="col-md-4 control-label">Date to: </label>
+                        <label class="col-sm-4 control-label">Date to: </label>
                         
-                        <div class="col-md-8">
+                        <div class="col-sm-8">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar"></i>

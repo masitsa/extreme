@@ -12,11 +12,11 @@
 					<div class="panel-body">
 					<form id="cash_search" method="post">
 						<div class="row">
-							<div class="col-md-4">
+							<div class="col-sm-4">
 								<div class="form-group">
-									<label class="col-lg-4 control-label">Visit Type: </label>
+									<label class="col-sm-4 control-label">Visit Type: </label>
 									
-									<div class="col-lg-8">
+									<div class="col-sm-8">
 										<select class="form-control" name="visit_type_id">
 											<option value="_">---Select Visit Type---</option>
 											<?php
@@ -35,12 +35,12 @@
 
 							</div>
 							
-							<div class="col-md-4">
+							<div class="col-sm-4">
 								
 								<div class="form-group">
-									<label class="col-lg-4 control-label">Visit Date From: </label>
+									<label class="col-sm-4 control-label">Visit Date From: </label>
 									
-									<div class="col-lg-8">
+									<div class="col-sm-8">
 										<div class="input-group">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
@@ -51,9 +51,9 @@
 								</div>
 								
 								<div class="form-group">
-									<label class="col-lg-4 control-label">Visit Date To: </label>
+									<label class="col-sm-4 control-label">Visit Date To: </label>
 									
-									<div class="col-lg-8">
+									<div class="col-sm-8">
 										<div class="input-group">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
@@ -65,12 +65,12 @@
 								
 							</div>
 							
-							<div class="col-md-4">
+							<div class="col-sm-4">
 								
 								<div class="form-group">
-									<label class="col-lg-4 control-label">Branch: </label>
+									<label class="col-sm-4 control-label">Branch: </label>
 									
-									<div class="col-lg-8">
+									<div class="col-sm-8">
 										<select class="form-control" name="branch_code">
 											<option value="_">---Select branch---</option>
 											<?php
@@ -87,7 +87,7 @@
 								</div>
 								
 								<div class="form-group">
-									<div class="col-lg-8 col-lg-offset-4">
+									<div class="col-sm-8 col-sm-offset-4">
 										<div class="center-align">
 											<button type="submit" class="btn btn-info">Search</button>
 										</div>

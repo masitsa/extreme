@@ -383,6 +383,7 @@ class Reports extends MX_Controller
 		
 		$v_data['date_from'] = $date_from;
 		$v_data['date_to'] = $date_to;
+		$v_data['branches'] = $this->reports_model->get_all_active_branches();
 		$v_data['accounts'] = $this->petty_cash_model->get_accounts();
 		$v_data['query'] = $this->petty_cash_model->get_petty_cash($where, $table);
 		$v_data['title'] = $search_title;
