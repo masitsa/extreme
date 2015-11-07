@@ -1211,7 +1211,6 @@ class Sync_model extends CI_Model
 
 	public function syn_up_petty_cash()
 	{
-
 		// get the data to sync up from petty cash
 
 		$petty_cash_response = $this->sync_model->get_petty_cash_table_details();
@@ -1224,7 +1223,7 @@ class Sync_model extends CI_Model
 			//The JSON data.
 
 			$data_string = json_encode($petty_cash_response);
-			
+			var_dump($data_string);
 			try{                                                                                                         
 
 				$ch = curl_init($url);                                                                      
@@ -1283,23 +1282,24 @@ class Sync_model extends CI_Model
 				$sync_table_name = $key->petty_cash_sync_table_name;
 				$sync_table_id = $key->petty_cash_sync_table_id;
 				$branch_code = $key->branch_code;
-				$table_key_name = $key->petty_cash_table_key;
+				$table_key_name = $key->table_key_name;
 				
 				if($sync_table_name == 'account')
 				{
 					$where = 'branch_code = "'.$this->session->userdata('branch_code').'"';
-
+					
 					$this->db->where($where);
 					$this->db->select('*');
 					$query_petty_cash = $this->db->get('account');
-
+					
 					$petty_cash[$sync_table_name] = array();
-
+					
 					if($query_petty_cash->num_rows() > 0)
 					{
 						foreach ($query_petty_cash->result() as $value) {
 							# code...
-							$table_key = $key->petty_cash_table_key;
+							//var_dump($value);die();
+							$table_key = $value->$table_key_name;
 							
 							$sync_data = array(
 								'branch_code'=>$this->session->userdata('branch_code'),

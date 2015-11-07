@@ -17,6 +17,7 @@
                 <div class="pull-right">
                 	<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#record_petty_cash"><i class="fa fa-plus"></i> Record</button>
                 	<a href="<?php echo base_url().'accounts/petty_cash/print_petty_cash/'.$date_from.'/'.$date_to;?>" class="btn btn-sm btn-success" target="_blank"><i class="fa fa-print"></i> Print</a>
+                	<a href="<?php echo base_url().'administration/sync_app_petty_cash';?>" class="btn btn-sm btn-info" target="_blank"><i class="fa fa-sign-out"></i> Sync</a>
                 </div>
                 <!-- Modal -->
                 <div class="modal fade" id="record_petty_cash" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
