@@ -824,6 +824,7 @@ class Reports extends administration
 		$data = array(
 			'debtor_invoice_id'=>$debtor_invoice_id,
 			'query' => $this->reports_model->get_debtor_invoice($where, $table),
+			'debtor_invoice_items' => $this->reports_model->get_debtor_invoice_items($debtor_invoice_id),
 			'personnel_query' => $this->personnel_model->get_all_personnel()
 		);
 			

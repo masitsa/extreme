@@ -355,7 +355,8 @@ class Pharmacy_model extends CI_Model
 		
 		$visit_charge_qty = $this->input->post('quantity'.$prescription_id);
 		$visit_charge_units = $this->input->post('units_given'.$prescription_id);
-
+		$visit_charge_amount = $this->input->post('charge'.$prescription_id);
+		
 		// check if this drug 
 		$result = $this->get_prescribed_drug($prescription_id,$visit_id);
 		$num_rows = count($result);
@@ -376,12 +377,14 @@ class Pharmacy_model extends CI_Model
 			$check_num_rows = count($check);
 
 			if($check_num_rows > 0){
+				//echo $visit_charge_amount;die();
 				foreach($check as $key2):
 				$visit_charge_id = $key2->visit_charge_id;
 				endforeach;
 				// if it exisit then update
 				$array = array('visit_charge_qty'=>$visit_charge_qty,
 							'visit_charge_units'=>$visit_charge_units,
+							'visit_charge_amount'=>$visit_charge_amount,
 							'created_by'=>$this->session->userdata("personnel_id"),
 							'modified_by'=>$this->session->userdata("personnel_id"),
 							'visit_id'=>$visit_id,
@@ -499,7 +502,7 @@ class Pharmacy_model extends CI_Model
 		
 		$table = "visit_charge";
 		$where = "visit_id = ". $visit_id ." AND service_charge_id = ".$service_charge_id;
-		$items = "sum(visit_charge_units) AS num_units";
+		$items = "visit_charge_units, visit_charge_amount";
 		$order = "visit_id";
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);

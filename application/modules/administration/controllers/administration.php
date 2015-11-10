@@ -49,9 +49,10 @@ class Administration  extends MX_Controller
 	{
 		// $this->sync_model->syn_up_on_closing_visit(673);
 
-		 $response = $this->sync_model->syn_up_petty_cash();
+		$response = $this->sync_model->syn_up_petty_cash();
 		
-		// echo $response;
+		$this->session->set_userdata('Sync completed successfully');
+		redirect('accounts/petty-cash');
 	}
 
 

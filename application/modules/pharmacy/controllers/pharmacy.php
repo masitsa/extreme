@@ -150,7 +150,8 @@ class Pharmacy  extends MX_Controller
 
 		if($module == 1)
 		{
-			$this->form_validation->set_rules('units_given'.$prescription_id, 'Units Given', 'trim|required|xss_clean');	
+			$this->form_validation->set_rules('units_given'.$prescription_id, 'Units Given', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('charge'.$prescription_id, 'Unit price', 'trim|required|xss_clean');	
 		}
 		
 		//if form conatins invalid data

@@ -248,6 +248,7 @@ $route['hospital-administration/deactivate-insurance-company/(:num)'] = 'hospita
 /*
 *	Accounts Routes
 */
+$route['accounts/creditors'] = 'accounts/creditors/index';
 $route['accounts/hospital-accounts'] = 'accounts/hospital_accounts/index';
 $route['accounts/petty-cash'] = 'accounts/petty_cash/index';
 $route['accounts/petty-cash/(:any)/(:any)'] = 'accounts/petty_cash/index/$1/$2';

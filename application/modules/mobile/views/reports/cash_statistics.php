@@ -1,5 +1,5 @@
 <div class="row statistics">
-    <div class="col-md-2 col-sm-12">
+    <div class="col-md-5 col-sm-12">
     	 <section class="panel panel-featured panel-featured-info">
             <header class="panel-heading">
                 <h2 class="panel-title">Patients</h2>
@@ -39,7 +39,7 @@
 		</section>
     </div>
     
-    <div class="col-md-10 col-sm-12">
+    <div class="col-md-7 col-sm-12">
     	 <section class="panel panel-featured panel-featured-info">
             <header class="panel-heading">
             	<h2 class="panel-title">Revenue <?php echo $title;?></h2>
@@ -50,7 +50,7 @@
                 <div class="row">
                     <!-- End Transaction Breakdown -->
                     
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <h5>Cash Breakdown</h5>
                         <table class="table table-striped table-hover table-condensed">
                             <tbody>
@@ -103,7 +103,7 @@
                         </table>
                     </div>
                     
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <h4>Total Cash</h4>	
                         <h3>Ksh <?php echo number_format($total_cash_breakdown, 2);?></h3>
                     </div>

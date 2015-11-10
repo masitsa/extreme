@@ -14,97 +14,7 @@
             </header>
             
             <div class="panel-body">
-                <!-- Modal -->
-                <div class="modal fade" id="record_petty_cash" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myModalLabel">Record Petty Cash</h4>
-                            </div>
-                            <div class="modal-body">
-                                <?php echo form_open("accounts/petty_cash/record_petty_cash", array("class" => "form-horizontal"));?>
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label">Transaction date: </label>
-                                    
-                                    <div class="col-md-8">
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <i class="fa fa-calendar"></i>
-                                            </span>
-                                            <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="petty_cash_date" placeholder="Transaction date">
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label">Type *</label>
-                                    
-                                    <div class="col-md-8">
-                                        <select class="form-control" name="transaction_type_id">
-                                            <option value="">-- Select type --</option>
-                                            <option value="1">Deposit</option>
-                                            <option value="2">Expenditure</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label">Account</label>
-                                    
-                                    <div class="col-md-8">
-                                        <select class="form-control" name="account_id">
-                                            <option value="">-- Select account --</option>
-                                            <?php
-                                            if($accounts->num_rows() > 0)
-											{
-												foreach($accounts->result() as $res)
-												{
-													$account_id = $res->account_id;
-													$account_name = $res->account_name;
-													?>
-                                                    <option value="<?php echo $account_id;?>"><?php echo $account_name;?></option>
-                                                    <?php
-												}
-											}
-											?>
-                                        </select>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label">Description *</label>
-                                    
-                                    <div class="col-md-8">
-                                        <textarea class="form-control" name="petty_cash_description"></textarea>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label">Amount *</label>
-                                    
-                                    <div class="col-md-8">
-                                        <input type="text" class="form-control" name="petty_cash_amount" placeholder="Amount"/>
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-8 col-md-offset-4">
-                                        <div class="center-align">
-                                            <button type="submit" class="btn btn-primary">Save record</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <?php echo form_close();?>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                
+                 
 			<?php
 			$error = $this->session->userdata('error_message');
 			$success = $this->session->userdata('success_message');
@@ -147,9 +57,54 @@
 					  <tbody>
 				';
 				
-				$total_debit = 0;
-				$total_credit = 0;
 				$count = 0;
+				if($balance_brought_forward > 0)
+				{
+					$debit = number_format($balance_brought_forward, 2);
+					$credit = '';
+					$total_debit = $balance_brought_forward;
+					$total_credit = 0;
+					$count++;
+				
+					$result .= 
+					'
+						<tr>
+							<td>'.$count.'</td>
+							<td style="text-align:center"></td>
+							<td></td>
+							<td>Balance brought forward</td>
+							<td style="text-align:center">'.$debit.'</td>
+							<td style="text-align:center">'.$credit.'</td>
+						</tr> 
+					';
+				}
+				
+				else if($balance_brought_forward < 0)
+				{
+					$balance_brought_forward *= -1;
+					$debit = '';
+					$credit = number_format($balance_brought_forward, 2);
+					$total_debit = 0;
+					$total_credit = $balance_brought_forward;
+					$count++;
+				
+					$result .= 
+					'
+						<tr>
+							<td>'.$count.'</td>
+							<td style="text-align:center"></td>
+							<td></td>
+							<td>Balance brought forward</td>
+							<td style="text-align:center">'.$debit.'</td>
+							<td style="text-align:center">'.$credit.'</td>
+						</tr> 
+					';
+				}
+				else
+				{
+					$total_debit = 0;
+					$total_credit = 0;
+				}
 				
 				foreach ($query->result() as $row)
 				{

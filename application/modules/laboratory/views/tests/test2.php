@@ -209,7 +209,7 @@ if(!empty($coming_from)){
 		<div class='row' style='margin-bottom: 20px;'>
 			<div class='col-md-12'>
 				<div class='center-align'><h3>General Comments</h3></div>
-				<textarea readonly='readonly' rows='5' id='test_comment' onkeyup='save_comment(".$visit_charge_id.")' class='form-control' readonly='readonly'>".$comment."</textarea>
+				<textarea readonly='readonly' rows='5' id='test_comment' onkeyup='save_comment(".$actual_visit_charge.")' class='form-control' readonly='readonly'>".$comment."</textarea>
 			</div>
 		</div>
 		
