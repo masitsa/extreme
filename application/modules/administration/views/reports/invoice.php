@@ -72,7 +72,7 @@ else
 		img.logo{max-height:70px; margin:0 auto;}
 	</style>
     <head>
-        <title>SUMC | Invoice</title>
+        <title>Debtors | Invoice</title>
         <!-- For mobile content -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- IE Support -->
@@ -104,75 +104,77 @@ else
         </div>
         
         <!-- Patient Details -->
-    	<div class="row receipt_bottom_border" style="margin-bottom: 10px;">
-        	<div class="col-md-6 pull-left">
-            	<div class="row">
-                	<div class="col-md-12">
-                    	
-                    	<div class="title-item">Invoice to:</div>
-                        
-                    	<?php echo $visit_type_name; ?>
-                    </div>
-                </div>
-            	
-            	<!--<div class="row">
-                	<div class="col-md-12">
-                    	<div class="title-item">Patient Number:</div> 
-                        
-                    	<?php //echo $patient_number; ?>
-                    </div>
-                </div>-->
-            
+    	<div class="row receipt_bottom_border" style="margin-bottom: 10px; padding:0 10px;">
+        	<div class="col-md-4">
+            	<strong>Invoice to:</strong>
+                <span class="pull-right"><?php echo $visit_type_name; ?></span>
             </div>
             
-        	<div class="col-md-6 pull-right">
-            	<div class="row">
-                	<div class="col-md-12">
-                    	<div class="title-item">Invoice Number:</div>
-                        
-                    	<?php echo $batch_no; ?>
-                    </div>
-                </div>
-            	
-            	<div class="row">
-                	<div class="col-md-12">
-                    	<div class="title-item">Invoice date:</div> 
-                        
-                    	<?php echo $invoice_date; ?>
-                    </div>
-                </div>
+        	<div class="col-md-4">
+            	<strong>Invoice Number:</strong>
+                <span class="pull-right"><?php echo $batch_no; ?></span>
+            </div>
+            
+        	<div class="col-md-4">
+            	<strong>Invoice date:</strong>
+                <span class="pull-right"><?php echo $invoice_date; ?></span>
             </div>
         </div>
         
     	<div class="row receipt_bottom_border">
         	<div class="col-md-12 center-align">
-            	<strong>BILLED ITEMS</strong>
+            	<strong>Invoice for services rendered between <?php echo $date_from;?> and <?php echo $date_to;?> as per the attached invoices</strong>
             </div>
         </div>
         
     	<div class="row">
-        	<div class="col-md-12">
-            				<table class="table table-hover table-bordered col-md-12">
-                                <thead>
+        	<div class="col-md-12"> 
+            	<table class="table table-hover table-bordered col-md-12">
+                	<thead>
+                    	<tr>
+                            <th>#</th>
+                            <th>Invoice Date</th>
+                            <th>Patient Number</th>
+                            <th>Patient</th>
+                            <th>Invoice Number</th>
+                            <th>Total Cost</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody> 
+                    	<?php
+                        if($debtor_invoice_items->num_rows() > 0)
+						{
+							$count = 0;
+							foreach($debtor_invoice_items->result() as $res)
+							{
+								$count++;
+								$invoice_amount = $res->invoice_amount;
+								$patient_surname = $res->patient_surname;
+								$patient_othernames = $res->patient_othernames;
+								$patient_number = $res->patient_number;
+								$current_patient_number = $res->current_patient_number;
+								$visit_id = $res->visit_id;
+								$visit_date = date('jS F Y',strtotime($res->visit_date));
+								?>
                                 <tr>
-                                  <th>Description</th>
-                                  <th>Cost</th>
+                                    <td><?php echo $count;?></td>
+                                    <td><?php echo $visit_date;?></td>
+                                    <td><?php echo $patient_number;?></td>
+                                    <td><?php echo $patient_surname;?> <?php echo $patient_othernames;?></td>
+                                    <td><?php echo $this->session->userdata('branch_code').'-INV-00'.$visit_id; ?></td>
+                                    <td><?php echo number_format($invoice_amount, 2);?></td>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                  
-                                <tr>
-                                  <td>Invoice for services rendered between <?php echo $date_from;?> and <?php echo $date_to;?> as per the attached invoices</td>
-                                  <td><?php echo $total_invoiced;?></td>
-                                </tr>
-                                  
-                                <tr>
-                                  <th align="center">Total</td>
-                                  <th align="center"><?php echo $total_invoiced;?></th>
-                                </tr>
-                                    
-                                </tbody>
-                              </table>
+                                <?php
+							}
+						}
+						?>
+                        <tr>
+                            <th colspan="5" align="right">Total</th>
+                            <th><?php echo $total_invoiced;?></th>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         

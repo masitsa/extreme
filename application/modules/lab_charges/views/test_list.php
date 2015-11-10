@@ -3,18 +3,14 @@
 <!-- end search -->
 <div class="row">
 	<div class="col-md-12">
-		<a href="<?php echo site_url();?>lab_charges/add_lab_test" class="btn btn-success btn-sm pull-right">Add a lab test</a>
+		<a href="<?php echo site_url();?>lab_charges/add_lab_test" class="btn btn-info btn-sm pull-right">Add a lab test</a>
+		<a href="<?php echo site_url();?>lab_charges/export_results" class="btn btn-success btn-sm pull-right" style="margin-right:10px;">Export</a>
 	</div>
 </div>
  <section class="panel">
     <header class="panel-heading">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
-          <div class="widget-icons pull-right">
-            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-            <a href="#" class="wclose"><i class="icon-remove"></i></a>
-          </div>
-          <div class="clearfix"></div>
-        </header>             
+        <h2 class="panel-title"><?php echo $title;?></h2>
+    </header>   
 
            <!-- Widget content -->
         <div class="panel-body">
@@ -62,6 +58,8 @@
 						  <th><a href="'.site_url().'laboratory-setup/tests/lab_test.lab_test_malelupperlimit/'.$order_method.'/'.$page.'">Male Upper</a></th>
 						  <th><a href="'.site_url().'laboratory-setup/tests/lab_test.lab_test_femalelowerlimit/'.$order_method.'/'.$page.'">Female Lower</a></th>
 						  <th><a href="'.site_url().'laboratory-setup/tests/lab_test.lab_test_femaleupperlimit/'.$order_method.'/'.$page.'">Female Upper</a></th>
+						  <th>No Done</th>
+						  <th>Revenue</th>
 						  <th colspan="4">Actions</th>
 						</tr>
 					  </thead>
@@ -82,6 +80,8 @@
 				$lab_test_femaleupperlimit = $row->lab_test_femaleupperlimit;
 				$lab_test_delete = $row->lab_test_delete;
 				$lab_test_id = $row->lab_test_id;
+				$no_done = $this->lab_charges_model->get_tests_done($lab_test_id);
+				$revenue = $this->lab_charges_model->get_tests_revenue($lab_test_id);
 				$count++;
 				
 				if($lab_test_delete == 1)
@@ -105,6 +105,8 @@
 							<td>'.$lab_test_malelupperlimit.'</td>
 							<td>'.$lab_test_femalelowerlimit.'</td>
 							<td>'.$lab_test_femaleupperlimit.'</td>
+							<td>'.number_format($no_done, 0).'</td>
+							<td>'.number_format($revenue, 2).'</td>
 							<td><a href="'.site_url().'lab_charges/test_format/'.$lab_test_id.'" class="btn btn-sm btn-info">Formats</a></td>
 							<td><a href="'.site_url().'lab_charges/add_lab_test/'.$lab_test_id.'" class="btn btn-sm btn-success">Edit</a></td>
 							'.$test_button.'

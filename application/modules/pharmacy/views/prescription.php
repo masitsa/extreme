@@ -660,7 +660,8 @@ $p = 0;
                         $rsf = $this->pharmacy_model->select_invoice_drugs($visit_id,$service_charge_id);
                         $num_rowsf = count($rsf);
                         foreach ($rsf as $key_price):
-                            $sum_units = $key_price->num_units;
+                            $sum_units = $key_price->visit_charge_units;
+                            $charge = $key_price->visit_charge_amount;
                         endforeach;
                         
                                     
@@ -692,8 +693,9 @@ $p = 0;
                         if($module == 1)
                         {
                             ?>
-                                <td><?php echo $charge;?></td>
-                                <td><?php echo $amoun;?></td>
+                                <!--<td><?php echo $charge;?></td>-->
+                                <td><input type="text" name="charge<?php echo $id?>" class='form-control' id="charge<?php echo $id?>" required="required" placeholder="charge" value="<?php echo $charge; ?>"  /></td>
+                                <td><?php echo number_format($amoun, 2);?></td>
                                 <td><input type="text" name="units_given<?php echo $id?>" class='form-control' id="units_given<?php echo $id?>" required="required" placeholder="units given" value="<?php echo $sum_units; ?>"  /></td>
                             <?php
                         }
@@ -762,7 +764,7 @@ $p = 0;
                         <td></td>
                         <td></td>
                         <td>Grand Total</td>
-                        <td><?php echo $total_visit_charge_amount;?></td>
+                        <td><?php echo number_format($total_visit_charge_amount, 2);?></td>
                         <td></td>
                         <td></td>
                         <td></td>

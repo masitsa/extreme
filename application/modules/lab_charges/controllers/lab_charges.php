@@ -97,9 +97,20 @@ class Lab_charges extends MX_Controller
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
+		$search_title = $this->session->userdata('tests_search_title');
 		
-		$data['title'] = 'Test List';
-		$v_data['title'] = 'Test List';
+		if(!empty($search_title))
+		{
+			$title = $search_title;
+		}
+		
+		else
+		{
+			$title = 'Test List';
+		}
+		
+		$data['title'] = $title;
+		$v_data['title'] = $title;
 		$v_data['module'] = 0;
 		
 		$data['content'] = $this->load->view('test_list', $v_data, true);
@@ -823,9 +834,50 @@ class Lab_charges extends MX_Controller
     	{
 
     	}
-
-    	
     }
-
+	
+	public function search_lab_test_results()
+	{
+		$visit_date_from = $this->input->post('visit_date_from');
+		$visit_date_to = $this->input->post('visit_date_to');
+		
+		$search_title = 'Showing reports for: ';
+		
+		if(!empty($visit_date_from) && !empty($visit_date_to))
+		{
+			$visit_date = ' AND visit_lab_test.created >= \''.$visit_date_from.'\' AND visit_lab_test.created <= \''.$visit_date_to.'\'';
+			$search_title .= 'Date from '.date('jS M Y', strtotime($visit_date_from)).' to '.date('jS M Y', strtotime($visit_date_to)).' ';
+		}
+		
+		else if(!empty($visit_date_from))
+		{
+			$visit_date = ' AND visit_lab_test.created = \''.$visit_date_from.'\'';
+			$search_title .= 'Payments of '.date('jS M Y', strtotime($visit_date_from)).' ';
+		}
+		
+		else if(!empty($visit_date_to))
+		{
+			$visit_date = ' AND visit_lab_test.created = \''.$visit_date_to.'\'';
+			$search_title .= 'Payments of '.date('jS M Y', strtotime($visit_date_to)).' ';
+		}
+		
+		else
+		{
+			$visit_date = '';
+		}
+		
+		$search = $visit_date;
+		$this->session->unset_userdata('tests_report_search');
+		
+		$this->session->set_userdata('tests_report_search', $search);
+		$this->session->set_userdata('tests_search_title', $search_title);
+		
+		redirect('laboratory-setup/tests');
+	}
+	
+	public function export_results()
+	{
+		$this->lab_charges_model->export_results();
+	}
 }
 ?>

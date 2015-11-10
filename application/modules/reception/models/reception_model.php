@@ -2530,7 +2530,7 @@ class Reception_model extends CI_Model
 		$date = date('Y-m-d');
 
 		$this->db->select('visit_id');
-		$this->db->where('visit_date = "'.$date.'"');
+		$this->db->where('visit_date < "'.$date.'" AND close_card = 0');
 		$query = $this->db->get('visit');
 
 		if($query->num_rows() > 0)

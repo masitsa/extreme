@@ -1107,12 +1107,24 @@ class Reports extends MX_Controller
 		$v_data['total_cash_collection'] = $this->reports_model->get_total_cash_collection($where2, $table, 'cash');
 		
 		//count outpatient visits
-		$where2 = $where.' AND visit.inpatient = 0';
-		$v_data['outpatients'] = $this->reports_model->count_items($table, $where2);
+		$cash_report_patients = $this->session->userdata('cash_report_patients');
+		
+		if(!empty($cash_report_patients))
+		{
+			$where2 = $cash_report_patients.' AND visit.branch_code = \''.$branch_code.'\'';
+		}
+		
+		else
+		{
+			$where2 = 'visit.visit_date = "'.date('Y-m-d').'" AND visit.branch_code = \''.$branch_code.'\'';
+		}
+		$where3 = $where2.' AND visit.inpatient = 0';
+		$table2 = 'visit';
+		$v_data['outpatients'] = $this->reports_model->count_items($table2, $where3);
 		
 		//count inpatient visits
-		$where2 = $where.' AND visit.inpatient = 1';
-		$v_data['inpatients'] = $this->reports_model->count_items($table, $where2);
+		$where3 = $where2.' AND visit.inpatient = 1';
+		$v_data['inpatients'] = $this->reports_model->count_items($table2, $where3);
 
 		$v_data['total_patients'] = $v_data['inpatients'] + $v_data['outpatients'];
 		
@@ -1191,30 +1203,36 @@ class Reports extends MX_Controller
 		{
 			$visit_date = ' AND payments.payment_created BETWEEN \''.$visit_date_from.'\' AND \''.$visit_date_to.'\'';
 			$search_title .= ' from '.date('jS M Y', strtotime($visit_date_from)).' to '.date('jS M Y', strtotime($visit_date_to)).' ';
+			$patients_date = 'visit.visit_date >= \''.$visit_date_from.'\' AND visit.visit_date <= \''.$visit_date_to.'\'';
 		}
 		
 		else if(!empty($visit_date_from) AND $visit_date_from != "_")
 		{
 			$visit_date = ' AND payments.payment_created = \''.$visit_date_from.'\'';
+			$patients_date = 'visit.visit_date = \''.$visit_date_from.'\'';
 			$search_title .= ''.date('jS M Y', strtotime($visit_date_from)).' ';
 		}
 		
 		else if(!empty($visit_date_to) AND $visit_date_to != "_")
 		{
 			$visit_date = ' AND payments.payment_created = \''.$visit_date_to.'\'';
+			$patients_date = 'visit.visit_date = \''.$visit_date_to.'\'';
 			$search_title .= ''.date('jS M Y', strtotime($visit_date_to)).' ';
 		}
 		
 		else
 		{
 			$visit_date = '';
+			$patients_date = '';
 		}
 
 		$search = $visit_type_id2.$visit_date.$personnel_id2;
 
 		$this->session->unset_userdata('cash_report_search');
+		$this->session->unset_userdata('cash_report_patients');
 		
 		$this->session->set_userdata('cash_report_search', $search);
+		$this->session->set_userdata('cash_report_patients', $patients_date);
 		$this->session->set_userdata('cash_search_title', $search_title);
 		
 		$this->cash_report();

@@ -8,11 +8,43 @@
         <div class="padd">
             <form id="petty_cash_search" method="post">
             <div class="row">
-                <div class="col-sm-4">
+                
+                <div class="col-sm-6">
                     <div class="form-group">
-                        <label class="col-sm-4 control-label">Branch: </label>
+                        <label class="col-lg-4 control-label">Date from: </label>
                         
-                        <div class="col-sm-8">
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <input type="date" class="form-control" name="date_from" placeholder="Date from">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-sm-6">
+                    
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Date to: </label>
+                        
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <input type="date" class="form-control" name="date_to" placeholder="Date to">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Branch: </label>
+                        
+                        <div class="col-lg-8">
                             <select class="form-control" name="branch_code">
                                 <option value="_">---Select branch---</option>
                                 <?php
@@ -29,40 +61,12 @@
                     </div>
                 </div>
                 
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label class="col-sm-4 control-label">Date from: </label>
-                        
-                        <div class="col-sm-8">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
-                                </span>
-                                <input type="date" class="form-control" name="date_from" placeholder="Date from">
-                            </div>
-                        </div>
+                <div class="col-sm-6">
+                    <br>
+                    <div class="center-align">
+                        <button type="submit" class="btn btn-info btn-sm">Search</button>
                     </div>
                 </div>
-                
-                <div class="col-sm-4">
-                    
-                    <div class="form-group">
-                        <label class="col-sm-4 control-label">Date to: </label>
-                        
-                        <div class="col-sm-8">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
-                                </span>
-                                <input type="date" class="form-control" name="date_to" placeholder="Date to">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <div class="center-align">
-                <button type="submit" class="btn btn-info btn-sm">Search</button>
             </div>
             </form>
         </div>

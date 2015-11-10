@@ -12,11 +12,46 @@
 					<div class="panel-body">
 					<form id="cash_search" method="post">
 						<div class="row">
-							<div class="col-sm-4">
+							
+							<div class="col-sm-6">
+								
 								<div class="form-group">
-									<label class="col-sm-4 control-label">Visit Type: </label>
+									<label class="col-lg-4 control-label">Visit Date From: </label>
 									
-									<div class="col-sm-8">
+									<div class="col-lg-8">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i class="fa fa-calendar"></i>
+											</span>
+											<input type="date" class="form-control" name="visit_date_from" placeholder="Visit Date From">
+										</div>
+									</div>
+								</div>
+
+							</div>
+							
+							<div class="col-sm-6">
+								
+								<div class="form-group">
+									<label class="col-lg-4 control-label">Visit Date To: </label>
+									
+									<div class="col-lg-8">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i class="fa fa-calendar"></i>
+											</span>
+											<input type="date" class="form-control" name="visit_date_to" placeholder="Visit Date To">
+										</div>
+									</div>
+								</div>
+
+							</div>
+                            
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-lg-4 control-label">Visit Type: </label>
+									
+									<div class="col-lg-8">
 										<select class="form-control" name="visit_type_id">
 											<option value="_">---Select Visit Type---</option>
 											<?php
@@ -35,42 +70,12 @@
 
 							</div>
 							
-							<div class="col-sm-4">
+							<div class="col-sm-6">
 								
 								<div class="form-group">
-									<label class="col-sm-4 control-label">Visit Date From: </label>
+									<label class="col-lg-4 control-label">Branch: </label>
 									
-									<div class="col-sm-8">
-										<div class="input-group">
-											<span class="input-group-addon">
-												<i class="fa fa-calendar"></i>
-											</span>
-											<input type="date" class="form-control" name="visit_date_from" placeholder="Visit Date From">
-										</div>
-									</div>
-								</div>
-								
-								<div class="form-group">
-									<label class="col-sm-4 control-label">Visit Date To: </label>
-									
-									<div class="col-sm-8">
-										<div class="input-group">
-											<span class="input-group-addon">
-												<i class="fa fa-calendar"></i>
-											</span>
-											<input type="date" class="form-control" name="visit_date_to" placeholder="Visit Date To">
-										</div>
-									</div>
-								</div>
-								
-							</div>
-							
-							<div class="col-sm-4">
-								
-								<div class="form-group">
-									<label class="col-sm-4 control-label">Branch: </label>
-									
-									<div class="col-sm-8">
+									<div class="col-lg-8">
 										<select class="form-control" name="branch_code">
 											<option value="_">---Select branch---</option>
 											<?php
