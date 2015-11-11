@@ -418,7 +418,7 @@ function display_procedure(visit_id){
     }
     
     var config_url = document.getElementById("config_url").value;
-    var url = config_url+"nurse/view_procedure/"+visit_id;
+    var url = config_url+"doctor/inpatient/view_procedure/"+visit_id;
     
     if(XMLHttpRequestObject) {
                 
