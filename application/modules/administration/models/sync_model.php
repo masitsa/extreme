@@ -5,7 +5,7 @@ class Sync_model extends CI_Model
 	{
 		// get the patient id and the branch id and patient
 		$patient_details = $this->sync_model->get_table_details($visit_id);
-		
+		// var_dump($patient_details); die();
 		if(count($patient_details) > 0)
 		{
 			// $url = 'http://localhost/erp/cloud/save_cloud_data';
