@@ -84,7 +84,7 @@ class Accounts extends MX_Controller
 		
 		$table = 'visit_department, visit, patients, visit_type';
 		
-		$visit_search = $this->session->userdata('visit_search');
+		$visit_search = $this->session->userdata('visit_accounts_search');
 		
 		if(!empty($visit_search))
 		{
@@ -213,6 +213,7 @@ class Accounts extends MX_Controller
 		$other_name .= ') ';
 		
 		$search = $visit_type_id.$surname.$other_name.$visit_date.$personnel_id;
+		$this->session->unset_userdata('visit_accounts_search');
 		$this->session->set_userdata('visit_accounts_search', $search);
 		if($pager == 1)
 		{

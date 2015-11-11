@@ -350,7 +350,7 @@ class Lab_charges_model extends CI_Model
 	}
 	function get_tests_revenue($lab_test_id)
 	{
-		$where = 'service_charge.service_charge_id = visit_charge.service_charge_id AND service_charge.service_charge_id = visit_lab_test.service_charge_id AND service_charge.lab_test_id = \''.$lab_test_id.'\'';
+		$where = 'visit_lab_test.visit_lab_test_id = visit_charge.visit_lab_test_id AND service_charge.service_charge_id = visit_lab_test.service_charge_id AND service_charge.lab_test_id = \''.$lab_test_id.'\'';
 		//$where = 'service_charge.service_charge_id = visit_charge.service_charge_id AND service_charge.lab_test_id = \''.$lab_test_id.'\'';
 		$search = $this->session->userdata('tests_report_search');
 		if(!empty($search))

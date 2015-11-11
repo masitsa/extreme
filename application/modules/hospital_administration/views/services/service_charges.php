@@ -44,15 +44,18 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-	 <section class="panel">
-	    <header class="panel-heading">
-	        <h2 class="panel-title">Unsynced Drugs</h2>
-	    </header>     
-	     <!-- Widget content -->
-	    <div class="panel-body">
 		<?php
+		$result_two = "";
 		if($department_id == 5)
 		{
+			?>
+             <section class="panel">
+                <header class="panel-heading">
+                    <h2 class="panel-title">Unsynced Drugs</h2>
+                </header>     
+                 <!-- Widget content -->
+                <div class="panel-body">
+            <?php
 			// get all unsyned products from pharmacy
 
 			$unsyned_rs = $this->services_model->get_unsynced_pharmacy_charges();
@@ -103,15 +106,18 @@
 		
 		else
 		{
-			$result_two .= "There are no service charges to be synced";
+			$result_two = "There are no service charges to be synced";
 		}
+		?>
+        
+		</div>
+	</section>
+        <?php
 	}
 		?>
         <?php echo $result_two; ?>
-		</div>
-	</section>
 </div>
-
+</div>
 <div class="row">
     <div class="col-md-12">
 
