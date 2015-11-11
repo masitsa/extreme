@@ -18,112 +18,59 @@ if(!empty($procedure_search))
 }
 
 $table = 'service_charge,visit_type,service, departments';
-//pagination
-$this->load->library('pagination');
-$config['base_url'] = site_url().'nurse/procedures/'.$visit_id;
-$config['total_rows'] = $this->reception_model->count_items($table, $where);
-$config['uri_segment'] = 4;
-$config['per_page'] = 15;
-$config['num_links'] = 5;
+$config["per_page"] = 0;
+$procedure_query = $this->nurse_model->get_other_procedures($table, $where, $order);
 
-$config['full_tag_open'] = '<ul class="pagination pull-right">';
-$config['full_tag_close'] = '</ul>';
+$rs9 = $procedure_query->result();
+$procedures = '';
+foreach ($rs9 as $rs10) :
 
-$config['first_tag_open'] = '<li>';
-$config['first_tag_close'] = '</li>';
 
-$config['last_tag_open'] = '<li>';
-$config['last_tag_close'] = '</li>';
+$procedure_id = $rs10->service_charge_id;
+$proced = $rs10->service_charge_name;
+$visit_type = $rs10->visit_type_id;
+$visit_type_name = $rs10->visit_type_name;
 
-$config['next_tag_open'] = '<li>';
-$config['next_link'] = 'Next';
-$config['next_tag_close'] = '</span>';
+$stud = $rs10->service_charge_amount;
+    $procedures .= "'".$proced." KES. ".$stud."',";
 
-$config['prev_tag_open'] = '<li>';
-$config['prev_link'] = 'Prev';
-$config['prev_tag_close'] = '</li>';
+endforeach;
 
-$config['cur_tag_open'] = '<li class="active"><a href="#">';
-$config['cur_tag_close'] = '</a></li>';
 
-$config['num_tag_open'] = '<li>';
-$config['num_tag_close'] = '</li>';
-$this->pagination->initialize($config);
-
-$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-$v_data["links"] = $this->pagination->create_links();
-$query = $this->nurse_model->get_procedures($table, $where, $config["per_page"], $page, $order);
 
 
 ?>
+
+ <script>
+  $(function() {
+    var availableTags = [
+      <?php echo $procedures;?>
+    ];
+    $( "#tags" ).autocomplete({
+      source: availableTags
+    });
+  });
+  </script>
 <div class="row">
     <div class="col-md-12"> 
+
         <section class="panel panel-featured panel-featured-info">
             <header class="panel-heading">
                 <h2 class="panel-title">Procedures</h2>
             </header>
             <div class="panel-body">
-                <center>
-                  <h2>
-                    InstaFlix
-                  </h2>
-                </center>
-                <div class="col-lg-12">
-                  <input type="search" class="form-control" id="input-search" placeholder="Search For Movie..." >
+                <div class="col-lg-6">
+                  <input type="search" class="form-control" id="tags" placeholder="Search For Procedure..." >
                 </div>
-                <br>
-                <br>
-                <br>
-                <div class="searchable-container">
+                <div class="col-lg-6">
+                 <a href="#" onClick="procedures(<?php echo $procedure_id?>,<?php echo $visit_id?>,<?php echo $suck; ?>)"><?php echo $proced?> </a></td>
+                </div>
 
-                <table border="0" class="table table-hover table-condensed">
-                    <thead> 
-                        <th> </th>
-                        <th>Procedure</th>
-                        <th>Patient Type</th>
-                        <th>Cost</th>
-                    </thead>
-        
-                    <?php 
-                    //echo "current - ".$current_item."end - ".$end_item;
-                    
-                    $rs9 = $query->result();
-                    var_dump($rs9);
-                    foreach ($rs9 as $rs10) :
-                    
-                    
-                    $procedure_id = $rs10->service_charge_id;
-                    $proced = $rs10->service_charge_name;
-                    $visit_type = $rs10->visit_type_id;
-                    $visit_type_name = $rs10->visit_type_name;
-                    
-                    $stud = $rs10->service_charge_amount;
-                    
-                    ?>
-                    <tr class="items clearfix">
-                        <td></td>
-                        
-                        <td> <?php $suck=1; ?>                
-                        <a href="#" onClick="procedures(<?php echo $procedure_id?>,<?php echo $visit_id?>,<?php echo $suck; ?>)"><?php echo $proced?> </a></td>
-                        <td><?php echo $visit_type_name;?></td>
-                        <td><?php echo $stud?></td>
-                    </tr>
-                    <?php endforeach;?>
-                </table>
-          
-            </div>
-            <div class="widget-foot">
-                                
-                <?php if(isset($links)){echo $links;}?>
-            
-                <div class="clearfix"></div> 
-            
             </div>
                      
-                <div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Procedure' onclick='myPopup3(<?php echo $visit_id; ?>)'/></p></div>
-                <!-- visit Procedures from java script -->
-                <div id="procedures"></div>
-                <!-- end of visit procedures -->
+           <!-- visit Procedures from java script -->
+            <div id="procedures"></div>
+            <!-- end of visit procedures -->
             </div>
          </section>
     </div>
@@ -144,7 +91,9 @@ $query = $this->nurse_model->get_procedures($table, $where, $config["per_page"],
          </section>
     </div>
 </div>
+
 <script type="text/javascript">
+
     
      $(function() {    
         $('#input-search').on('keyup', function() {
@@ -155,4 +104,63 @@ $query = $this->nurse_model->get_procedures($table, $where, $config["per_page"],
             }).show();
         });
     });
+
+    function procedures(id, v_id, suck){
+   
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    var url = "<?php echo site_url();?>nurse/procedure/"+id+"/"+v_id+"/"+suck;
+   
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                window.close(this);
+                
+                window.opener.document.getElementById("procedures").innerHTML=XMLHttpRequestObject.responseText;
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
 </script>
+
+<?php
+// $order = 'diseases_id';
+        
+// $where = 'diseases_id > 0 ';
+// $table = 'diseases';
+// // $procedure_query = $this->nurse_model->get_procedures($table, $where, $config["per_page"], $order);
+// $config["per_page"] = 0;
+// $page = 0;
+// $query = $this->nurse_model->get_diseases($table, $where, $config["per_page"], $page, $order);
+
+// $rs9 = $query->result();
+// $procedures = '';
+// // var_dump($query->result());
+// foreach ($rs9 as $rs10) :
+
+
+// $diseases_name = $rs10->diseases_name;
+// $diseases_name =  str_replace(","," ", $diseases_name);
+// $diseases_name =  str_replace("[","", $diseases_name);
+// $diseases_name =  str_replace("]","", $diseases_name);
+// $diseases_name =  str_replace("'","", $diseases_name);
+
+//     $procedures .= "'".$diseases_name."',";
+
+// endforeach;
+?>

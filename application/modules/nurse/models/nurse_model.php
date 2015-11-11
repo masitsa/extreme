@@ -306,6 +306,17 @@ class Nurse_model extends CI_Model
 		
 		return $query;
 	}
+	public function get_other_procedures($table, $where, $order)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by($order,'asc');
+		$query = $this->db->get('');
+		
+		return $query;
+	}
 	public function get_vaccines_list($table, $where, $per_page, $page, $order)
 	{
 		//retrieve all users

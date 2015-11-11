@@ -10,11 +10,12 @@ class Cron  extends MX_Controller
 	
 	public function sync_visits()
 	{
-		$this->db->where('close_card', '1');
-		$query = $this->db->get('visit');
 		
+		$date = date('Y-m-d');
 		//Sync KDP
 		$this->session->set_userdata('branch_code', 'KDP');
+		$this->db->where('branch_code = "'.$this->session->userdata('branch_code').'" AND visit_date = "'.$date.'"');
+		$query = $this->db->get('visit');
 		
 		if($query->num_rows() > 0)
 		{
@@ -30,6 +31,9 @@ class Cron  extends MX_Controller
 		
 		//Sync KDPH
 		$this->session->set_userdata('branch_code', 'KDPH');
+
+		$this->db->where('branch_code = "'.$this->session->userdata('branch_code').'" AND visit_date = "'.$date.'"');
+		$query = $this->db->get('visit');
 		
 		if($query->num_rows() > 0)
 		{
