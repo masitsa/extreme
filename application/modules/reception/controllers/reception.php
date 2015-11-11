@@ -332,7 +332,7 @@ class Reception  extends MX_Controller
 			$where .= ' AND visit.personnel_id = '.$this->session->userdata('personnel_id');
 		}
 		
-		if($page_name != 'accounts')
+		if(($page_name != 'accounts') && ($page_name != 'doctor'))
 		{
 			$where .= ' AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
 		}

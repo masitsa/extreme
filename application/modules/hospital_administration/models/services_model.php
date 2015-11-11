@@ -166,10 +166,22 @@ class Services_model extends CI_Model
 	public function delete_service($service_id)
 	{
 		$data['service_delete'] = 1;
+		
+		//delete service charges
+		
 		$this->db->where('service_id', $service_id);
-		if($this->db->update('service', $data))
+		if($this->db->delete('service_charge'))
 		{
-			return TRUE;
+			$this->db->where('service_id', $service_id);
+			if($this->db->update('service', $data))
+			{
+				return TRUE;
+			}
+			
+			else
+			{
+				return FALSE;
+			}
 		}
 		
 		else
