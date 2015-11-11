@@ -120,7 +120,6 @@ class Branches extends admin
 		//form validation rules
 		$this->form_validation->set_rules('branch_name', 'Branch name', 'required|xss_clean');
 		$this->form_validation->set_rules('branch_phone', 'Phone', 'xss_clean');
-		$this->form_validation->set_rules('branch_email', 'Email', 'xss_clean');
 		$this->form_validation->set_rules('branch_email', 'Email', 'valid_email|xss_clean');
 		$this->form_validation->set_rules('branch_working_weekday', 'Weekday working hours', 'xss_clean');
 		$this->form_validation->set_rules('branch_working_weekend', 'Weekend working hours', 'xss_clean');

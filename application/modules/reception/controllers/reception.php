@@ -179,6 +179,11 @@ class Reception  extends MX_Controller
 		{
 			$where = 'visit.visit_delete = '.$delete.' AND visit.patient_id = patients.patient_id AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
 			
+			if($page_name = 'doctor')
+			{
+				$where .= ' AND visit.personnel_id = '.$this->session->userdata('personnel_id');
+			}
+			
 			//terminated visits
 			if($visits == 1)
 			{
@@ -320,7 +325,17 @@ class Reception  extends MX_Controller
 	{
 		$segment = 4;
 		// AND visit.visit_date = \''.date('Y-m-d').'\'
-		$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit_type.visit_type_id = visit.visit_type AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
+		$where = 'visit.inpatient = 0 AND visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit_type.visit_type_id = visit.visit_type AND visit.visit_date = \''.date('Y-m-d').'\'';
+		
+		if($page_name == 'doctor')
+		{
+			$where .= ' AND visit.personnel_id = '.$this->session->userdata('personnel_id');
+		}
+		
+		if($page_name != 'accounts')
+		{
+			$where .= ' AND visit.branch_code = \''.$this->session->userdata('branch_code').'\'';
+		}
 		
 		if(($page_name == 'laboratory') || ($page_name == 'radiology') || ($page_name == 'pharmacy'))
 		{

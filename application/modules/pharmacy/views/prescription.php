@@ -659,6 +659,7 @@ $p = 0;
 
                         $rsf = $this->pharmacy_model->select_invoice_drugs($visit_id,$service_charge_id);
                         $num_rowsf = count($rsf);
+						$sum_units = 0;
                         foreach ($rsf as $key_price):
                             $sum_units = $key_price->visit_charge_units;
                             $charge = $key_price->visit_charge_amount;

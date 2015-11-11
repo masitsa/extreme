@@ -22,11 +22,11 @@ class Nurse  extends MX_Controller
 		$this->load->model('theatre/theatre_model');
 		
 		//removed because doctors loose notes
-		/*$this->load->model('auth/auth_model');
+		$this->load->model('auth/auth_model');
 		if(!$this->auth_model->check_login())
 		{
 			redirect('login');
-		}*/
+		}
 	}
 	
 	public function index()
