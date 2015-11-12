@@ -60,18 +60,29 @@ endforeach;
             </header>
             <div class="panel-body">
                 <div class="col-lg-6">
-                  <input type="search" class="form-control" id="tags" placeholder="Search For Procedure..." >
+                  <!-- <input type="search" class="form-control" id="tags" placeholder="Search For Procedure..." > -->
+                
                 </div>
                 <div class="col-lg-6">
-                 <a href="#" onClick="procedures(<?php echo $procedure_id?>,<?php echo $visit_id?>,<?php echo $suck; ?>)"><?php echo $proced?> </a></td>
+                  <div class="form-group">
+                  <select id="lunchBegins" class="selectpicker" data-live-search="true" data-live-search-style="begins" title="Please select a lunch ...">
+                    <option>Hot Dog, Fries and a Soda</option>
+                    <option>Burger, Shake and a Smile</option>
+                    <option>Sugar, Spice and all things nice</option>
+                    <option>Baby Back Ribs</option>
+                    <option>A really really long option made to illustrate an issue with the live search in an inline form</option>
+                  </select>
+                </div>
                 </div>
 
             </div>
+
+
                      
            <!-- visit Procedures from java script -->
             <div id="procedures"></div>
             <!-- end of visit procedures -->
-            </div>
+            
          </section>
     </div>
 </div>
@@ -91,7 +102,6 @@ endforeach;
          </section>
     </div>
 </div>
-
 <script type="text/javascript">
 
     
