@@ -25,6 +25,13 @@ class Administration  extends MX_Controller
 		}
 	}
 	
+	public function textarea()
+	{
+		$data['title'] = 'Textarea';
+		$data['content'] = $this->load->view('textarea', '', TRUE);
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	
 	public function index()
 	{
 		$this->session->unset_userdata('all_transactions_search');
