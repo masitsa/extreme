@@ -228,6 +228,13 @@ class Inpatient extends MX_Controller {
 
 		echo json_encode($response);
 	}
+	public function view_procedure($visit_id){
+		//check patient visit type
+		
+		$v_data['visit_id'] = $visit_id;
+		$this->load->view('view_procedure', $v_data);
+		
+	}
 
 
 }

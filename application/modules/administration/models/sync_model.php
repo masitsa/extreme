@@ -205,14 +205,14 @@ class Sync_model extends CI_Model
 				
 				if($sync_table_name == 'patients')
 				{
-					$where = 'visit.patient_id = patients.patient_id AND visit.branch_code = "'.$this->session->userdata('branch_code').'" AND visit.visit_id = '.$visit_id;
-
+					$where = 'visit.patient_id = patients.patient_id AND patients.branch_code = "'.$this->session->userdata('branch_code').'"  AND visit.branch_code = "'.$this->session->userdata('branch_code').'" AND visit.visit_id = '.$visit_id;
+					// var_dump($where); die();
 					$this->db->where($where);
 					$this->db->select('patients.*');
 					$query_patients = $this->db->get('patients,visit');
 
 					$patients[$sync_table_name] = array();
-
+					// var_dump($where); die();
 					if($query_patients->num_rows() > 0)
 					{
 						foreach ($query_patients->result() as $value) {
@@ -354,7 +354,10 @@ class Sync_model extends CI_Model
 	}
 	public function get_all_tables_sync()
 	{
-		$this->db->where('branch_code ="'.$this->session->userdata('branch_code').'" AND sync_table_status = 1');
+		$where = 'branch_code = "'.$this->session->userdata('branch_code').'" AND sync_table_status = 1';
+
+		$this->db->where($where);
+
 		$query = $this->db->get('sync_table');
 
 		return $query;
