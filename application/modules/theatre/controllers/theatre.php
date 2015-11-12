@@ -392,6 +392,23 @@ class Theatre  extends MX_Controller
 		$this->load->view('test_surgery', $data);
 	}
 
+	public function test_orthopaedic_surgery($visit_id, $service_charge_id=NULL){
+		$data = array('service_charge_id' => $service_charge_id, 'visit_id' => $visit_id);
+		$this->load->view('test_orthopaedic_surgery', $data);
+	}
+	public function test_opthamology_surgery($visit_id, $service_charge_id=NULL){
+		$data = array('service_charge_id' => $service_charge_id, 'visit_id' => $visit_id);
+		$this->load->view('test_opthamology_surgery', $data);
+	}
+	public function test_obstetrics_surgery($visit_id, $service_charge_id=NULL){
+		$data = array('service_charge_id' => $service_charge_id, 'visit_id' => $visit_id);
+		$this->load->view('test_obstetrics_surgery', $data);
+	}
+	public function test_theatre_procedures($visit_id, $service_charge_id=NULL){
+		$data = array('service_charge_id' => $service_charge_id, 'visit_id' => $visit_id);
+		$this->load->view('test_theatre_procedures', $data);
+	}
+
 	public function test2($visit_id){
 		$data = array('visit_id' => $visit_id);
 		$this->load->view('tests/test2', $data);
@@ -402,5 +419,10 @@ class Theatre  extends MX_Controller
 		$this->theatre_model->delete_visit_theatre($visit_charge_id);
 		
 		$this->test_surgery($visit_id);
+	}
+
+	public function delete_inpatient_cost($visit_charge_id, $visit_id)
+	{
+		$this->theatre_model->delete_visit_theatre($visit_charge_id);
 	}
 }

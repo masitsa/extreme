@@ -184,14 +184,24 @@ $(document).ready(function(){
                 previous_vitals(visit_id);
                 // get_family_history(visit_id);
                 // nurse_notes(visit_id);
-                // patient_details(visit_id);
+                 get_xray_table(visit_id);
+                 get_ultrasound_table(visit_id);
+
+
+                 // suregies
+                get_orthopaedic_surgery_table(visit_id);
+                get_opthamology_surgery_table(visit_id);
+                get_obstetrics_surgery_table(visit_id);
+                get_theatre_procedures_table(visit_id);
+
 				display_procedure(visit_id);
 				get_medication(visit_id);
-				// get_surgeries(visit_id);
+				get_lab_table(visit_id);
 				get_vaccines(visit_id);
 				display_vaccines(visit_id);
 				display_visit_vaccines(visit_id);
                 display_visit_consumables(visit_id);
+
             }
         }
                 
@@ -1205,3 +1215,332 @@ function save_vaccine(vaccine_id, value, visit_id){
 </script>
 
 
+<!-- soap items -->
+<script type="text/javascript">
+    function get_lab_table(visit_id){
+        var XMLHttpRequestObject = false;
+            
+        if (window.XMLHttpRequest) {
+        
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+            
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var url = "<?php echo site_url();?>laboratory/test_lab/"+visit_id;
+    
+        if(XMLHttpRequestObject) {
+                    
+            XMLHttpRequestObject.open("GET", url);
+                    
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                    
+                    document.getElementById("lab_table").innerHTML = XMLHttpRequestObject.responseText;
+                }
+            }
+            
+            XMLHttpRequestObject.send(null);
+        }
+    }
+    function get_xray_table(visit_id){
+        var XMLHttpRequestObject = false;
+            
+        if (window.XMLHttpRequest) {
+        
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+            
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var url = "<?php echo site_url();?>radiology/xray/test_xray/"+visit_id;
+        
+        if(XMLHttpRequestObject) {
+                    
+            XMLHttpRequestObject.open("GET", url);
+                    
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                    
+                    document.getElementById("xray_table").innerHTML = XMLHttpRequestObject.responseText;
+                }
+            }
+            
+            XMLHttpRequestObject.send(null);
+        }
+    }
+     function get_ultrasound_table(visit_id){
+        var XMLHttpRequestObject = false;
+            
+        if (window.XMLHttpRequest) {
+        
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+            
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var url = "<?php echo site_url();?>radiology/ultrasound/test_ultrasound/"+visit_id;
+        
+        if(XMLHttpRequestObject) {
+                    
+            XMLHttpRequestObject.open("GET", url);
+                    
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                    
+                    document.getElementById("ultrasound_table").innerHTML = XMLHttpRequestObject.responseText;
+                }
+            }
+            
+            XMLHttpRequestObject.send(null);
+        }
+    }
+    function get_orthopaedic_surgery_table(visit_id){
+        var XMLHttpRequestObject = false;
+            
+        if (window.XMLHttpRequest) {
+        
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+            
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var url = "<?php echo site_url();?>theatre/test_orthopaedic_surgery/"+visit_id;
+        
+        if(XMLHttpRequestObject) {
+                    
+            XMLHttpRequestObject.open("GET", url);
+                    
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                    
+                    document.getElementById("orthopaedic_surgery_table").innerHTML = XMLHttpRequestObject.responseText;
+                }
+            }
+            
+            XMLHttpRequestObject.send(null);
+        }
+    }
+    function get_opthamology_surgery_table(visit_id){
+        var XMLHttpRequestObject = false;
+            
+        if (window.XMLHttpRequest) {
+        
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+            
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var url = "<?php echo site_url();?>theatre/test_opthamology_surgery/"+visit_id;
+        
+        if(XMLHttpRequestObject) {
+                    
+            XMLHttpRequestObject.open("GET", url);
+                    
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                    
+                    document.getElementById("opthamology_surgery_table").innerHTML = XMLHttpRequestObject.responseText;
+                }
+            }
+            
+            XMLHttpRequestObject.send(null);
+        }
+    }
+    function get_obstetrics_surgery_table(visit_id){
+        var XMLHttpRequestObject = false;
+            
+        if (window.XMLHttpRequest) {
+        
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+            
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var url = "<?php echo site_url();?>theatre/test_obstetrics_surgery/"+visit_id;
+        
+        if(XMLHttpRequestObject) {
+                    
+            XMLHttpRequestObject.open("GET", url);
+                    
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                    
+                    document.getElementById("obstetrics_surgery_table").innerHTML = XMLHttpRequestObject.responseText;
+                }
+            }
+            
+            XMLHttpRequestObject.send(null);
+        }
+    }
+    function get_theatre_procedures_table(visit_id){
+        var XMLHttpRequestObject = false;
+            
+        if (window.XMLHttpRequest) {
+        
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+            
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var url = "<?php echo site_url();?>theatre/test_theatre_procedures/"+visit_id;
+        
+        if(XMLHttpRequestObject) {
+                    
+            XMLHttpRequestObject.open("GET", url);
+                    
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                    
+                    document.getElementById("theatre_procedures_table").innerHTML = XMLHttpRequestObject.responseText;
+                }
+            }
+            
+            XMLHttpRequestObject.send(null);
+        }
+    }
+    // laboratory
+    function delete_cost(visit_charge_id, visit_id){
+  
+      var XMLHttpRequestObject = false;
+      
+      if (window.XMLHttpRequest) {
+        XMLHttpRequestObject = new XMLHttpRequest();
+      } 
+      
+      else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      var url = config_url+"laboratory/delete_cost/"+visit_charge_id+"/"+visit_id;
+      
+      if(XMLHttpRequestObject) {
+        var obj = document.getElementById("lab_table");
+        
+        XMLHttpRequestObject.open("GET", url);
+        
+        XMLHttpRequestObject.onreadystatechange = function(){
+          
+          if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+            
+            obj.innerHTML = XMLHttpRequestObject.responseText;
+            //window.location.href = config_url+"data/doctor/laboratory.php?visit_id="+visit_id;
+          }
+        }
+        XMLHttpRequestObject.send(null);
+      }
+    }
+    function delete_procedure(id, visit_id){
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+     var config_url = document.getElementById("config_url").value;
+    var url = config_url+"nurse/delete_procedure/"+id;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+                display_procedure(visit_id);
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
+
+function delete_ultrasound_cost(visit_charge_id, visit_id)
+{
+    var res = confirm('Are you sure you want to delete this charge?');
+    
+    if(res)
+    {
+        var XMLHttpRequestObject = false;
+        
+        if (window.XMLHttpRequest) {
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+        
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var url = config_url+"radiology/ultrasound/delete_cost/"+visit_charge_id+"/"+visit_id;
+        
+        if(XMLHttpRequestObject) {
+            var obj = document.getElementById("ultrasound_table");
+            
+            XMLHttpRequestObject.open("GET", url);
+            
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                    
+                    obj.innerHTML = XMLHttpRequestObject.responseText;
+                    get_ultrasound_table(visit_id);
+                }
+            }
+            XMLHttpRequestObject.send(null);
+        }
+    }
+}
+
+function delete_xray_cost(visit_charge_id, visit_id)
+{
+    var res = confirm('Are you sure you want to delete this charge?');
+    
+    if(res)
+    {
+        var XMLHttpRequestObject = false;
+        
+        if (window.XMLHttpRequest) {
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+        
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var url = config_url+"radiology/xray/delete_cost/"+visit_charge_id+"/"+visit_id;
+        
+        if(XMLHttpRequestObject) {
+            var obj = document.getElementById("xray_table");
+            
+            XMLHttpRequestObject.open("GET", url);
+            
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                    
+                    obj.innerHTML = XMLHttpRequestObject.responseText;
+                    window.location.href = host+"data/doctor/xray.php?visit_id="+visit_id;
+                }
+            }
+            XMLHttpRequestObject.send(null);
+        }
+    }
+}
+
+</script>

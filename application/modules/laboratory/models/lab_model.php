@@ -171,6 +171,17 @@ class Lab_model extends CI_Model
 		
 		return $query;
 	}
+	public function get_inpatient_lab_tests($table, $where, $order)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('service_charge.service_charge_amount, service_charge.service_charge_id, service_charge.service_charge_name, lab_test_class.lab_test_class_name');
+		$this->db->where($where);
+		$this->db->order_by($order,'asc');
+		$query = $this->db->get('');
+		
+		return $query;
+	}
 
 	function get_lab_test_id($service_charge_id){
 		$table = "service_charge";
