@@ -350,33 +350,39 @@ class Reports extends MX_Controller
 	}
 	public function petty_cash($date_from = NULL, $date_to = NULL)
 	{
-		$where = 'petty_cash.transaction_type_id = transaction_type.transaction_type_id';
+		$branch_code = $this->session->userdata('search_branch_code');
+		
+		if(empty($branch_code))
+		{
+			$branch_code = "OSH";
+		}
+		$where = 'petty_cash.transaction_type_id = transaction_type.transaction_type_id AND petty_cash.branch_code = \''.$branch_code.'\'';
 		$table = 'petty_cash, transaction_type';
 		
 		if(!empty($date_from) && !empty($date_to))
 		{
 			$where .= ' AND (petty_cash.petty_cash_date >= \''.$date_from.'\' AND petty_cash.petty_cash_date <= \''.$date_to.'\')';
 			//$where .= ' AND petty_cash.petty_cash_date BETWEEN \''.$date_from.'\' AND \'petty_cash.petty_cash_date <= '.$date_to.'\')';
-			$search_title = 'Petty cash from '.date('jS M Y', strtotime($date_from)).' to '.date('jS M Y', strtotime($date_to)).' ';
+			$search_title = $branch_code.' Petty cash from '.date('jS M Y', strtotime($date_from)).' to '.date('jS M Y', strtotime($date_to)).' ';
 		}
 		
 		else if(!empty($date_from))
 		{
 			$where .= ' AND petty_cash.petty_cash_date = \''.$date_from.'\'';
-			$search_title = 'Petty cash of '.date('jS M Y', strtotime($date_from)).' ';
+			$search_title = $branch_code.' Petty cash of '.date('jS M Y', strtotime($date_from)).' ';
 		}
 		
 		else if(!empty($date_to))
 		{
 			$where .= ' AND petty_cash.petty_cash_date = \''.$date_to.'\'';
-			$search_title = 'Petty cash of '.date('jS M Y', strtotime($date_to)).' ';
+			$search_title = $branch_code.' Petty cash of '.date('jS M Y', strtotime($date_to)).' ';
 		}
 		
 		else
 		{
 			$date_from = date('Y-m-01');
 			$where .= ' AND DATE_FORMAT(petty_cash.petty_cash_date, \'%m\') = \''.date('m').'\' AND DATE_FORMAT(petty_cash.petty_cash_date, \'%Y\') = \''.date('Y').'\'';
-			$search_title = 'Petty cash for the month of '.date('M Y').' ';
+			$search_title = $branch_code.' Petty cash for the month of '.date('M Y').' ';
 		}
 		
 		$v_data['balance_brought_forward'] = $this->petty_cash_model->calculate_balance_brought_forward($date_from);
@@ -396,10 +402,12 @@ class Reports extends MX_Controller
 		echo json_encode($newdata);
 	}
 
-	public function search_petty_cash($date_from = NULL, $date_to = NULL)
+	public function search_petty_cash($date_from = NULL, $date_to = NULL, $branch_code = NULL)
 	{
-		
-		
+		if(!empty($branch_code) AND ($branch_code != "_"))
+		{
+			$this->session->set_userdata('search_branch_code', $branch_code);
+		}
 		if(!empty($date_from) && !empty($date_to) AND $date_from != "_" AND $date_to != "_")
 		{
 			redirect('mobile/reports/petty_cash/'.$date_from.'/'.$date_to);

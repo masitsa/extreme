@@ -532,6 +532,7 @@ $route['cash-office/general-queue'] = 'reception/general_queue/accounts';
 $route['cash-office/closed-visits'] = 'accounts/accounts_closed_visits';
 $route['cash-office/inpatients'] = 'reception/inpatients/accounts';
 $route['cash-office/un-closed-visits'] = 'accounts/accounts_unclosed_queue';
+$route['accounts/un-closed-visits'] = 'accounts/accounts_unclosed_queue';
 
 
 /*
