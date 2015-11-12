@@ -123,9 +123,7 @@
                
                  <div class="tab-pane" id="previous-vitals">
                   <?php echo $this->load->view("patients/billing", '', TRUE);?>
-                  
                 </div>
-                
 
                  <div class="tab-pane" id="soap">
                   <?php echo $this->load->view("nurse/patients/soap", '', TRUE);?>
@@ -133,7 +131,6 @@
                 </div>
                  <div class="tab-pane" id="visit_trail">
                   <?php echo $this->load->view("nurse/patients/visit_trail", '', TRUE);?>
-                  
                 </div>
                 
               </div>

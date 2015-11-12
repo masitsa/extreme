@@ -338,7 +338,7 @@ class Nurse  extends MX_Controller
         		"added_by" => $this->session->userdata("personnel_id"),
         		"visit_id" => $visit_id,
         		"created" => date("Y-m-d")
-	    		);
+	    	);
 
 		$this->db->insert('nurse_patient_notes', $trail_data);
 		// end of things to do with the trail

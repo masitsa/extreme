@@ -42,14 +42,14 @@ endforeach;
 ?>
 
  <script>
-  $(function() {
+  /*$(function() {
     var availableTags = [
       <?php echo $procedures;?>
     ];
     $( "#tags" ).autocomplete({
       source: availableTags
     });
-  });
+  });*/
   </script>
 <div class="row">
     <div class="col-md-12"> 

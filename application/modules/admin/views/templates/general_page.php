@@ -109,6 +109,11 @@
         <script src="<?php echo base_url()."assets/bluish/"?>js/jquery.flot.pie.js"></script>
         <script src="<?php echo base_url()."assets/bluish/"?>js/jquery.flot.stack.js"></script>
         
-		<script src="<?php echo base_url()."assets/bluish";?>/js/jquery.cleditor.min.js"></script> <!-- CLEditor -->
+		<script type="text/javascript" src="<?php echo base_url();?>assets/themes/tinymce/tinymce.min.js"></script>
+        <script type="text/javascript">
+            tinymce.init({
+                selector: ".cleditor"
+            });
+        </script>
 	</body>
 </html>
