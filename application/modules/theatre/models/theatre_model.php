@@ -42,6 +42,18 @@ class Theatre_model extends CI_Model
 		
 		return $query;
 	}
+
+	public function get_inpatient_surgeries($table, $where,$order)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('service_charge.service_charge_amount, service_charge.service_charge_id, service_charge.service_charge_name');
+		$this->db->where($where);
+		$this->db->order_by($order,'ASC');
+		$query = $this->db->get('');
+		
+		return $query;
+	}
 	
 	function get_surgery_visit($visit_id, $service_charge_id=NULL){
 		$table = "visit_charge";
@@ -94,6 +106,18 @@ class Theatre_model extends CI_Model
 	{
 		$table = "visit_charge, service_charge, service";
 		$where = 'visit_charge_delete = 0 AND service.service_id = service_charge.service_id AND (service.service_name = "Surgery" OR service.service_name = "surgery") AND visit_charge_delete = 0 AND service_charge.service_charge_id = visit_charge.service_charge_id AND visit_charge.visit_id = '.$visit_id;
+		$items = "*";
+		$order = "visit_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+		
+	}
+	function get_surgery_inpatient($visit_id,$service_id)
+	{
+		$table = "visit_charge, service_charge, service";
+		$where = 'visit_charge_delete = 0 AND service.service_id = service_charge.service_id  AND visit_charge_delete = 0 AND service_charge.service_charge_id = visit_charge.service_charge_id AND service.service_id = '.$service_id.' AND visit_charge.visit_id = '.$visit_id;
 		$items = "*";
 		$order = "visit_id";
 		

@@ -157,6 +157,17 @@ class Ultrasound_model extends CI_Model
 		
 		return $query;
 	}
+	public function get_inpatient_ultrasounds($table, $where,$order)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('service_charge.service_charge_amount, service_charge.service_charge_id, service_charge.service_charge_name');
+		$this->db->where($where);
+		$this->db->order_by($order,'asc');
+		$query = $this->db->get('');
+		
+		return $query;
+	}
 
 	function get_ultrasound_visit_old($visit_id, $service_charge_id=NULL){
 		$table = "visit_charge";
