@@ -225,6 +225,20 @@ class Pharmacy_model extends CI_Model
 		
 		return $query;
 	}
+	public function get_inpatient_drugs($table, $where,$order)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('service_charge.service_charge_id, service_charge.visit_type_id,generic.generic_name, brand.brand_name, service_charge.service_charge_amount, service_charge.product_id , service_charge.service_charge_name,product.product_id,product.quantity,brand.brand_name');
+		$this->db->join('generic', 'product.generic_id = generic.generic_id', 'left');
+		$this->db->join('brand', 'product.brand_id = brand.brand_id', 'left');
+		$this->db->where($where);
+		$this->db->order_by($order,'asc');
+		$query = $this->db->get('');
+		
+		return $query;
+	}
+
 	
 	public function save_prescription($visit_id,$module)
 	{

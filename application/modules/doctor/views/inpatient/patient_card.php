@@ -201,6 +201,7 @@ $(document).ready(function(){
 				display_vaccines(visit_id);
 				display_visit_vaccines(visit_id);
                 display_visit_consumables(visit_id);
+                display_inpatient_prescription(visit_id,1);
 
             }
         }
@@ -1535,11 +1536,43 @@ function delete_xray_cost(visit_charge_id, visit_id)
                 if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
                     
                     obj.innerHTML = XMLHttpRequestObject.responseText;
-                    window.location.href = host+"data/doctor/xray.php?visit_id="+visit_id;
+                    get_xray_table(visit_id);
                 }
             }
             XMLHttpRequestObject.send(null);
         }
+    }
+}
+
+function display_inpatient_prescription(visit_id,module){
+
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    var config_url = document.getElementById("config_url").value;
+    var url = config_url+"pharmacy/display_inpatient_prescription/"+visit_id+"/"+module;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+                document.getElementById("visit_prescription").innerHTML=XMLHttpRequestObject.responseText;
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
     }
 }
 

@@ -224,6 +224,32 @@ foreach ($rs14 as $theatre_rs) :
 endforeach;
 
 // end of surgeries
+
+
+
+$drugs_order = 'product.product_name'; 
+$drugs_where = 'product.product_id = service_charge.product_id  AND service_charge.service_id = service.service_id AND (service.service_name = "Pharmacy" OR service.service_name = "pharmacy") AND service_charge.visit_type_id = '.$visit_t;
+$drugs_table = 'product, service_charge, service';
+$drug_query = $this->pharmacy_model->get_inpatient_drugs($drugs_table, $drugs_where, $drugs_order);
+
+$rs15 = $drug_query->result();
+$drugs = '';
+foreach ($rs15 as $drug_rs) :
+
+
+  $drug_id = $drug_rs->service_charge_id;
+  $drug_name = $drug_rs->service_charge_name;
+  $brand_name = $drug_rs->brand_name;
+
+  $drug_price = $drug_rs->service_charge_amount;
+
+  $drugs .="<option value='".$drug_id."'>".$drug_name." Brand: ".$brand_name." KES.".$drug_price."</option>";
+
+endforeach;
+
+// end of surgeries
+  
+
 ?>
 
 <div class="row">
@@ -377,6 +403,38 @@ endforeach;
          </section>
     </div>
 </div>
+
+<div class="row">
+  <div class="col-md-12">
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">Prescription</h2>
+            </header>
+            <div class="panel-body">
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <div class="form-group">
+                    <select id='drug_id' name='drug_id' class='form-control custom-select '>
+                      <option value=''>None - Please Select an drug</option>
+                      <?php echo $drugs;?>
+                    </select>
+                  </div>
+                
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <div class="form-group">
+                      <button type='submit' class="btn btn-sm btn-success"  onclick="get_drug_to_prescribe(<?php echo $visit_id;?>);"> Prescribe drug</button>
+                  </div>
+                </div>
+                 <!-- visit Procedures from java script -->
+                
+                <!-- end of visit procedures -->
+            </div>
+             <div id="prescription_view"></div>
+             <div id="visit_prescription"></div>
+              
+         </section>
+    </div>
+</div>
 <div class="row">
   <div class="col-md-12">
         <section class="panel panel-featured panel-featured-info">
@@ -504,6 +562,7 @@ endforeach;
         $("#opthamology_surgery_id").customselect();
         $("#obstetrics_surgery_id").customselect();
         $("#theatre_procedure_id").customselect();
+        $("#drug_id").customselect();
       });
     
      $(function() {    
@@ -534,7 +593,6 @@ function parse_lab_test(visit_id,suck)
 {
   var lab_test_id = document.getElementById("lab_test_id").value;
 
-  alert(lab_test_id);
   
 }
 function parse_procedures(visit_id,suck)
@@ -578,6 +636,42 @@ function procedures(id, v_id, suck){
                 
         XMLHttpRequestObject.send(null);
     }
+
+}
+
+function get_drug_to_prescribe(visit_id)
+{
+  var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var drug_id = document.getElementById("drug_id").value;
+
+    var url = "<?php echo site_url();?>pharmacy/inpatient_prescription/"+visit_id+"/"+drug_id+"/1";
+
+     if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+              var prescription_view = document.getElementById("prescription_view");
+             
+              document.getElementById("prescription_view").innerHTML=XMLHttpRequestObject.responseText;
+               prescription_view.style.display = 'block';
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+
 }
 function vaccines_anchor(id, v_id, suck){
    
@@ -942,6 +1036,153 @@ function delete_inpatient_surgery_cost(visit_charge_id, visit_id,surgery_type)
   }
 }
 
+function pass_prescription()
+{
+  var quantity = document.getElementById("quantity_value").value;
+  var x = document.getElementById("x_value").value;
+  var duration = document.getElementById("duration_value").value;
+  var consumption = document.getElementById("consumption_value").value;
+  var number_of_days = document.getElementById("number_of_days_value").value;
+  var service_charge_id = document.getElementById("drug_id").value;
+  var visit_id = document.getElementById("visit_id").value;
+  var module = document.getElementById("module").value;
+  var passed_value = document.getElementById("passed_value").value;
+
+  var url = "<?php echo base_url();?>pharmacy/prescribe_prescription";
+
+
+  $.ajax({
+  type:'POST',
+  url: url,
+  data:{quantity: quantity, x: x, duration: duration,consumption: consumption, service_charge_id : service_charge_id, visit_id : visit_id, number_of_days: number_of_days,module: module,passed_value:passed_value},
+  dataType: 'text',
+  success:function(data){
+
+  
+  },
+  error: function(xhr, status, error) {
+  alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+
+  }
+  });
+  var prescription_view = document.getElementById("prescription_view");
+  prescription_view.style.display = 'none';
+  display_inpatient_prescription(visit_id,1);
+  return false;
+}
+
+function get_visit_trail(visit_id){
+
+  var myTarget2 = document.getElementById("visit_trail"+visit_id);
+  var button = document.getElementById("open_visit"+visit_id);
+  var button2 = document.getElementById("close_visit"+visit_id);
+
+  myTarget2.style.display = '';
+  button.style.display = 'none';
+  button2.style.display = '';
+}
+function close_visit_trail(visit_id){
+
+  var myTarget2 = document.getElementById("visit_trail"+visit_id);
+  var button = document.getElementById("open_visit"+visit_id);
+  var button2 = document.getElementById("close_visit"+visit_id);
+
+  myTarget2.style.display = 'none';
+  button.style.display = '';
+  button2.style.display = 'none';
+}
+
+function button_update_prescription(visit_id,visit_charge_id,prescription_id,module)
+{
+  var quantity = $('#quantity'+prescription_id).val();
+  var x = $('#x'+prescription_id).val();
+  var duration = $('#duration'+prescription_id).val();
+  var consumption = $('#consumption'+prescription_id).val();
+
+  var url = "<?php echo base_url();?>pharmacy/update_inpatient_prescription/"+visit_id+"/"+visit_charge_id+"/"+prescription_id+"/"+module;
+
+
+  $.ajax({
+  type:'POST',
+  url: url,
+  data:{quantity: quantity, x: x, duration: duration,consumption: consumption},
+  dataType: 'text',
+  success:function(data){
+
+  
+  },
+  error: function(xhr, status, error) {
+  alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+
+  }
+  });
+  display_inpatient_prescription(visit_id,1);
+  return false;
+}
+
+function dispense_prescription(visit_id,visit_charge_id,prescription_id,module)
+{
+  var quantity = $('#quantity'+prescription_id).val();
+  var x = $('#x'+prescription_id).val();
+  var duration = $('#duration'+prescription_id).val();
+  var consumption = $('#consumption'+prescription_id).val();
+  var charge = $('#charge'+prescription_id).val();
+  var units_given = $('#units_given'+prescription_id).val();
+
+  var url = "<?php echo base_url();?>pharmacy/dispense_inpatient_prescription/"+visit_id+"/"+visit_charge_id+"/"+prescription_id+"/"+module;
+
+  $.ajax({
+  type:'POST',
+  url: url,
+  data:{quantity: quantity, x: x, duration: duration,consumption: consumption,charge: charge, units_given: units_given},
+  dataType: 'text',
+  success:function(data){
+    window.alert(data.result);
+  
+  },
+  error: function(xhr, status, error) {
+  alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+
+  }
+  });
+  display_inpatient_prescription(visit_id,1);
+  return false;
+}
+
+
+function delete_prescription(prescription_id, visit_id,visit_charge_id,module)
+{
+  var res = confirm('Are you sure you want to delete this prescription ?');
+  
+  if(res)
+  {
+    var XMLHttpRequestObject = false;
+    
+    if (window.XMLHttpRequest) {
+      XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+    
+    else if (window.ActiveXObject) {
+      XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = config_url+"pharmacy/delete_inpatient_prescription/"+prescription_id+"/"+visit_id+"/"+visit_charge_id+"/"+module;
+    
+    if(XMLHttpRequestObject) {
+      
+      XMLHttpRequestObject.open("GET", url);
+      
+      XMLHttpRequestObject.onreadystatechange = function(){
+        
+        if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+          
+           display_inpatient_prescription(visit_id,1);
+         
+        }
+      }
+      XMLHttpRequestObject.send(null);
+    }
+  }
+}
 
 
 </script>
