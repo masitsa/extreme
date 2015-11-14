@@ -6,6 +6,30 @@ if(count($rs)>0){
       $visit_t = $rs1->visit_type;
   }
 }
+
+
+
+// echo $visit_t; die();
+$consumable_order = 'service_charge.service_charge_name';
+$consumable_table = 'service_charge,product,category';
+$consumble_where = 'service_charge.product_id = product.product_id AND category.category_id = product.category_id AND category.category_name = "Consumable" AND service_charge.visit_type_id = '.$visit_t;
+
+$consumable_query = $this->nurse_model->get_inpatient_consumable_list($consumable_table, $consumble_where, $consumable_order);
+$rs8 = $consumable_query->result();
+$consumables = '';
+foreach ($rs8 as $consumable_rs) :
+
+
+$consumable_id = $consumable_rs->service_charge_id;
+$consumable_name = $consumable_rs->service_charge_name;
+
+$consumable_name_stud = $consumable_rs->service_charge_amount;
+
+    $consumables .="<option value='".$consumable_id."'>".$consumable_name." KES.".$consumable_name_stud."</option>";
+
+endforeach;
+
+
 $order = 'service_charge.service_charge_name';
 
 $where = 'service_charge.service_id = service.service_id AND (service.service_name = "Procedure" OR service.service_name = "procedure" OR service.service_name = "procedures" OR service.service_name = "Procedures" ) AND service.department_id = departments.department_id AND departments.department_name = "General practice" AND service.branch_code = "OSH" AND service_charge.visit_type_id = visit_type.visit_type_id  AND service_charge.visit_type_id = '.$visit_t;
@@ -251,6 +275,35 @@ endforeach;
   
 
 ?>
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">Consumables</h2>
+            </header>
+            <div class="panel-body">
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <div class="form-group">
+                    <select id='consumable_id' name='consumable_id' class='form-control custom-select '>
+                      <option value=''>None - Please Select a consumable</option>
+                      <?php echo $consumables;?>
+                    </select>
+                  </div>
+                
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <div class="form-group">
+                      <button type='submit' class="btn btn-sm btn-success"  onclick="parse_consumable_charge(<?php echo $visit_id;?>,1);"> Add Consumable</button>
+                  </div>
+                </div>
+               
+            </div>
+             <!-- visit Procedures from java script -->
+                <div id="consumables_to_patients"></div>
+                <!-- end of visit procedures -->
+         </section>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-12"> 
@@ -553,6 +606,7 @@ endforeach;
 </div>
 <script type="text/javascript">
      $(function() {
+        $("#consumable_id").customselect();
         $("#procedure_id").customselect();
         $("#vaccine_id").customselect();
         $("#lab_test_id").customselect();
@@ -563,6 +617,7 @@ endforeach;
         $("#obstetrics_surgery_id").customselect();
         $("#theatre_procedure_id").customselect();
         $("#drug_id").customselect();
+
       });
     
      $(function() {    
@@ -862,7 +917,44 @@ function orthopaedic(id, visit_id){
         XMLHttpRequestObject.send(null);
     }
 }
+function parse_consumable_charge(visit_id,suck)
+{
+  var consumable_id = document.getElementById("consumable_id").value;
+  // alert(opthamology_surgery_id);
+  consumable(consumable_id, visit_id,suck);
 
+}
+
+function consumable(id, visit_id,suck){
+    
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>nurse/inpatient_consumables/"+id+"/"+visit_id+"/"+suck;
+    // window.alert(url);
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+               document.getElementById("consumables_to_patients").innerHTML = XMLHttpRequestObject.responseText;
+               //get_surgery_table(visit_id);
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
+}
 function parse_opthamology_surgery(visit_id)
 {
   var opthamology_surgery_id = document.getElementById("opthamology_surgery_id").value;
