@@ -105,6 +105,66 @@ class Pharmacy  extends MX_Controller
 		}
 		
 	}
+
+	public function inpatient_prescription($visit_id,$service_charge_id=NULL,$module=NULL,$prescription_id=NULL)
+	{
+		//$this->form_validation->set_rules('substitution', 'Substitution', 'xss_clean');
+		// $this->form_validation->set_rules('prescription_finishdate', 'Finish Date', 'trim|required|xss_clean');
+		
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		
+		$v_data = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'prescription_id'=>$prescription_id,'module'=>$module);
+
+		$v_data['patient_type'] = $patient['patient_type'];
+		$v_data['patient_othernames'] = $patient['patient_othernames'];
+		$v_data['patient_surname'] = $patient['patient_surname'];
+		$v_data['patient_type_id'] = $patient['visit_type_id'];
+		$v_data['account_balance'] = $patient['account_balance'];
+		$v_data['visit_type_name'] = $patient['visit_type_name'];
+		$v_data['patient_id'] = $patient['patient_id'];
+		$patient_date_of_birth = $patient['patient_date_of_birth'];
+		$age = $this->reception_model->calculate_age($patient_date_of_birth);
+		$visit_date = $this->reception_model->get_visit_date($visit_id);
+		$gender = $patient['gender'];
+		$visit_date = date('jS M Y',strtotime($visit_date));
+		$v_data['age'] = $age;
+		$v_data['visit_date'] = $visit_date;
+		$v_data['gender'] = $gender;
+		echo $this->load->view('inpatient/prescription', $v_data, true);
+
+		
+	}
+	public function prescribe_prescription()
+	{
+		$this->form_validation->set_rules('x', 'Times Per Day', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('number_of_days', 'Number of Day', 'required|xss_clean');
+		//$this->form_validation->set_rules('visit_charge_id', 'Cost', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('duration', 'Duration', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('consumption', 'Consumption', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('quantity', 'Quantity', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('service_charge_id', 'Drug', 'trim|required|xss_clean');
+		
+		$visit_id =  $this->input->post('visit_id');
+		$module =  $this->input->post('module');
+
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			if($this->pharmacy_model->save_prescription($visit_id,$module))
+			{
+				$response['success'] = "success";
+			}
+			else
+			{
+				$response['error'] = "failure";
+			}
+		}
+		else
+		{
+			$response['error']	 = "Please check on these errors";
+		}
+		return $response;
+	}
 	
 	public function update_prescription($visit_id, $visit_charge_id, $prescription_id,$module = NULL){
 		// $this->form_validation->set_rules('substitution'.$prescription_id, 'Substitution', 'trim|required|xss_clean');
@@ -141,6 +201,81 @@ class Pharmacy  extends MX_Controller
 		}
 		echo json_encode($data);
 	}
+	public function update_inpatient_prescription($visit_id, $visit_charge_id, $prescription_id,$module = NULL){
+		// $this->form_validation->set_rules('substitution'.$prescription_id, 'Substitution', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('x'.$prescription_id, 'Times Per Day', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('duration'.$prescription_id, 'Duration', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('consumption'.$prescription_id, 'Consumption', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('quantity'.$prescription_id, 'Quantity', 'required|xss_clean');
+
+		if($module == 1)
+		{
+			$this->form_validation->set_rules('units_given'.$prescription_id, 'Units Given', 'trim|required|xss_clean');	
+		}
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->session->set_userdata('error_message', validation_errors());
+		}
+
+		else
+		{
+			if($this->pharmacy_model->update_prescription($visit_id, $visit_charge_id, $prescription_id))
+			{
+				$data['result'] = "Success";
+				$this->session->set_userdata('success_message', 'Prescription updated successfully');
+			}
+
+			else
+			{
+				$data['result'] = "Failed";
+				$this->session->set_userdata('error_message', 'Could not update the prescription. Please try again');
+			}
+		
+		}
+		echo json_encode($data);
+	}
+
+	public function dispense_inpatient_prescription($visit_id, $visit_charge_id, $prescription_id,$module = NULL){
+		// $this->form_validation->set_rules('substitution'.$prescription_id, 'Substitution', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('x'.$prescription_id, 'Times Per Day', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('duration'.$prescription_id, 'Duration', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('consumption'.$prescription_id, 'Consumption', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('quantity'.$prescription_id, 'Quantity', 'required|xss_clean');
+
+		if($module == 1)
+		{
+			$this->form_validation->set_rules('units_given'.$prescription_id, 'Units Given', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('charge'.$prescription_id, 'Unit price', 'trim|required|xss_clean');	
+		}
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run() == FALSE)
+		{	
+			$data['result'] = "Please ensure you have values saved";
+			$this->session->set_userdata('error_message', validation_errors());
+		}
+
+		else
+		{
+			if($this->pharmacy_model->dispense_drug($visit_id, $visit_charge_id, $prescription_id))
+			{
+				$data['result'] = "You successfully updated the prescription";
+				$this->session->set_userdata('success_message', 'Prescription updated successfully');
+			}
+
+			else
+			{
+				$data['result'] = "Please ensure you have values saved";
+
+				$this->session->set_userdata('error_message', 'Could not update the prescription. Please try again');
+			}
+		
+		}
+		echo json_encode($data);
+	}
+
 	public function dispense_prescription($visit_id, $visit_charge_id, $prescription_id,$module = NULL){
 		// $this->form_validation->set_rules('substitution'.$prescription_id, 'Substitution', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('x'.$prescription_id, 'Times Per Day', 'trim|required|xss_clean');
@@ -180,6 +315,8 @@ class Pharmacy  extends MX_Controller
 			redirect('pharmacy/prescription/'.$visit_id);
 		}
 	}
+
+
 	public function search_drugs($visit_id, $module = NULL)
 	{
 		// $this->form_validation->set_rules('search_item', 'Search', 'trim|required|xss_clean');
@@ -305,6 +442,10 @@ class Pharmacy  extends MX_Controller
 	public function display_prescription($visit_id){
 		$visit_data = array('visit_id'=>$visit_id);
 		$this->load->view('display_prescription',$visit_data);
+	}
+	public function display_inpatient_prescription($visit_id,$module){
+		$visit_data = array('visit_id'=>$visit_id,'module'=>$module);
+		$this->load->view('inpatient/display_prescription',$visit_data);
 	}
 	public function pharmacy_queue($page_name = NULL)
 	{
@@ -458,6 +599,27 @@ class Pharmacy  extends MX_Controller
 		{
 			redirect('pharmacy/prescription/'.$visit_id);
 		}
+	}
+	public function delete_inpatient_prescription($prescription_id,$visit_id,$visit_charge_id,$module=NULL)
+	{
+		//  delete the visit charge
+
+		$this->db->where(array("visit_charge_id"=>$visit_charge_id));
+		$this->db->delete('visit_charge');
+		
+		//  check if the visit charge has been deleted
+
+		$rs = $this->pharmacy_model->check_deleted_visitcharge($visit_charge_id);
+		$num_rows =count($rs);
+
+		//echo BB.$visit_charge_id;
+		if($num_rows==0){
+			$this->db->where(array("prescription_id"=>$prescription_id));
+			$this->db->delete('pres');
+		}
+		$data['result'] = "You have successfully removed the prescription from the list";
+
+		echo json_encode($data);
 	}
 	public function prescription_history($visit_id,$page_name = NULL)
 	{
