@@ -72,7 +72,7 @@ class Inpatient_model extends CI_Model
 			
 			//update personnel's last login date time
 			$this->update_personnel_login($result[0]->personnel_id);
-			return TRUE;
+			return $newdata;
 		}
 		
 		//if personnel doesn't exist

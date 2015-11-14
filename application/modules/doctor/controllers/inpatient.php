@@ -89,19 +89,18 @@ class Inpatient extends MX_Controller
 				
 				$response['message'] = 'success';
 				$response['result'] = $newdata;
-				
 			}
 			
 			else
 			{
 				
-			
-				if($this->inpatient_model->validate_member())
+				$newdata = $this->inpatient_model->validate_member();
+				if($newdata != FALSE)
 				{
 					//create user's login session
 					
 					$response['message'] = 'success';
-					$response['result'] = 'You have successfully logged in';
+					$response['result'] = $newdata;
 				}
 				
 				else
