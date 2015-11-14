@@ -9,12 +9,6 @@ $( document ).ready(function() {
 		
 	}, 5000);
 	
-	/* CL Editor */
-	$(".cleditor").cleditor({
-		width: "auto",
-		height: "100%"
-	});
-	
 });
 
 $(document).on("click",".nav-tabs li a",function()
