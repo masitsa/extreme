@@ -650,6 +650,24 @@ class Nurse  extends MX_Controller
 		$this->visit_consumables($visit_id);	
 	}
 
+	function inpatient_consumables($consumable_id,$visit_id,$suck)
+	{
+		$data = array('consumable_id'=>$consumable_id,'visit_id'=>$visit_id,'suck'=>$suck);
+		$this->nurse_model->submitvisitconsumable($consumable_id,$visit_id,$suck);
+
+		$visit_type_rs = $this->nurse_model->get_visit_type($visit_id);
+		
+		if(count($visit_type_rs) >0){
+			foreach ($visit_type_rs as $rs1 ) :
+				# code...
+				$visit_t = $rs1->visit_type;
+		
+			endforeach;
+		}
+		$this->nurse_model->visit_charge_insert($visit_id,$consumable_id,$suck);
+		$this->visit_consumables($visit_id);	
+	}
+
 	function visit_vaccines($visit_id)
 	{
 		$data = array('visit_id'=>$visit_id);
