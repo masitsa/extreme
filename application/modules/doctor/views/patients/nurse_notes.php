@@ -9,6 +9,8 @@
 				<!-- vitals from java script -->
 				<?php
 				$visit_data1['visit_id'] = $visit_id;
+				$visit_data1['mobile_personnel_id'] = $mobile_personnel_id;
+				
 				?>
 				<?php echo $this->load->view('nurse/soap/nurse_notes',$visit_data1, TRUE); ?>
 				<!-- end of vitals data -->

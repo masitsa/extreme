@@ -58,7 +58,7 @@ class Inpatient_model extends CI_Model
 			//create personnel's login session
 			$newdata = array(
                    'login_status'     			=> TRUE,
-                   'first_name'     			=> $result[0]->personnel_fname,
+                   'personnel_fname'     		=> $result[0]->personnel_fname,
                    'username'     				=> $result[0]->personnel_username,
                    'personnel_id'  				=> $result[0]->personnel_id,
                    'branch_id'  				=> $result[0]->branch_id,
