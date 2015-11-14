@@ -1590,5 +1590,44 @@ class Nurse_model extends CI_Model
 			return FALSE;
 		}
 	}
+	
+	public function add_notes($visit_id, $notes_type_id, $signature_name)
+	{
+		$notes=$this->input->post('nurse_notes');
+		$date=$this->input->post('date');
+		$time=$this->input->post('time');
+
+		//  enter into the nurse notes trail 
+		$trail_data = array(
+        		"notes_type_id" => $notes_type_id,
+        		"visit_id" => $visit_id,
+        		"notes_name" => $notes,
+        		"notes_time" => $time,
+        		"notes_date" => $date,
+        		"notes_signature" => $signature_name,
+				'created'=>date('Y-m-d H:i:s'),
+				'created_by'=>$this->session->userdata('personnel_id'),
+				'modified_by'=>$this->session->userdata('personnel_id')
+	    	);
+
+		if($this->db->insert('notes', $trail_data))
+		{
+			return $this->db->insert_id();
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	public function get_notes($notes_type_id, $visit_id)
+	{
+		$this->db->select('notes.*, notes_type.notes_type_name');
+		$this->db->where('notes.visit_id = '.$visit_id.' AND notes.notes_type_id = '.$notes_type_id.' AND notes.notes_status = 1 AND notes.notes_type_id = notes_type.notes_type_id');
+		$query = $this->db->get('notes, notes_type');
+		
+		return $query;
+	}
 }
 ?>

@@ -19,7 +19,7 @@
 $config['base_url'] = 'http://localhost/erp/';
 #$config['base_url'] = 'http://192.168.9.105/';
 #$config['base_url'] = 'http://159.203.78.242/';
-#$config['base_url'] = 'http://192.168.1.105/';
+#$config['base_url'] = 'http://192.168.9.105/';
 
 /*
 |--------------------------------------------------------------------------
@@ -250,7 +250,7 @@ $config['encryption_key'] = 'OHCOSHODPKISIIAMMTSBOMNISERP2015';
 |
 */
 $config['sess_cookie_name']		= 'ci_session';
-$config['sess_expiration']		= 2000;
+$config['sess_expiration']		= 0;
 $config['sess_expire_on_close']	= TRUE;
 $config['sess_encrypt_cookie']	= FALSE;
 $config['sess_use_database']	= TRUE;
