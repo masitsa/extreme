@@ -2,6 +2,8 @@
 
 class Nurse  extends MX_Controller
 {	
+	var $signature_path;
+	var $signature_location;
 	function __construct()
 	{
 		parent:: __construct();
@@ -20,6 +22,8 @@ class Nurse  extends MX_Controller
 		$this->load->model('radiology/xray_model');
 		$this->load->model('radiology/ultrasound_model');
 		$this->load->model('theatre/theatre_model');
+		$this->signature_path = realpath(APPPATH . '../assets/signatures');
+		$this->signature_location = base_url().'assets/signatures/';
 		
 		//removed because doctors loose notes
 		$this->load->model('auth/auth_model');
@@ -312,35 +316,33 @@ class Nurse  extends MX_Controller
 	}
 	public function save_nurse_notes($visit_id)
 	{
-		$notes=$this->input->post('notes');
-		$patient_id = $this->nurse_model->get_patient_id($visit_id);
-		$rs = $this->nurse_model->get_nurse_notes($patient_id,$visit_id);
-		$num_nurse_notes = count($rs);
-		$visit_data = array(
-        		"patient_id" => $patient_id,
-        		"nurse_notes" => $notes
-	    		);
+		$signature_name = '';
+		if(isset($_POST['signature']))
+		{
+			$this->load->library('signature/signature');
+			//require_once 'signature-to-image.php';
+	
+			$json = $_POST['signature']; // From Signature Pad
+			//var_dump($json); die();
+			$img = $this->signature->sigJsonToImage($json);
+			$signature_name = $this->session->userdata('username').'_signature_'.date('Y-m-d-H-i-s').'.png';
+			imagepng($img, $this->signature_path.'\\'.$image_name);
+			//imagedestroy($img);
+		}
 		
-		if($num_nurse_notes == 0){	
-
-			$this->db->insert('nurse_notes', $visit_data);
+		if($this->nurse_model->add_notes($visit_id, $signature_name))
+		{
+			$v_data['signature_location'] = $this->signature_location;
+			$v_data['query'] = $this->nurse_model->get_notes(1);
+			$return['result'] = 'success';
+			$return['message'] = $this->load->view('patients/notes', $v_data, TRUE);
+			echo 'success';
 		}
-		else {
-			$this->db->where('patient_id',$patient_id);
-			$this->db->update('nurse_notes', $visit_data);
-			
+		
+		else
+		{
+			echo 'fail';
 		}
-
-		//  enter into the nurse notes trail
-		$trail_data = array(
-        		"patient_id" => $patient_id,
-        		"nurse_notes" => $notes,
-        		"added_by" => $this->session->userdata("personnel_id"),
-        		"visit_id" => $visit_id,
-        		"created" => date("Y-m-d")
-	    	);
-
-		$this->db->insert('nurse_patient_notes', $trail_data);
 		// end of things to do with the trail
 	}
 	

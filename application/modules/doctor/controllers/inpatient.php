@@ -1,7 +1,9 @@
 <?php   if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Inpatient extends MX_Controller {
-	
+class Inpatient extends MX_Controller 
+{
+	var $signature_path;
+	var $signature_location;
 	function __construct()
 	{
 		parent:: __construct();
@@ -42,6 +44,8 @@ class Inpatient extends MX_Controller {
 		$this->load->model('theatre/theatre_model');
 		$this->load->model('pharmacy/pharmacy_model');
 		$this->load->model('administration/sync_model');
+		$this->signature_path = realpath(APPPATH . '../assets/signatures');
+		$this->signature_location = base_url().'assets/signatures/';
 	}
 	
 	public function get_logged_in_member()
@@ -236,5 +240,37 @@ class Inpatient extends MX_Controller {
 		
 	}
 
-
+	public function save_nurse_notes($visit_id)
+	{
+		$signature_name = '';
+		if(isset($_POST['signature']))
+		{
+			$this->load->library('signature/signature');
+			//require_once 'signature-to-image.php';
+	
+			$json = $_POST['signature']; // From Signature Pad
+			//var_dump($json); die();
+			$img = $this->signature->sigJsonToImage($json);
+			$username = $this->session->userdata('username');
+			//$username = 'alvaro';
+			$signature_name = $username.'_signature_'.date('Y-m-d-H-i-s').'.png';
+			imagepng($img, $this->signature_path.'/'.$signature_name);
+			//imagedestroy($img);
+		}
+		
+		if($this->nurse_model->add_notes($visit_id, 1, $signature_name))
+		{
+			$v_data['visit_id'] = $visit_id;
+			$v_data['signature_location'] = $this->signature_location;
+			$v_data['query'] = $this->nurse_model->get_notes(1, $visit_id);
+			$return['result'] = 'success';
+			$return['message'] = $this->load->view('nurse/patients/notes', $v_data, TRUE);
+		}
+		
+		else
+		{
+			$return['result'] = 'fail';
+		}
+		echo json_encode($return);
+	}
 }

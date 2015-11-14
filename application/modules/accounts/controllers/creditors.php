@@ -109,14 +109,14 @@ class Creditors extends accounts
 	{
 		//form validation rules
 		$this->form_validation->set_rules('creditor_name', 'Name', 'required|xss_clean');
-		$this->form_validation->set_rules('creditor_email', 'Email', 'required|xss_clean');
-		$this->form_validation->set_rules('creditor_phone', 'Phone', 'required|xss_clean');
+		$this->form_validation->set_rules('creditor_email', 'Email', 'xss_clean');
+		$this->form_validation->set_rules('creditor_phone', 'Phone', 'xss_clean');
 		$this->form_validation->set_rules('creditor_location', 'Location', 'xss_clean');
 		$this->form_validation->set_rules('creditor_building', 'Building', 'xss_clean');
 		$this->form_validation->set_rules('creditor_floor', 'Floor', 'xss_clean');
 		$this->form_validation->set_rules('creditor_address', 'Address', 'xss_clean');
 		$this->form_validation->set_rules('creditor_post_code', 'Post code', 'xss_clean');
-		$this->form_validation->set_rules('creditor_city', 'City', 'required|xss_clean');
+		$this->form_validation->set_rules('creditor_city', 'City', 'xss_clean');
 		$this->form_validation->set_rules('creditor_contact_person_name', 'Contact Name', 'xss_clean');
 		$this->form_validation->set_rules('creditor_contact_person_onames', 'Contact Other Names', 'xss_clean');
 		$this->form_validation->set_rules('creditor_contact_person_phone1', 'Contact Phone 1', 'xss_clean');
@@ -130,7 +130,7 @@ class Creditors extends accounts
 			$creditor_id = $this->creditors_model->add_creditor();
 			if($creditor_id > 0)
 			{
-				$this->session->set_userdata("success_message", "Personnel added successfully");
+				$this->session->set_userdata("success_message", "Creditor added successfully");
 				redirect('accounts/creditors');
 			}
 			
@@ -156,14 +156,14 @@ class Creditors extends accounts
 	{
 		//form validation rules
 		$this->form_validation->set_rules('creditor_name', 'Name', 'required|xss_clean');
-		$this->form_validation->set_rules('creditor_email', 'Email', 'required|xss_clean');
-		$this->form_validation->set_rules('creditor_phone', 'Phone', 'required|xss_clean');
+		$this->form_validation->set_rules('creditor_email', 'Email', 'xss_clean');
+		$this->form_validation->set_rules('creditor_phone', 'Phone', 'xss_clean');
 		$this->form_validation->set_rules('creditor_location', 'Location', 'xss_clean');
 		$this->form_validation->set_rules('creditor_building', 'Building', 'xss_clean');
 		$this->form_validation->set_rules('creditor_floor', 'Floor', 'xss_clean');
 		$this->form_validation->set_rules('creditor_address', 'Address', 'xss_clean');
 		$this->form_validation->set_rules('creditor_post_code', 'Post code', 'xss_clean');
-		$this->form_validation->set_rules('creditor_city', 'City', 'required|xss_clean');
+		$this->form_validation->set_rules('creditor_city', 'City', 'xss_clean');
 		$this->form_validation->set_rules('creditor_contact_person_name', 'Contact Name', 'xss_clean');
 		$this->form_validation->set_rules('creditor_contact_person_onames', 'Contact Other Names', 'xss_clean');
 		$this->form_validation->set_rules('creditor_contact_person_phone1', 'Contact Phone 1', 'xss_clean');
@@ -177,7 +177,7 @@ class Creditors extends accounts
 			$creditor_id = $this->creditors_model->edit_creditor($creditor_id);
 			if($creditor_id > 0)
 			{
-				$this->session->set_userdata("success_message", "Personnel added successfully");
+				$this->session->set_userdata("success_message", "Creditor updated successfully");
 				redirect('accounts/creditors');
 			}
 			

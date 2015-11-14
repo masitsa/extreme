@@ -1,7 +1,5 @@
 <?php   if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-// require_once "./application/modules/administration/controllers/administration.php";
-
 class Doctors extends MX_Controller
 {	
 	function __construct()
@@ -13,7 +11,7 @@ class Doctors extends MX_Controller
 			header('Access-Control-Allow-Credentials: true');
 			header('Access-Control-Max-Age: 86400');    // cache for 1 day
 		}
-	
+		
 		// Access-Control headers are received during OPTIONS requests
 		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 	
@@ -26,7 +24,8 @@ class Doctors extends MX_Controller
 			exit(0);
 		}
 
-		$this->load->model('doctors_model.php');
+		$this->load->model('mobile/doctors_model.php');
+		$this->load->model('nurse/nurse_model.php');
 	}
     public function get_doctors_bokings()
     {
@@ -101,4 +100,35 @@ class Doctors extends MX_Controller
 		echo json_encode($newdata);
     }
 
+	public function save_nurse_notes($visit_id)
+	{
+		$signature_name = '';
+		if(isset($_POST['signature']))
+		{
+			$this->load->library('signature/signature');
+			//require_once 'signature-to-image.php';
+	
+			$json = $_POST['signature']; // From Signature Pad
+			//var_dump($json); die();
+			$img = $this->signature->sigJsonToImage($json);
+			$signature_name = $this->session->userdata('username').'_signature_'.date('Y-m-d-H-i-s').'.png';
+			imagepng($img, $this->signature_path.'\\'.$image_name);
+			//imagedestroy($img);
+		}
+		
+		if($this->nurse_model->add_notes($visit_id, $signature_name))
+		{
+			$v_data['signature_location'] = $this->signature_location;
+			$v_data['query'] = $this->nurse_model->get_notes(1);
+			$return['result'] = 'success';
+			$return['message'] = $this->load->view('nurse/patients/notes', $v_data, TRUE);
+			echo 'success';
+		}
+		
+		else
+		{
+			echo 'fail';
+		}
+		// end of things to do with the trail
+	}
 }

@@ -27,9 +27,54 @@ if ($query->num_rows() > 0)
 		  <tbody>
 	';
 	
-	$total_debit = 0;
-	$total_credit = 0;
 	$count = 0;
+	if($balance_brought_forward > 0)
+	{
+		$debit = number_format($balance_brought_forward, 2);
+		$credit = '';
+		$total_debit = $balance_brought_forward;
+		$total_credit = 0;
+		$count++;
+	
+		$result .= 
+		'
+			<tr>
+				<td>'.$count.'</td>
+				<td style="text-align:center"></td>
+				<td></td>
+				<td>Balance brought forward</td>
+				<td style="text-align:center">'.$debit.'</td>
+				<td style="text-align:center">'.$credit.'</td>
+			</tr> 
+		';
+	}
+	
+	else if($balance_brought_forward < 0)
+	{
+		$balance_brought_forward *= -1;
+		$debit = '';
+		$credit = number_format($balance_brought_forward, 2);
+		$total_debit = 0;
+		$total_credit = $balance_brought_forward;
+		$count++;
+	
+		$result .= 
+		'
+			<tr>
+				<td>'.$count.'</td>
+				<td style="text-align:center"></td>
+				<td></td>
+				<td>Balance brought forward</td>
+				<td style="text-align:center">'.$debit.'</td>
+				<td style="text-align:center">'.$credit.'</td>
+			</tr> 
+		';
+	}
+	else
+	{
+		$total_debit = 0;
+		$total_credit = 0;
+	}
 	
 	foreach ($query->result() as $row)
 	{
@@ -167,11 +212,29 @@ else
         </div>
         
     	<div class="row" style="font-style:italic; font-size:11px;">
-        	<div class="col-md-10 pull-left">
-            	Prepared by: <?php echo $served_by;?> 
-          	</div>
-        	<div class="col-md-2 pull-right">
-            	<?php echo date('jS M Y H:i a'); ?>
+        	<div class="col-sm-12">
+                <div class="col-sm-10 pull-left">
+                    <strong>Prepared by: </strong><?php echo $served_by;?> 
+                </div>
+                <div class="col-sm-2 pull-right">
+                    <?php echo date('jS M Y H:i a'); ?>
+                </div>
+            </div>
+        	<div class="col-sm-12" style="margin-top:60px;">
+                <div class="col-sm-2">
+                	<strong>Checked by: </strong>
+                </div>
+                <div class="col-sm-4">
+                	
+                </div>
+            </div>
+        	<div class="col-sm-12" style="margin-top:60px;">
+                <div class="col-sm-2">
+                	<strong>Approved by: </strong>
+                </div>
+                <div class="col-sm-4">
+                	
+                </div>
             </div>
         </div>
     </body>
