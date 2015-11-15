@@ -3,7 +3,7 @@
 $rs = $this->nurse_model->get_plan($visit_id);
 $num_rows = count($rs);
 	
-echo "
+	$item = "
 	<div class='row' style='margin-bottom:10px;'>
 		<div class='col-md-2 center-align' col-md-offset-1>
 			<input type='button' class='btn btn-warning btn-sm' value='Laboratory Test' onclick='open_window_lab(0, ".$visit_id.")'/>
@@ -27,6 +27,8 @@ echo "
 			-->
 		</div>
 	</div>";
+
+	
 
 if($num_rows > 0){
 	foreach ($rs as $key):

@@ -268,9 +268,10 @@
 
 	  }
 	  });
+	  display_inpatient_prescription(visit_id,1);
 	  var prescription_view = document.getElementById("prescription_view");
 	  prescription_view.style.display = 'none';
-	  display_inpatient_prescription(visit_id,1);
+	  
 	  return false;
 	}
 	function display_inpatient_prescription(visit_id,module){
@@ -310,8 +311,8 @@
 	  var x = $('#x'+prescription_id).val();
 	  var duration = $('#duration'+prescription_id).val();
 	  var consumption = $('#consumption'+prescription_id).val();
-
-	  var url = "<?php echo base_url();?>pharmacy/update_inpatient_prescription/"+visit_id+"/"+visit_charge_id+"/"+prescription_id+"/"+module;
+	
+	  var url = "<?php echo site_url();?>pharmacy/update_inpatient_prescription/"+visit_id+"/"+visit_charge_id+"/"+prescription_id+"/"+module;
 
 
 	  $.ajax({
@@ -328,30 +329,29 @@
 
 	  }
 	  });
-	  display_inpatient_prescription(visit_id,0);
+	  display_inpatient_prescription(visit_id,1);
 	  return false;
 	}
 
 	function dispense_prescription(visit_id,visit_charge_id,prescription_id,module)
 	{
 
-	  var quantity = $('#quantity'+prescription_id).val();
+	  var quantity =  $('#quantity'+prescription_id).val();
 	  var x = $('#x'+prescription_id).val();
 	  var duration = $('#duration'+prescription_id).val();
 	  var consumption = $('#consumption'+prescription_id).val();
 	  var charge = $('#charge'+prescription_id).val();
 	  var units_given = $('#units_given'+prescription_id).val();
-
-	  var url = "<?php echo base_url();?>pharmacy/dispense_inpatient_prescription/"+visit_id+"/"+visit_charge_id+"/"+prescription_id+"/"+module;
-	  alert(url);
+	  
+	  var url = "<?php echo site_url();?>pharmacy/dispense_inpatient_prescription/"+visit_id+"/"+visit_charge_id+"/"+prescription_id+"/"+module+"/"+quantity;
+	 
 	  $.ajax({
 	  type:'POST',
 	  url: url,
 	  data:{quantity: quantity, x: x, duration: duration,consumption: consumption,charge: charge, units_given: units_given},
-	  dataType: 'text',
+	  dataType: 'json',
 	  success:function(data){
 	    window.alert(data.result);
-	  
 	  },
 	  error: function(xhr, status, error) {
 	  alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
@@ -361,5 +361,40 @@
 	  display_inpatient_prescription(visit_id,1);
 	  return false;
 	}
+
+function delete_prescription(prescription_id, visit_id,visit_charge_id,module)
+{
+  var res = confirm('Are you sure you want to delete this prescription ?');
+  
+  if(res)
+  {
+    var XMLHttpRequestObject = false;
+    
+    if (window.XMLHttpRequest) {
+      XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+    
+    else if (window.ActiveXObject) {
+      XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>pharmacy/delete_inpatient_prescription/"+prescription_id+"/"+visit_id+"/"+visit_charge_id+"/"+module;
+    // alert(url);
+    if(XMLHttpRequestObject) {
+      
+      XMLHttpRequestObject.open("GET", url);
+      
+      XMLHttpRequestObject.onreadystatechange = function(){
+        
+        if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+          
+           display_inpatient_prescription(visit_id,1);
+         
+        }
+      }
+      XMLHttpRequestObject.send(null);
+    }
+  }
+}
+
 
 </script>                        

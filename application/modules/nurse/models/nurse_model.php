@@ -673,6 +673,7 @@ class Nurse_model extends CI_Model
 
 		return $result;
 	}
+
 	
 	public function get_symptoms_visit($visit_id)
 	{
@@ -764,7 +765,17 @@ class Nurse_model extends CI_Model
 		
 		return $query;
 	}
+	function get_inpatient_symptom_list($table, $where, $order){
 
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by($order,'asc');
+		$query = $this->db->get('');
+		
+		return $query;
+	}
 	function update_visit_sypmtom($symptoms_id,$visit_id,$description)
 	{
 		$description = str_replace('%20', ' ',$description);

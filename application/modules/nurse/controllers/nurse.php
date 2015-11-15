@@ -466,7 +466,31 @@ class Nurse  extends MX_Controller
 		  $drugs .="<option value='".$drug_id."'>".$drug_name." Brand: ".$brand_name." KES.".$drug_price."</option>";
 
 		endforeach;
+
+
+		$disease_order = 'diseases_id';
+        
+		$disease_where = 'diseases_id > 0 ';
+		$disease_table = 'diseases';
+		
+		$query = $this->nurse_model->get_diseases($table, $where, $config["per_page"], $page, $order);
+
+		$rs9 = $query->result();
+		$diseases = '';
+		// var_dump($query->result());
+		foreach ($rs9 as $rs10) :
+
+
+		$diseases_name = $rs10->diseases_name;
+		$diseases_id = $rs10->diseases_id;
+		$diseases_code = $rs10->diseases_code;
+
+		  $diseases .="<option value='".$diseases_id."'>".$diseases_name." Disease Code: ".$diseases_code." </option>";
+
+		endforeach;
+
 		$v_data['consumables'] = $consumables;
+		$v_data['diseases'] = $diseases;
 		$v_data['drugs'] = $drugs;
 		$v_data['procedures'] = $procedures;
 		$v_data['orthopaedics'] = $orthopaedics;

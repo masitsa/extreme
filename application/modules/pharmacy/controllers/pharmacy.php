@@ -203,34 +203,31 @@ class Pharmacy  extends MX_Controller
 	}
 	public function update_inpatient_prescription($visit_id, $visit_charge_id, $prescription_id,$module = NULL){
 		// $this->form_validation->set_rules('substitution'.$prescription_id, 'Substitution', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('x'.$prescription_id, 'Times Per Day', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('duration'.$prescription_id, 'Duration', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('consumption'.$prescription_id, 'Consumption', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('quantity'.$prescription_id, 'Quantity', 'required|xss_clean');
+		$this->form_validation->set_rules('x', 'Times Per Day', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('duration', 'Duration', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('consumption', 'Consumption', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('quantity', 'Quantity', 'required|xss_clean');
 
-		if($module == 1)
-		{
-			$this->form_validation->set_rules('units_given'.$prescription_id, 'Units Given', 'trim|required|xss_clean');	
-		}
 		
 		//if form conatins invalid data
 		if ($this->form_validation->run() == FALSE)
 		{
-			$this->session->set_userdata('error_message', validation_errors());
+			$data['result'] = "Sorry, something went wrong. Please try again";
+			// $this->session->set_userdata('error_message', validation_errors());
 		}
 
 		else
 		{
-			if($this->pharmacy_model->update_prescription($visit_id, $visit_charge_id, $prescription_id))
+			if($this->pharmacy_model->update_inpatient_prescription($visit_id, $visit_charge_id, $prescription_id))
 			{
-				$data['result'] = "Success";
-				$this->session->set_userdata('success_message', 'Prescription updated successfully');
+				$data['result'] = "You have successfully updated the prescription";
+				// $this->session->set_userdata('success_message', 'Prescription updated successfully');
 			}
 
 			else
 			{
-				$data['result'] = "Failed";
-				$this->session->set_userdata('error_message', 'Could not update the prescription. Please try again');
+				$data['result'] = "Sorry, something went wrong. Please try again";
+				// $this->session->set_userdata('error_message', 'Could not update the prescription. Please try again');
 			}
 		
 		}
@@ -244,17 +241,16 @@ class Pharmacy  extends MX_Controller
 		$this->form_validation->set_rules('consumption', 'Consumption', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('quantity', 'Quantity', 'required|xss_clean');
 
-		if($module == 1)
-		{
-			$this->form_validation->set_rules('units_given', 'Units Given', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('charge', 'Unit price', 'trim|required|xss_clean');	
-		}
+		
+		$this->form_validation->set_rules('units_given', 'Units Given', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('charge', 'Unit price', 'trim|required|xss_clean');	
+
 		
 		//if form conatins invalid data
 		if ($this->form_validation->run() == FALSE)
 		{	
 			$data['result'] = "Please ensure you have values saved";
-			$this->session->set_userdata('error_message', validation_errors());
+			// $this->session->set_userdata('error_message', validation_errors());
 		}
 
 		else
@@ -262,14 +258,14 @@ class Pharmacy  extends MX_Controller
 			if($this->pharmacy_model->dispense_drug($visit_id, $visit_charge_id, $prescription_id))
 			{
 				$data['result'] = "You successfully updated the prescription";
-				$this->session->set_userdata('success_message', 'Prescription updated successfully');
+				// $this->session->set_userdata('success_message', 'Prescription updated successfully');
 			}
 
 			else
 			{
 				$data['result'] = "Please ensure you have values saved";
 
-				$this->session->set_userdata('error_message', 'Could not update the prescription. Please try again');
+				// $this->session->set_userdata('error_message', 'Could not update the prescription. Please try again');
 			}
 		
 		}

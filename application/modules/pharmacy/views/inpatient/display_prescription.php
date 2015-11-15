@@ -88,10 +88,18 @@ $duration_list = $duration_list."</select>";
                         }
                         else
                         {
+                            ?>
+                            <th>Admin route:</th>
+                            <th>Qty:</th>
+                            <th>X:</th>
+                            <th>Duration:</th>
+                            <?php
 
                         }
                         ?>
+                       
                         <th colspan="3"> </th>
+                       
                     </tr>
                    <?php 
                    $rs = $this->pharmacy_model->select_prescription($visit_id);
@@ -165,7 +173,7 @@ $duration_list = $duration_list."</select>";
                                 endforeach;
                             }
                         }
-                        
+                        $time_item = '';
                         $time_list2 = "<select id = 'x".$id."' name = 'x".$id."' class='form-control'>";
                         
                             foreach ($times_rs as $key_items):
@@ -174,6 +182,7 @@ $duration_list = $duration_list."</select>";
                                 $drug_times_id = $key_items->drug_times_id;
                                 if($time == $frequncy)
                                 {
+                                    $time_item = $time;
                                     $time_list2 = $time_list2."<option value='".$drug_times_id."' selected>".$time."</option>";										
                                 }
                                 
@@ -183,7 +192,7 @@ $duration_list = $duration_list."</select>";
                                 }
                             endforeach;
                         $time_list2 = $time_list2."</select>";
-                        
+                        $duration_item = '';
                         $duration_list2 = "<select id = 'duration".$id."' name = 'duration".$id."' class='form-control'>";
                         
                         foreach ($duration_rs as $key_duration):
@@ -191,6 +200,7 @@ $duration_list = $duration_list."</select>";
                             $drug_duration_id = $key_duration->drug_duration_id;
                             if($durations == $duration)
                             {
+                                $duration_item = $durations;
                                 $duration_list2 = $duration_list2."<option value='".$drug_duration_id."' selected>".$durations."</option>";
                             }
                             
@@ -200,7 +210,7 @@ $duration_list = $duration_list."</select>";
                             }
                         endforeach;
                         $duration_list2 = $duration_list2."</select>";
-                        
+                         $consumption_item = '';
                         $cons_list2 = "<select id = 'consumption".$id."' name = 'consumption".$id."' class='form-control'>";
                         
                         foreach ($rs_cons as $key_cons):
@@ -208,11 +218,13 @@ $duration_list = $duration_list."</select>";
                             $drug_consumption_id = $key_cons->drug_consumption_id;
                             if($con == $consumption)
                             {
+                                $consumption_item = $con;
                                 $cons_list2 = $cons_list2."<option value='".$drug_consumption_id."' selected>".$con."</option>";
                             }
                             
                             else
                             {
+
                                 $cons_list2 = $cons_list2."<option value='".$drug_consumption_id."'>".$con."</option>";
                             }
                         endforeach;
@@ -254,9 +266,17 @@ $duration_list = $duration_list."</select>";
                         }
                         else
                         {
+                            ?>
+                                <th><?php echo $consumption_item;?></th>
+                                <th><?php echo $quantity;?></th>
+                                <th><?php echo $time_item;?></th>
+                                <th><?php echo $duration_item;?></th>
+                            <?php
 
                         }
+
                         ?>
+
                         <td>
 							<a  class="btn btn-sm btn-primary" id="open_visit<?php echo $id;?>" onclick="get_visit_trail(<?php echo $id;?>);"> View Detail</a>
 							<a  class="btn btn-sm btn-warning " id="close_visit<?php echo $id;?>" style="display:none;" onclick="close_visit_trail(<?php echo $id;?>);"> Close Detail</a>
@@ -273,7 +293,7 @@ $duration_list = $duration_list."</select>";
                             else
                             {
                                 ?>
-                                <button name="update" type="submit" value="Update" class="btn btn-sm btn-success" onclick="button_update_prescription(<?php echo $visit_id?>,<?php echo $visit_charge_id;?>,<?php echo $id;?>,<?php echo $module;?>);">Update prescription</button>
+                                <!-- <button name="update" type="submit" value="Update" class="btn btn-sm btn-success" onclick="button_update_prescription(<?php echo $visit_id?>,<?php echo $visit_charge_id;?>,<?php echo $id;?>,<?php echo $module;?>);">Update prescription</button> -->
                                 <?php
                             }
                             ?>
@@ -323,7 +343,7 @@ $duration_list = $duration_list."</select>";
 						                 </div>
 						                  <div class="col-md-3">
 						                    <div class="form-group">
-						                        <input type="text" name="quantity<?php echo $id?>" class='form-control' autocomplete="off" value="<?php echo $quantity?>" />
+						                        <input type="text" name="quantity<?php echo $id?>"  id="quantity<?php echo $id?>" class='form-control' autocomplete="off" value="<?php echo $quantity?>" />
 						                    </div>
 						                 </div>
 						                  <div class="col-md-3">

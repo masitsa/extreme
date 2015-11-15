@@ -205,13 +205,26 @@ $data['lab_test'] = 100;
       </header>
 
       <div class="panel-body">
-                <!-- visit Procedures from java script -->
-                <?php echo $this->load->view("nurse/soap/view_plan", $data, TRUE); ?>
-                <!-- end of visit procedures -->
-                <div id="visit_diagnosis_original">
-                  <?php echo $this->load->view("nurse/soap/get_diagnosis", $data, TRUE); ?>
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <div class="form-group">
+                    <select id='diseases_id' name='diseases_id' class='form-control custom-select '>
+                      <option value=''>None - Please Select a diagnosis</option>
+                      <?php echo $diseases;?>
+                    </select>
+                  </div>
+                
                 </div>
-            </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <div class="form-group">
+                      <button type='submit' class="btn btn-sm btn-success"  onclick="pass_diagnosis(<?php echo $visit_id;?>);"> Identify the disease</button>
+                  </div>
+                </div>
+      </div>
+      <!-- visit Procedures from java script -->
+      <?php echo $this->load->view("nurse/soap/view_plan", $data, TRUE); ?>
+      <!-- end of visit procedures -->
+      <div id="patient_diagnosis"></div>
+            
     </section>
     </div>
 </div>
@@ -259,6 +272,7 @@ $(function() {
     $("#obstetrics_surgery_id").customselect();
     $("#theatre_procedure_id").customselect();
     $("#drug_id").customselect();
+    $("#diseases_id").customselect();
 
   });
 $(document).ready(function(){
@@ -273,6 +287,7 @@ $(document).ready(function(){
   get_lab_table(<?php echo $visit_id;?>);
     get_xray_table(<?php echo $visit_id;?>);
     get_ultrasound_table(<?php echo $visit_id;?>);
+    get_diagnosis(<?php echo $visit_id;?>);
 
 
                  // suregies
@@ -379,6 +394,9 @@ function save_doctor_notes(visit_id){
 
       
 }
+
+
+
 
 function assessment(visit_id){
   var XMLHttpRequestObject = false;
@@ -1651,4 +1669,73 @@ function get_drug_to_prescribe(visit_id)
 
 
 }
+
+function pass_diagnosis(visit_id)
+{
+  var diseases_id = document.getElementById("diseases_id").value;
+  save_disease(diseases_id, visit_id);
+
+}
+
+function save_disease(val, visit_id){
+  
+  var XMLHttpRequestObject = false;
+    
+  if (window.XMLHttpRequest) {
+  
+    XMLHttpRequestObject = new XMLHttpRequest();
+  } 
+    
+  else if (window.ActiveXObject) {
+    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+  } 
+  var config_url = $('#config_url').val();
+  var url = config_url+"nurse/save_diagnosis/"+val+"/"+visit_id;
+  if(XMLHttpRequestObject) {
+        
+    XMLHttpRequestObject.open("GET", url);
+        
+    XMLHttpRequestObject.onreadystatechange = function(){
+      
+      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+        get_disease(visit_id);
+      }
+    }
+    
+    XMLHttpRequestObject.send(null);
+  }
+}
+
+function get_disease(visit_id){
+  
+  var XMLHttpRequestObject = false;
+    
+  if (window.XMLHttpRequest) {
+  
+    XMLHttpRequestObject = new XMLHttpRequest();
+  } 
+    
+  else if (window.ActiveXObject) {
+    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+   var config_url = $('#config_url').val();
+  var url = "<?php echo site_url();?>nurse/get_diagnosis/"+visit_id;
+  
+
+      
+  if(XMLHttpRequestObject) {
+      var obj = document.getElementById("patient_diagnosis");
+    XMLHttpRequestObject.open("GET", url);
+        
+    XMLHttpRequestObject.onreadystatechange = function(){
+      
+      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+        obj.innerHTML = XMLHttpRequestObject.responseText;
+      }
+    }
+    
+    XMLHttpRequestObject.send(null);
+  }
+}
+
 </script>

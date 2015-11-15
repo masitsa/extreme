@@ -304,7 +304,35 @@ class Pharmacy_model extends CI_Model
 			return FALSE;
 		}
 	}
-	
+	public function update_inpatient_prescription($visit_id, $visit_charge_id, $prescription_id)
+	{
+		//$varpassed_value = $_POST['passed_value'];
+		// $varsubstitution = $_POST['substitution'.$prescription_id];
+		
+		// if(empty($varsubstitution)){
+		// 	$varsubstitution = "No";
+		// }
+		$date = date("Y-m-d"); 
+		$time = date("H:i:s");
+
+		$data2 = array(
+			// 'prescription_finishdate'=>$this->input->post('finishdate'),
+			'drug_times_id'=>$this->input->post('x'),
+			'drug_duration_id'=>$this->input->post('duration'),
+			'drug_consumption_id'=>$this->input->post('consumption'),
+			// 'units_given'=>$this->input->post('units_given'),
+			'prescription_quantity'=>$this->input->post('quantity')
+		);
+		
+		$this->db->where('prescription_id', $prescription_id);
+		if($this->db->update('pres', $data2))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
 	public function update_prescription($visit_id, $visit_charge_id, $prescription_id)
 	{
 		//$varpassed_value = $_POST['passed_value'];
