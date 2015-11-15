@@ -289,7 +289,7 @@ $(document).ready(function(){
   get_lab_table(<?php echo $visit_id;?>);
     get_xray_table(<?php echo $visit_id;?>);
     get_ultrasound_table(<?php echo $visit_id;?>);
-    get_diagnosis(<?php echo $visit_id;?>);
+    get_disease(<?php echo $visit_id;?>);
 
 
                  // suregies

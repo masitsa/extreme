@@ -191,8 +191,6 @@ $(document).ready(function(){
                 for(count = 1; count < 12; count++){
                     load_vitals(count, visit_id);
                 }
-				display_bed_charges(visit_id);
-				display_consultation_charges(visit_id);
                 previous_vitals(visit_id);
                 // get_family_history(visit_id);
                 // nurse_notes(visit_id);
@@ -204,9 +202,6 @@ $(document).ready(function(){
 				display_vaccines(visit_id);
 				display_visit_vaccines(visit_id);
                 display_visit_consumables(visit_id);
-
-
-                
             }
         }
                 

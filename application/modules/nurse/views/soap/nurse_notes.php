@@ -30,8 +30,12 @@ echo
 				<input type="time" name="time" class="form-control">
 			</div>
 		</div>
-	</div>
+	</div>';
 	
+
+if($mobile_personnel_id != NULL)
+{
+	echo '
 	<!--<div class="row">
 		<div class="col-md-12 sigPad" >
 			<label class="control-label">Signature</label>
@@ -56,9 +60,11 @@ echo
 				<input type="hidden" name="output" class="output">
 			</div>
 		</div>
-	</div>
-	
-	<div class="row">
+	</div>';
+}
+
+echo '	
+	<div class="row" style="margin-top:10px;">
 		<div class="col-md-12" >
 			<textarea id="nurse_notes_item" class="cleditor" rows="10" name="nurse_notes"></textarea>
 		</div>
