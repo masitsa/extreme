@@ -35,7 +35,7 @@ if($num_rows > 0){
 	echo
 	"
 	<div class='row'>
-		<div class='col-md-12' style='height:400px;'>
+		<div class='col-md-12'>
 			<textarea class='cleditor' id='visit_plan' >".$visit_plan."</textarea>
 		</div>
 	</div>
