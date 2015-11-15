@@ -110,6 +110,8 @@
         <script src="<?php echo base_url()."assets/bluish/"?>js/jquery.flot.stack.js"></script>
         
 		<script type="text/javascript" src="<?php echo base_url();?>assets/themes/tinymce/tinymce.min.js"></script>
+		 <script src='<?php echo base_url()."assets/bluish/"?>src/jquery-customselect.js'></script>
+	    <link href='<?php echo base_url()."assets/bluish/"?>src/jquery-customselect.css' rel='stylesheet' />
         <script type="text/javascript">
             tinymce.init({
                 selector: ".cleditor"

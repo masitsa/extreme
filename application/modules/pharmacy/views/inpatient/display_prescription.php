@@ -236,25 +236,7 @@ $duration_list = $duration_list."</select>";
 
 
                     ?>
-                    <?php
-                        if($module == 1)
-                        {
-                            // pharmacy
-                             // echo form_open('pharmacy/dispense_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id.'/'.$module, array("class" => "form-horizontal"));
-                        	?>
-                        		<form enctype="multipart/form-data" prescription_id="<?php echo $id;?>" action="<?php echo base_url();?>pharmacy/update_prescription/<?php echo $visit_id;?>/<?php echo $visit_charge_id;?>/<?php echo $id;?>/<?php echo $module;?>"  id = "update_prescription" method="post">
-
-                        	<?php
-                        }
-                        else
-                        {
-                             // echo form_open('pharmacy/update_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id.'/'.$module, array("class" => "form-horizontal"));
-                        	?>
-                        		<form enctype="multipart/form-data" prescription_id="<?php echo $id;?>" action="<?php echo base_url();?>pharmacy/update_prescription/<?php echo $visit_id;?>/<?php echo $visit_charge_id;?>/<?php echo $id;?>/<?php echo $module;?>"  id = "update_prescription" method="post">
-
-                        	<?php
-                        }
-                    ?>
+                  
                     <tr>
                         <td><?php echo $s; ?></td>
                         <td><?php echo $medicine;?></td>
@@ -277,7 +259,7 @@ $duration_list = $duration_list."</select>";
                         ?>
                         <td>
 							<a  class="btn btn-sm btn-primary" id="open_visit<?php echo $id;?>" onclick="get_visit_trail(<?php echo $id;?>);"> View Detail</a>
-							<a  class="btn btn-sm btn-warning " id="close_visit<?php echo $id;?>" style="display:none;" onclick="close_visit_trail(<?php echo $id;?>);"> Close Detail</a></td>
+							<a  class="btn btn-sm btn-warning " id="close_visit<?php echo $id;?>" style="display:none;" onclick="close_visit_trail(<?php echo $id;?>);"> Close Detail</a>
 						</td>
                        
                          <td>
@@ -371,8 +353,6 @@ $duration_list = $duration_list."</select>";
 
 						</td>
 					</tr>
-                    <?php //echo form_close();?>
-                    </form>
               <?php
               endforeach;
                 if($module == 1)

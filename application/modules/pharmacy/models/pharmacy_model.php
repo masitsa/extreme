@@ -367,9 +367,9 @@ class Pharmacy_model extends CI_Model
 		$date = date("Y-m-d"); 
 		$time = date("H:i:s");
 		
-		$visit_charge_qty = $this->input->post('quantity'.$prescription_id);
-		$visit_charge_units = $this->input->post('units_given'.$prescription_id);
-		$visit_charge_amount = $this->input->post('charge'.$prescription_id);
+		$visit_charge_qty = $this->input->post('quantity');
+		$visit_charge_units = $this->input->post('units_given');
+		$visit_charge_amount = $this->input->post('charge');
 		
 		// check if this drug 
 		$result = $this->get_prescribed_drug($prescription_id,$visit_id);

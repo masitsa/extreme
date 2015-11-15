@@ -1,5 +1,3 @@
-<?php echo form_open("reception/register-other-patient", array("class" => "form-horizontal"));?>
-
 <div class="row">
 	<div class="col-md-12">
         <section class="panel panel-featured panel-featured-info">
@@ -29,36 +27,71 @@
 </div>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12"> 
+
         <section class="panel panel-featured panel-featured-info">
             <header class="panel-heading">
                 <h2 class="panel-title">Procedures</h2>
             </header>
             <div class="panel-body">
-                <div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Procedure' onclick='myPopup3(<?php echo $visit_id; ?>)'/></p></div>
-                <!-- visit Procedures from java script -->
-                <div id="procedures"></div>
-                <!-- end of visit procedures -->
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <div class="form-group">
+                    <select id='procedure_id' name='procedure_id' class='form-control custom-select '>
+                      <option value=''>None - Please Select</option>
+                      <?php echo $procedures;?>
+                    </select>
+                  </div>
+                
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <div class="form-group">
+                      <button type='submit' class="btn btn-sm btn-success"  onclick="parse_procedures(<?php echo $visit_id;?>,1);"> Add Procedure</button>
+                  </div>
+                </div>
+
             </div>
+
+
+                     
+           <!-- visit Procedures from java script -->
+            <div id="procedures"></div>
+            <!-- end of visit procedures -->
+            
          </section>
     </div>
 </div>
 
+
 <div class="row">
-	<div class="col-md-12">
+    <div class="col-md-12">
         <section class="panel panel-featured panel-featured-info">
             <header class="panel-heading">
                 <h2 class="panel-title">Vaccines</h2>
             </header>
             <div class="panel-body">
-                <div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Vaccine' onclick='myPopup4(<?php echo $visit_id; ?>)'/></p></div>
-                <!-- visit Procedures from java script -->
-                <div id="vaccines_to_patients"></div>
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <div class="form-group">
+                    <select id='vaccine_id' name='vaccine_id' class='form-control custom-select '>
+                      <option value=''>None - Please Select a vaccine</option>
+                      <?php echo $vaccines;?>
+                    </select>
+                  </div>
+                
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <div class="form-group">
+                      <button type='submit' class="btn btn-sm btn-success"  onclick="parse_vaccine(<?php echo $visit_id;?>,1);"> Add Vaccine</button>
+                  </div>
+                </div>
+                 <!-- visit Procedures from java script -->
+                
                 <!-- end of visit procedures -->
             </div>
+            <div id="vaccines_to_patients"></div>
          </section>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
         <section class="panel panel-featured panel-featured-info">
@@ -66,15 +99,28 @@
                 <h2 class="panel-title">Consumables</h2>
             </header>
             <div class="panel-body">
-                <div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Consumables' onclick='myPopup5(<?php echo $visit_id; ?>)'/></p></div>
-                <!-- visit Procedures from java script -->
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <div class="form-group">
+                    <select id='consumable_id' name='consumable_id' class='form-control custom-select '>
+                      <option value=''>None - Please Select a consumable</option>
+                      <?php echo $consumables;?>
+                    </select>
+                  </div>
+                
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <div class="form-group">
+                      <button class="btn btn-sm btn-success"  onclick="parse_consumable_charge(<?php echo $visit_id;?>,1);"> Add Consumable</button>
+                  </div>
+                </div>
+               
+            </div>
+             <!-- visit Procedures from java script -->
                 <div id="consumables_to_patients"></div>
                 <!-- end of visit procedures -->
-            </div>
          </section>
     </div>
 </div>
-
 <div class="row">
     <div class="col-md-12">
 		<section class="panel panel-featured panel-featured-info">
@@ -94,10 +140,21 @@
     </div>
 </div>
 
-<?php echo form_close();?>
-
 <script text="javascript">
+ $(function() {
+    $("#consumable_id").customselect();
+    $("#procedure_id").customselect();
+    $("#vaccine_id").customselect();
+    $("#lab_test_id").customselect();
+    $("#xray_id").customselect();
+    $("#ultrasound_id").customselect();
+    $("#orthopaedic_surgery_id").customselect();
+    $("#opthamology_surgery_id").customselect();
+    $("#obstetrics_surgery_id").customselect();
+    $("#theatre_procedure_id").customselect();
+    $("#drug_id").customselect();
 
+  });
 $(document).ready(function(){
   vitals_interface(<?php echo $visit_id;?>);
 });
@@ -147,6 +204,9 @@ $(document).ready(function(){
 				display_vaccines(visit_id);
 				display_visit_vaccines(visit_id);
                 display_visit_consumables(visit_id);
+
+
+                
             }
         }
                 
@@ -1156,5 +1216,121 @@ function save_vaccine(vaccine_id, value, visit_id){
     }
 	
 }
+
+</script>
+
+<script type="text/javascript">
+    // other changes
+    function parse_procedures(visit_id,suck)
+    {
+      var procedure_id = document.getElementById("procedure_id").value;
+       procedures(procedure_id, visit_id, suck);
+      
+    }
+    function parse_vaccine(visit_id,suck)
+    {
+      var vaccine_id = document.getElementById("vaccine_id").value;
+       vaccines_anchor(vaccine_id, visit_id, suck);
+      
+    }
+    function procedures(id, v_id, suck){
+       
+        var XMLHttpRequestObject = false;
+            
+        if (window.XMLHttpRequest) {
+        
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+            
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        
+        var url = "<?php echo site_url();?>nurse/procedure/"+id+"/"+v_id+"/"+suck;
+       
+         if(XMLHttpRequestObject) {
+                    
+            XMLHttpRequestObject.open("GET", url);
+                    
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+                    document.getElementById("procedures").innerHTML=XMLHttpRequestObject.responseText;
+                }
+            }
+                    
+            XMLHttpRequestObject.send(null);
+        }
+
+    }
+    function vaccines_anchor(id, v_id, suck){
+   
+        var XMLHttpRequestObject = false;
+            
+        if (window.XMLHttpRequest) {
+        
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+            
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+      
+        var url = "<?php echo site_url();?>nurse/vaccines/"+id+"/"+v_id+"/"+suck;
+      
+        if(XMLHttpRequestObject) {
+                    
+            XMLHttpRequestObject.open("GET", url);
+                    
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+                    document.getElementById("vaccines_to_patients").innerHTML=XMLHttpRequestObject.responseText;
+                }
+            }
+                    
+            XMLHttpRequestObject.send(null);
+        }
+    }
+    function parse_consumable_charge(visit_id,suck)
+    {
+      var consumable_id = document.getElementById("consumable_id").value;
+       // alert(consumable_id);
+      consumable(consumable_id, visit_id,suck);
+
+    }
+
+    function consumable(id, visit_id,suck){
+        
+        var XMLHttpRequestObject = false;
+            
+        if (window.XMLHttpRequest) {
+        
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+            
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var url = "<?php echo site_url();?>nurse/inpatient_consumables/"+id+"/"+visit_id+"/"+suck;
+        
+        if(XMLHttpRequestObject) {
+                    
+            XMLHttpRequestObject.open("GET", url);
+                    
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                    
+                   document.getElementById("consumables_to_patients").innerHTML = XMLHttpRequestObject.responseText;
+                   //get_surgery_table(visit_id);
+                }
+            }
+            
+            XMLHttpRequestObject.send(null);
+        }
+    }
 
 </script>

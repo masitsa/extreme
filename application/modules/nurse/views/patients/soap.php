@@ -1,4 +1,3 @@
-<?php echo form_open("reception/register-other-patient", array("class" => "form-horizontal"));?>
 <?php
 if($dental == 1)
 {
@@ -61,56 +60,159 @@ $data['lab_test'] = 100;
 <?php
 }
 ?>
-<div class="row">
- 	<div class="col-md-12">
-		<section class="panel panel-featured panel-featured-info">
-			<header class="panel-heading">
-				<h2 class="panel-title">Plan</h2>
-			</header>
 
-			<div class="panel-body">
+
+<div id="test_results">
+  <div class="row">
+  <div class="col-md-12">
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">Lab Tests</h2>
+            </header>
+            <div class="panel-body">
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <div class="form-group">
+                    <select id='lab_test_id' name='lab_test_id' class='form-control custom-select '>
+                      <option value=''>None - Please Select a Lab test</option>
+                      <?php echo $lab_tests;?>
+                    </select>
+                  </div>
+                
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <div class="form-group">
+                      <button type='submit' class="btn btn-sm btn-success"  onclick="parse_lab_test(<?php echo $visit_id;?>);"> Add Lab Test</button>
+                  </div>
+                </div>
+                 <!-- visit Procedures from java script -->
+                
+                <!-- end of visit procedures -->
+            </div>
+            <div id="lab_table"></div>
+            <?php echo $this->load->view("laboratory/tests/test2", $data, TRUE); ?>
+         </section>
+    </div>
+</div>
+
+</div>
+
+<div id="xray_results">
+  <div class="row">
+  <div class="col-md-12">
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">XRAY</h2>
+            </header>
+            <div class="panel-body">
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <div class="form-group">
+                    <select id='xray_id' name='xray_id' class='form-control custom-select '>
+                      <option value=''>None - Please Select an XRAY</option>
+                      <?php echo $xrays;?>
+                    </select>
+                  </div>
+                
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <div class="form-group">
+                      <button type='submit' class="btn btn-sm btn-success"  onclick="parse_xray(<?php echo $visit_id;?>);"> Add an XRAY</button>
+                  </div>
+                </div>
+                 <!-- visit Procedures from java script -->
+                
+                <!-- end of visit procedures -->
+            </div>
+            <div id="xray_table"></div>
+            <?php echo $this->load->view("radiology/tests/test2", $data, TRUE); ?>
+         </section>
+    </div>
+</div>
+	
+</div>
+
+<div id="ultrasound_results">
+  <div class="row">
+  <div class="col-md-12">
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">ULTRASOUND</h2>
+            </header>
+            <div class="panel-body">
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <div class="form-group">
+                    <select id='ultrasound_id' name='ultrasound_id' class='form-control custom-select '>
+                      <option value=''>None - Please Select an Ulra sound</option>
+                      <?php echo $ultrasound;?>
+                    </select>
+                  </div>
+                
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <div class="form-group">
+                      <button type='submit' class="btn btn-sm btn-success"  onclick="parse_ultrasound(<?php echo $visit_id;?>);"> Add an Ultrasound</button>
+                  </div>
+                </div>
+                 <!-- visit Procedures from java script -->
+                
+                <!-- end of visit procedures -->
+            </div>
+             <div id="ultrasound_table"></div>
+             <?php echo $this->load->view("radiology/tests_ultrasound/test2", $data, TRUE); ?>
+         </section>
+    </div>
+</div>
+	
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+        <section class="panel panel-featured panel-featured-info">
+            <header class="panel-heading">
+                <h2 class="panel-title">Prescription</h2>
+            </header>
+            <div class="panel-body">
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <div class="form-group">
+                    <select id='drug_id' name='drug_id' class='form-control custom-select '>
+                      <option value=''>None - Please Select an drug</option>
+                      <?php echo $drugs;?>
+                    </select>
+                  </div>
+                
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <div class="form-group">
+                      <button type='submit' class="btn btn-sm btn-success"  onclick="get_drug_to_prescribe(<?php echo $visit_id;?>);"> Prescribe drug</button>
+                  </div>
+                </div>
+                 <!-- visit Procedures from java script -->
+                
+                <!-- end of visit procedures -->
+            </div>
+             <div id="prescription_view"></div>
+             <div id="visit_prescription"></div>
+
+             <?php // echo $this->load->view("pharmacy/display_prescription", $data, TRUE); ?>
+              
+         </section>
+    </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <section class="panel panel-featured panel-featured-info">
+      <header class="panel-heading">
+        <h2 class="panel-title">Plan</h2>
+      </header>
+
+      <div class="panel-body">
                 <!-- visit Procedures from java script -->
                 <?php echo $this->load->view("nurse/soap/view_plan", $data, TRUE); ?>
                 <!-- end of visit procedures -->
                 <div id="visit_diagnosis_original">
-                	<?php echo $this->load->view("nurse/soap/get_diagnosis", $data, TRUE); ?>
+                  <?php echo $this->load->view("nurse/soap/get_diagnosis", $data, TRUE); ?>
                 </div>
             </div>
-		</section>
-    </div>
-</div>
-
-<div id="test_results">
-	<?php echo $this->load->view("laboratory/tests/test2", $data, TRUE); ?>
-</div>
-
-<div id="xray_results">
-	<?php echo $this->load->view("radiology/tests/test2", $data, TRUE); ?>
-</div>
-
-<div id="ultrasound_results">
-	<?php echo $this->load->view("radiology/tests_ultrasound/test2", $data, TRUE); ?>
-</div>
-
-<div id="surgery_results">
-	<?php echo $this->load->view("theatre/tests/test2", $data, TRUE); ?>
-</div>
-
-<div class="row">
- 	<div class="col-md-12">
-		<section class="panel panel-featured panel-featured-info">
-			<header class="panel-heading">
-				<h2 class="panel-title">Prescription</h2>
-			</header>
-
-			<div class="panel-body">
-                <!-- vitals from java script -->
-                <div id="prescription">
-                <?php echo $this->load->view("pharmacy/display_prescription", $data, TRUE); ?>
-                </div>
-                <!-- end of vitals data -->
-            </div>
-		</section>
+    </section>
     </div>
 </div>
 
@@ -143,13 +245,22 @@ $data['lab_test'] = 100;
 		</section>
     </div>
 </div>
-<?php echo form_close();?>
 
 
 
 
 <script type="text/javascript">
+$(function() {
+    $("#lab_test_id").customselect();
+    $("#xray_id").customselect();
+    $("#ultrasound_id").customselect();
+    $("#orthopaedic_surgery_id").customselect();
+    $("#opthamology_surgery_id").customselect();
+    $("#obstetrics_surgery_id").customselect();
+    $("#theatre_procedure_id").customselect();
+    $("#drug_id").customselect();
 
+  });
 $(document).ready(function(){
 	//symptoms(<?php echo $visit_id;?>);
 	//objective_findings(<?php echo $visit_id;?>);
@@ -159,6 +270,19 @@ $(document).ready(function(){
 	//nurse_notes(<?php echo $visit_id?>);
 	//get_disease(<?php echo $visit_id?>);
 	//display_prescription(<?php echo $visit_id?>,2);
+  get_lab_table(<?php echo $visit_id;?>);
+    get_xray_table(<?php echo $visit_id;?>);
+    get_ultrasound_table(<?php echo $visit_id;?>);
+
+
+                 // suregies
+    // get_orthopaedic_surgery_table(<?php echo $visit_id;?>);
+    // get_opthamology_surgery_table(<?php echo $visit_id;?>);
+    // get_obstetrics_surgery_table(<?php echo $visit_id;?>);
+    // get_theatre_procedures_table(<?php echo $visit_id;?>);
+
+  
+    display_inpatient_prescription(<?php echo $visit_id;?>,0);
 });
   
 function symptoms(visit_id)
@@ -690,5 +814,841 @@ function print_previous_test(visit_id, patient_id){
 					"directories=yes,location=yes,menubar=yes," +
 					 "resizable=no status=no,history=no top = 50 left = 100");
   win.focus();
+}
+</script>
+<script type="text/javascript">
+
+  function parse_lab_test(visit_id)
+  {
+    var lab_test_id = document.getElementById("lab_test_id").value;
+     lab(lab_test_id, visit_id);
+    
+  }
+   function get_lab_table(visit_id){
+        var XMLHttpRequestObject = false;
+            
+        if (window.XMLHttpRequest) {
+        
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+            
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var url = "<?php echo site_url();?>laboratory/test_lab/"+visit_id;
+    
+        if(XMLHttpRequestObject) {
+                    
+            XMLHttpRequestObject.open("GET", url);
+                    
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                    
+                    document.getElementById("lab_table").innerHTML = XMLHttpRequestObject.responseText;
+                }
+            }
+            
+            XMLHttpRequestObject.send(null);
+        }
+    }
+  
+   function lab(id, visit_id){
+    
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>laboratory/test_lab/"+visit_id+"/"+id;
+    // window.alert(url);
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+               document.getElementById("lab_table").innerHTML = XMLHttpRequestObject.responseText;
+               //get_lab_table(visit_id);
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
+}
+function parse_xray(visit_id)
+{
+  var xray_id = document.getElementById("xray_id").value;
+  xray(xray_id, visit_id);
+
+}
+
+function xray(id, visit_id){
+    
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>radiology/xray/test_xray/"+visit_id+"/"+id;
+    // window.alert(url);
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+               document.getElementById("xray_table").innerHTML = XMLHttpRequestObject.responseText;
+               //get_xray_table(visit_id);
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
+}
+
+function get_xray_table(visit_id){
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>radiology/xray/test_xray/"+visit_id;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+                document.getElementById("xray_table").innerHTML = XMLHttpRequestObject.responseText;
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
+}
+ function get_ultrasound_table(visit_id){
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>radiology/ultrasound/test_ultrasound/"+visit_id;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+                document.getElementById("ultrasound_table").innerHTML = XMLHttpRequestObject.responseText;
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
+}
+function get_orthopaedic_surgery_table(visit_id){
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>theatre/test_orthopaedic_surgery/"+visit_id;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+                document.getElementById("orthopaedic_surgery_table").innerHTML = XMLHttpRequestObject.responseText;
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
+}
+function get_opthamology_surgery_table(visit_id){
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>theatre/test_opthamology_surgery/"+visit_id;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+                document.getElementById("opthamology_surgery_table").innerHTML = XMLHttpRequestObject.responseText;
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
+}
+function get_obstetrics_surgery_table(visit_id){
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>theatre/test_obstetrics_surgery/"+visit_id;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+                document.getElementById("obstetrics_surgery_table").innerHTML = XMLHttpRequestObject.responseText;
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
+}
+function get_theatre_procedures_table(visit_id){
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>theatre/test_theatre_procedures/"+visit_id;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+                document.getElementById("theatre_procedures_table").innerHTML = XMLHttpRequestObject.responseText;
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
+}
+function parse_ultrasound(visit_id)
+{
+  var ultrasound_id = document.getElementById("ultrasound_id").value;
+  ultrasound(ultrasound_id, visit_id);
+
+}
+function ultrasound(id, visit_id){
+    
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>radiology/ultrasound/test_ultrasound/"+visit_id+"/"+id;
+    // window.alert(url);
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+               document.getElementById("ultrasound_table").innerHTML = XMLHttpRequestObject.responseText;
+               //get_ultrasound_table(visit_id);
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
+}
+
+function parse_orthopaedic_surgery(visit_id)
+{
+  var orthopaedic_surgery_id = document.getElementById("orthopaedic_surgery_id").value;
+  orthopaedic(orthopaedic_surgery_id, visit_id);
+
+}
+
+function orthopaedic(id, visit_id){
+    
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>theatre/test_orthopaedic_surgery/"+visit_id+"/"+id;
+    // window.alert(url);
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+               document.getElementById("orthopaedic_surgery_table").innerHTML = XMLHttpRequestObject.responseText;
+               //get_surgery_table(visit_id);
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
+}
+function parse_opthamology_surgery(visit_id)
+{
+  var opthamology_surgery_id = document.getElementById("opthamology_surgery_id").value;
+  // alert(opthamology_surgery_id);
+  opthamology(opthamology_surgery_id, visit_id);
+
+}
+
+function opthamology(id, visit_id){
+    
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>theatre/test_opthamology_surgery/"+visit_id+"/"+id;
+    // window.alert(url);
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+               document.getElementById("opthamology_surgery_table").innerHTML = XMLHttpRequestObject.responseText;
+               //get_surgery_table(visit_id);
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
+}
+
+function parse_obstetrics_surgery(visit_id)
+{
+  var obstetrics_surgery_id = document.getElementById("obstetrics_surgery_id").value;
+  obsterics(obstetrics_surgery_id, visit_id);
+
+}
+
+function obsterics(id, visit_id){
+    
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>theatre/test_obstetrics_surgery/"+visit_id+"/"+id;
+    // window.alert(url);
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+               document.getElementById("obstetrics_surgery_table").innerHTML = XMLHttpRequestObject.responseText;
+               //get_surgery_table(visit_id);
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
+}
+
+function parse_theatre_procedures(visit_id)
+{
+  var theatre_procedure_id = document.getElementById("theatre_procedure_id").value;
+  theatre_procedure(theatre_procedure_id, visit_id);
+
+}
+
+function theatre_procedure(id, visit_id){
+    
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>theatre/test_theatre_procedures/"+visit_id+"/"+id;
+    // window.alert(url);
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+               document.getElementById("theatre_procedures_table").innerHTML = XMLHttpRequestObject.responseText;
+               //get_surgery_table(visit_id);
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
+}
+
+function delete_inpatient_surgery_cost(visit_charge_id, visit_id,surgery_type)
+{
+  var res = confirm('Are you sure you want to delete this charge?');
+  
+  if(res)
+  {
+    var XMLHttpRequestObject = false;
+    
+    if (window.XMLHttpRequest) {
+      XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+    
+    else if (window.ActiveXObject) {
+      XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = config_url+"theatre/delete_inpatient_cost/"+visit_charge_id+"/"+visit_id;
+    
+    if(XMLHttpRequestObject) {
+      
+      XMLHttpRequestObject.open("GET", url);
+      
+      XMLHttpRequestObject.onreadystatechange = function(){
+        
+        if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+          
+          
+          if(surgery_type == 25)
+          {
+              // orthopaedic procedures
+              get_orthopaedic_surgery_table(visit_id);
+                
+
+          }
+          else if(surgery_type == 29)
+          {
+              // opthamology procedures
+              get_opthamology_surgery_table(visit_id);
+                
+          }
+          else if(surgery_type == 30)
+          {
+              // obstetrics procedures
+              get_obstetrics_surgery_table(visit_id);
+                
+          }
+          else if(surgery_type == 27)
+          {
+              // theatre procedures
+              get_theatre_procedures_table(visit_id);
+
+          }
+        }
+      }
+      XMLHttpRequestObject.send(null);
+    }
+  }
+}
+
+function pass_prescription()
+{
+  var quantity = document.getElementById("quantity_value").value;
+  var x = document.getElementById("x_value").value;
+  var duration = document.getElementById("duration_value").value;
+  var consumption = document.getElementById("consumption_value").value;
+  var number_of_days = document.getElementById("number_of_days_value").value;
+  var service_charge_id = document.getElementById("drug_id").value;
+  var visit_id = document.getElementById("visit_id").value;
+  var module = document.getElementById("module").value;
+  var passed_value = document.getElementById("passed_value").value;
+
+  var url = "<?php echo base_url();?>pharmacy/prescribe_prescription";
+
+
+  $.ajax({
+  type:'POST',
+  url: url,
+  data:{quantity: quantity, x: x, duration: duration,consumption: consumption, service_charge_id : service_charge_id, visit_id : visit_id, number_of_days: number_of_days,module: module,passed_value:passed_value},
+  dataType: 'text',
+  success:function(data){
+
+  
+  },
+  error: function(xhr, status, error) {
+  alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+
+  }
+  });
+  display_inpatient_prescription(visit_id,0);
+  var prescription_view = document.getElementById("prescription_view");
+  prescription_view.style.display = 'none';
+ 
+  return false;
+}
+
+function get_visit_trail(visit_id){
+
+  var myTarget2 = document.getElementById("visit_trail"+visit_id);
+  var button = document.getElementById("open_visit"+visit_id);
+  var button2 = document.getElementById("close_visit"+visit_id);
+
+  myTarget2.style.display = '';
+  button.style.display = 'none';
+  button2.style.display = '';
+}
+function close_visit_trail(visit_id){
+
+  var myTarget2 = document.getElementById("visit_trail"+visit_id);
+  var button = document.getElementById("open_visit"+visit_id);
+  var button2 = document.getElementById("close_visit"+visit_id);
+
+  myTarget2.style.display = 'none';
+  button.style.display = '';
+  button2.style.display = 'none';
+}
+
+function button_update_prescription(visit_id,visit_charge_id,prescription_id,module)
+{
+  var quantity = $('#quantity'+prescription_id).val();
+  var x = $('#x'+prescription_id).val();
+  var duration = $('#duration'+prescription_id).val();
+  var consumption = $('#consumption'+prescription_id).val();
+  var url = "<?php echo base_url();?>pharmacy/update_inpatient_prescription/"+visit_id+"/"+visit_charge_id+"/"+prescription_id+"/"+module;
+
+
+  $.ajax({
+  type:'POST',
+  url: url,
+  data:{quantity: quantity, x: x, duration: duration,consumption: consumption},
+  dataType: 'text',
+  success:function(data){
+
+  
+  },
+  error: function(xhr, status, error) {
+  alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+
+  }
+  });
+  display_inpatient_prescription(visit_id,0);
+  return false;
+}
+
+function dispense_prescription(visit_id,visit_charge_id,prescription_id,module)
+{
+  var quantity = $('#quantity'+prescription_id).val();
+  var x = $('#x'+prescription_id).val();
+  var duration = $('#duration'+prescription_id).val();
+  var consumption = $('#consumption'+prescription_id).val();
+  var charge = $('#charge'+prescription_id).val();
+  var units_given = $('#units_given'+prescription_id).val();
+
+  var url = "<?php echo base_url();?>pharmacy/dispense_inpatient_prescription/"+visit_id+"/"+visit_charge_id+"/"+prescription_id+"/"+module;
+
+  $.ajax({
+  type:'POST',
+  url: url,
+  data:{quantity: quantity, x: x, duration: duration,consumption: consumption,charge: charge, units_given: units_given},
+  dataType: 'text',
+  success:function(data){
+    window.alert(data.result);
+  
+  },
+  error: function(xhr, status, error) {
+  alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+
+  }
+  });
+  display_inpatient_prescription(visit_id,0);
+  return false;
+}
+
+
+function delete_prescription(prescription_id, visit_id,visit_charge_id,module)
+{
+  var res = confirm('Are you sure you want to delete this prescription ?');
+  
+  if(res)
+  {
+    var XMLHttpRequestObject = false;
+    
+    if (window.XMLHttpRequest) {
+      XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+    
+    else if (window.ActiveXObject) {
+      XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = config_url+"pharmacy/delete_inpatient_prescription/"+prescription_id+"/"+visit_id+"/"+visit_charge_id+"/"+module;
+    
+    if(XMLHttpRequestObject) {
+      
+      XMLHttpRequestObject.open("GET", url);
+      
+      XMLHttpRequestObject.onreadystatechange = function(){
+        
+        if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+          
+           display_inpatient_prescription(visit_id,0);
+         
+        }
+      }
+      XMLHttpRequestObject.send(null);
+    }
+  }
+}
+
+function delete_ultrasound_cost(visit_charge_id, visit_id)
+{
+    var res = confirm('Are you sure you want to delete this charge?');
+    
+    if(res)
+    {
+        var XMLHttpRequestObject = false;
+        
+        if (window.XMLHttpRequest) {
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+        
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var url = config_url+"radiology/ultrasound/delete_cost/"+visit_charge_id+"/"+visit_id;
+        
+        if(XMLHttpRequestObject) {
+            var obj = document.getElementById("ultrasound_table");
+            
+            XMLHttpRequestObject.open("GET", url);
+            
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                    
+                    obj.innerHTML = XMLHttpRequestObject.responseText;
+                    get_ultrasound_table(visit_id);
+                }
+            }
+            XMLHttpRequestObject.send(null);
+        }
+    }
+}
+   function delete_cost(visit_charge_id, visit_id){
+  
+      var XMLHttpRequestObject = false;
+      
+      if (window.XMLHttpRequest) {
+        XMLHttpRequestObject = new XMLHttpRequest();
+      } 
+      
+      else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      var url = config_url+"laboratory/delete_cost/"+visit_charge_id+"/"+visit_id;
+      
+      if(XMLHttpRequestObject) {
+        var obj = document.getElementById("lab_table");
+        
+        XMLHttpRequestObject.open("GET", url);
+        
+        XMLHttpRequestObject.onreadystatechange = function(){
+          
+          if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+            
+            obj.innerHTML = XMLHttpRequestObject.responseText;
+            //window.location.href = config_url+"data/doctor/laboratory.php?visit_id="+visit_id;
+          }
+        }
+        XMLHttpRequestObject.send(null);
+      }
+    }
+
+function delete_xray_cost(visit_charge_id, visit_id)
+{
+    var res = confirm('Are you sure you want to delete this charge?');
+    
+    if(res)
+    {
+        var XMLHttpRequestObject = false;
+        
+        if (window.XMLHttpRequest) {
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+        
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var url = config_url+"radiology/xray/delete_cost/"+visit_charge_id+"/"+visit_id;
+        
+        if(XMLHttpRequestObject) {
+            var obj = document.getElementById("xray_table");
+            
+            XMLHttpRequestObject.open("GET", url);
+            
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                    
+                    obj.innerHTML = XMLHttpRequestObject.responseText;
+                    get_xray_table(visit_id);
+                }
+            }
+            XMLHttpRequestObject.send(null);
+        }
+    }
+}
+
+
+
+function display_inpatient_prescription(visit_id,module){
+
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    var config_url = document.getElementById("config_url").value;
+    var url = config_url+"pharmacy/display_inpatient_prescription/"+visit_id+"/"+module;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+                document.getElementById("visit_prescription").innerHTML=XMLHttpRequestObject.responseText;
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
+function get_drug_to_prescribe(visit_id)
+{
+  var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var drug_id = document.getElementById("drug_id").value;
+
+    var url = "<?php echo site_url();?>pharmacy/inpatient_prescription/"+visit_id+"/"+drug_id+"/1";
+
+     if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+              var prescription_view = document.getElementById("prescription_view");
+             
+              document.getElementById("prescription_view").innerHTML=XMLHttpRequestObject.responseText;
+               prescription_view.style.display = 'block';
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+
+
 }
 </script>

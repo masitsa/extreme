@@ -1159,7 +1159,7 @@ function pass_prescription()
   });
   var prescription_view = document.getElementById("prescription_view");
   prescription_view.style.display = 'none';
-  display_inpatient_prescription(visit_id,1);
+  display_inpatient_prescription(visit_id,0);
   return false;
 }
 
@@ -1208,7 +1208,7 @@ function button_update_prescription(visit_id,visit_charge_id,prescription_id,mod
 
   }
   });
-  display_inpatient_prescription(visit_id,1);
+  display_inpatient_prescription(visit_id,0);
   return false;
 }
 
@@ -1237,7 +1237,7 @@ function dispense_prescription(visit_id,visit_charge_id,prescription_id,module)
 
   }
   });
-  display_inpatient_prescription(visit_id,1);
+  display_inpatient_prescription(visit_id,0);
   return false;
 }
 
@@ -1267,7 +1267,7 @@ function delete_prescription(prescription_id, visit_id,visit_charge_id,module)
         
         if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
           
-           display_inpatient_prescription(visit_id,1);
+           display_inpatient_prescription(visit_id,0);
          
         }
       }

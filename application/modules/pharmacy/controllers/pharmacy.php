@@ -239,15 +239,15 @@ class Pharmacy  extends MX_Controller
 
 	public function dispense_inpatient_prescription($visit_id, $visit_charge_id, $prescription_id,$module = NULL){
 		// $this->form_validation->set_rules('substitution'.$prescription_id, 'Substitution', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('x'.$prescription_id, 'Times Per Day', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('duration'.$prescription_id, 'Duration', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('consumption'.$prescription_id, 'Consumption', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('quantity'.$prescription_id, 'Quantity', 'required|xss_clean');
+		$this->form_validation->set_rules('x', 'Times Per Day', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('duration', 'Duration', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('consumption', 'Consumption', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('quantity', 'Quantity', 'required|xss_clean');
 
 		if($module == 1)
 		{
-			$this->form_validation->set_rules('units_given'.$prescription_id, 'Units Given', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('charge'.$prescription_id, 'Unit price', 'trim|required|xss_clean');	
+			$this->form_validation->set_rules('units_given', 'Units Given', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('charge', 'Unit price', 'trim|required|xss_clean');	
 		}
 		
 		//if form conatins invalid data
@@ -563,6 +563,34 @@ class Pharmacy  extends MX_Controller
 		$v_data['visit_date'] = $visit_date;
 		$v_data['gender'] = $gender;
 		$v_data['module'] = $module;
+
+		$rs = $this->nurse_model->check_visit_type($visit_id);
+		if(count($rs)>0){
+		  foreach ($rs as $rs1) {
+		    # code...
+		      $visit_t = $rs1->visit_type;
+		  }
+		}
+		$drugs_order = 'product.product_name'; 
+		$drugs_where = 'product.product_id = service_charge.product_id  AND service_charge.service_id = service.service_id AND (service.service_name = "Pharmacy" OR service.service_name = "pharmacy") AND service_charge.visit_type_id = '.$visit_t;
+		$drugs_table = 'product, service_charge, service';
+		$drug_query = $this->pharmacy_model->get_inpatient_drugs($drugs_table, $drugs_where, $drugs_order);
+
+		$rs15 = $drug_query->result();
+		$drugs = '';
+		foreach ($rs15 as $drug_rs) :
+
+
+		  $drug_id = $drug_rs->service_charge_id;
+		  $drug_name = $drug_rs->service_charge_name;
+		  $brand_name = $drug_rs->brand_name;
+
+		  $drug_price = $drug_rs->service_charge_amount;
+
+		  $drugs .="<option value='".$drug_id."'>".$drug_name." Brand: ".$brand_name." KES.".$drug_price."</option>";
+
+		endforeach;
+		$v_data['drugs'] = $drugs;
 		
 		$data['content'] = $this->load->view('prescription', $v_data, TRUE);
 		
