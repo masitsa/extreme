@@ -74,36 +74,42 @@
               </ul>
               <div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
                 <div class="tab-pane active" id="tests-pane">
-                	<div class="row">
-						<div class="center-align">
-							<?php
-					        	if(($visit == 2)||(($visit == 3))||(($visit == 1))||(($visit == 4))){
-									echo "<input type='button' onClick='open_window_lab(8, ".$visit_id.")' value='Add Test' class='btn btn-primary'>";
-								}
-								
-								if($close_card == 0)
-								{
-									?>
-									<a href="<?php echo site_url().'laboratory/hold_card/'.$visit_id;?>" class="btn btn-default">Hold card</a>
-									<?php
-								}
-								
-								else
-								{
-									?>
-									<a href="<?php echo site_url().'laboratory/release_card/'.$visit_id;?>" class="btn btn-warning">Release card</a>
-									<?php
-								}
-							?>
+                	  <div class="row">
+						  <div class="col-md-12">
+						        <section class="panel panel-featured panel-featured-info">
+						            <header class="panel-heading">
+						                <h2 class="panel-title">Lab Tests</h2>
+						            </header>
+						            <div class="panel-body">
+						                <div class="col-lg-8 col-md-8 col-sm-8">
+						                  <div class="form-group">
+						                    <select id='lab_test_id' name='lab_test_id' class='form-control custom-select '>
+						                      <option value=''>None - Please Select a Lab test</option>
+						                      <?php echo $lab_tests;?>
+						                    </select>
+						                  </div>
+						                
+						                </div>
+						                <div class="col-lg-4 col-md-4 col-sm-4">
+						                  <div class="form-group">
+						                      <button type='submit' class="btn btn-sm btn-success"  onclick="parse_lab_test(<?php echo $visit_id;?>);"> Add Lab Test</button>
+						                  </div>
+						                </div>
+						                 <!-- visit Procedures from java script -->
+						                
+						                <!-- end of visit procedures -->
+						            </div>
+						            <div id="lab_table"></div>
+						         </section>
+						    </div>
 						</div>
-					</div>
                 	
                 	<!-- laboratory technicial should choose what test should be done to the patient -->
-					 <div class="row">
+					<!--  <div class="row">
 					 	<div class="col-md-12">
                             <div id="lab_table"></div>
                         </div>
-					 </div>
+					 </div> -->
 					<!-- bill for thr test asap -->
 
                   	<div id="test_results"></div>
@@ -121,10 +127,51 @@
    
 
   <script type="text/javascript">
+  	$(function() {
+	    $("#lab_test_id").customselect();
+	});
+
 	  $(document).ready(function(){
 	       get_test_results(100, <?php echo $visit_id?>);
 		   get_lab_table(<?php echo $visit_id;?>);
 	  });
+	   function parse_lab_test(visit_id)
+	  {
+	    var lab_test_id = document.getElementById("lab_test_id").value;
+	     lab(lab_test_id, visit_id);
+	    
+	  }
+	  function lab(id, visit_id){
+    
+	    var XMLHttpRequestObject = false;
+	        
+	    if (window.XMLHttpRequest) {
+	    
+	        XMLHttpRequestObject = new XMLHttpRequest();
+	    } 
+	        
+	    else if (window.ActiveXObject) {
+	        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	    }
+	    var url = "<?php echo site_url();?>laboratory/test_lab/"+visit_id+"/"+id;
+	    // window.alert(url);
+	    if(XMLHttpRequestObject) {
+	                
+	        XMLHttpRequestObject.open("GET", url);
+	                
+	        XMLHttpRequestObject.onreadystatechange = function(){
+	            
+	            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+	                
+	               document.getElementById("lab_table").innerHTML = XMLHttpRequestObject.responseText;
+	               get_lab_table(visit_id);
+	               get_test_results(100, visit_id)
+	            }
+	        }
+	        
+	        XMLHttpRequestObject.send(null);
+	    }
+	}
 	 function get_lab_table(visit_id){
         var XMLHttpRequestObject = false;
             

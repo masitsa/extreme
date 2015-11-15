@@ -221,9 +221,11 @@ $data['lab_test'] = 100;
                 </div>
       </div>
       <!-- visit Procedures from java script -->
-      <?php echo $this->load->view("nurse/soap/view_plan", $data, TRUE); ?>
+     
       <!-- end of visit procedures -->
       <div id="patient_diagnosis"></div>
+
+      <?php echo $this->load->view("nurse/soap/view_plan", $data, TRUE); ?>
             
     </section>
     </div>

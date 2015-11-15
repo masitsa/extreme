@@ -159,6 +159,39 @@ class Laboratory  extends MX_Controller
 		$v_data['age'] = $age;
 		$v_data['visit_date'] = $visit_date;
 		$v_data['gender'] = $gender;
+
+		$rs = $this->nurse_model->check_visit_type($visit_id);
+		if(count($rs)>0){
+		  foreach ($rs as $rs1) {
+		    # code...
+		      $visit_t = $rs1->visit_type;
+		  }
+		}
+
+		$lab_test_order = 'service_charge_name';
+
+		$lab_test_where = 'service_charge.service_charge_name = lab_test.lab_test_name AND lab_test_class.lab_test_class_id = lab_test.lab_test_class_id  AND service_charge.service_id = service.service_id AND (service.service_name = "Lab" OR service.service_name = "lab" OR service.service_name = "Laboratory" OR service.service_name = "laboratory" OR service.service_name = "Laboratory test")  AND  service_charge.visit_type_id = '.$visit_t;
+		    
+		$lab_test_table = '`service_charge`, lab_test_class, lab_test, service';
+
+		$lab_test_query = $this->lab_model->get_inpatient_lab_tests($lab_test_table, $lab_test_where, $lab_test_order);
+
+		$rs11 = $lab_test_query->result();
+		$lab_tests = '';
+		foreach ($rs11 as $lab_test_rs) :
+
+
+		  $lab_test_id = $lab_test_rs->service_charge_id;
+		  $lab_test_name = $lab_test_rs->service_charge_name;
+
+		  $lab_test_price = $lab_test_rs->service_charge_amount;
+
+		  $lab_tests .="<option value='".$lab_test_id."'>".$lab_test_name." KES.".$lab_test_price."</option>";
+
+		endforeach;
+
+		$v_data['lab_tests'] = $lab_tests;
+
 		
 		$data['content'] = $this->load->view('tests/test', $v_data, true);
 		$data['sidebar'] = 'lab_sidebar';

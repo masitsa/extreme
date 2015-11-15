@@ -473,7 +473,7 @@ class Nurse  extends MX_Controller
 		$disease_where = 'diseases_id > 0 ';
 		$disease_table = 'diseases';
 		
-		$query = $this->nurse_model->get_diseases($table, $where, $config["per_page"], $page, $order);
+		$query = $this->nurse_model->get_inpatient_diseases($disease_table, $disease_where,$disease_order);
 
 		$rs9 = $query->result();
 		$diseases = '';
