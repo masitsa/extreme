@@ -201,7 +201,7 @@ $(document).ready(function(){
 				display_vaccines(visit_id);
 				display_visit_vaccines(visit_id);
                 display_visit_consumables(visit_id);
-                display_inpatient_prescription(visit_id,1);
+                display_inpatient_prescription(visit_id,0);
 
             }
         }
