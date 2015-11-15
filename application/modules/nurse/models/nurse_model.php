@@ -1613,7 +1613,7 @@ class Nurse_model extends CI_Model
 		}
 	}
 	
-	public function add_notes($visit_id, $notes_type_id, $signature_name)
+	public function add_notes($visit_id, $notes_type_id, $signature_name, $personnel_id)
 	{
 		$notes=$this->input->post('nurse_notes');
 		$date=$this->input->post('date');
@@ -1628,8 +1628,8 @@ class Nurse_model extends CI_Model
         		"notes_date" => $date,
         		"notes_signature" => $signature_name,
 				'created'=>date('Y-m-d H:i:s'),
-				'created_by'=>$this->session->userdata('personnel_id'),
-				'modified_by'=>$this->session->userdata('personnel_id')
+				'created_by'=>$personnel_id,
+				'modified_by'=>$personnel_id
 	    	);
 
 		if($this->db->insert('notes', $trail_data))
@@ -1643,13 +1643,58 @@ class Nurse_model extends CI_Model
 		}
 	}
 	
+	public function edit_notes($visit_id, $notes_type_id, $notes_id, $personnel_id)
+	{
+		$notes=$this->input->post('nurse_notes');
+		$date=$this->input->post('date');
+		$time=$this->input->post('time');
+
+		//  enter into the nurse notes trail 
+		$trail_data = array(
+        		"notes_name" => $notes,
+        		"notes_time" => $time,
+        		"notes_date" => $date,
+				'modified_by'=>$personnel_id
+	    	);
+		
+		$this->db->where('notes_id', $notes_id);
+		if($this->db->update('notes', $trail_data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	
 	public function get_notes($notes_type_id, $visit_id)
 	{
-		$this->db->select('notes.*, notes_type.notes_type_name');
+		$this->db->select('notes.*, notes_type.notes_type_name, personnel.personnel_fname');
 		$this->db->where('notes.visit_id = '.$visit_id.' AND notes.notes_type_id = '.$notes_type_id.' AND notes.notes_status = 1 AND notes.notes_type_id = notes_type.notes_type_id');
+		$this->db->join('personnel', 'personnel.personnel_id = notes.created_by', 'left');
+		$this->db->order_by('notes_date', 'ASC');
+		$this->db->order_by('notes_time', 'ASC');
 		$query = $this->db->get('notes, notes_type');
 		
 		return $query;
+	}
+	
+	public function delete_notes($notes_id, $personnel_id)
+	{
+		$data['notes_status'] = 0;
+		$data['modified_by'] = $personnel_id;
+		$this->db->where('notes_id', $notes_id);
+		if($this->db->update('notes', $data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
 	}
 }
 ?>

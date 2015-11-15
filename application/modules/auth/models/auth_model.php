@@ -122,22 +122,14 @@ class Auth_model extends CI_Model
 	{
 		$personnel_type_id = $this->session->userdata('personnel_type_id');
 		
-		//logout all except doctors
-		if($personnel_type_id == 1)
-		{
-			if($this->session->userdata('login_status'))
-			{
-				return TRUE;
-			}
-			
-			else
-			{
-				return FALSE;
-			}
-		}
-		else
+		if($this->session->userdata('login_status'))
 		{
 			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
 		}
 	}
 	

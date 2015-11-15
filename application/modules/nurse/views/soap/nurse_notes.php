@@ -4,6 +4,12 @@
 $v_data['signature_location'] = base_url().'assets/signatures/';
 $v_data['query'] = $this->nurse_model->get_notes(1, $visit_id);
 
+if(!isset($mobile_personnel_id))
+{
+	$mobile_personnel_id = NULL;
+}
+$v_data['mobile_personnel_id'] = $mobile_personnel_id;
+
 $notes = $this->load->view('nurse/patients/notes', $v_data, TRUE);
 
 echo '<div id="nurse_notes_section">'.$notes.'</div>';
@@ -61,7 +67,7 @@ echo
 	<br>
 	<div class="row">
 	    <div class="col-md-12">
-			<div class="center-align">output
+			<div class="center-align">
 				<button type="submit" class="btn btn-large btn-primary">Update</button>
 			</div>
 	    </div>

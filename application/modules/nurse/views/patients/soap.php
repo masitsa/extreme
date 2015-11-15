@@ -606,7 +606,8 @@ function save_assessment(visit_id){
   var config_url = $('#config_url').val();
   var data_url = config_url+"nurse/save_assessment/"+visit_id;
   //window.alert(data_url);
-  var assessment = $('#visit_assessment').val();//document.getElementById("vital"+vital_id).value;
+  //var assessment = $('#visit_assessment').val();//document.getElementById("vital"+vital_id).value;
+   var assessment = tinymce.get('visit_assessment').getContent();
   $.ajax({
   type:'POST',
   url: data_url,
@@ -711,18 +712,22 @@ function nurse_notes(visit_id){
 
 function save_symptoms(visit_id){
   
-
+	console.debug(tinymce.activeEditor.getContent());
+	//alert(tinymce.activeEditor.getContent());
   var config_url = $('#config_url').val();
   var data_url = config_url+"nurse/save_symptoms/"+visit_id;
   //window.alert(data_url);
-   var symptoms = $('#visit_symptoms').val();//document.getElementById("vital"+vital_id).value;
+  // var symptoms = tinymce.activeEditor.getContent();
+   var symptoms = tinymce.get('visit_symptoms').getContent();
+   //$('#visit_symptoms').val();//document.getElementById("vital"+vital_id).value;
+   //alert(symptoms);
   $.ajax({
   type:'POST',
   url: data_url,
   data:{notes: symptoms},
   dataType: 'text',
   success:function(data){
-    //window.alert("You have successfully updated the symptoms");
+    window.alert("You have successfully updated the symptoms");
   //obj.innerHTML = XMLHttpRequestObject.responseText;
   },
   error: function(xhr, status, error) {
@@ -738,7 +743,8 @@ function save_objective_findings(visit_id){
 	var config_url = $('#config_url').val();
 	var data_url = config_url+"nurse/save_objective_findings/"+visit_id;
 	//window.alert(data_url);
-	var objective_findings = $('#visit_objective_findings').val();//document.getElementById("vital"+vital_id).value;
+   var objective_findings = tinymce.get('visit_objective_findings').getContent();
+	//var objective_findings = $('#visit_objective_findings').val();//document.getElementById("vital"+vital_id).value;
 	//alert(objective_findings);
 	$.ajax({
 		type:'POST',
@@ -746,7 +752,7 @@ function save_objective_findings(visit_id){
 		data:{notes: objective_findings},
 		dataType: 'text',
 		success:function(data){
-			//window.alert("You have successfully updated the objective findings");
+			window.alert("You have successfully updated the objective findings");
 			//obj.innerHTML = XMLHttpRequestObject.responseText;
 		},
 		error: function(xhr, status, error) {
@@ -760,7 +766,9 @@ function save_plan(visit_id){
   var config_url = $('#config_url').val();
   var data_url = config_url+"nurse/save_plan/"+visit_id;
   //window.alert(data_url);
-   var plan = $('#visit_plan').val();//document.getElementById("vital"+vital_id).value;
+  // var plan = $('#visit_plan').val();//document.getElementById("vital"+vital_id).value;
+  
+   var plan = tinymce.get('visit_plan').getContent();
   $.ajax({
   type:'POST',
   url: data_url,

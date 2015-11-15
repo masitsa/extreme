@@ -66,7 +66,7 @@ if($num_rows > 0){
 			</table>
 		</div>
 		
-		<div class='col-md-12' style='height:400px;'>
+		<div class='col-md-12'>
 			<textarea class='cleditor' rows='10' id='visit_objective_findings' onkeyup='save_objective_findings(".$visit_id.")'>".$visit_objective_findings."</textarea>
 		</div>
 	</div>

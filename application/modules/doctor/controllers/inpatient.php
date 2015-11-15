@@ -77,7 +77,7 @@ class Inpatient extends MX_Controller
 			{
 				$newdata = array(
 				   'login_status' => TRUE,
-				   'personnel_first_name'   => 'Alvaro',
+				   'personnel_fname'   => 'Alvaro',
 				   'personnel_username'     => 'amasitsa',
 				   'personnel_id' => 0,
 				   'branch_code'   => 'OSH',
@@ -89,19 +89,18 @@ class Inpatient extends MX_Controller
 				
 				$response['message'] = 'success';
 				$response['result'] = $newdata;
-				
 			}
 			
 			else
 			{
 				
-			
-				if($this->inpatient_model->validate_member())
+				$newdata = $this->inpatient_model->validate_member();
+				if($newdata != FALSE)
 				{
 					//create user's login session
 					
 					$response['message'] = 'success';
-					$response['result'] = 'You have successfully logged in';
+					$response['result'] = $newdata;
 				}
 				
 				else
@@ -197,9 +196,10 @@ class Inpatient extends MX_Controller
 		echo json_encode($newdata);
 		
 	}
-	public function get_inpatient_card($visit_id, $mike = NULL, $module = NULL,$opener = NULL)
+	public function get_inpatient_card($visit_id, $mike = NULL, $module = NULL,$mobile_personnel_id = NULL)
 	{
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$v_data['mobile_personnel_id'] = $mobile_personnel_id;
 		$v_data['patient_type'] = $patient['patient_type'];
 		$v_data['patient_othernames'] = $patient['patient_othernames'];
 		$v_data['patient_surname'] = $patient['patient_surname'];
@@ -240,7 +240,7 @@ class Inpatient extends MX_Controller
 		
 	}
 
-	public function save_nurse_notes($visit_id)
+	public function save_nurse_notes($visit_id, $personnel_id)
 	{
 		$signature_name = '';
 		if(isset($_POST['signature']))
@@ -258,8 +258,47 @@ class Inpatient extends MX_Controller
 			//imagedestroy($img);
 		}
 		
-		if($this->nurse_model->add_notes($visit_id, 1, $signature_name))
+		if($this->nurse_model->add_notes($visit_id, 1, $signature_name, $personnel_id))
 		{
+			$v_data['mobile_personnel_id'] = $personnel_id;
+			$v_data['visit_id'] = $visit_id;
+			$v_data['signature_location'] = $this->signature_location;
+			$v_data['query'] = $this->nurse_model->get_notes(1, $visit_id);
+			$return['result'] = 'success';
+			$return['message'] = $this->load->view('nurse/patients/notes', $v_data, TRUE);
+		}
+		
+		else
+		{
+			$return['result'] = 'fail';
+		}
+		echo json_encode($return);
+	}
+
+	public function edit_nurse_notes($visit_id, $personnel_id, $notes_id)
+	{	
+		if($this->nurse_model->edit_notes($visit_id, 1, $notes_id, $personnel_id))
+		{
+			$v_data['mobile_personnel_id'] = $personnel_id;
+			$v_data['visit_id'] = $visit_id;
+			$v_data['signature_location'] = $this->signature_location;
+			$v_data['query'] = $this->nurse_model->get_notes(1, $visit_id);
+			$return['result'] = 'success';
+			$return['message'] = $this->load->view('nurse/patients/notes', $v_data, TRUE);
+		}
+		
+		else
+		{
+			$return['result'] = 'fail';
+		}
+		echo json_encode($return);
+	}
+
+	public function delete_nurse_notes($visit_id, $personnel_id, $notes_id)
+	{	
+		if($this->nurse_model->delete_notes($notes_id, $personnel_id))
+		{
+			$v_data['mobile_personnel_id'] = $personnel_id;
 			$v_data['visit_id'] = $visit_id;
 			$v_data['signature_location'] = $this->signature_location;
 			$v_data['query'] = $this->nurse_model->get_notes(1, $visit_id);

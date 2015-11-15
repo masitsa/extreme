@@ -65,7 +65,7 @@ if($num_rows > 0){
 			</table>
 		</div>
 		
-		<div class='col-md-12' style='height:400px;'>
+		<div class='col-md-12'>
 			<textarea class='cleditor' placeholder='Type Additional Symptoms Here' id='visit_symptoms' >".$visit_symptoms."</textarea>
 		</div>
 	</div>
