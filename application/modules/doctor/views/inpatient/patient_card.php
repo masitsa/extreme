@@ -126,7 +126,7 @@
                 </div>
 
                  <div class="tab-pane" id="soap">
-                  <?php echo $this->load->view("nurse/patients/soap", '', TRUE);?>
+                  <?php echo $this->load->view("soap", '', TRUE);?>
                   
                 </div>
                  <div class="tab-pane" id="visit_trail">
@@ -1574,6 +1574,31 @@ function display_inpatient_prescription(visit_id,module){
                 
         XMLHttpRequestObject.send(null);
     }
+}
+
+function save_symptoms(visit_id){
+  
+
+  var config_url = $('#config_url').val();
+  var data_url = "<?php echo site_url();?>nurse/save_symptoms/"+visit_id;
+  //window.alert(data_url);
+   var symptoms = document.getElementById("visit_symptoms").value; //$('#visit_symptoms').val();
+   window.alert(symptoms);
+  $.ajax({
+  type:'POST',
+  url: data_url,
+  data:{notes: symptoms},
+  dataType: 'text',
+  success:function(data){
+    window.alert("You have successfully updated the symptoms");
+  //obj.innerHTML = XMLHttpRequestObject.responseText;
+  },
+  error: function(xhr, status, error) {
+  //alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+  alert(error);
+  }
+
+  });
 }
 
 </script>
