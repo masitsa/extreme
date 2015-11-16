@@ -576,6 +576,7 @@ class Inpatient extends MX_Controller
 			$v_data['query'] = $this->nurse_model->get_notes(1, $visit_id);
 			$return['result'] = 'success';
 			$return['message'] = $this->load->view('nurse/patients/notes', $v_data, TRUE);
+			
 		}
 		
 		else

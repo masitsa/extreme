@@ -19,7 +19,7 @@ $data['lab_test'] = 100;
 			<div class="panel-body">
                 <!-- vitals from java script -->
                 <div id="symptoms">
-               	<?php echo $this->load->view("nurse/soap/view_symptoms", $data, TRUE); ?>
+               	<?php echo $this->load->view("soap/view_symptoms", $data, TRUE); ?>
                 </div>
                 <!-- end of vitals data -->
             </div>
