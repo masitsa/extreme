@@ -7,6 +7,25 @@ class Nurse  extends MX_Controller
 	function __construct()
 	{
 		parent:: __construct();
+		
+		// Allow from any origin
+		if (isset($_SERVER['HTTP_ORIGIN'])) {
+			header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+			header('Access-Control-Allow-Credentials: true');
+			header('Access-Control-Max-Age: 86400');    // cache for 1 day
+		}
+	
+		// Access-Control headers are received during OPTIONS requests
+		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+	
+			if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
+				header("Access-Control-Allow-Methods: GET, POST, OPTIONS");         
+	
+			if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
+				header("Access-Control-Allow-Headers:        {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+	
+			exit(0);
+		}
 		$this->load->model('nurse_model');
 		$this->load->model('reception/reception_model');
 		$this->load->model('accounts/accounts_model');
@@ -26,11 +45,11 @@ class Nurse  extends MX_Controller
 		$this->signature_location = base_url().'assets/signatures/';
 		
 		//removed because doctors loose notes
-		$this->load->model('auth/auth_model');
+		/*$this->load->model('auth/auth_model');
 		if(!$this->auth_model->check_login())
 		{
 			redirect('login');
-		}
+		}*/
 	}
 	
 	public function index()
@@ -3071,7 +3090,8 @@ class Nurse  extends MX_Controller
 		$v_data['mike'] = $mike;
 		$v_data['visit_id'] = $visit_id;
 		$v_data['dental'] = 0;
-		$data['content'] = $this->load->view('inpatient/patient_card', $v_data, true);
+		$v_data['mobile_personnel_id'] = NULL;
+		$data['content'] = $this->load->view('doctor/inpatient/patient_card', $v_data, true);
 		
 		$data['title'] = 'Patient Card';
 		if(($mike != NULL) && ($mike != 'a')){

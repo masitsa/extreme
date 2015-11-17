@@ -1487,7 +1487,7 @@ class Nurse_model extends CI_Model
 			$row = $query->row();
 			$bed_name = $row->bed_number;
 			
-			$this->db->where('service.service_id = service_charge.service_id AND service_name = "Bed charge" AND service_charge_name = "'.$bed_name.'"');
+			$this->db->where('service.service_id = service_charge.service_id AND service_name = "Bed charge" AND service_charge_name = "'.$bed_name.'" AND service_charge.visit_type_id = (SELECT visit_type FROM visit WHERE visit_id = '.$visit_id.')');
 			$query2 = $this->db->get('service, service_charge');
 			$service_charge_amount = 0;
 			

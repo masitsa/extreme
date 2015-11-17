@@ -37,6 +37,7 @@
         <link rel="stylesheet" href="<?php echo base_url()."assets/bluish";?>/style/jquery.cleditor.css">
 
 		<!-- Theme Custom CSS -->
+  		<link rel="stylesheet" href="<?php echo base_url()."assets/themes/";?>dist/css/bootstrap-select.css">
 		
 
 		<!-- Head Libs -->

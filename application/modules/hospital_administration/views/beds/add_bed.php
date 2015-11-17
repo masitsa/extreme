@@ -50,8 +50,26 @@
                     
                     <?php echo form_open($this->uri->uri_string(), array("class" => "form-horizontal", "role" => "form"));?>
                     <div class="row">
+                    	<div class="col-md-4">
+                            <!-- Company Name -->
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Cash Price</label>
+                                <div class="col-lg-6">
+                                    <input type="text" class="form-control" name="cash_price" placeholder="Cash Price" value="<?php echo set_value('cash_price');?>" required>
+                                </div>
+                            </div>
+                        </div>
+                    	<div class="col-md-4">
+                            <!-- Company Name -->
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Insurance Price</label>
+                                <div class="col-lg-6">
+                                    <input type="text" class="form-control" name="insurance_price" placeholder="Insurance Price" value="<?php echo set_value('insurance_price');?>" required>
+                                </div>
+                            </div>
+                        </div>
                         
-                    	<div class="col-md-12">
+                    	<div class="col-md-4">
                             <!-- Activate checkbox -->
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Activate?</label>
@@ -75,7 +93,7 @@
                         </div>
                     </div>
                     
-                    <div class="form-actions center-align">
+                    <div class="form-actions center-align" style="margin-top:10px">
                         <button class="submit btn btn-primary" type="submit">
                             Add bed
                         </button>

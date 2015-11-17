@@ -488,6 +488,19 @@ class Services extends Hospital_administration
 		redirect('hospital-administration/service-charges/'.$service_id);
 	}
 	
+	public function import_bed_charges($service_id)
+	{
+		if($this->services_model->import_bed_charges($service_id))
+		{
+		}
+		
+		else
+		{
+		}
+		
+		redirect('hospital-administration/service-charges/'.$service_id);
+	}
+	
 	public function import_pharmacy_charges($service_id)
 	{
 		if($this->services_model->import_pharmacy_charges($service_id))

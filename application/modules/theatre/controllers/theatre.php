@@ -7,6 +7,25 @@ class Theatre  extends MX_Controller
 	function __construct()
 	{
 		parent:: __construct();
+		
+		// Allow from any origin
+		if (isset($_SERVER['HTTP_ORIGIN'])) {
+			header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+			header('Access-Control-Allow-Credentials: true');
+			header('Access-Control-Max-Age: 86400');    // cache for 1 day
+		}
+	
+		// Access-Control headers are received during OPTIONS requests
+		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+	
+			if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
+				header("Access-Control-Allow-Methods: GET, POST, OPTIONS");         
+	
+			if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
+				header("Access-Control-Allow-Headers:        {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+	
+			exit(0);
+		}
 		$this->load->model('theatre_model');
 		$this->load->model('nurse/nurse_model');
 		$this->load->model('reception/reception_model');
@@ -21,11 +40,11 @@ class Theatre  extends MX_Controller
 		$this->load->model('reception/database');
 		$this->load->model('administration/personnel_model');
 		
-		$this->load->model('auth/auth_model');
+		/*$this->load->model('auth/auth_model');
 		if(!$this->auth_model->check_login())
 		{
 			redirect('login');
-		}
+		}*/
 	}
 	
 	public function index()

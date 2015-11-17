@@ -428,6 +428,91 @@ class Services_model extends CI_Model
 		
 		return TRUE;
 	}
+	
+	public function import_bed_charges($service_id)
+	{
+		//get lab tests
+		$this->db->where('bed_status', 1);
+		$tests = $this->db->get('bed');
+		
+		if($tests->num_rows() > 0)
+		{
+			foreach($tests->result() as $res)
+			{
+				$bed_id = $res->bed_id;
+				$bed_number = $res->bed_number;
+				$cash_price = $res->cash_price;
+				$insurance_price = $res->insurance_price;
+	
+				// get all the visit type
+				$this->db->where('visit_type_status', 1);
+				$visit_type_query = $this->db->get('visit_type');
+	
+				if($visit_type_query->num_rows() > 0)
+				{
+					foreach ($visit_type_query->result() as $key) {
+					
+						$visit_type_id = $key->visit_type_id;
+						
+						if($visit_type_id == 1)
+						{
+							$price = $cash_price;
+						}
+						
+						else
+						{
+							$price = $insurance_price;
+						}
+						// service charge entry
+						$service_charge_insert = array(
+										"service_charge_name" => $bed_number,
+										"service_id" => $service_id,
+										"visit_type_id" => $visit_type_id,
+										//"lab_test_id" => $bed_id,
+										"service_charge_amount" => $price,
+										'service_charge_status' => 1,
+									);
+						
+						if($this->service_charge_exists($bed_number, $visit_type_id))
+						{
+							$this->db->where(array('service_charge_name' => $bed_number, 'visit_type_id' => $visit_type_id));
+							if($this->db->update('service_charge', $service_charge_insert))
+							{
+							}
+							
+							else
+							{
+							}
+						}
+						
+						else
+						{
+							$service_charge_insert['created'] = date('Y-m-d H:i:s');
+							$service_charge_insert['created_by'] = $this->session->userdata('personnel_id');
+							$service_charge_insert['modified_by'] = $this->session->userdata('personnel_id');
+							
+							if($this->db->insert('service_charge', $service_charge_insert))
+							{
+							}
+							
+							else
+							{
+							}
+						}
+					}
+				}
+			}
+			
+			$this->session->set_userdata('success_message', 'Charges created successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'There are no lab tests.');
+		}
+		
+		return TRUE;
+	}
 
 	public function get_unsynced_pharmacy_charges()
 	{

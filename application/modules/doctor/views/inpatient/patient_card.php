@@ -110,23 +110,23 @@
               </ul>
               <div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
                 <div class="tab-pane active" id="about-pane">
-                	<?php echo $this->load->view("about", '', TRUE);?>
+                	<?php echo $this->load->view("doctor/inpatient/about", '', TRUE);?>
                 </div>
                
                 <div class="tab-pane" id="vitals-pane">
-                	  <?php echo $this->load->view("patients/vitals", '', TRUE);?>
+                	  <?php echo $this->load->view("doctor/patients/vitals", '', TRUE);?>
                 </div>
                 
                 <div class="tab-pane" id="lifestyle">
-                    <?php echo $this->load->view("patients/nurse_notes", '', TRUE);?>
+                    <?php echo $this->load->view("doctor/patients/nurse_notes", '', TRUE);?>
                 </div>
                
                  <div class="tab-pane" id="previous-vitals">
-                  <?php echo $this->load->view("patients/billing", '', TRUE);?>
+                  <?php echo $this->load->view("doctor/patients/billing", '', TRUE);?>
                 </div>
 
                  <div class="tab-pane" id="soap">
-                  <?php echo $this->load->view("soap", '', TRUE);?>
+                  <?php echo $this->load->view("doctor/inpatient/soap", '', TRUE);?>
                   
                 </div>
                  <div class="tab-pane" id="visit_trail">
@@ -142,6 +142,7 @@
 
 <script text="javascript">
 
+var config_url = document.getElementById("config_url").value;
 $(document).ready(function(){
 
   vitals_interface(<?php echo $visit_id;?>);
@@ -160,7 +161,6 @@ $(document).ready(function(){
         XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
     }
 
-    var config_url = document.getElementById("config_url").value;
     var url = config_url+"nurse/vitals_interface/"+visit_id;
 
             
@@ -674,6 +674,36 @@ function calculatebedtotal(amount, visit_charge_id, service_charge_id, v_id){
     }
     
     var url = config_url+"nurse/bed_total/"+visit_charge_id+"/"+units+"/"+amount;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) 
+			{
+    			display_bed_charges(v_id);
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
+function delete_bed_charge(visit_charge_id, v_id)
+{
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    var url = config_url+"nurse/delete_bed/"+visit_charge_id;
     
     if(XMLHttpRequestObject) {
                 

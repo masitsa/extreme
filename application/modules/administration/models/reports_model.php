@@ -1497,7 +1497,7 @@ class Reports_model extends CI_Model
 	
 	public function get_debtor_invoice_items($debtor_invoice_id)
 	{
-		$this->db->select('SUM(visit_charge.visit_charge_units * visit_charge.visit_charge_amount) AS invoice_amount, patients.patient_surname, patients.patient_othernames, patients.patient_number, patients.current_patient_number, visit.visit_id, visit.visit_date');
+		$this->db->select('SUM(visit_charge.visit_charge_units * visit_charge.visit_charge_amount) AS invoice_amount, patients.patient_surname, patients.patient_othernames, patients.patient_number, patients.current_patient_number, visit.visit_id, visit.visit_date, visit.patient_insurance_number');
 		$this->db->where('visit.visit_id = debtor_invoice_item.visit_id AND visit.patient_id = patients.patient_id AND visit.visit_id = visit_charge.visit_id AND debtor_invoice_item.debtor_invoice_id = '.$debtor_invoice_id);
 		
 		$this->db->group_by('visit_id');

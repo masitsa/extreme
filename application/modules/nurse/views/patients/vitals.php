@@ -36,7 +36,7 @@
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='procedure_id' name='procedure_id' class='form-control custom-select '>
+                    <select id='procedure_id' name='procedure_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select</option>
                       <?php echo $procedures;?>
                     </select>
@@ -71,7 +71,7 @@
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='vaccine_id' name='vaccine_id' class='form-control custom-select '>
+                    <select id='vaccine_id' name='vaccine_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select a vaccine</option>
                       <?php echo $vaccines;?>
                     </select>
@@ -101,7 +101,7 @@
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='consumable_id' name='consumable_id' class='form-control custom-select '>
+                    <select id='consumable_id' name='consumable_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select a consumable</option>
                       <?php echo $consumables;?>
                     </select>
@@ -141,20 +141,6 @@
 </div>
 
 <script text="javascript">
- $(function() {
-    $("#consumable_id").customselect();
-    $("#procedure_id").customselect();
-    $("#vaccine_id").customselect();
-    $("#lab_test_id").customselect();
-    $("#xray_id").customselect();
-    $("#ultrasound_id").customselect();
-    $("#orthopaedic_surgery_id").customselect();
-    $("#opthamology_surgery_id").customselect();
-    $("#obstetrics_surgery_id").customselect();
-    $("#theatre_procedure_id").customselect();
-    $("#drug_id").customselect();
-
-  });
 $(document).ready(function(){
   vitals_interface(<?php echo $visit_id;?>);
 });

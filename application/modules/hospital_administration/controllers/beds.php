@@ -97,6 +97,8 @@ class Beds extends Hospital_administration
 	public function add_bed($room_id) 
 	{
 		//form validation rules
+		$this->form_validation->set_rules('cash_price', 'Cash Price', 'required|xss_clean');
+		$this->form_validation->set_rules('insurance_price', 'Insurance Price', 'required|xss_clean');
 		$this->form_validation->set_rules('bed_status', 'Bed Status', 'required|xss_clean');
 		
 		//if form has been submitted
@@ -125,6 +127,8 @@ class Beds extends Hospital_administration
 	public function edit_bed($room_id, $bed_id) 
 	{
 		//form validation rules
+		$this->form_validation->set_rules('cash_price', 'Cash Price', 'required|xss_clean');
+		$this->form_validation->set_rules('insurance_price', 'Insurance Price', 'required|xss_clean');
 		$this->form_validation->set_rules('bed_status', 'Bed Status', 'required|xss_clean');
 		
 		//if form has been submitted
@@ -136,7 +140,18 @@ class Beds extends Hospital_administration
 				$this->session->set_userdata('success_message', 'Bed updated successfully');
 				redirect('hospital-administration/beds/'.$room_id);
 			}
+			
+			else
+			{
+			}
 		}
+		else
+		{
+			
+            $validation_errors = validation_errors();
+			//var_dump($validation_errors); die();
+		}
+		
 		
 		$v_data['room_id'] = $room_id;
 		//open the add new bed

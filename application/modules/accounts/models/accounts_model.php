@@ -749,24 +749,32 @@ class Accounts_model extends CI_Model
 	
 	public function get_personnel($personnel_id)
 	{
-		$this->db->select('personnel.personnel_fname, personnel.personnel_onames');
-		$this->db->from('personnel');
-		$this->db->where('personnel.personnel_id = '.$personnel_id);
-		
-		$query = $this->db->get();
-		
-		if($query->num_rows() > 0)
+		if(empty($personnel_id))
 		{
-			$row = $query->row();
-			$personnel = $row->personnel_onames.' '.$row->personnel_fname;
+			redirect('login');
 		}
 		
 		else
 		{
-			$personnel = '-';
+			$this->db->select('personnel.personnel_fname, personnel.personnel_onames');
+			$this->db->from('personnel');
+			$this->db->where('personnel.personnel_id = '.$personnel_id);
+			
+			$query = $this->db->get();
+			
+			if($query->num_rows() > 0)
+			{
+				$row = $query->row();
+				$personnel = $row->personnel_onames.' '.$row->personnel_fname;
+			}
+			
+			else
+			{
+				$personnel = '-';
+			}
+			
+			return $personnel;
 		}
-		
-		return $personnel;
 	}
 	
 	public function get_visit_date($visit_id)

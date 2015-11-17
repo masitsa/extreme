@@ -310,9 +310,9 @@ if(count($doctor) > 0){
 						<a  class="btn btn-sm btn-success" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
 					</td>
 					<td>
-						<button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#create_inpatient">Inpatient</button>
+						<button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#create_inpatient'.$visit_id.'">Inpatient</button>
 						
-						<div class="modal fade" id="create_inpatient" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal fade" id="create_inpatient'.$visit_id.'" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 							<div class="modal-dialog" role="document">
 								<div class="modal-content">
 									<div class="modal-header">
@@ -320,7 +320,7 @@ if(count($doctor) > 0){
 										<h4 class="modal-title" id="myModalLabel">Change to inpatient</h4>
 									</div>
 									<div class="modal-body">
-										'.form_open("reception/change_patient_visit/".$visit_id.'/'.$visit_type_id, array("class" => "form-horizontal")).'
+										'.form_open('reception/change_patient_visit/'.$visit_id.'/'.$visit_type_id, array("class" => "form-horizontal")).'
 										<div class="form-group">
 											<label class="col-md-4 control-label">Ward: </label>
 											

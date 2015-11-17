@@ -220,6 +220,7 @@ $rs = $this->pharmacy_model->select_prescription($visit_id);
                       <th>#</th>
                       <th>Drug Name</th>
                       <th>Prescription</th>
+                      <th>Days</th>
                       <th>Units</th>
                       <th>Unit Cost</th>
                       <th>Total</th>
@@ -228,7 +229,7 @@ $rs = $this->pharmacy_model->select_prescription($visit_id);
                     <tbody>
                     <?php
                     $temp_visit_charge_amount =0;
-                   
+                   	$total_selected_drugs = count($selected_drugs);
 					$num_rows =count($rs);
 			        $s=0;
 			        if($num_rows > 0){
@@ -279,31 +280,66 @@ $rs = $this->pharmacy_model->select_prescription($visit_id);
 
 			            $rsf = $this->pharmacy_model->select_invoice_drugs($visit_id,$service_charge_id);
                         $num_rowsf = count($rsf);
-                        foreach ($rsf as $key_price):
-                            $sum_units = $key_price->num_units;
+						$sum_units = 0;
+                        $visit_charge_amount = 0;
+                        
+						foreach ($rsf as $key_price):
+                            $sum_units = $key_price->visit_charge_units;
+                            $visit_charge_amount = $key_price->visit_charge_amount;
                         endforeach;
-
-			            $amoun=$charge* $sum_units ;
-                        $total_visit_charge_amount=$amoun+$temp_visit_charge_amount;
-                        $temp_visit_charge_amount=$total_visit_charge_amount; 
-                        $s++;
-                		?>
-							<tr>
-								<td><?php echo $s;?></td>
-								<td><?php echo $medicine;?></td>
-								<td><?php echo $consumption;?> - <?php echo $duration;?> - <?php echo $frequncy;?></td>
-								<td><?php echo $sum_units;?></td>
-								<td><?php echo number_format($charge,2);?></td>
-								<td><?php echo number_format($amoun,2);?></td>
-							</tr>
-						<?php
-
+						
+						//display selected drugs
+						if(is_array($selected_drugs) && ($total_selected_drugs > 0))
+						{
+							$selected = 0;
+							for($r = 0; $r < $total_selected_drugs; $r++)
+							{
+								$prescription_id = $selected_drugs[$r];
+								if($prescription_id == $id)
+								{
+									$amoun=$visit_charge_amount* $sum_units ;
+									$total_visit_charge_amount=$amoun+$temp_visit_charge_amount;
+									$temp_visit_charge_amount=$total_visit_charge_amount; 
+									$s++;
+									?>
+										<tr>
+											<td><?php echo $s;?></td>
+											<td><?php echo $medicine;?></td>
+											<td><?php echo $consumption;?> - <?php echo $duration;?> - <?php echo $frequncy;?></td>
+											<td><?php echo $number_of_days;?></td>
+											<td><?php echo $sum_units;?></td>
+											<td><?php echo number_format($visit_charge_amount,2);?></td>
+											<td><?php echo number_format($amoun,2);?></td>
+										</tr>
+									<?php
+								}
+							}
+						}
+						
+						else
+						{
+							$amoun=$visit_charge_amount* $sum_units ;
+							$total_visit_charge_amount=$amoun+$temp_visit_charge_amount;
+							$temp_visit_charge_amount=$total_visit_charge_amount; 
+							$s++;
+							?>
+								<tr>
+									<td><?php echo $s;?></td>
+									<td><?php echo $medicine;?></td>
+									<td><?php echo $consumption;?> - <?php echo $duration;?> - <?php echo $frequncy;?></td>
+									<td><?php echo $number_of_days;?></td>
+									<td><?php echo $sum_units;?></td>
+									<td><?php echo number_format($visit_charge_amount,2);?></td>
+									<td><?php echo number_format($amoun,2);?></td>
+								</tr>
+							<?php
+						}
 						endforeach;
 
 						?>
 
                          <tr>
-	                        <td colspan="5" style="align:right">Grand Total :</td>
+	                        <td colspan="6" style="align:right">Grand Total :</td>
 	                        <td><?php echo $temp_visit_charge_amount;?></td>
 	                    </tr>
                     </tbody>
@@ -311,7 +347,7 @@ $rs = $this->pharmacy_model->select_prescription($visit_id);
             </div>
         </div>
         <?php
-	
+		$this->session->unset_userdata('selected_drugs');
 		}
 		
         if($doctor == '-')

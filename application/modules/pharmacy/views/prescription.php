@@ -94,6 +94,12 @@
              <div id="prescription_view"></div>
              <div id="visit_prescription"></div>
               
+			
+			<div class="center-align">
+			<?php echo '<a href="'.site_url().'pharmacy/send_to_accounts/'.$visit_id.'" onclick="return confirm(\'Send to accounts?\');" class="btn btn-sm btn-success">Send to Accounts</a>';?>
+			<?php echo '<a href="'.site_url().'pharmacy/print-prescription/'.$visit_id.'" class="btn btn-sm btn-warning print_prescription" target="_blank"><i class="fa fa-print"></i> Print Prescription</a>';?>
+
+		 	</div>
          </section>
     </div>
 </div>
@@ -253,7 +259,6 @@
 
 	  var url = "<?php echo base_url();?>pharmacy/prescribe_prescription";
 
-
 	  $.ajax({
 	  type:'POST',
 	  url: url,
@@ -261,16 +266,16 @@
 	  dataType: 'text',
 	  success:function(data){
 
-	  
+	  var prescription_view = document.getElementById("prescription_view");
+	  prescription_view.style.display = 'none';
+	  display_inpatient_prescription(visit_id,1);
+	  	
 	  },
 	  error: function(xhr, status, error) {
 	  alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
 
 	  }
 	  });
-	  display_inpatient_prescription(visit_id,1);
-	  var prescription_view = document.getElementById("prescription_view");
-	  prescription_view.style.display = 'none';
 	  
 	  return false;
 	}
@@ -388,7 +393,6 @@ function delete_prescription(prescription_id, visit_id,visit_charge_id,module)
         if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
           
            display_inpatient_prescription(visit_id,1);
-         
         }
       }
       XMLHttpRequestObject.send(null);
@@ -396,5 +400,38 @@ function delete_prescription(prescription_id, visit_id,visit_charge_id,module)
   }
 }
 
-
+$(document).on("click","a.print_prescription",function(e)
+{
+	e.preventDefault();
+	
+	//get checkbox values
+	var val = [];
+	$(':checkbox:checked').each(function(i){
+	  	val[i] = $(this).val();
+	});
+	var request = '<?php echo site_url();?>pharmacy/print_selected_drugs/<?php echo $visit_id;?>';
+	$.ajax({
+		type:'POST',
+		url: request,
+		data:{prescription_id: val},
+		dataType: 'text',
+		success:function(data)
+		{
+			var win = window.open("<?php echo site_url();?>pharmacy/print-prescription/<?php echo $visit_id;?>", '_blank');
+			if(win){
+				//Browser has allowed it to be opened
+				win.focus();
+			}else{
+				//Broswer has blocked it
+				alert('Please allow popups for this site');
+			}
+		},
+		error: function(xhr, status, error) 
+		{
+			alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+		}
+	});
+	
+	return false;
+});
 </script>                        

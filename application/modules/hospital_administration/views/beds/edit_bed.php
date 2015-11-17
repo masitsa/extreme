@@ -18,8 +18,28 @@
             if(isset($error)){
                 echo '<div class="alert alert-danger"> Oh snap! '.$error.' </div>';
             }
+			$error = $this->session->userdata('error_message');
+			$success = $this->session->userdata('success_message');
+			
+			if(!empty($success))
+			{
+				echo '
+					<div class="alert alert-success">'.$success.'</div>
+				';
+				$this->session->unset_userdata('success_message');
+			}
+			
+			if(!empty($error))
+			{
+				echo '
+					<div class="alert alert-danger">'.$error.'</div>
+				';
+				$this->session->unset_userdata('error_message');
+			}
 			
 			//the bed details
+			$cash_price = $bed[0]->cash_price;
+			$insurance_price = $bed[0]->insurance_price;
 			$bed_number = $bed[0]->bed_number;
 			$bed_status = $bed[0]->bed_status;
             
@@ -28,6 +48,8 @@
             if(!empty($validation_errors))
             {
 				$bed_number = set_value('bed_number');
+				$cash_price = set_value('cash_price');
+				$insurance_price = set_value('insurance_price');
 				$bed_status = set_value('bed_status');
 				
                 echo '<div class="alert alert-danger"> Oh snap! '.$validation_errors.' </div>';
@@ -37,7 +59,7 @@
             
             <?php echo form_open($this->uri->uri_string(), array("class" => "form-horizontal", "role" => "form"));?>
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label class="col-lg-4 control-label">Bed number</label>
                         <div class="col-lg-8">
@@ -46,7 +68,7 @@
                     </div>
                 </div>
                 
-                <div class="col-md-2">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label class="col-lg-4 control-label">Activate bed?</label>
                         <div class="col-lg-4">
@@ -74,7 +96,27 @@
                     </div>
                 </div>
             </div>
-            <div class="form-actions center-align">
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Company Name -->
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Cash Price</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" name="cash_price" placeholder="Cash Price" value="<?php echo $cash_price;?>" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <!-- Company Name -->
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Insurance Price</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" name="insurance_price" placeholder="Insurance Price" value="<?php echo $insurance_price;?>" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions center-align" style="margin-top:10px">
                 <button class="submit btn btn-primary" type="submit">
                     Edit bed
                 </button>

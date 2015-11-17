@@ -72,7 +72,7 @@ $data['lab_test'] = 100;
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='lab_test_id' name='lab_test_id' class='form-control custom-select '>
+                    <select id='lab_test_id' name='lab_test_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select a Lab test</option>
                       <?php echo $lab_tests;?>
                     </select>
@@ -106,7 +106,7 @@ $data['lab_test'] = 100;
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='xray_id' name='xray_id' class='form-control custom-select '>
+                    <select id='xray_id' name='xray_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select an XRAY</option>
                       <?php echo $xrays;?>
                     </select>
@@ -140,7 +140,7 @@ $data['lab_test'] = 100;
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='ultrasound_id' name='ultrasound_id' class='form-control custom-select '>
+                    <select id='ultrasound_id' name='ultrasound_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select an Ulra sound</option>
                       <?php echo $ultrasound;?>
                     </select>
@@ -173,7 +173,7 @@ $data['lab_test'] = 100;
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='drug_id' name='drug_id' class='form-control custom-select '>
+                    <select id='drug_id' name='drug_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select an drug</option>
                       <?php echo $drugs;?>
                     </select>
@@ -207,7 +207,7 @@ $data['lab_test'] = 100;
       <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='diseases_id' name='diseases_id' class='form-control custom-select '>
+                    <select id='diseases_id' name='diseases_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select a diagnosis</option>
                       <?php echo $diseases;?>
                     </select>
@@ -265,18 +265,6 @@ $data['lab_test'] = 100;
 
 
 <script type="text/javascript">
-$(function() {
-    $("#lab_test_id").customselect();
-    $("#xray_id").customselect();
-    $("#ultrasound_id").customselect();
-    $("#orthopaedic_surgery_id").customselect();
-    $("#opthamology_surgery_id").customselect();
-    $("#obstetrics_surgery_id").customselect();
-    $("#theatre_procedure_id").customselect();
-    $("#drug_id").customselect();
-    $("#diseases_id").customselect();
-
-  });
 $(document).ready(function(){
 	//symptoms(<?php echo $visit_id;?>);
 	//objective_findings(<?php echo $visit_id;?>);
@@ -1386,6 +1374,9 @@ function pass_prescription()
   dataType: 'text',
   success:function(data){
 
+  var prescription_view = document.getElementById("prescription_view");
+  prescription_view.style.display = 'none';
+  display_inpatient_prescription(visit_id,0);
   
   },
   error: function(xhr, status, error) {
@@ -1393,9 +1384,6 @@ function pass_prescription()
 
   }
   });
-  display_inpatient_prescription(visit_id,0);
-  var prescription_view = document.getElementById("prescription_view");
-  prescription_view.style.display = 'none';
  
   return false;
 }

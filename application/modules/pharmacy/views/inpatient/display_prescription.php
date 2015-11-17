@@ -74,6 +74,7 @@ $duration_list = $duration_list."</select>";
             <div class="panel-body">
                 <table class='table table-striped table-hover table-condensed'>
                      <tr>
+                        <th></th>
                         <th>No.</th>
                         <th>Medicine:</th>
                         <th>Days:</th>
@@ -130,7 +131,7 @@ $duration_list = $duration_list."</select>";
                         $visit_charge_id = $key_rs->visit_charge_id;
                         $number_of_days = $key_rs->number_of_days;
                         $units_given = $key_rs->units_given;
-
+						$prescription_id = $key_rs->prescription_id;
 
                         // checking for the stocks in drugs
                         $purchases = $this->pharmacy_model->item_purchases($checker_id);
@@ -245,11 +246,18 @@ $duration_list = $duration_list."</select>";
                         $total_visit_charge_amount=$amoun+$temp_visit_charge_amount;
                         $temp_visit_charge_amount=$total_visit_charge_amount; 
                         $s++;
-
+						
+						$checkbox_data = array(
+								  'name'        => 'visit_charge[]',
+								  'id'          => 'checkbox'.$prescription_id,
+								  'class'          => 'css-checkbox lrg',
+								  'value'       => $prescription_id
+								);
 
                     ?>
                   
                     <tr>
+                        <td><?php echo form_checkbox($checkbox_data); ?><label for="checkbox<?php echo $visit_id; ?>" name="checkbox79_lbl" class="css-label lrg klaus"></label></td>
                         <td><?php echo $s; ?></td>
                         <td><?php echo $medicine;?></td>
                         <td><?php echo $number_of_days;?></td>

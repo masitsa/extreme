@@ -284,7 +284,7 @@ endforeach;
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='consumable_id' name='consumable_id' class='form-control custom-select '>
+                    <select id='consumable_id' name='consumable_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select a consumable</option>
                       <?php echo $consumables;?>
                     </select>
@@ -315,7 +315,7 @@ endforeach;
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='procedure_id' name='procedure_id' class='form-control custom-select '>
+                    <select id='procedure_id' name='procedure_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select</option>
                       <?php echo $procedures;?>
                     </select>
@@ -349,7 +349,7 @@ endforeach;
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='vaccine_id' name='vaccine_id' class='form-control custom-select '>
+                    <select id='vaccine_id' name='vaccine_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select a vaccine</option>
                       <?php echo $vaccines;?>
                     </select>
@@ -378,7 +378,7 @@ endforeach;
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='lab_test_id' name='lab_test_id' class='form-control custom-select '>
+                    <select id='lab_test_id' name='lab_test_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select a Lab test</option>
                       <?php echo $lab_tests;?>
                     </select>
@@ -407,7 +407,7 @@ endforeach;
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='xray_id' name='xray_id' class='form-control custom-select '>
+                    <select id='xray_id' name='xray_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select an XRAY</option>
                       <?php echo $xrays;?>
                     </select>
@@ -436,7 +436,7 @@ endforeach;
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='ultrasound_id' name='ultrasound_id' class='form-control custom-select '>
+                    <select id='ultrasound_id' name='ultrasound_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select an Ulra sound</option>
                       <?php echo $ultrasound;?>
                     </select>
@@ -466,7 +466,7 @@ endforeach;
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='drug_id' name='drug_id' class='form-control custom-select '>
+                    <select id='drug_id' name='drug_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select an drug</option>
                       <?php echo $drugs;?>
                     </select>
@@ -497,7 +497,7 @@ endforeach;
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='orthopaedic_surgery_id' name='orthopaedic_surgery_id' class='form-control custom-select '>
+                    <select id='orthopaedic_surgery_id' name='orthopaedic_surgery_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select an arthopaedic procedure</option>
                       <?php echo $orthopaedics;?>
                     </select>
@@ -526,7 +526,7 @@ endforeach;
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='opthamology_surgery_id' name='opthamology_surgery_id' class='form-control custom-select '>
+                    <select id='opthamology_surgery_id' name='opthamology_surgery_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select an opthamology procedure</option>
                       <?php echo $opthamology;?>
                     </select>
@@ -555,7 +555,7 @@ endforeach;
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='obstetrics_surgery_id' name='obstetrics_surgery_id' class='form-control custom-select '>
+                    <select id='obstetrics_surgery_id' name='obstetrics_surgery_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select an opthamology procedure</option>
                       <?php echo $obstetrics;?>
                     </select>
@@ -584,7 +584,7 @@ endforeach;
             <div class="panel-body">
                 <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="form-group">
-                    <select id='theatre_procedure_id' name='theatre_procedure_id' class='form-control custom-select '>
+                    <select id='theatre_procedure_id' name='theatre_procedure_id' class='selectpicker'  data-live-search="true" data-live-search-style="begins">
                       <option value=''>None - Please Select an theatre procedure</option>
                       <?php echo $theatre;?>
                     </select>

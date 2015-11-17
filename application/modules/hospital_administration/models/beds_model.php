@@ -93,6 +93,8 @@ class Beds_model extends CI_Model
 			$data = array(
 					'bed_number'=>$this->beds_model->create_bed_number($room_id),
 					'room_id'=>$room_id,
+					'cash_price'=>$this->input->post('cash_price'),
+					'insurance_price'=>$this->input->post('insurance_price'),
 					'bed_status'=>$this->input->post('bed_status'),
 					'created'=>date('Y-m-d H:i:s'),
 					'created_by'=>$this->session->userdata('personnel_id'),
@@ -124,29 +126,21 @@ class Beds_model extends CI_Model
 	*/
 	public function update_bed($room_id, $bed_id)
 	{
-		$status = $this->input->post('bed_status');
-		//Check room bed capacity
-		if($this->check_room_capacity_against_active_beds($room_id, $status))
+		$data = array(
+				'cash_price'=>$this->input->post('cash_price'),
+				'insurance_price'=>$this->input->post('insurance_price'),
+				'bed_status'=>$this->input->post('bed_status'),
+				'modified_by'=>$this->session->userdata('personnel_id')
+			);
+			
+		$this->db->where('bed_id', $bed_id);
+		if($this->db->update('bed', $data))
 		{
-			$data = array(
-					'bed_status'=>$this->input->post('bed_status'),
-					'modified_by'=>$this->session->userdata('personnel_id')
-				);
-				
-			$this->db->where('bed_id', $bed_id);
-			if($this->db->update('bed', $data))
-			{
-				return TRUE;
-			}
-			else
-			{
-				$this->session->set_userdata('error_message', 'Unable to update bed. Please try again.');
-				return FALSE;
-			}
+			return TRUE;
 		}
-		
 		else
 		{
+			$this->session->set_userdata('error_message', 'Unable to update bed. Please try again.');
 			return FALSE;
 		}
 	}

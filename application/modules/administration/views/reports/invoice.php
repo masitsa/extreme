@@ -4,6 +4,7 @@ $row = $query->row();
 $invoice_date = date('jS M Y H:i a',strtotime($row->debtor_invoice_created));
 $debtor_invoice_id = $row->debtor_invoice_id;
 $visit_type_name = $row->visit_type_name;
+//$patient_insurance_number = $row->patient_insurance_number;
 $batch_no = $row->batch_no;
 $status = $row->debtor_invoice_status;
 $personnel_id = $row->debtor_invoice_created_by;
@@ -134,7 +135,7 @@ else
                     	<tr>
                             <th>#</th>
                             <th>Invoice Date</th>
-                            <th>Patient Number</th>
+                            <th>Member Number</th>
                             <th>Patient</th>
                             <th>Invoice Number</th>
                             <th>Total Cost</th>
@@ -153,6 +154,7 @@ else
 								$patient_surname = $res->patient_surname;
 								$patient_othernames = $res->patient_othernames;
 								$patient_number = $res->patient_number;
+								$patient_insurance_number = $res->patient_insurance_number;
 								$current_patient_number = $res->current_patient_number;
 								$visit_id = $res->visit_id;
 								$visit_date = date('jS F Y',strtotime($res->visit_date));
@@ -160,7 +162,7 @@ else
                                 <tr>
                                     <td><?php echo $count;?></td>
                                     <td><?php echo $visit_date;?></td>
-                                    <td><?php echo $patient_number;?></td>
+                                    <td><?php echo $patient_insurance_number;?></td>
                                     <td><?php echo $patient_surname;?> <?php echo $patient_othernames;?></td>
                                     <td><?php echo $this->session->userdata('branch_code').'-INV-00'.$visit_id; ?></td>
                                     <td><?php echo number_format($invoice_amount, 2);?></td>

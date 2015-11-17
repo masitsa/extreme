@@ -36,6 +36,7 @@ echo "
 							<td align='center'><input type='text' class='form-control' readonly='readonly' size='5' value='".$units * $visit_charge_amount."' id='total".$visit_charge_id."'></div></td>
 							<td>
 							<a class='btn btn-sm btn-primary' href='#' onclick='calculatebedtotal(".$visit_charge_amount.",".$visit_charge_id.", ".$service_charge_id.",".$visit_id.")'><i class='fa fa-pencil'></i></a>
+							<a class='btn btn-sm btn-danger' href='#' onclick='delete_bed_charge(".$visit_charge_id.",".$visit_id.")'><i class='fa fa-pencil'></i></a>
 							</td>
 						</tr>	
 				";

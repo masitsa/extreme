@@ -21,7 +21,9 @@ class Site extends MX_Controller
 	function __construct()
 	{
 		parent:: __construct();
-		
+		$this->load->model('site_model');
+		$this->load->model('admin/sections_model');
+		$this->load->model('admin/admin_model');
 		//image paths
 		$this->posts_path = realpath(APPPATH . '../assets/images/posts');
 		$this->brand_models_path = realpath(APPPATH . '../assets/brand_model/images');
@@ -618,6 +620,16 @@ class Site extends MX_Controller
 	public function speech()
 	{
 		$this->load->view('speech');
+	}
+	
+	public function search_box()
+	{
+		$data['title'] = 'General Queue';
+		$v_data['title'] = 'General Queue';
+		
+		$data['content'] = $this->load->view('search', $v_data, true);
+		
+		$this->load->view('admin/templates/general_page', $data);
 	}
 }
 ?>

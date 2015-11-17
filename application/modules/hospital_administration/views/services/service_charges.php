@@ -30,6 +30,13 @@
 				<?php 
 			}
 			
+            else if($department_id == 17)
+			{
+				?>
+					<a href="<?php echo site_url()?>hospital_administration/services/import_bed_charges/<?php echo $service_id;?>" class="btn btn-sm btn-warning"><i class="fa fa-sign-out"></i> Import bed charges </a>
+				<?php 
+			}
+			
 			else
 			{
 				?>
