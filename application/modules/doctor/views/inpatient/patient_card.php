@@ -195,9 +195,9 @@ $(document).ready(function(){
                 get_theatre_procedures_table(visit_id);
 
 				display_procedure(visit_id);
-				get_medication(visit_id);
+				//get_medication(visit_id);
 				get_lab_table(visit_id);
-				get_vaccines(visit_id);
+				//get_vaccines(visit_id);
 				display_vaccines(visit_id);
 				display_visit_vaccines(visit_id);
                 display_visit_consumables(visit_id);

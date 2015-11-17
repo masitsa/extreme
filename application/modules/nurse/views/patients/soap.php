@@ -266,15 +266,16 @@ $data['lab_test'] = 100;
 
 <script type="text/javascript">
 $(document).ready(function(){
-  	symptoms(<?php echo $visit_id;?>);
-  	objective_findings(<?php echo $visit_id;?>);
-  	assessment(<?php echo $visit_id;?>);
-  	plan(<?php echo $visit_id;?>);
-  	//doctor_notes(<?php echo $visit_id;?>);
-  	//nurse_notes(<?php echo $visit_id?>);
+
+	//symptoms(<?php echo $visit_id;?>);
+	//objective_findings(<?php echo $visit_id;?>);
+	//assessment(<?php echo $visit_id;?>);
+	//plan(<?php echo $visit_id;?>);
+	//doctor_notes(<?php echo $visit_id;?>);
+	//nurse_notes(<?php echo $visit_id?>);
   	get_disease(<?php echo $visit_id?>);
   	display_prescription(<?php echo $visit_id?>,0);
-    get_lab_table(<?php echo $visit_id;?>);
+  	get_lab_table(<?php echo $visit_id;?>);
     get_xray_table(<?php echo $visit_id;?>);
     get_ultrasound_table(<?php echo $visit_id;?>);
     get_disease(<?php echo $visit_id;?>);

@@ -202,7 +202,7 @@
 								<td>'.$created_by.'</td>
 								<td>'.$status.'</td>
 								<td>'.$total_invoiced.'</td>
-								<td><a href="'.site_url().'administration/reports/view_invoices/'.$debtor_invoice_id.'" class="btn btn-info btn-sm" target="_blank">View invoices</a></td>
+								<td><a href="'.site_url().'administration/reports/view_invoices/'.$debtor_invoice_id.'" class="btn btn-info btn-sm">View invoices</a></td>
 								<td><a href="'.site_url().'administration/reports/export_debt_transactions/'.$debtor_invoice_id.'" class="btn btn-success btn-sm pull-right">Export</a></td>
 								<td><a href="'.site_url().'administration/reports/invoice/'.$debtor_invoice_id.'" class="btn btn-warning btn-sm pull-right" target="_blank">Print</a></td>
 							</tr> 
