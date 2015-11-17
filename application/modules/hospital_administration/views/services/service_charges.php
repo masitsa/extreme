@@ -119,10 +119,77 @@
         
 		</div>
 	</section>
+	  <?php echo $result_two; ?>
+      <?php
+	}
+
+	if($department_id == 18)
+	{
+		?>
+             <section class="panel">
+                <header class="panel-heading">
+                    <h2 class="panel-title">Unsynced Lab Tests</h2>
+                </header>     
+                 <!-- Widget content -->
+                <div class="panel-body">
+            <?php
+			// get all unsyned products from pharmacy
+
+			$unsyned_lab_rs = $this->services_model->get_unsynced_laboratory_charges();
+			$result_three = '';
+			$counter_three = 0;
+			if ($unsyned_lab_rs->num_rows() > 0)
+			{
+				
+				$result_three .= 
+					'
+						<table class="table table-hover table-bordered ">
+						  <thead>
+							<tr>
+							  <th>#</th>
+							  <th>Lab test Name</th>
+							  <th>Cash Unit Price</th>
+							</tr>
+						  </thead>
+						  <tbody>
+					';
+
+				foreach ($unsyned_lab_rs->result() as $unsynced_lab_row)
+				{
+					$lab_test_id = $unsynced_lab_row->lab_test_id;
+					$lab_test_name = $unsynced_lab_row->lab_test_name;
+					$lab_test_price = $unsynced_lab_row->lab_test_price;
+					$counter_three++;
+					$result_three .= 
+					'
+						<tr>
+							<td>'.$counter_three.'</td>
+							<td>'.$lab_test_name.'</td>
+							<td>'.$lab_test_price.'</td>
+						</tr> 
+					';
+
+				}
+
+				$result_three .= 
+			'
+						  </tbody>
+						</table>
+			';
+		}
+		
+		else
+		{
+			$result_three = "There are no service charges to be synced";
+		}
+		?>
+        
+		</div>
+	</section>
         <?php
 	}
 		?>
-        <?php echo $result_two; ?>
+        <?php echo $result_three; ?>
 </div>
 </div>
 <div class="row">

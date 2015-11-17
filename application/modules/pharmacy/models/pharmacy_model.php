@@ -268,7 +268,7 @@ class Pharmacy_model extends CI_Model
 
 			$visit_charge_qty = $this->input->post('quantity');
 
-			$array = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'visit_charge_amount'=>$visit_charge_amount,'date'=>$date,'time'=>$time,'visit_charge_qty'=>$visit_charge_qty,'created_by'=>$this->session->userdata("personnel_id"));
+			$array = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'visit_charge_amount'=>$visit_charge_amount,'date'=>$date,'time'=>$time,'visit_charge_qty'=>0,'created_by'=>$this->session->userdata("personnel_id"));
 			if($this->db->insert('visit_charge', $array))
 			{
 				$visit_charge_id = $this->db->insert_id();

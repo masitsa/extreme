@@ -108,7 +108,7 @@ foreach ($rs as $key6):
 	}
 	else
 	{
-		$button = "<a class='btn btn-success btn-sm' onclick='return confirm(\'Do you want to add ".$test." to the invoice ?\');' href='".site_url()."laboratory/add_lab_cost/".$visit_lab_test_id."/".$visit_id."' >Charge for lab test</a>";
+		$button = "<a class='btn btn-success btn-sm' onclick='update_lab_test_charge(".$visit_lab_test_id.",".$visit_id.")' >Charge for lab test</a>";
 		$status ="<a class='btn btn-info btn-sm' href='".site_url()."laboratory/remove_lab_test/".$visit_lab_test_id."/".$visit_id."' onclick='return confirm(\"Are you sure you want to remove this test?\");'>Remove from list</a>";
 	}
 
@@ -117,7 +117,7 @@ foreach ($rs as $key6):
 		<tr>
         	<td>".($s)."</td>
 			<td>".$test."</td>
-			<td>".$price."</td>
+			<td><input type='text' value='".$price."' id='lab_test_price".$visit_lab_test_id."'/> </td>
 			<td>
 				<div class='btn-toolbar'>
 					<div class='btn-group'>

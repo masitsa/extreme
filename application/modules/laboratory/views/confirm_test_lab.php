@@ -97,19 +97,27 @@ foreach ($rs as $key6):
 	$service_charge_id = $key6->service_charge_id;
 
 	// check if lab test exisit in the visit charge table
-	$visit_charge_id = $this->lab_model->check_visit_charge_lab_test($visit_lab_test_id);
+	$lab_test_charge_rs = $this->lab_model->check_visit_charge_lab_test($visit_lab_test_id);
 	//echo $visit_lab_test_id."<br/>";
 
-	if($visit_charge_id > 0)
+
+	if(count($lab_test_charge_rs) > 0)
 	{
+		foreach ($lab_test_charge_rs as $value_key): 
+			$visit_charge_id = $value_key->visit_charge_id;
+			$visit_charge_amount = $value_key->visit_charge_amount;
+		endforeach;
+		$price_field = "<input type='text' class='form-control col-md-2'  value='".$visit_charge_amount."' id='lab_test_price".$visit_lab_test_id."'/>";
 		$button = "<a class='btn btn-danger btn-sm' href='".site_url()."laboratory/remove_cost/".$visit_charge_id."/".$visit_id."' onclick='return confirm(\'Do you want to remove ".$test." from the invoice ?\');'>Remove lab test charge</a>";
 		
 		$status = '';
 	}
 	else
 	{
-		$button = "<a class='btn btn-success btn-sm' onclick='return confirm(\'Do you want to add ".$test." to the invoice ?\');' href='".site_url()."laboratory/add_lab_cost/".$visit_lab_test_id."/".$visit_id."' >Charge for lab test</a>";
+		$button = "<a class='btn btn-success btn-sm' onclick='update_lab_test_charge(".$visit_lab_test_id.",".$visit_id.")' >Charge for lab test</a>";
 		$status ="<a class='btn btn-info btn-sm' href='".site_url()."laboratory/remove_lab_test/".$visit_lab_test_id."/".$visit_id."' onclick='return confirm(\"Are you sure you want to remove this test?\");'>Remove from list</a>";
+		$price_field = "<input type='text' class='form-control col-md-2'  value='".$price."' id='lab_test_price".$visit_lab_test_id."'/>";
+
 	}
 
 	$s++;
@@ -117,7 +125,7 @@ foreach ($rs as $key6):
 		<tr>
         	<td>".($s)."</td>
 			<td>".$test."</td>
-			<td>".$price."</td>
+			<td>".$price_field."</td>
 			<td>
 				<div class='btn-toolbar'>
 					<div class='btn-group'>
