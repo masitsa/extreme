@@ -780,40 +780,61 @@ class Reports extends administration
 		redirect('accounts/insurance-invoices/'.$visit_type_id);
 	}
 	
-	public function view_invoices($debtor_invoice_id)
-	{
-		$_SESSION['all_transactions_search'] = NULL;
-		$_SESSION['all_transactions_tables'] = NULL;
-		
-		$this->session->unset_userdata('search_title');
-		
-		$search = 'debtor_invoice_item.visit_id = visit.visit_id AND debtor_invoice_item.debtor_invoice_id = '.$debtor_invoice_id;
-		$table = ', debtor_invoice_item';
-		
-		//create title
-		$this->db->where('visit_type.visit_type_id = debtor_invoice.visit_type_id AND debtor_invoice.debtor_invoice_id = '.$debtor_invoice_id);
-		$this->db->select('visit_type_name, date_from, date_to');
-		$query = $this->db->get('debtor_invoice, visit_type');
-		
-		$row = $query->row();
-		
-		$visit_type_name = $row->visit_type_name;
-		$date_from = date('jS M Y',strtotime($row->date_from));
-		$date_to = date('jS M Y',strtotime($row->date_to));
-		
-		$search_title = 'Invoices for '.$visit_type_name.' between '.$date_from.' and '.$date_to;
-		
-		$_SESSION['all_transactions_search'] = $search;
-		$_SESSION['all_transactions_tables'] = $table;
-		
-		$this->session->set_userdata('search_title', $search_title);
-		
-		redirect('administration/reports/all_transactions');
-	}
-	
 	public function export_debt_transactions($debtor_invoice_id)
 	{
 		$this->reports_model->export_debt_transactions($debtor_invoice_id);
+	}
+	
+	public function view_invoices($debtor_invoice_id)
+	{
+		$where = 'debtor_invoice.debtor_invoice_id = '.$debtor_invoice_id.' AND debtor_invoice.visit_type_id = visit_type.visit_type_id';
+		$table = 'debtor_invoice, visit_type';
+		
+		$v_data = array(
+			'debtor_invoice_id'=>$debtor_invoice_id,
+			'query' => $this->reports_model->get_debtor_invoice($where, $table),
+			'debtor_invoice_items' => $this->reports_model->get_debtor_invoice_items($debtor_invoice_id),
+			'personnel_query' => $this->personnel_model->get_all_personnel()
+		);
+			
+		$where .= ' AND debtor_invoice.debtor_invoice_id = debtor_invoice_item.debtor_invoice_id AND visit.visit_id = debtor_invoice_item.visit_id ';
+		$table .= ', visit, debtor_invoice_item';
+		
+		$v_data['where'] = $where;
+		$v_data['table'] = $table;
+			
+		$data['title'] = $v_data['title'] = 'Debtors Invoice';
+		
+		$data['content'] = $this->load->view('reports/view_invoices', $v_data, TRUE);
+		$this->load->view('admin/templates/general_page', $data);
+	}
+
+	public function activate_debtor_invoice_item($debtor_invoice_item_id, $debtor_invoice_id)
+	{
+		$visit_data = array('debtor_invoice_item_status'=>0);
+		$this->db->where('debtor_invoice_item_id',$debtor_invoice_item_id);
+		if($this->db->update('debtor_invoice_item', $visit_data))
+		{
+			redirect('administration/reports/view_invoices/'.$debtor_invoice_id);
+		}
+		else
+		{
+			redirect('administration/reports/view_invoices/'.$debtor_invoice_id);
+		}
+	}
+	
+	public function deactivate_debtor_invoice_item($debtor_invoice_item_id, $debtor_invoice_id)
+	{
+		$visit_data = array('debtor_invoice_item_status'=>1);
+		$this->db->where('debtor_invoice_item_id',$debtor_invoice_item_id);
+		if($this->db->update('debtor_invoice_item', $visit_data))
+		{
+			redirect('administration/reports/view_invoices/'.$debtor_invoice_id);
+		}
+		else
+		{
+			redirect('administration/reports/view_invoices/'.$debtor_invoice_id);
+		}
 	}
 	
 	public function invoice($debtor_invoice_id)

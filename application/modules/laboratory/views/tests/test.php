@@ -127,9 +127,6 @@
    
 
   <script type="text/javascript">
-  	$(function() {
-	    $("#lab_test_id").customselect();
-	});
 
 	  $(document).ready(function(){
 	       get_test_results(100, <?php echo $visit_id?>);

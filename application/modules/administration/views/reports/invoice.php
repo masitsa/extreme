@@ -144,6 +144,7 @@ else
                     
                     <tbody> 
                     	<?php
+						$total_amount = 0;
                         if($debtor_invoice_items->num_rows() > 0)
 						{
 							$count = 0;
@@ -158,22 +159,29 @@ else
 								$current_patient_number = $res->current_patient_number;
 								$visit_id = $res->visit_id;
 								$visit_date = date('jS F Y',strtotime($res->visit_date));
-								?>
-                                <tr>
-                                    <td><?php echo $count;?></td>
-                                    <td><?php echo $visit_date;?></td>
-                                    <td><?php echo $patient_insurance_number;?></td>
-                                    <td><?php echo $patient_surname;?> <?php echo $patient_othernames;?></td>
-                                    <td><?php echo $this->session->userdata('branch_code').'-INV-00'.$visit_id; ?></td>
-                                    <td><?php echo number_format($invoice_amount, 2);?></td>
-                                </tr>
-                                <?php
+								$debtor_invoice_item_status = $res->debtor_invoice_item_status;
+								
+								//display only active items
+								if($debtor_invoice_item_status == 0)
+								{
+									$total_amount += $invoice_amount;
+									?>
+									<tr>
+										<td><?php echo $count;?></td>
+										<td><?php echo $visit_date;?></td>
+										<td><?php echo $patient_insurance_number;?></td>
+										<td><?php echo $patient_surname;?> <?php echo $patient_othernames;?></td>
+										<td><?php echo $this->session->userdata('branch_code').'-INV-00'.$visit_id; ?></td>
+										<td><?php echo number_format($invoice_amount, 2);?></td>
+									</tr>
+									<?php
+								}
 							}
 						}
 						?>
                         <tr>
                             <th colspan="5" align="right">Total</th>
-                            <th><?php echo $total_invoiced;?></th>
+                            <th><?php echo number_format($total_amount, 2);?></th>
                         </tr>
                     </tbody>
                 </table>

@@ -605,31 +605,7 @@ endforeach;
     </div>
 </div>
 <script type="text/javascript">
-     $(function() {
-        $("#consumable_id").customselect();
-        $("#procedure_id").customselect();
-        $("#vaccine_id").customselect();
-        $("#lab_test_id").customselect();
-        $("#xray_id").customselect();
-        $("#ultrasound_id").customselect();
-        $("#orthopaedic_surgery_id").customselect();
-        $("#opthamology_surgery_id").customselect();
-        $("#obstetrics_surgery_id").customselect();
-        $("#theatre_procedure_id").customselect();
-        $("#drug_id").customselect();
-
-      });
-    
-     $(function() {    
-        $('#input-search').on('keyup', function() {
-          var rex = new RegExp($(this).val(), 'i');
-            $('.searchable-container .items').hide();
-            $('.searchable-container .items').filter(function() {
-                return rex.test($(this).text());
-            }).show();
-        });
-    });
-    $(document).on("change","select#ward_id",function(e)
+  $(document).on("change","select#ward_id",function(e)
   {
     var ward_id = $(this).val();
     

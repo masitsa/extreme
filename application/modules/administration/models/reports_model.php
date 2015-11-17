@@ -1260,6 +1260,8 @@ class Reports_model extends CI_Model
 				//get all invoices within the selected dates
 				$this->db->where(
 					array(
+						'close_card' => 1,
+						'visit_delete' => 0,
 						'visit_type' => $visit_type_id,
 						'visit_date >= ' => $this->input->post('invoice_date_from'),
 						'visit_date <= ' => $this->input->post('invoice_date_to')
@@ -1497,8 +1499,8 @@ class Reports_model extends CI_Model
 	
 	public function get_debtor_invoice_items($debtor_invoice_id)
 	{
-		$this->db->select('SUM(visit_charge.visit_charge_units * visit_charge.visit_charge_amount) AS invoice_amount, patients.patient_surname, patients.patient_othernames, patients.patient_number, patients.current_patient_number, visit.visit_id, visit.visit_date, visit.patient_insurance_number');
-		$this->db->where('visit.visit_id = debtor_invoice_item.visit_id AND visit.patient_id = patients.patient_id AND visit.visit_id = visit_charge.visit_id AND debtor_invoice_item.debtor_invoice_id = '.$debtor_invoice_id);
+		$this->db->select('SUM(visit_charge.visit_charge_units * visit_charge.visit_charge_amount) AS invoice_amount, patients.patient_surname, patients.patient_othernames, patients.patient_number, patients.current_patient_number, visit.visit_id, visit.visit_date, visit.patient_insurance_number, debtor_invoice_item.debtor_invoice_item_status, debtor_invoice_item.debtor_invoice_item_id');
+		$this->db->where('visit.visit_delete = 0 AND visit.visit_id = debtor_invoice_item.visit_id AND visit.patient_id = patients.patient_id AND visit.visit_id = visit_charge.visit_id AND debtor_invoice_item.debtor_invoice_id = '.$debtor_invoice_id);
 		
 		$this->db->group_by('visit_id');
 		$this->db->order_by('visit_date');
