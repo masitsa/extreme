@@ -97,8 +97,8 @@
 						<tr>
 							<td>'.$counter.'</td>
 							<td>'.$product_name.'</td>
-							<td>'.$quantity.'</td>
-							<td>'.$product_unitprice.'</td>
+							<td>'.number_format($quantity, 0).'</td>
+							<td>'.number_format($product_unitprice, 2).'</td>
 						</tr> 
 					';
 
@@ -116,13 +116,13 @@
 			$result_two = "There are no service charges to be synced";
 		}
 		?>
-        
-		</div>
-	</section>
         <?php
 	}
 		?>
         <?php echo $result_two; ?>
+        
+		</div>
+	</section>
 </div>
 </div>
 <div class="row">

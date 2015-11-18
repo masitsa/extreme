@@ -648,19 +648,24 @@ class Pharmacy  extends MX_Controller
 		//  delete the visit charge
 
 		$this->db->where(array("visit_charge_id"=>$visit_charge_id));
-		$this->db->delete('visit_charge');
-		
-		//  check if the visit charge has been deleted
-
-		$rs = $this->pharmacy_model->check_deleted_visitcharge($visit_charge_id);
-		$num_rows =count($rs);
-
-		//echo BB.$visit_charge_id;
-		if($num_rows==0){
+		if($this->db->delete('visit_charge'))
+		{
 			$this->db->where(array("prescription_id"=>$prescription_id));
-			$this->db->delete('pres');
+			if($this->db->delete('pres'))
+			{
+				$data['result'] = "You have successfully removed the prescription from the list";
+			}
+			
+			else
+			{
+				$data['result'] = "Unable to delete the charge";
+			}
 		}
-		$data['result'] = "You have successfully removed the prescription from the list";
+		
+		else
+		{
+			$data['result'] = "Unable to delete the drug from list";
+		}
 
 		echo json_encode($data);
 	}
