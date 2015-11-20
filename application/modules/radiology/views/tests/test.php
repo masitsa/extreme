@@ -181,10 +181,9 @@
 	  //window.alert(XMLHttpRequestObject.responseText);
 	        obj.innerHTML = XMLHttpRequestObject.responseText;
 			/* CL Editor */
-			$(".cleditor").cleditor({
-				width: "auto",
-				height: "100%"
-			});
+			tinymce.init({
+                selector: ".cleditor"
+            });
 	        if((page == 75) || (page == 85)){
 	          window.close(this);
 	        }
