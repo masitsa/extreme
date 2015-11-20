@@ -354,7 +354,13 @@ class Services_model extends CI_Model
 
 		return $department_id;
 	}
-	
+	public function get_unsynced_laboratory_charges()
+	{
+		$this->db->where('lab_test_delete = 0 AND is_synced = 0');
+		$query = $this->db->get('lab_test');
+		
+		return $query;
+	}
 	public function import_lab_charges($service_id)
 	{
 		//get lab tests
@@ -368,7 +374,7 @@ class Services_model extends CI_Model
 				$lab_test_id = $res->lab_test_id;
 				$lab_test_name = $res->lab_test_name;
 				$price = $res->lab_test_price;
-				$insurance_price = ($price*1.5);
+	
 				// get all the visit type
 				$this->db->where('visit_type_status', 1);
 				$visit_type_query = $this->db->get('visit_type');
@@ -379,11 +385,7 @@ class Services_model extends CI_Model
 					
 						$visit_type_id = $key->visit_type_id;
 						// service charge entry
-						
-						if($visit_type_id == 1)
-						{
-							// service charge entry
-							$service_charge_insert = array(
+						$service_charge_insert = array(
 										"service_charge_name" => $lab_test_name,
 										"service_id" => $service_id,
 										"visit_type_id" => $visit_type_id,
@@ -391,22 +393,8 @@ class Services_model extends CI_Model
 										"service_charge_amount" => $price,
 										'service_charge_status' => 1,
 									);
-
-						}
-						else
-						{
-							// service charge entry
-							$service_charge_insert = array(
-										"service_charge_name" => $lab_test_name,
-										"service_id" => $service_id,
-										"visit_type_id" => $visit_type_id,
-										"lab_test_id" => $lab_test_id,
-										"service_charge_amount" => $insurance_price,
-										'service_charge_status' => 1,
-									);
-						}
 						
-						if($this->lab_test_service_charge_exists($lab_test_id, $visit_type_id))
+						if($this->service_charge_exists($lab_test_name, $visit_type_id))
 						{
 							$this->db->where(array('service_charge_name' => $lab_test_name, 'visit_type_id' => $visit_type_id));
 							if($this->db->update('service_charge', $service_charge_insert))
@@ -434,12 +422,10 @@ class Services_model extends CI_Model
 						}
 					}
 				}
-				$update_array = array('is_synced'=>1);
-				$this->db->where('lab_test_id ='.$lab_test_id);
-				$this->db->update('lab_test',$update_array);
-
 			}
-			
+			$update_array = array('is_synced'=>1);
+			$this->db->where('lab_test_id ='.$lab_test_id);
+			$this->db->update('lab_test',$update_array);
 			$this->session->set_userdata('success_message', 'Charges created successfully');
 		}
 		
@@ -540,13 +526,6 @@ class Services_model extends CI_Model
 	{
 		$this->db->where('product_status = 1 AND is_synced = 0');
 		$query = $this->db->get('product');
-		
-		return $query;
-	}
-	public function get_unsynced_laboratory_charges()
-	{
-		$this->db->where('is_synced = 0 AND lab_test_delete = 0');
-		$query = $this->db->get('lab_test');
 		
 		return $query;
 	}
@@ -666,21 +645,6 @@ class Services_model extends CI_Model
 	public function service_charge_exists($service_charge_name, $visit_type_id)
 	{
 		$this->db->where(array('service_charge_name' => $service_charge_name, 'visit_type_id' => $visit_type_id, 'service_charge_delete' => 0));
-		$query = $this->db->get('service_charge');
-		
-		if($query->num_rows() > 0)
-		{
-			return TRUE;
-		}
-		
-		else
-		{
-			return FALSE;
-		}
-	}
-	public function lab_test_service_charge_exists($lab_test_id, $visit_type_id)
-	{
-		$this->db->where(array('lab_test_id' => $lab_test_id, 'visit_type_id' => $visit_type_id, 'service_charge_delete' => 0));
 		$query = $this->db->get('service_charge');
 		
 		if($query->num_rows() > 0)

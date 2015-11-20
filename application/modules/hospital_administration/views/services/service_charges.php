@@ -116,10 +116,11 @@
 			$result_two = "There are no service charges to be synced";
 		}
 		?>
+		 <?php echo $result_two; ?>
         
 		</div>
 	</section>
-	  <?php echo $result_two; ?>
+	 
       <?php
 	}
 
@@ -183,13 +184,13 @@
 			$result_three = "There are no service charges to be synced";
 		}
 		?>
-        
+        <?php echo $result_three; ?>
 		</div>
 	</section>
         <?php
 	}
 		?>
-        <?php echo $result_three; ?>
+        
 </div>
 </div>
 <div class="row">

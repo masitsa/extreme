@@ -477,13 +477,13 @@ class Pharmacy_model extends CI_Model
 			
 
 		$data2 = array(
-			'prescription_finishdate'=>$this->input->post('finishdate'.$prescription_id),
-			'drug_times_id'=>$this->input->post('x'.$prescription_id),
-			'drug_duration_id'=>$this->input->post('duration'.$prescription_id),
-			'drug_consumption_id'=>$this->input->post('consumption'.$prescription_id),
-			'units_given'=>$this->input->post('units_given'.$prescription_id),
+			'prescription_finishdate'=>$this->input->post('finishdate'),
+			'drug_times_id'=>$this->input->post('x'),
+			'drug_duration_id'=>$this->input->post('duration'),
+			'drug_consumption_id'=>$this->input->post('consumption'),
+			'units_given'=>$this->input->post('units_given'),
 			'visit_charge_id'=>$visit_charge_id,
-			'prescription_quantity'=>$this->input->post('quantity'.$prescription_id)
+			'prescription_quantity'=>$this->input->post('quantity')
 		);
 		
 		$this->db->where('prescription_id', $prescription_id);
