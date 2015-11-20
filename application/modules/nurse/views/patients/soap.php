@@ -529,7 +529,7 @@ function display_prescription(visit_id, page){
   }
   
   else{
-    var obj = document.getElementById("prescription");
+    var obj = document.getElementById("visit_prescription");
   }
   if(XMLHttpRequestObject) {
         
