@@ -751,7 +751,8 @@ class Accounts_model extends CI_Model
 	{
 		if(empty($personnel_id))
 		{
-			redirect('login');
+			//redirect('login');
+			$personnel = '-';
 		}
 		
 		else

@@ -117,12 +117,12 @@
 		}
 		?>
 		 <?php echo $result_two; ?>
-        
 		</div>
 	</section>
-	 
       <?php
 	}
+	
+	$result_three = '';
 
 	if($department_id == 18)
 	{
@@ -184,13 +184,13 @@
 			$result_three = "There are no service charges to be synced";
 		}
 		?>
-        <?php echo $result_three; ?>
-		</div>
-	</section>
         <?php
 	}
 		?>
+        <?php echo $result_three; ?>
         
+		</div>
+	</section>
 </div>
 </div>
 <div class="row">
