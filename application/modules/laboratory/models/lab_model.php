@@ -300,6 +300,38 @@ class Lab_model extends CI_Model
 			return FALSE;
 		}
 	}
+
+	function update_lab_test_charge_to_visit_charge($visit_id, $visit_lab_test_id)
+	{
+
+		$passed_amount = $this->input->post('amount');
+		//get service charge details
+		$this->db->select('service_charge.service_charge_amount, service_charge.service_charge_id');
+		$this->db->where('visit_lab_test.service_charge_id = service_charge.service_charge_id AND visit_lab_test.visit_lab_test_id = '.$visit_lab_test_id);
+		$query = $this->db->get('service_charge, visit_lab_test');
+
+		if($query->num_rows() > 0)
+		{
+			$key = $query->row();
+			$service_charge_amount = $key->service_charge_amount;
+			$service_charge_id = $key->service_charge_id;
+			$visit_data = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'visit_lab_test_id'=>$visit_lab_test_id,'visit_charge_amount'=>$passed_amount,'created_by'=>$this->session->userdata("personnel_id"));
+			if($this->db->insert('visit_charge', $visit_data))
+			{
+				return TRUE;
+			}
+			
+			else
+			{
+				return FALSE;
+			}
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
 	
 
 	public function check_visit_charge_lab_test($visit_lab_test_id)
@@ -311,16 +343,7 @@ class Lab_model extends CI_Model
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 
-		if(count($result) > 0){
-			foreach ($result as $key): 
-				$visit_charge_id = $key->visit_charge_id;
-			endforeach;
-			return $visit_charge_id;
-		}
-		else
-		{
-			return 0;
-		}
+		return $result;
 	}
 	// this will ensure that the lab test shall only be authorised by the relevant laboratory technician
 

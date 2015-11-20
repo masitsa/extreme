@@ -241,7 +241,7 @@ class Accounts_model extends CI_Model
 	public function get_patient_visit_charge_items($visit_id)
 	{
 		$table = "visit_charge, service_charge, service";
-		$where = "service.service_delete = 0 AND service_charge.service_id = service.service_id AND visit_charge.visit_charge_delete = 0 AND visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_id =". $visit_id;
+		$where = "service.service_delete = 0 AND visit_charge.visit_charge_units <> 0 AND service_charge.service_id = service.service_id AND visit_charge.visit_charge_delete = 0 AND visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_id =". $visit_id;
 		$items = "service.service_id,service.service_name,service_charge.service_charge_name,visit_charge.service_charge_id,visit_charge.visit_charge_units, visit_charge.visit_charge_amount, visit_charge.visit_charge_timestamp,visit_charge.visit_charge_id,visit_charge.created_by, visit_charge.personnel_id";
 		$order = "service.service_name";
 		
@@ -751,7 +751,8 @@ class Accounts_model extends CI_Model
 	{
 		if(empty($personnel_id))
 		{
-			redirect('login');
+			//redirect('login');
+			$personnel = '-';
 		}
 		
 		else

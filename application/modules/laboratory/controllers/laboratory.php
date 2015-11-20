@@ -356,6 +356,23 @@ class Laboratory  extends MX_Controller
 		}
 	}
 
+	public function update_lab_charge_amount($visit_lab_test_id,$visit_id)
+	{
+		$amount = $this->input->post('amount');
+		if($amount > 0)
+		{
+			$this->lab_model->update_lab_test_charge_to_visit_charge($visit_id,$visit_lab_test_id);
+			$result = "You have successfully billed for the lab test";
+
+		}
+		else
+		{
+			$result = "Sorry something went wrong, please try again";
+		}
+		echo  $result;
+		
+	}
+
 	public function test_lab($visit_id, $service_charge_id=NULL){
 		$data = array('service_charge_id' => $service_charge_id, 'visit_id' => $visit_id);
 		$this->load->view('test_lab', $data);

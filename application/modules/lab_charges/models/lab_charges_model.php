@@ -263,6 +263,7 @@ class Lab_charges_model extends CI_Model
 				"lab_test_class_id" => $lab_test_class_id,
 				"lab_test_price" => $price,
 				"lab_test_units" => $units,
+				"is_synced" => 0,
 				"lab_test_malelowerlimit" => $male_lower_limit,
 				"lab_test_malelupperlimit" => $male_upper_limit,
 				"lab_test_femalelowerlimit" => $female_lower_limit,
@@ -324,118 +325,6 @@ class Lab_charges_model extends CI_Model
 		$query = $this->db->get();
 		
 		return $query;
-	}
-	function get_tests_done($lab_test_id)
-	{
-		$where = 'service_charge.service_charge_id = visit_lab_test.service_charge_id AND service_charge.lab_test_id = \''.$lab_test_id.'\'';
-		$search = $this->session->userdata('tests_report_search');
-		if(!empty($search))
-		{
-			$where .= $search;
-		}
-		$this->db->where($where);
-		$this->db->from('service_charge, visit_lab_test');
-		$this->db->select('count(visit_lab_test_id) AS total_tests');
-		//echo 'SELECT count(visit_charge_id) AS total_tests FROM service_charge, visit_charge WHERE '.$where;die();
-		$query = $this->db->get();
-		
-		$total_tests = 0;
-		
-		if($query->num_rows() > 0)
-		{
-			$row = $query->row();
-			$total_tests = $row->total_tests;
-		}
-		return $total_tests;
-	}
-	function get_tests_revenue($lab_test_id)
-	{
-		$where = 'visit_lab_test.visit_lab_test_id = visit_charge.visit_lab_test_id AND service_charge.service_charge_id = visit_lab_test.service_charge_id AND service_charge.lab_test_id = \''.$lab_test_id.'\'';
-		//$where = 'service_charge.service_charge_id = visit_charge.service_charge_id AND service_charge.lab_test_id = \''.$lab_test_id.'\'';
-		$search = $this->session->userdata('tests_report_search');
-		if(!empty($search))
-		{
-			$where .= $search;
-		}
-		$this->db->where($where);
-		$this->db->from('service_charge, visit_charge, visit_lab_test');
-		$this->db->select('SUM(visit_charge_units * visit_charge_amount) AS total_test_revenue');
-		$query = $this->db->get();
-		
-		$total_test_revenue = 0;
-		
-		if($query->num_rows() > 0)
-		{
-			$row = $query->row();
-			$total_test_revenue = $row->total_test_revenue;
-		}
-		return $total_test_revenue;
-	}
-	
-	public function export_results()
-	{
-		$this->load->library('excel');
-		
-		//get all transactions
-		$where = 'lab_test_class.lab_test_class_id = lab_test.lab_test_class_id AND lab_test.lab_test_delete = 0';
-		$table = 'lab_test,lab_test_class';
-		
-		$this->db->where($where);
-		$this->db->order_by('lab_test_name', 'ASC');
-		$visits_query = $this->db->get($table);
-		
-		$title = 'Laboratory test revenue export '.date('jS M Y H:i a',strtotime(date('Y-m-d H:i:s')));
-		
-		if($visits_query->num_rows() > 0)
-		{
-			$count = 0;
-			/*
-				-----------------------------------------------------------------------------------------
-				Document Header
-				-----------------------------------------------------------------------------------------
-			*/
-
-			$row_count = 0;
-			$report[$row_count][0] = '#';
-			$report[$row_count][1] = 'Class';
-			$report[$row_count][2] = 'Test';
-			$report[$row_count][3] = 'Cash Price';
-			$report[$row_count][4] = 'No. Done';
-			$report[$row_count][5] = 'Revenue';
-			//get & display all services
-			
-			//display all patient data in the leftmost columns
-			foreach($visits_query->result() as $row)
-			{
-				$row_count++;
-				$lab_test_class_id = $row->lab_test_class_id;
-				$lab_test_class = $row->lab_test_class_name;
-				$lab_test_name = $row->lab_test_name;
-				$lab_test_units = $row->lab_test_units;
-				$lab_test_price = $row->lab_test_price;
-				$lab_test_malelowerlimit = $row->lab_test_malelowerlimit;
-				$lab_test_malelupperlimit = $row->lab_test_malelupperlimit;
-				$lab_test_femalelowerlimit = $row->lab_test_femalelowerlimit;
-				$lab_test_femaleupperlimit = $row->lab_test_femaleupperlimit;
-				$lab_test_delete = $row->lab_test_delete;
-				$lab_test_id = $row->lab_test_id;
-				$no_done = $this->lab_charges_model->get_tests_done($lab_test_id);
-				$revenue = $this->lab_charges_model->get_tests_revenue($lab_test_id);
-				$count++;
-				
-				//display the patient data
-				$report[$row_count][0] = $count;
-				$report[$row_count][1] = $lab_test_class;
-				$report[$row_count][2] = $lab_test_name;
-				$report[$row_count][3] = number_format($lab_test_price, 2);
-				$report[$row_count][4] = number_format($no_done, 0);
-				$report[$row_count][5] = number_format($revenue, 2);
-			}
-		}
-		
-		//create the excel document
-		$this->excel->addArray ( $report );
-		$this->excel->generateXML ($title);
 	}
 }
 ?>

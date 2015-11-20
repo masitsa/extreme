@@ -406,6 +406,30 @@
 
 		
 	}
+	function update_lab_test_charge(visit_lab_test_id,visit_id){
+		var config_url = $('#config_url').val();
+		var lab_test_amount = document.getElementById("lab_test_price"+visit_lab_test_id).value;
+        var data_url = "<?php echo site_url();?>laboratory/update_lab_charge_amount/"+visit_lab_test_id+"/"+visit_id;
+
+		  $.ajax({
+		  type:'POST',
+		  url: data_url,
+		  data:{amount: lab_test_amount},
+		  dataType: 'text',
+		  success:function(data){
+		    window.alert("You have successfully updated the lab test amount");
+		  //obj.innerHTML = XMLHttpRequestObject.responseText;
+		  },
+		  error: function(xhr, status, error) {
+		  //alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+		  alert(error);
+		  }
+
+		  });
+		   get_lab_table(visit_id);
+		
+	}
+
 	function print_previous_test(visit_id, patient_id){
 		var config_url = $('#config_url').val();
     	window.open(config_url+"laboratory/print_test/"+visit_id+"/"+patient_id,"Popup","height=900,width=1200,,scrollbars=yes,"+

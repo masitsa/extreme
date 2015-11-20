@@ -79,6 +79,15 @@ if(!empty($coming_from)){
 				// check if test is in visit charge
 			$actual_visit_charge = $this->lab_model->check_visit_charge_lab_test($visit_lab_test_id,$visit_id);
 			// end of geting the actual charge id
+
+			$actual_visit_charge_id = 0;
+
+			if(count($actual_visit_charge) > 0)
+			{
+				$row_v = $actual_visit_charge[0];
+			// /var_dump($row_v); die();
+				$actual_visit_charge_id = $row_v->visit_charge_id;
+			}
 			
 			$test_formats = $this->lab_model->get_lab_formats($service_charge_id);
 			$num_formats = $test_formats->num_rows();
@@ -201,7 +210,6 @@ if(!empty($coming_from)){
 					</tr>";
 			}
 		endforeach;
-		
 		echo //MM.$lab_test.
 		"
 		</table>
@@ -209,7 +217,7 @@ if(!empty($coming_from)){
 		<div class='row' style='margin-bottom: 20px;'>
 			<div class='col-md-12'>
 				<div class='center-align'><h3>General Comments</h3></div>
-				<textarea readonly='readonly' rows='5' id='test_comment' onkeyup='save_comment(".$actual_visit_charge.")' class='form-control' readonly='readonly'>".$comment."</textarea>
+				<textarea readonly='readonly' rows='5' id='test_comment' onkeyup='save_comment(".$actual_visit_charge_id.")' class='form-control' readonly='readonly'>".$comment."</textarea>
 			</div>
 		</div>
 		

@@ -254,6 +254,7 @@ if($all_notes->num_rows() > 0)
                                     $total = 0;
                                     if(count($item_invoiced_rs) > 0){
 										$s=0;
+										$total_nhif_days = 0;
 										
 										foreach ($item_invoiced_rs as $key_items):
 											$service_charge_id = $key_items->service_charge_id;
@@ -264,6 +265,11 @@ if($all_notes->num_rows() > 0)
 											$service_id = $key_items->service_id;
 											$personnel_id = $key_items->personnel_id;
 											$doctor = '';
+											
+											if($service_name == 'Bed charge')
+											{
+												$total_nhif_days = $units;
+											}
 											
 											if($personnel_id > 0)
 											{
@@ -322,6 +328,24 @@ if($all_notes->num_rows() > 0)
 												$total = $total + $visit_total;
 											}
 										endforeach;
+										
+										//less NHIF Rebate
+										if(($inpatient == 1) && (!empty($patient_insurance_number)))
+										{
+											$rebate = 1600;
+											$total_rebate = $rebate * $total_nhif_days;
+											$s++;
+											?>
+                                            <tr>
+                                                <td><?php echo $s;?></td>
+                                                <td colspan="2">Less NHIF Rebate</td>
+                                                <td><?php echo $total_nhif_days;?></td>
+                                                <td><?php echo number_format($rebate,2);?></td>
+                                                <td>(<?php echo number_format($total_rebate,2);?>)</td>
+                                            </tr>
+                                            <?php
+											$total = $total - $total_rebate;
+										}
 										$total_amount = $total ;
 										
 										// $total_amount = ($total + $debit_note_amount) - $credit_note_amount;
