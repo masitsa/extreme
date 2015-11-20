@@ -116,8 +116,7 @@
 			$result_two = "There are no service charges to be synced";
 		}
 		?>
-        
-	  <?php echo $result_two; ?>
+		 <?php echo $result_two; ?>
 		</div>
 	</section>
       <?php

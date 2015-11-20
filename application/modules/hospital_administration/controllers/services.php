@@ -292,10 +292,35 @@ class Services extends Hospital_administration
 			$service_charge_name = $this->input->post('service_charge_name');
 			$patient_type = $this->input->post('patient_type');
 			$charge = $this->input->post('charge');
+			if($patient_type != 1)
+			{
+				// select * insurance service charge 
 
-			$visit_data = array('service_charge_name'=>$service_charge_name,'visit_type_id'=>$patient_type,'service_charge_amount'=>$charge, 'modified_by'=>$this->session->userdata('personnel_id'));
-			$this->db->where('service_charge_id',$service_charge_id);
-			$this->db->update('service_charge', $visit_data);
+				$this->db->where('patient_type <> 1 AND  service_charge_name = "'.$service_charge_name.'"');
+				$service_charges = $this->db->get('service_charge');
+
+				if($service_charges->num_rows() > 0)
+				{
+					foreach ($service_charges->result() as $key) {
+						$service_charge_id_id = $key->service_charge_id;
+						$visit_type_idd = $key->visit_type_id;
+
+						$visit_data = array('service_charge_name'=>$service_charge_name,'visit_type_id'=>$visit_type_idd,'service_charge_amount'=>$charge, 'modified_by'=>$this->session->userdata('personnel_id'));
+						$this->db->where('service_charge_id',$service_charge_id_id);
+						$this->db->update('service_charge', $visit_data);
+
+					}			
+				}
+
+
+			}
+			else
+			{
+				$visit_data = array('service_charge_name'=>$service_charge_name,'visit_type_id'=>$patient_type,'service_charge_amount'=>$charge, 'modified_by'=>$this->session->userdata('personnel_id'));
+				$this->db->where('service_charge_id',$service_charge_id);
+				$this->db->update('service_charge', $visit_data);
+			}
+			
 			
 			$this->session->set_userdata("success_message","Successfully updated service charge");
 				
