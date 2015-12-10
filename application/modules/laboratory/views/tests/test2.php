@@ -157,57 +157,60 @@ if(!empty($coming_from)){
 			{
 				//get test
 				$test = $this->lab_model->get_test_details($service_charge_id);
-				$row = $test->row();
-				
-				$lab_test_name =$row->lab_test_name;
-				
-				$rs = $this->lab_model->get_m_test($visit_lab_test_id);//die();
-				foreach ($rs as $key2)
+				if($test->num_rows() > 0)
 				{
-					$lab_test_class_name =$key2->lab_test_class_name;
-					$lab_test_units =$key2->lab_test_units;
-					$lab_test_upper_limit =$key2->lab_test_malelowerlimit;
-					$lab_test_lower_limit =$key2->lab_test_malelupperlimit;
-					$lab_test_upper_limit1 =$key2->lab_test_femalelowerlimit;
-					$lab_test_lower_limit1 =$key2->lab_test_femaleupperlimit;
-					$lab_visit_result =$key2->lab_visit_result;
-					$visit_charge_id =$key2->lab_visit_id;
+					$row = $test->row();
 					
-					if(!empty($lab_visit_result)){
-						$class = "class='success'";
+					$lab_test_name =$row->lab_test_name;
+					
+					$rs = $this->lab_model->get_m_test($visit_lab_test_id);//die();
+					foreach ($rs as $key2)
+					{
+						$lab_test_class_name =$key2->lab_test_class_name;
+						$lab_test_units =$key2->lab_test_units;
+						$lab_test_upper_limit =$key2->lab_test_malelowerlimit;
+						$lab_test_lower_limit =$key2->lab_test_malelupperlimit;
+						$lab_test_upper_limit1 =$key2->lab_test_femalelowerlimit;
+						$lab_test_lower_limit1 =$key2->lab_test_femaleupperlimit;
+						$lab_visit_result =$key2->lab_visit_result;
+						$visit_charge_id =$key2->lab_visit_id;
+						
+						if(!empty($lab_visit_result)){
+							$class = "class='success'";
+						}
+						else{
+							$class = "class=''";
+						}
+						echo "
+						<tr ".$class.">
+							<td>".$lab_test_name."</td>
+							<td>".$lab_test_class_name."</td>
+							<td></td>
+							<td><input type='text' class='form-control'  id='laboratory_result".$visit_charge_id."' size='10' readonly='readonly' value='".$lab_visit_result."'/></td>
+							<td>".$lab_test_units."</td>
+							<td></td>
+							<td>".$lab_test_upper_limit." - ".$lab_test_lower_limit."</td>
+							<td>".$lab_test_upper_limit1." - ".$lab_test_lower_limit1."</td>
+							<td id='result_space".$visit_charge_id."'></td>
+							<td><div class='ui-widget' id='value".$visit_charge_id."'></div></td>
+						</tr>";
 					}
-					else{
-						$class = "class=''";
+					
+					$rsy2 = $this->lab_model->get_test_comment($visit_charge_id);
+					$num_rowsy2 = count($rsy2);
+					$comment4 = '';
+	
+					if($num_rowsy2 > 0){
+	
+						foreach ($rsy2 as $keyy):
+							$comment4= $keyy->lab_visit_format_comments;
+						endforeach;
 					}
 					echo "
-					<tr ".$class.">
-						<td>".$lab_test_name."</td>
-						<td>".$lab_test_class_name."</td>
-						<td></td>
-						<td><input type='text' class='form-control'  id='laboratory_result".$visit_charge_id."' size='10' readonly='readonly' value='".$lab_visit_result."'/></td>
-						<td>".$lab_test_units."</td>
-						<td></td>
-						<td>".$lab_test_upper_limit." - ".$lab_test_lower_limit."</td>
-						<td>".$lab_test_upper_limit1." - ".$lab_test_lower_limit1."</td>
-						<td id='result_space".$visit_charge_id."'></td>
-						<td><div class='ui-widget' id='value".$visit_charge_id."'></div></td>
-					</tr>";
+						<tr>
+							<td colspan='8'><textarea readonly='readonly' rows='5' class='form-control' id='laboratory_comment".$visit_charge_id."'  placeholder='".$lab_test_name." Comments'>".$comment4."</textarea> </td>
+						</tr>";
 				}
-				
-				$rsy2 = $this->lab_model->get_test_comment($visit_charge_id);
-				$num_rowsy2 = count($rsy2);
-				$comment4 = '';
-
-				if($num_rowsy2 > 0){
-
-					foreach ($rsy2 as $keyy):
-						$comment4= $keyy->lab_visit_format_comments;
-					endforeach;
-				}
-				echo "
-					<tr>
-						<td colspan='8'><textarea readonly='readonly' rows='5' class='form-control' id='laboratory_comment".$visit_charge_id."'  placeholder='".$lab_test_name." Comments'>".$comment4."</textarea> </td>
-					</tr>";
 			}
 		endforeach;
 		echo //MM.$lab_test.

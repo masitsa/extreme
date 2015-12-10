@@ -257,7 +257,7 @@ class Pharmacy_model extends CI_Model
 		$service_charge_id = $this->input->post('service_charge_id');
 		//  insert into visit charge 
 
-		if($module != NULL)
+		if(($module == '1') || ($module == 1))
 		{
 			$amount_rs  = $this->get_service_charge_amount($service_charge_id);
 
@@ -274,20 +274,25 @@ class Pharmacy_model extends CI_Model
 				$visit_charge_id = $this->db->insert_id();
 			}
 			else{
-				return FALSE;
+				$visit_charge_id = 0;
 			}
 		}
+		
+		else
+		{
+			$visit_charge_id = 0;
+		}
 
-		$rs = $this->get_visit_charge_id($visit_id, $date, $time);
+		/*$rs = $this->get_visit_charge_id($visit_id, $date, $time);
 		foreach ($rs as $key):
 			$visit_charge_id = $key->visit_charge_id;
-		endforeach;
+		endforeach;*/
 		$data = array(
 			'prescription_substitution'=>$varsubstitution,
 			'prescription_startdate'=>$date,
 			'prescription_finishdate'=>$this->input->post('finishdate'),
 			'drug_times_id'=>$this->input->post('x'),
-			// 'visit_charge_id'=>$visit_charge_id,
+			'visit_charge_id'=>$visit_charge_id,
 			'visit_id'=>$visit_id,
 			'drug_duration_id'=>$this->input->post('duration'),
 			'drug_consumption_id'=>$this->input->post('consumption'),
@@ -437,8 +442,23 @@ class Pharmacy_model extends CI_Model
 				$this->db->where('visit_charge_id',$visit_charge_id);
 				if($this->db->update('visit_charge', $array))
 				{
-					// $visit_charge_id = $this->db->insert_id();
-					return TRUE;
+					$data2 = array(
+						'prescription_finishdate'=>$this->input->post('finishdate'),
+						'drug_times_id'=>$this->input->post('x'),
+						'drug_duration_id'=>$this->input->post('duration'),
+						'drug_consumption_id'=>$this->input->post('consumption'),
+						'units_given'=>$this->input->post('units_given'),
+						'prescription_quantity'=>$this->input->post('quantity')
+					);
+					
+					$this->db->where('prescription_id', $prescription_id);
+					if($this->db->update('pres', $data2))
+					{
+						return TRUE;
+					}
+					else{
+						return FALSE;
+					}
 				}
 				else{
 					return FALSE;
@@ -461,39 +481,34 @@ class Pharmacy_model extends CI_Model
 				if($this->db->insert('visit_charge', $array))
 				{
 					$visit_charge_id = $this->db->insert_id();
+					
+					$data2 = array(
+						'prescription_finishdate'=>$this->input->post('finishdate'),
+						'drug_times_id'=>$this->input->post('x'),
+						'drug_duration_id'=>$this->input->post('duration'),
+						'drug_consumption_id'=>$this->input->post('consumption'),
+						'units_given'=>$this->input->post('units_given'),
+						'visit_charge_id'=>$visit_charge_id,
+						'prescription_quantity'=>$this->input->post('quantity')
+					);
+					
+					$this->db->where('prescription_id', $prescription_id);
+					if($this->db->update('pres', $data2))
+					{
+						return TRUE;
+					}
+					else{
+						return FALSE;
+					}
 				}
 				else{
 					return FALSE;
 				}
 			}
-
-
-
 			
 		}
 		else
 		{
-			
-		}
-
-			
-
-		$data2 = array(
-			'prescription_finishdate'=>$this->input->post('finishdate'),
-			'drug_times_id'=>$this->input->post('x'),
-			'drug_duration_id'=>$this->input->post('duration'),
-			'drug_consumption_id'=>$this->input->post('consumption'),
-			'units_given'=>$this->input->post('units_given'),
-			'visit_charge_id'=>$visit_charge_id,
-			'prescription_quantity'=>$this->input->post('quantity')
-		);
-		
-		$this->db->where('prescription_id', $prescription_id);
-		if($this->db->update('pres', $data2))
-		{
-			return TRUE;
-		}
-		else{
 			return FALSE;
 		}
 	}

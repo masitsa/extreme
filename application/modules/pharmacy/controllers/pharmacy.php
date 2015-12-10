@@ -147,6 +147,7 @@ class Pharmacy  extends MX_Controller
 		$gender = $patient['gender'];
 		$visit_date = date('jS M Y',strtotime($visit_date));
 		$v_data['age'] = $age;
+		$v_data['module'] = $module;
 		$v_data['visit_date'] = $visit_date;
 		$v_data['gender'] = $gender;
 		echo $this->load->view('inpatient/prescription', $v_data, true);
@@ -259,8 +260,6 @@ class Pharmacy  extends MX_Controller
 		$this->form_validation->set_rules('duration', 'Duration', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('consumption', 'Consumption', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('quantity', 'Quantity', 'required|xss_clean');
-
-		
 		$this->form_validation->set_rules('units_given', 'Units Given', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('charge', 'Unit price', 'trim|required|xss_clean');	
 

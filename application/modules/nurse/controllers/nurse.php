@@ -189,7 +189,6 @@ class Nurse  extends MX_Controller
 	}
 	public function patient_card($visit_id, $mike = NULL, $module = NULL,$opener = NULL)
 	{
-
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
 		$v_data['patient_type'] = $patient['patient_type'];
 		$v_data['patient_othernames'] = $patient['patient_othernames'];

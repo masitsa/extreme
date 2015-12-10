@@ -816,7 +816,33 @@ class Administration  extends MX_Controller
 	}
 	
 		
-	
+	public function backup_database()
+	{
+		$backup_path = realpath(APPPATH . '../assets/backup');
+		$file_name = date('Y-m-d H:i:s');
+		// Load the DB utility class
+		$this->load->dbutil();
+		$prefs = array(
+                //'tables'      => array(),  // Array of tables to backup.
+                'ignore'      => array('group', 'table'),           // List of tables to omit from the backup
+                /*'format'      => 'gzip',             // gzip, zip, txt
+                'filename'    => $backup_path.'/backup_'.$file_name.'.sql',    // File name - NEEDED ONLY WITH ZIP FILES
+                'add_drop'    => TRUE,              // Whether to add DROP TABLE statements to backup file
+                'add_insert'  => TRUE,              // Whether to add INSERT data to backup file
+                'newline'     => "\n"               // Newline character used in backup file*/
+              );
+		
+		// Backup your entire database and assign it to a variable
+		$backup =& $this->dbutil->backup($prefs); 
+		
+		// Load the file helper and write the file to your server
+		$this->load->helper('file');
+		write_file($backup_path.'/backup_'.$file_name.'.gz', $backup); 
+		
+		// Load the download helper and send the file to your desktop
+		$this->load->helper('download');
+		force_download($backup_path.'/backup_'.$file_name.'.gz', $backup);
+	}
 }
 
 ?>
