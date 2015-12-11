@@ -1226,7 +1226,7 @@ class Sync_model extends CI_Model
 			//The JSON data.
 
 			$data_string = json_encode($petty_cash_response);
-			var_dump($data_string);
+			//var_dump($data_string);
 			try{                                                                                                         
 
 				$ch = curl_init($url);                                                                      

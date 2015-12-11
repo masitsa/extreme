@@ -386,7 +386,6 @@ $route['microfinance/activate-savings-plan/(:num)'] = 'microfinance/savings_plan
 $route['microfinance/activate-savings-plan/(:num)/(:num)'] = 'microfinance/savings_plan/activate_savings_plan/$1/$2';
 $route['microfinance/deactivate-savings-plan/(:num)'] = 'microfinance/savings_plan/deactivate_savings_plan/$1';
 $route['microfinance/deactivate-savings-plan/(:num)/(:num)'] = 'microfinance/savings_plan/deactivate_savings_plan/$1/$2';
-
 $route['microfinance/add-individual-plan/(:num)'] = 'microfinance/individual/add_individual_plan/$1';
 $route['microfinance/activate-individual-plan/(:num)/(:num)'] = 'microfinance/individual/activate_individual_plan/$1/$2';
 $route['microfinance/deactivate-individual-plan/(:num)/(:num)'] = 'microfinance/individual/deactivate_individual_plan/$1/$2';
@@ -394,8 +393,6 @@ $route['microfinance/deactivate-individual-plan/(:num)/(:num)'] = 'microfinance/
 
 /* End of file routes.php */
 /* Location: ./system/application/config/routes.php */
-
-
 
 /*
 *	reception Routes
@@ -546,7 +543,6 @@ $route['cloud/edit-sync-table/(:num)'] = 'cloud/sync_tables/edit_sync_table/$1';
 $route['cloud/delete-sync-table/(:num)'] = 'cloud/sync_tables/delete_sync_table/$1';
 $route['cloud/activate-sync-table/(:num)'] = 'cloud/sync_tables/activate_sync_table/$1';
 $route['cloud/deactivate-sync-table/(:num)'] = 'cloud/sync_tables/deactivate_sync_table/$1';
-
 $route['pharmacy/validate-import'] = 'pharmacy/do_drugs_import';
 $route['pharmacy/import-template'] = 'pharmacy/import_template';
 $route['pharmacy/import-drugs'] = 'pharmacy/import_drugs';
@@ -558,8 +554,6 @@ $route['inventory-setup/inventory-categories'] = 'inventory/categories/index';
 $route['inventory-setup/categories/(:num)'] = 'inventory/categories/index/$1';
 $route['inventory-setup/add-category'] = 'inventory/categories/add_category';
 $route['inventory-setup/edit-category/(:num)'] = 'inventory/categories/edit_category/$1';
-
-
 $route['inventory-setup/inventory-stores'] = 'inventory/stores/index';
 $route['inventory-setup/stores/(:num)'] = 'inventory/stores/index/$1';
 $route['inventory-setup/add-store'] = 'inventory/stores/add_store';

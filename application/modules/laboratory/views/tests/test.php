@@ -133,6 +133,10 @@
 	  $(document).ready(function(){
 	       get_test_results(100, <?php echo $visit_id?>);
 		   get_lab_table(<?php echo $visit_id;?>);
+
+			$(function() {
+				$("#lab_test_id").customselect();
+			});
 	  });
 	   function parse_lab_test(visit_id)
 	  {

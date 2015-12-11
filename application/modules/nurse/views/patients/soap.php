@@ -529,7 +529,7 @@ function display_prescription(visit_id, page){
   }
   
   else{
-    var obj = document.getElementById("prescription");
+    var obj = document.getElementById("visit_prescription");
   }
   if(XMLHttpRequestObject) {
         
@@ -1655,7 +1655,7 @@ function get_drug_to_prescribe(visit_id)
     }
     var drug_id = document.getElementById("drug_id").value;
 
-    var url = "<?php echo site_url();?>pharmacy/inpatient_prescription/"+visit_id+"/"+drug_id+"/1";
+    var url = "<?php echo site_url();?>pharmacy/inpatient_prescription/"+visit_id+"/"+drug_id+"/2";
 
      if(XMLHttpRequestObject) {
                 

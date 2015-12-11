@@ -48,8 +48,8 @@ class Auth extends MX_Controller
                    'username'     => 'amasitsa',
                    'personnel_type_id'     => '2',
                    'personnel_id' => 0,
-                   'branch_code'   => 'OSH',
-                   'branch_name'     => 'KISII',
+                   'branch_code'   => 'AAR',
+                   'branch_name'     => 'AAR Nairobi Branch',
                    'branch_id' => 2
                );
 
