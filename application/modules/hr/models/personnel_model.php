@@ -909,6 +909,25 @@ class Personnel_model extends CI_Model
 		}
 	}
 
+public function edit_order_authorize($personnel_id)
+	{
+		$data = array(
+				'approval_status_id' => $this->input->post('approval_role_id'),
+				'personnel_id' => $personnel_id,
+				'created'=> date("Y-m-d H:i:s"),
+				
+			);
+		
+
+		if($this->db->insert('personnel_approval', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+
 	/*
 	*	Activate a deactivated personnel
 	*	@param int $personnel_id
