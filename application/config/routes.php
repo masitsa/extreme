@@ -559,23 +559,58 @@ $route['inventory-setup/stores/(:num)'] = 'inventory/stores/index/$1';
 $route['inventory-setup/add-store'] = 'inventory/stores/add_store';
 $route['inventory-setup/edit-store/(:num)'] = 'inventory/stores/edit_store/$1';
 
+$route['inventory-setup/item-categories'] = 'inventory/items_categories/index';
+$route['inventory-setup/delete-category/(:num)']='inventory/items_categories/delete_category/$1';
+$route['inventory-setup/deactivate-category/(:num)']='inventory/items_categories/deactivate_category/$1';
+$route['inventory-setup/activate-category/(:num)']='inventory/items_categories/activate_category/$1';
+$route['inventory-setup/item-categories/(:num)'] = 'inventory/items_categories/index/$1';
+$route['inventory-setup/item_add-category'] = 'inventory/items_categories/add_item_category';
+$route['inventory-setup/edit-item-category/(:num)'] = 'inventory/items_categories/edit_category/$1';
+$route['inventory-setup/inventory-stores'] = 'inventory/stores/index';
+$route['inventory-setup/stores/(:num)'] = 'inventory/stores/index/$1';
+$route['inventory-setup/add-store'] = 'inventory/stores/add_store';
+$route['inventory-setup/edit-store/(:num)'] = 'inventory/stores/edit_store/$1';
+
 $route['inventory-setup/suppliers'] = 'inventory/suppliers/index';
 $route['inventory-setup/suppliers/(:num)'] = 'inventory/suppliers/index/$1';
 $route['inventory-setup/add-supplier'] = 'inventory/suppliers/add_supplier';
 $route['inventory-setup/edit-supplier/(:num)'] = 'inventory/suppliers/edit_supplier/$1';
+$route['inventory-setup/deactivate-supplier/(:num)']='inventory/suppliers/deactivate_supplier/$1';
+$route['inventory-setup/activate-supplier/(:num)']='inventory/suppliers/activate_supplier/$1';
+$route['inventory-setup/delete-supplier/(:num)']='inventory/suppliers/delete_supplier/$1';
+
+$route['inventory-setup/clients'] = 'inventory/clients/index';
+$route['inventory-setup/clients/(:num)'] = 'inventory/clients/index/$1';
+$route['inventory-setup/add-clients'] = 'inventory/clients/add_clients';
+$route['inventory-setup/delete-clients/(:num)']='inventory/clients/delete_clients/$1';
+$route['inventory-setup/activate-clients/(:num)']='inventory/clients/activate_clients/$1';
+$route['inventory-setup/deactivate-clients/(:num)']='inventory/clients/deactivate_clients/$1';
+$route['inventory-setup/edit-clients/(:num)'] = 'inventory/clients/edit_clients/$1';
 
 $route['inventory/orders'] = 'inventory/orders/index';
 $route['inventory/orders/(:num)'] = 'inventory/orders/index/$1';
 $route['inventory/add-order'] = 'inventory/orders/add_order';
 $route['inventory/add-order-item/(:num)/(:any)'] = 'inventory/orders/add_order_item/$1/$2';
 $route['inventory/update-order-item/(:num)/(:any)/(:num)'] = 'inventory/orders/update_order_item/$1/$2/$3';
+
+
+$route['requests'] = 'inventory/requests/index';
+$route['inventory/requests/(:num)'] = 'inventory/requests/index/$1';
+$route['inventory/add-requests'] = 'inventory/requests/add_request';
+$route['inventory/add-request-item/(:num)/(:any)'] = 'inventory/requests/add_request_item/$1/$2';
+$route['inventory/delete-request-item/(:num)/(:num)/(:any)']='inventory/requests/delete_request_item/$1/$2/$3';
+$route['inventory/update-request-item/(:num)/(:any)/(:num)'] = 'inventory/requests/update_request_item/$1/$2/$3';
+$route['inventory/send-request-for-approval/(:num)/(:num)'] = 'inventory/requests/send_request_for_approval/$1';
+
+
 $route['inventory/update-supplier-prices/(:num)/(:any)/(:num)'] = 'inventory/orders/update_supplier_prices/$1/$2/$3';
-$route['inventory/send-for-correction/(:num)'] = 'inventory/orders/send_order_for_correction/$1';
-$route['inventory/send-for-approval/(:num)'] = 'inventory/orders/send_order_for_approval/$1';
-$route['inventory/send-for-approval/(:num)/(:num)'] = 'inventory/orders/send_order_for_approval/$1/$2';
-$route['inventory/submit-supplier/(:num)/(:any)'] = 'inventory/orders/submit_supplier/$1/$2';
-$route['inventory/generate-lpo/(:num)'] = 'inventory/orders/print_lpo_new/$1';
-$route['inventory/generate-rfq/(:num)/(:num)/(:any)'] = 'inventory/orders/print_rfq_new/$1/$2/$3';
+$route['inventory/send-for-correction/(:num)'] = 'inventory/requests/send_request_for_correction/$1';
+$route['inventory/send-for-approval/(:num)'] = 'inventory/requests/send_request_for_approval/$1';
+$route['inventory/send-for-approval/(:num)/(:num)'] = 'inventory/requests/send_request_for_approval/$1/$2';
+$route['inventory/request-for-quotation/(:num)']='inventory/requests/print_lpo_new/$1';
+$route['inventory/submit-supplier/(:num)/(:any)'] = 'inventory/requests/submit_supplier/$1/$2';
+$route['inventory/generate-lpo/(:num)'] = 'inventory/requests/print_lpo_new/$1';
+$route['inventory/generate-rfq/(:num)/(:num)/(:any)'] = 'inventory/requests/print_rfq_new/$1/$2/$3';
 $route['inventory/edit_order/(:num)'] = 'inventory/orders/edit_order/$1';
 
 $route['inventory/products'] = 'inventory_management/index';
@@ -584,6 +619,13 @@ $route['inventory/add-product'] = 'inventory_management/add_product';
 $route['inventory/activate-product/(:num)'] = 'inventory_management/products/activate_product/$1';
 $route['inventory/deactivate-product/(:num)'] = 'inventory_management/products/deactivate_product/$1';
 $route['inventory/edit-product/(:num)'] = 'inventory_management/edit_product/$1';
+
+$route['inventory/item'] = 'inventory_management/items';
+$route['inventory/items/(:num)'] = 'inventory_management/index/$1';
+$route['inventory/add-item'] = 'inventory_management/items/add_item';
+$route['inventory/activation/activate/(:num)'] = 'inventory_management/items/activate_item/$1';
+$route['inventory/activation/deactivate/(:num)'] = 'inventory_management/items/deactivate_item/$1';
+$route['inventory/edit-item/(:num)'] = 'inventory_management/edit_item/$1';
 
 $route['inventory/product-details/(:num)'] = 'inventory_management/manage_product/$1';
 $route['inventory/manage-store'] = 'inventory_management/manage_store';

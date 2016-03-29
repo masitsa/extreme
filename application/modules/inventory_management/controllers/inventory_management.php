@@ -8,6 +8,7 @@ class Inventory_management  extends MX_Controller
 		parent:: __construct();
 		$this->load->model('inventory_management_model');
 		$this->load->model('products_model');
+		$this->load->model('items_model');
 		$this->load->model('reception/reception_model');
 		$this->load->model('pharmacy/pharmacy_model');
 		$this->load->model('nurse/nurse_model');
@@ -106,8 +107,8 @@ class Inventory_management  extends MX_Controller
 			$addition = '';
 		}
 
-		$where = 'product.category_id = category.category_id '.$constant.' '.$addition.' ';
-		$table = 'product, category, store'.$table;
+		$where = 'item.item_category_id = item_category.item_category_id '.$constant.' '.$addition.' ';
+		$table = 'item, item_category, store'.$table;
 		
 		$product_inventory_search = $this->session->userdata('product_inventory_search');
 		
@@ -118,7 +119,7 @@ class Inventory_management  extends MX_Controller
 		$segment = 3;
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = base_url().'inventory/products';
+		$config['base_url'] = base_url().'inventory/items';
 		$config['total_rows'] = $this->users_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -150,7 +151,7 @@ class Inventory_management  extends MX_Controller
 		
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
-		$query = $this->products_model->get_all_products($table, $where, $config["per_page"], $page);
+		$query = $this->items_model->get_all_items($table, $where, $config["per_page"], $page);
 		$v_data['all_generics'] = $this->inventory_management_model->get_all_generics();
 		$v_data['all_brands'] = $this->inventory_management_model->get_all_brands();
 		if ($query->num_rows() > 0)
@@ -191,10 +192,10 @@ class Inventory_management  extends MX_Controller
 	public function add_product($product_id = NULL)
 	{
 		//form validation rules
-		$this->form_validation->set_rules('product_name', 'product Name', 'required|xss_clean');
-		$this->form_validation->set_rules('products_pack_size', 'Pack Size', 'numeric|xss_clean');
-		$this->form_validation->set_rules('quantity', 'Opening Quantity', 'numeric|xss_clean');
-		$this->form_validation->set_rules('products_unitprice', 'Unit Price', 'numeric|xss_clean');
+		$this->form_validation->set_rules('item_name', 'product Name', 'required|xss_clean');
+		$this->form_validation->set_rules('category_id', 'Item Category', 'numeric|xss_clean');
+		$this->form_validation->set_rules('quantity', ' Quantity', 'numeric|xss_clean');
+		$this->form_validation->set_rules('store_id', 'Supplier', 'numeric|xss_clean');
 		
 		//if form conatins valid data
 		if ($this->form_validation->run())
@@ -202,13 +203,13 @@ class Inventory_management  extends MX_Controller
 
 			if($this->inventory_management_model->save_product())
 			{
-				$this->session->userdata('success_message', 'Product has been added successfully');
-				redirect('inventory/products');
+				$this->session->userdata('success_message', 'Item has been added successfully');
+				redirect('inventory/item');
 			}
 			
 			else
 			{
-				$this->session->userdata('error_message', 'Unable to add product. Please try again');
+				$this->session->userdata('error_message', 'Unable to add item. Please try again');
 			}
 		}
 		
@@ -218,12 +219,12 @@ class Inventory_management  extends MX_Controller
 		}
 		
 		//load the interface
-		$data['title'] = 'Add product';
+		$data['title'] = 'Add Item';
 		$v_data['product_id'] = $product_id;
 		$v_data['title'] = 'Add product';
 		$v_data['all_stores'] = $this->stores_model->all_stores();
 		$v_data['all_categories'] = $this->categories_model->all_categories();
-		$v_data['drug_types'] = $this->pharmacy_model->get_drug_forms();
+		//$v_data['drug_types'] = $this->pharmacy_model->get_drug_forms();
 		$v_data['drug_brands'] = $this->pharmacy_model->get_drug_brands();
 		$v_data['drug_classes'] = $this->pharmacy_model->get_drug_classes();
 		$v_data['drug_generics'] = $this->pharmacy_model->get_drug_generics();
@@ -242,10 +243,10 @@ class Inventory_management  extends MX_Controller
 	public function edit_product($products_id, $module = NULL)
 	{
 		//form validation rules
-		$this->form_validation->set_rules('product_name', 'product Name', 'required|xss_clean');
-		$this->form_validation->set_rules('product_pack_size', 'Pack Size', 'numeric|xss_clean');
-		$this->form_validation->set_rules('quantity', 'Opening Quantity', 'numeric|xss_clean');
-		$this->form_validation->set_rules('product_unitprice', 'Unit Price', 'numeric|xss_clean');
+		$this->form_validation->set_rules('item_name', 'Item Name', 'required|xss_clean');
+		$this->form_validation->set_rules('store_id', 'Supplier', 'numeric|xss_clean');
+		$this->form_validation->set_rules('quantity', 'Quantity', 'numeric|xss_clean');
+		$this->form_validation->set_rules('product_unit_price', 'Unit Price', 'numeric|xss_clean');
 		$this->form_validation->set_rules('batch_no', 'Batch Number', 'numeric|xss_clean');
 		
 		//if form conatins valid data
@@ -288,7 +289,7 @@ class Inventory_management  extends MX_Controller
 		$v_data['products_id'] = $products_id;
 		$v_data['all_stores'] = $this->stores_model->all_stores();
 		$v_data['all_categories'] = $this->categories_model->all_categories();
-		$v_data['drug_types'] = $this->pharmacy_model->get_drug_forms();
+		//$v_data['drug_types'] = $this->pharmacy_model->get_drug_forms();
 		$v_data['drug_brands'] = $this->pharmacy_model->get_drug_brands();
 		$v_data['drug_classes'] = $this->pharmacy_model->get_drug_classes();
 		$v_data['drug_generics'] = $this->pharmacy_model->get_drug_generics();

@@ -42,7 +42,7 @@ class Auth_model extends CI_Model
                    'personnel_type_id'     		=> $result[0]->personnel_type_id
                );
 
-			$this->session->set_userdata($newdata);
+			$this->session->set_userdata($newdata);	
 			
 			//update personnel's last login date time
 			$this->update_personnel_login($result[0]->personnel_id);

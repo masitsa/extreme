@@ -1,25 +1,25 @@
 <?php
 
-class Products_model extends CI_Model 
+class Items_model extends CI_Model 
 {	
 	/*
-	*	Retrieve all products
+	*	Retrieve all items
 	*
 	*/
-	public function all_products()
+	public function all_items()
 	{
-		$this->db->where('product_status = 1');
-		$query = $this->db->get('product');
+		$this->db->where('item_status_id = 1');
+		$query = $this->db->get('item');
 		
 		return $query;
 	}
 	
-	public function get_all_products($table, $where, $per_page, $page, $limit = NULL, $order_by = 'product.created', $order_method = 'DESC')
+	public function get_all_items($table, $where, $per_page, $page)
 	{
 		$this->db->from($table);
 		$this->db->select('*');
 		$this->db->where($where);
-		$this->db->order_by($order_by, $order_method);
+		//$this->db->order_by('item_id');
 		
 		if(isset($limit))
 		{
@@ -35,25 +35,23 @@ class Products_model extends CI_Model
 	}
 
 	
-	public function add_product()
+	public function add_item()
 	{
 		
-		//$code = $this->create_product_code($this->input->post('category_id'));
+		//$code = $this->create_item_code($this->input->post('category_id'));
 		
 		$data = array(
-				'item_category_id'=>$this->input->post('category_id'),
 				'item_name'=>ucwords(strtolower($this->input->post('item_name'))),
-				'item_status_id'=>$this->input->post('product_status'),
-				'item_description'=>$this->input->post('item_description'),
-				//'category_id'=>$this->input->post('category_id'),
+				'item_status_id'=>$this->input->post('item_status_id'),
 				'supplier_id'=>$this->input->post('store_id'),
 				'quantity'=>$this->input->post('quantity'),
-				'item_unit_price'=>$this->input->post('product_unit_price'),
-				'unit_of_measure_id'=>$this->input->post('unit_of_measure'),
-				//'item_description'=>$this->input->post('product_description'),
+				'item_unit_price'=>$this->input->post('item_unit_price'),
+				'item_description'=>$this->input->post('item_description'),
+				'item_category_id'=>$this->input->post('item_category_id'),
+				'created'=>date('Y-m-d H:i:s'),
 				'created_by'=>$this->session->userdata('personnel_id'),
 				'modified_by'=>$this->session->userdata('personnel_id'),
-				);
+			);
 			
 		if($this->db->insert('item', $data))
 		{
@@ -66,25 +64,25 @@ class Products_model extends CI_Model
 		
 	}
 	/*
-	*	Update an existing product
+	*	Update an existing item
 	*	@param string $image_name
-	*	@param int $product_id
+	*	@param int $item_id
 	*
 	*/
-	public function update_product($product_id)
+	public function update_item($item_id)
 	{
 		$data = array(
-				'product_name'=>ucwords(strtolower($this->input->post('product_name'))),
-				'product_status'=>$this->input->post('product_status'),
-				'product_description'=>$this->input->post('product_description'),
+				'item_name'=>ucwords(strtolower($this->input->post('item_name'))),
+				'item_status_id'=>$this->input->post('item_status_id'),
+				'item_description'=>$this->input->post('item_description'),
 				'category_id'=>$this->input->post('category_id'),
 				'created'=>date('Y-m-d H:i:s'),
 				'created_by'=>$this->session->userdata('personnel_id'),
 				'modified_by'=>$this->session->userdata('personnel_id'),
 			);
 			
-		$this->db->where('product_id', $product_id);
-		if($this->db->update('product', $data))
+		$this->db->where('item_id', $item_id);
+		if($this->db->update('item', $data))
 		{
 			//save locations
 			
@@ -99,24 +97,24 @@ class Products_model extends CI_Model
 	
 	
 	/*
-	*	get a single product's details
-	*	@param int $product_id
+	*	get a single item's details
+	*	@param int $item_id
 	*
 	*/
-	public function get_product($product_id, $personnel_id = NULL)
+	public function get_item($item_id, $personnel_id = NULL)
 	{
 		//retrieve all users
-		$this->db->from('product, category');
-		$this->db->select('product.*, category.category_name');
+		$this->db->from('item, item_category');
+		$this->db->select('item.*, item_category.item_category_name');
 		
 		if($personnel_id == NULL)
 		{
-			$this->db->where('product.category_id = category.category_id AND product_id = '.$product_id);
+			$this->db->where('item.item_category_id = item_category.item_category_id AND item_id = '.$item_id);
 		}
 		
 		else
 		{
-			$this->db->where('product.category_id = category.category_id AND product_id = '.$product_id.' AND product.created_by = '.$personnel_id);
+			$this->db->where('item.category_id = category.category_id AND item_id = '.$item_id.' AND item.created_by = '.$personnel_id);
 		}
 		$query = $this->db->get();
 		
@@ -124,40 +122,40 @@ class Products_model extends CI_Model
 	}
 	
 	/*
-	*	get a single product's details
-	*	@param int $product_id
+	*	get a single item's details
+	*	@param int $item_id
 	*
 	*/
-	public function get_product_shipping($product_id, $personnel_id = NULL)
+	public function get_item_shipping($item_id, $personnel_id = NULL)
 	{
 		//retrieve all users
-		$this->db->from('product');
+		$this->db->from('item');
 		
-		$this->db->where('product_id = '.$product_id.' AND product.created_by = '.$personnel_id);
+		$this->db->where('item_id = '.$item_id.' AND item.created_by = '.$personnel_id);
 		$query = $this->db->get();
 		
 		return $query;
 	}
-	public function recently_viewed_products()
+	public function recently_viewed_items()
 	{
 		//retrieve all users
-		$this->db->from('product, category');
-		$this->db->select('product.*, category.category_name');
-		$this->db->where('product.category_id = category.category_id  AND product.product_status = 1');
-		$this->db->order_by('product.last_viewed_date','desc');
+		$this->db->from('item, item_category');
+		$this->db->select('item.*, category.category_name');
+		$this->db->where('item.category_id = item_category.citem_ategory_id  AND item.item_status_id = 1');
+		$this->db->order_by('item.last_viewed_date','desc');
 		$query = $this->db->get('', 10);
 		 
 		return $query;
 	}
 	
 	/*
-	*	Delete an existing product
-	*	@param int $product_id
+	*	Delete an existing item
+	*	@param int $item_id
 	*
 	*/
-	public function delete_product($product_id)
+	public function delete_item($item_id)
 	{
-		if($this->db->delete('product', array('product_id' => $product_id)))
+		if($this->db->delete('item', array('item_id' => $item_id)))
 		{
 			return TRUE;
 		}
@@ -167,18 +165,18 @@ class Products_model extends CI_Model
 	}
 	
 	/*
-	*	Activate a deactivated product
-	*	@param int $product_id
+	*	Activate a deactivated item
+	*	@param int $item_id
 	*
 	*/
-	public function activate_product($product_id)
+	public function activate_item($item_id)
 	{
 		$data = array(
-				'product_status' => 1
+				'item_status_id' => 1
 			);
-		$this->db->where('product_id', $product_id);
+		$this->db->where('item_id', $item_id);
 		
-		if($this->db->update('product', $data))
+		if($this->db->update('item', $data))
 		{
 			return TRUE;
 		}
@@ -188,18 +186,18 @@ class Products_model extends CI_Model
 	}
 	
 	/*
-	*	Deactivate an activated product
-	*	@param int $product_id
+	*	Deactivate an activated item
+	*	@param int $item_id
 	*
 	*/
-	public function deactivate_product($product_id)
+	public function deactivate_item($item_id)
 	{
 		$data = array(
-				'product_status' => 0
+				'item_status_id' => 0
 			);
-		$this->db->where('product_id', $product_id);
+		$this->db->where('item_id', $item_id);
 		
-		if($this->db->update('product', $data))
+		if($this->db->update('item', $data))
 		{
 			return TRUE;
 		}
@@ -208,20 +206,20 @@ class Products_model extends CI_Model
 		}
 	}
 	
-	public function create_product_code($category_id)
+	public function create_item_code($category_id)
 	{
 		//get category_details
-		$query = $this->categories_model->get_category($category_id);
+		$query = $this->items_categories_model->get_category($category_id);
 		
 		if($query->num_rows() > 0)
 		{
 			$result = $query->result();
 			$category_preffix =  $result[0]->category_preffix;
 			
-			//select product code
-			$this->db->from('product');
-			$this->db->select('MAX(product_code) AS number');
-			$this->db->where("product_code LIKE '".$category_preffix."%'");
+			//select item code
+			$this->db->from('item');
+			$this->db->select('MAX(item_code) AS number');
+			$this->db->where("item_code LIKE '".$category_preffix."%'");
 			$query = $this->db->get();
 			
 			if($query->num_rows() > 0)
@@ -247,7 +245,7 @@ class Products_model extends CI_Model
 		return $number;
 	}
 	
-	public function import_csv_products($upload_path)
+	public function import_csv_items($upload_path)
 	{
 		//load the file model
 		$this->load->model('admin/file_model');

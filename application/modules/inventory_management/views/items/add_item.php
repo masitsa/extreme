@@ -1,9 +1,9 @@
 <?php
 //shipping data
 
-if($product_id > 0)
+if($item_id > 0)
 {
-	$query = $this->items_model->get_item($product_id);
+	$query = $this->items_model->get_item($item_id);
 	$product = $query->result();
 	
 	$category_id = $product[0]->category_id;
@@ -17,7 +17,7 @@ if($product_id > 0)
     $brand_id = $product[0]->brand_id;
     $generic_id = $product[0]->generic_id;
     $class_id = $product[0]->class_id;
-    //$drug_type_id = $product[0]->drug_type_id;
+    $drug_type_id = $product[0]->drug_type_id;
 
 	$v_errors = validation_errors();
 	
@@ -39,7 +39,7 @@ else
     $generic_id = set_value('generic_id');
     $class_id = set_value('class_id');
     $class_id = set_value('class_id');
-    //$drug_type_id = set_value('drug_type_id');
+    $drug_type_id = set_value('drug_type_id');
     $unit_of_measure = set_value('unit_of_measure');
 }
 
@@ -50,7 +50,7 @@ else
         <h2 class="panel-title">Add new Item</h2>
     </header>
     <div class="panel-body">
-          	<a href="<?php echo site_url().'inventory/products';?>" class="btn btn-sm btn-info pull-right">Back to items</a>
+          	<a href="<?php echo site_url().'inventory/item';?>" class="btn btn-sm btn-info pull-right">Back to items</a>
             
             <div class="row">
                 <div class="col-md-12">
@@ -58,7 +58,7 @@ else
                     <!-- Adding Errors -->
                     <?php
 					
-					if($product_id > 0)
+					if($item_id > 0)
 					{
 						echo '';
 					}
@@ -93,7 +93,7 @@ else
                                   
                                     <?php 
 									
-									echo form_open('inventory/add-product', array("class" => "form-horizontal", "role" => "form"));
+									echo form_open('inventory/add-item', array("class" => "form-horizontal", "role" => "form"));
 									?>
                                      	<div class="row">
                                         	<div class="col-md-6">
@@ -102,7 +102,7 @@ else
                                                 <div class="form-group">
                                                     <label class="col-lg-4 control-label">Item Name <span class="required">*</span></label>
                                                     <div class="col-lg-8">
-                                                        <input type="text" id="item_name" class="form-control" name="item_name" placeholder="Item Name" value="<?php echo $product_name;?>">
+                                                        <input type="text" class="form-control" name="item_name" placeholder="Item Name" value="<?php echo $product_name;?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -110,20 +110,20 @@ else
                                                     <div class="col-lg-8">
                                                         <select name="store_id" id="store_id" class="form-control">
                                                             <?php
-                                                            echo '<option value="0">No Category</option>';
-                                                            if($all_stores->num_rows() > 0)
+                                                            echo '<option value="0">No Supplier</option>';
+                                                            if($all_suppliers->num_rows() > 0)
                                                             {
-                                                                $result = $all_stores->result();
+                                                                $result = $all_suppliers->result();
                                                                 
                                                                 foreach($result as $res_store)
                                                                 {
-                                                                    if($res_store->store_id == $store_id)
+                                                                    if($res_store->supplier_id == $supplier_id)
                                                                     {
-                                                                        echo '<option value="'.$res_store->store_id.'" selected>'.$res_store->store_name.'</option>';
+                                                                        echo '<option value="'.$res_store->supplier_id.'" selected>'.$res_store->supplier_name.'</option>';
                                                                     }
                                                                     else
                                                                     {
-                                                                        echo '<option value="'.$res_store->store_id.'">'.$res_store->store_name.'</option>';
+                                                                        echo '<option value="'.$res_store->supplier_id.'">'.$res_store->supplier_name.'</option>';
                                                                     }
                                                                 }
                                                             }
@@ -135,22 +135,22 @@ else
                                                 <div class="form-group">
                                                     <label class="col-lg-4 control-label">Item Category <span class="required">*</span></label>
                                                     <div class="col-lg-8">
-                                                        <select name="category_id" id="category_id" class="form-control">
+                                                        <select name="item_category_id" id="category_id" class="form-control">
                                                             <?php
-                                                            echo '<option value="0">No Category</option>';
+                                                            echo '<option value="0">No Category </option>';
                                                             if($all_categories->num_rows() > 0)
                                                             {
                                                                 $result = $all_categories->result();
                                                                 
                                                                 foreach($result as $res)
                                                                 {
-                                                                    if($res->category_id == $category_id)
+                                                                    if($res->item_category_id == $item_category_id)
                                                                     {
-                                                                        echo '<option value="'.$res->category_id.'" selected>'.$res->category_name.'</option>';
+                                                                        echo '<option value="'.$res->item_category_id.'" selected>'.$res->category_name.' '.$res->item_category_id.'</option>';
                                                                     }
                                                                     else
                                                                     {
-                                                                        echo '<option value="'.$res->category_id.'">'.$res->category_name.'</option>';
+                                                                        echo '<option value="'.$res->item_category_id.'">'.$res->category_name.' '.$res->item_category_id.'</option>';
                                                                     }
                                                                 }
                                                             }
@@ -164,34 +164,20 @@ else
                                                         <div class="col-lg-8">
                                                             <select class="form-control" name="drug_type_id">
                                                                 <?php
-                                                                    /*if(count($drug_types) > 0)
-                                                                    {
-                                                                        foreach($drug_types as $res)
-                                                                        {
-                                                                            $drug_type_id = $res->drug_type_id;
-                                                                            $drug_type_name = $res->drug_type_name;
-                                                                            
-                                                                            if($drug_type_id == set_value("drug_type_id"))
-                                                                            {
-                                                                                echo '<option value="'.$drug_type_id.'" selected>'.$drug_type_name.'</option>';
-                                                                            }
-                                                                            
-                                                                            else
-                                                                            {
-                                                                                echo '<option value="'.$drug_type_id.'">'.$drug_type_name.'</option>';
-                                                                            }
-                                                                        }
-                                                                    }*/
                                                                 ?>
                                                             </select>
                                                         </div>
                                                     </div>-->
                                                     <!-- Activate checkbox -->
                                                  <div class="form-group">
-                                                    <label class="col-lg-4 control-label">Quantity: </label>
+                                                    <label class="col-lg-4 control-label">Unit of measure: </label>
                                                     
                                                     <div class="col-lg-8">
-                                                        <input type="text" class="form-control" name="quantity" placeholder="Quantity" value="<?php echo $unit_of_measure;?>">
+                                                    <select name="unit_of_measure" class="form-control">
+                                                    <option value="Weekly">Weekly</option>
+                                                    <option value="Daily">Daily</option>
+                                                    <option value="Daily">Hourly</option>
+                                                    </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -225,128 +211,33 @@ else
                                                     <label class="col-lg-4 control-label">Unit Price: </label>
                                                     
                                                     <div class="col-lg-8">
-                                                        <input type="text" class="form-control" name="item_unit_price" placeholder="Unit Price" value="<?php echo set_value('item_unit_price');?>">
+                                                 
+                                                      <input type="text" class="form-control" name="product_unitprice" placeholder="Unit Price" value="<?php echo set_value('product_unit_price');?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-4 control-label">Unit of Measure: </label>
+                                                    <label class="col-lg-4 control-label">Asset Price: </label>
                                                     
                                                     <div class="col-lg-8">
-                                                        <input type="text" class="form-control" name="unit_of_measure" placeholder="Unit of Measure" value="<?php echo set_value('unit_of_measure');?>">
+                                                        <input type="text" class="form-control" name="product_pack_size" placeholder="Asset Price" value="<?php echo set_value('product_pack_size');?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-4 control-label">Price: </label>
+                                                    <label class="col-lg-4 control-label">Item Price: </label>
                                                     
                                                     <div class="col-lg-8">
-                                                        <input type="text" class="form-control" name="price" placeholder="Price:" value="<?php echo set_value('quantity');?>">
+                                                        <input type="text" class="form-control" name="item_unit_price" placeholder="Price:" value="<?php echo set_value('item_unit_price');?>">
                                                     </div>
                                                 </div>
-                                                <!--<div class="form-group">
-                                                    <label class="col-lg-4 control-label">Re order Level: </label>
+               	   <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Quantity: </label>
                                                     
                                                     <div class="col-lg-8">
-                                                        <input type="text" class="form-control" name="reorder_level" placeholder="Reorder Level" value="<?php echo $reorder_level;?>">
-                                                    </div>
-                                                </div>-->
-                                                
-                  <!--<div class="form-group">
-                                                    <label class="col-lg-4 control-label">Brand: </label>
-                                                    
-                                                    <div class="col-lg-8">
-                                                        <select class="form-control" name="brand_id">
-                                                            <?php
-                                                                if(count($drug_brands) > 0)
-                                                                {
-                                                                    foreach($drug_brands as $res)
-                                                                    {
-                                                                        $brand_id = $res->brand_id;
-                                                                        $brand_name = $res->brand_name;
-                                                                        
-                                                                        if($brand_id == set_value("brand_id"))
-                                                                        {
-                                                                            echo '<option value="'.$brand_id.'" selected>'.$brand_name.'</option>';
-                                                                        }
-                                                                        
-                                                                        else
-                                                                        {
-                                                                            echo '<option value="'.$brand_id.'">'.$brand_name.'</option>';
-                                                                        }
-                                                                    }
-                                                                }
-                                                            ?>
-                                                        </select>
+                                                        <input type="text" class="form-control" name="quantity" placeholder="quantity" value="<?php echo set_value('quantity');?>">
                                                     </div>
                                                 </div>
-                                                
                                                 <div class="form-group">
-                                                    <label class="col-lg-4 control-label">Class: </label>
-                                                    
-                                                    <div class="col-lg-8">
-                                                        <select class="form-control" name="class_id">
-                                                            <?php
-                                                                if(count($drug_classes) > 0)
-                                                                {
-                                                                    foreach($drug_classes as $res)
-                                                                    {
-                                                                        $class_id = $res->class_id;
-                                                                        $class_name = $res->class_name;
-                                                                        
-                                                                        if($class_id == set_value("class_id"))
-                                                                        {
-                                                                            echo '<option value="'.$class_id.'" selected>'.$class_name.'</option>';
-                                                                        }
-                                                                        
-                                                                        else
-                                                                        {
-                                                                            echo '<option value="'.$class_id.'">'.$class_name.'</option>';
-                                                                        }
-                                                                    }
-                                                                }
-                                                            ?>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="form-group">
-                                                    <label class="col-lg-4 control-label">Generic: </label>
-                                                    
-                                                    <div class="col-lg-8">
-                                                        <select class="form-control" name="generic_id">
-                                                            <?php
-                                                                if(count($drug_generics) > 0)
-                                                                {
-                                                                    foreach($drug_generics as $res)
-                                                                    {
-                                                                        $generic_id = $res->generic_id;
-                                                                        $generic_name = $res->generic_name;
-                                                                        
-                                                                        if($generic_id == set_value("generic_id"))
-                                                                        {
-                                                                            echo '<option value="'.$generic_id.'" selected>'.$generic_name.'</option>';
-                                                                        }
-                                                                        
-                                                                        else
-                                                                        {
-                                                                            echo '<option value="'.$generic_id.'">'.$generic_name.'</option>';
-                                                                        }
-                                                                    }
-                                                                }
-                                                            ?>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                
-                                               
-                                            </div>
-                                        </div>-->                              
-                                        <br>
-                                            
-                                        <div class="row">
-                                        	<div class="col-md-12">
-                                                <!-- Product Description -->
-                                                <div class="form-group">
-                                                  <label class="col-lg-2 control-label">Item Description <span class="required">*</span></label>
+                                                  <label class="col-lg-2 control-label">Item Description</label>
                                                   <div class="col-lg-10">
                                                     <textarea name="item_description" class="form-control"><?php echo $product_description;?></textarea>
                                                   </div>

@@ -65,7 +65,7 @@
 								  <thead>
 									<tr>
 									  <th class="table-sortable:default table-sortable" title="Click to sort">#</th>
-									  <th class="table-sortable:default table-sortable" title="Click to sort">Category Name</th>
+									  <th class="table-sortable:default table-sortable" title="Click to sort">Item Category Name</th>
 									  <th class="table-sortable:default table-sortable" title="Click to sort">Date Created</th>
 									  <th class="table-sortable:default table-sortable" title="Click to sort">Last Modified</th>
 									  <th>Status</th>
@@ -81,7 +81,7 @@
 							
 							foreach ($query->result() as $row)
 							{
-								$category_id = $row->category_id;
+								$item_category_id = $row->item_category_id;
 								$category_name = $row->category_name;
 								$parent = $row->category_parent;
 								$category_status = $row->category_status;
@@ -104,8 +104,8 @@
 								//category parent
 								foreach($query->result() as $row2)
 								{
-									$category_id2 = $row2->category_id;
-									if($parent == $category_id2)
+									$item_category_id2 = $row2->item_category_id;
+									if($parent == $item_category_id2)
 									{
 										$category_parent = $row2->category_name;
 										break;
@@ -118,14 +118,14 @@
 								{
 									foreach($child_categories->result() as $res)
 									{
-										$child_category_id = $row->category_id;
+										$child_item_category_id = $row->item_category_id;
 										$child_category_name = $row->category_name;
 										$child_parent = $row->category_parent;
 										$child_category_status = $row->category_status;
 										$child_image = $row->category_image_name;
 										
 										//display only the particular category's children
-										if($child_parent == $category_id)
+										if($child_parent == $item_category_id)
 										{
 											
 										}
@@ -136,13 +136,13 @@
 								if($category_status == 0)
 								{
 									$status = '<span class="label label-danger">Deactivated</span>';
-									$button = '<a class="btn btn-info" href="'.site_url().'inventory-setup/activate-category/'.$category_id.'" onclick="return confirm(\'Do you want to activate '.$category_name.'?\');">Activate</a>';
+									$button = '<a class="btn btn-sm btn-info" href="'.site_url().'inventory-setup/activate-category/'.$item_category_id.'" onclick="return confirm(\'Do you want to activate '.$category_name.'?\');">Activate</a>';
 								}
 								//create activated status display
 								else if($category_status == 1)
 								{
 									$status = '<span class="label label-success">Active</span>';
-									$button = '<a class="btn btn-default" href="'.site_url().'inventory-setup/deactivate-category/'.$category_id.'" onclick="return confirm(\'Do you want to deactivate '.$category_name.'?\');">Deactivate</a>';
+									$button = '<a class="btn btn-sm btn-default" href="'.site_url().'inventory-setup/deactivate-category/'.$item_category_id.'" onclick="return confirm(\'Do you want to deactivate '.$category_name.'?\');">Deactivate</a>';
 								}
 								
 								//creators & editors
@@ -183,9 +183,9 @@
 										<td>'.date('jS M Y H:i a',strtotime($row->created)).'</td>
 										<td>'.date('jS M Y H:i a',strtotime($row->last_modified)).'</td>
 										<td>'.$status.'</td>
-										<td><a href="'.site_url().'inventory-setup/edit-category/'.$category_id.'" class="btn btn-sm btn-success">Edit</a></td>
+										<td><a href="'.site_url().'inventory-setup/edit-item-category/'.$item_category_id.'" class="btn btn-sm btn-success">Edit</a></td>
 										<td>'.$button.'</td>
-										<td><a href="'.site_url().'inventory-setup/delete-category/'.$category_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$category_name.'?\');">Delete</a></td>
+										<td><a href="'.site_url().'inventory-setup/delete-category/'.$item_category_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$category_name.'?\');">Delete</a></td>
 										
 									
 									</tr> 

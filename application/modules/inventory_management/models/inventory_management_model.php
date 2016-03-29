@@ -226,7 +226,7 @@ class Inventory_management_model extends CI_Model
 		if($this->input->post('category_id') == 2)
 		{
 			// get the administration route nam
-			$this->db->where('drug_type_id = '.$this->input->post('drug_type_id'));
+			/*$this->db->where('drug_type_id = '.$this->input->post('drug_type_id'));
 			$query = $this->db->get('drug_type');
 
 			if($query->num_rows() > 0)
@@ -235,11 +235,23 @@ class Inventory_management_model extends CI_Model
 					# code...
 					$drug_type_name = $key->drug_type_name;
 				}
-			}
+			}*/
 		}
-		$product_name = $name.'-'.$unit_of_measure.'('.$drug_type_name.')';
+		//$product_name = $name.'-'.$unit_of_measure.'('.$drug_type_name.')';
+		//$product_name = $name.'-'.$unit_of_measure.'';
 		$array = array(
-			'product_name'=>$product_name,
+			'item_name'=>ucwords(strtolower($this->input->post('item_name'))),
+				'item_status_id'=>$this->input->post('item_status'),
+				'quantity'=>$this->input->post('quantity'),
+				'item_unit_price'=>$this->input->post('item_unit_price'),
+				'unit_of_measure_id'=>$this->input->post('unit_of_measure'),
+				'item_description'=>$this->input->post('item_description'),
+				'item_category_id'=>$this->input->post('category_id'),
+				'created'=>date('Y-m-d H:i:s'),
+				'created_by'=>$this->session->userdata('personnel_id'),
+				'modified_by'=>$this->session->userdata('personnel_id')
+
+		/*	'product_name'=>$name,
 			'product_status'=>1,
 			'product_description'=>$this->input->post('product_description'),
 			'category_id'=>$this->input->post('category_id'),
@@ -257,10 +269,10 @@ class Inventory_management_model extends CI_Model
 			'class_id'=>$this->input->post('class_id'),
 			'generic_id'=>$this->input->post('generic_id'),
 			'drug_type_id'=>$this->input->post('drug_type_id'),
-			'is_synced'=>0
+			'is_synced'=>0*/
 		);
 		//save product in the db
-		if($this->db->insert('product', $array))
+		if($this->db->insert('item', $array))
 		{
 			//calculate the price of the drug
 			$product_id = $this->db->insert_id();
