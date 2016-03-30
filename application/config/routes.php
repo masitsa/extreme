@@ -609,7 +609,7 @@ $route['inventory/send-for-approval/(:num)'] = 'inventory/requests/send_request_
 $route['inventory/send-for-approval/(:num)/(:num)'] = 'inventory/requests/send_request_for_approval/$1/$2';
 $route['inventory/request-for-quotation/(:num)']='inventory/requests/print_lpo_new/$1';
 $route['inventory/submit-supplier/(:num)/(:any)'] = 'inventory/requests/submit_supplier/$1/$2';
-$route['inventory/generate-lpo/(:num)'] = 'inventory/requests/print_lpo_new/$1';
+$route['inventory/generate-lpo/(:num)/(:any)'] = 'inventory/requests/print_lpo_new/$1/$2';
 $route['inventory/generate-rfq/(:num)/(:num)/(:any)'] = 'inventory/requests/print_rfq_new/$1/$2/$3';
 $route['inventory/edit_order/(:num)'] = 'inventory/orders/edit_order/$1';
 

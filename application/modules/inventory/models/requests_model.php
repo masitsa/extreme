@@ -41,6 +41,7 @@ class requests_model extends CI_Model
 	}
 	public function get_supplier_request_details($supplier_request_id)
 	{
+		$this->db->select('supplier.*,supplier_request.*,requests.*');
 		$this->db->where('supplier.supplier_id = supplier_request.supplier_id AND requests.request_id = supplier_request.request_id AND supplier_request.supplier_request_id = '.$supplier_request_id);
 		$query = $this->db->get('supplier,supplier_request,requests');
 		
@@ -168,6 +169,14 @@ class requests_model extends CI_Model
 	*	Add a new request
 	*
 	*/
+	public function get_personnel_name($created_by){
+		$query=$this->db->query('select personnel_fname from personnel where personnel_id='.$created_by.'');
+		$result = $query->result();
+		foreach($result AS $key)
+		{
+		return $key->personnel_fname;
+		}
+	}
 	public function add_request()
 	{
 
@@ -175,7 +184,7 @@ class requests_model extends CI_Model
 		
 		$data = array(
 				'request_number'=>$request_number,
-				'created_by'=>$this->input->post('personnel_id'),
+				'created_by'=>$this->session->userdata('personnel_id'),
 				'request_status_id'=>1,
 				'request_instructions'=>$this->input->post('request_instructions'),
 				'client_id'=>$this->input->post('client_id'),
@@ -191,7 +200,8 @@ class requests_model extends CI_Model
 
 			$insert_data = array(
 					'request_id'=>$request_id,
-					'request_level_status_status'=>0,
+					'request_level_status_status'=>1,
+					'inventory_level_status_id'=>1,
 					'created'=>date("Y-m-d H:i:s"),
 					'created_by' => $this->session->userdata('personnel_id'),
 					'modified_by' =>$this->session->userdata('personnel_id')
@@ -293,6 +303,8 @@ class requests_model extends CI_Model
 	{
 		$item_id = $this->input->post('item_id');
 		$quantity = $this->input->post('quantity');
+		$request_item_price=$this->input->post('request_item_price');
+		
 		//Check if item exists
 		$this->db->select('*');
 		$this->db->where('item_id = '.$item_id.' AND request_id = '.$request_id);
@@ -302,11 +314,13 @@ class requests_model extends CI_Model
 		{
 			$result = $query->row();
 			$qty = $result->quantity;
-			
+			$item_hiring_price=$result->item_hiring_price;
 			$quantity += $qty;
 			
 			$data = array(
-					'request_item_quantity'=>$quantity
+					//'request_item_price'=>$item_hiring_price,
+					'request_item_quantity'=>$quantity,
+					'request_item_price'=>$request_item_price
 				);
 				
 			$this->db->where('item_id = '.$item_id.' AND request_id = '.$request_id);
@@ -319,12 +333,16 @@ class requests_model extends CI_Model
 			}
 		}
 		
+		
 		else
 		{
 			$data = array(
+						
 					'request_id'=>$request_id,
 					'item_id'=>$item_id,
+					'request_item_price'=>$request_item_price,
 					'request_item_quantity'=>$quantity
+					
 				);
 				
 			if($this->db->insert('request_item', $data))
@@ -516,7 +534,7 @@ class requests_model extends CI_Model
 	{
 		$insert_data = array(
 					'request_id'=>$request_id,
-					'personnel_request_approval_status'=>$request_status,
+					//'personnel_request_approval_status'=>$request_status,
 					'request_level_status_status'=>1,
 					'created'=>date("Y-m-d H:i:s"),
 					'created_by' => $this->session->userdata('personnel_id'),
@@ -536,7 +554,7 @@ class requests_model extends CI_Model
 	public function get_lpo_authorising_personnel($request_id)
 	{
 		$this->db->select('*');
-		$this->db->where('request_level_status.created_by = personnel.personnel_id AND job_title.job_title_id = personnel_job.job_title_id AND personnel.personnel_id = personnel_job.personnel_id AND request_level_status.request_level_status_status = 1 AND title.title_id = personnel.title_id AND request_level_status.personnel_request_approval_status = 6');
+		$this->db->where('request_level_status.created_by = personnel.personnel_id AND job_title.job_title_id = personnel_job.job_title_id AND personnel.personnel_id = personnel_job.personnel_id AND request_level_status.request_level_status_status = 1 AND title.title_id = personnel.title_id');
 		$query = $this->db->get('personnel,request_level_status,title,personnel_job,job_title');
 		
 		if($query->num_rows() > 0)

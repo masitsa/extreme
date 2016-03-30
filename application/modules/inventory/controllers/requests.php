@@ -7,6 +7,7 @@ class requests extends MX_Controller
 	function __construct()
 	{
 		parent:: __construct();
+		$this->load->model('auth/auth_model');
 		$this->load->model('admin/users_model');
 		$this->load->model('inventory_management/items_model');
 		$this->load->model('inventory_management/products_model');
@@ -19,6 +20,11 @@ class requests extends MX_Controller
 		$this->load->model('admin/admin_model');
 		$this->load->model('administration/personnel_model');
 		$this->load->model('hr/personnel_model');
+		
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
 	}
     
 	/*
@@ -102,7 +108,7 @@ class requests extends MX_Controller
 			//update request
 			if($request_id > 0)
 			{
-				redirect('inventory/requests/'.$request_id);
+				redirect('requests');
 			}
 			
 			else
@@ -127,25 +133,37 @@ class requests extends MX_Controller
 
 		$this->form_validation->set_rules('item_id', 'Item', 'required|xss_clean');
 		$this->form_validation->set_rules('quantity', 'Quantity', 'required|xss_clean');
+		$this->form_validation->set_rules('request_item_price', 'Item Price', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('minimum_hiring_price', 'Minimum Price', 'required|numeric|xss_clean');
 		 
 		if ($this->form_validation->run())
 		{
-			if($this->requests_model->add_request_item($request_id))
+			$minimum_hiring_price = $this->input->post('minimum_hiring_price');
+			$request_item_price = $this->input->post('request_item_price');
+			
+			if($request_item_price >= $minimum_hiring_price)
 			{
-				$this->session->set_userdata('success_message', 'request created successfully');
-			}	
+				if($this->requests_model->add_request_item($request_id))
+				{
+					$this->session->set_userdata('success_message', 'request created successfully');
+				}	
+				else
+				{
+					$this->session->set_userdata('error_message', 'Something went wrong, please try again');
+				}
+			}
 			else
 			{
-				$this->session->set_userdata('error_message', 'Something went wrong, please try again');
+				$this->session->set_userdata('error_message', 'The item price is less than the minimum acceptable price of '.$minimum_hiring_price);
 			}
 		}
 		else
 		{
-			$this->session->set_userdata('error_message', 'Something went wrong, please try again');
+			$this->session->set_userdata('error_message', validation_errors());
 		}
 		$v_data['title'] = 'Add request Item to '.$request_number;
 		//$v_data['request_status_query'] = $this->requests_model->get_request_status();
-		$v_data['items_query'] = $this->items_model->all_items();
+		$v_data['items_query'] = $this->items_model->all_unselected_items($request_id);
 		$v_data['request_number'] = $request_number;
 		$v_data['request_id'] = $request_id;
 		$v_data['request_item_query'] = $this->requests_model->get_request_items($request_id);
@@ -158,9 +176,9 @@ class requests extends MX_Controller
     }
 
 
-    public function print_lpo_new($supplier_request_id)
+    public function print_lpo_new($supplier_request_id,$request_number)
 	{
-		$data = array('supplier_request_id'=>$supplier_request_id);
+		$data = array('supplier_request_id'=>$supplier_request_id, 'request_number'=>$request_number);
 
 		$data['contacts'] = $this->site_model->get_contacts();
 		
@@ -305,7 +323,7 @@ class requests extends MX_Controller
 					'request_status_id'=>1
 				);
 				
-		$this->db->where('request_id = '.$order_id);
+		$this->db->where('request_id = '.$request_id);
 		$this->db->update('requests', $data);
 		
 		redirect('inventory/requests');
@@ -440,6 +458,23 @@ class requests extends MX_Controller
 		$this->db->update('requests', $data);
 		
 		redirect('all-requests');
+	}
+	
+	public function get_item_price($item_id)
+	{
+		$this->db->where('item_id = '.$item_id);
+		$query = $this->db->get('item');
+		$data['item_price'] = 0;
+		$data['minimum_hiring_price'] = 0;
+		
+		if($query->num_rows())
+		{
+			$row = $query->row();
+			$data['item_price'] = $row->item_hiring_price;
+			$data['minimum_hiring_price'] = $row->minimum_hiring_price;
+		}
+		
+		echo json_encode($data);
 	}
 }
 ?>

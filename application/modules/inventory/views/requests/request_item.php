@@ -39,11 +39,11 @@ if($request_approval_status == 0)
 			
 				    	<?php echo form_open($this->uri->uri_string(), array("class" => "form-horizontal", "role" => "form"));?>
 				        <div class="row">
-				        	<div class="col-md-6">
+				        	<div class="col-md-4">
 				                <div class="form-group">
 				                	<label class="col-lg-2 control-label">Item Name</label>
 				                    <div class="col-lg-8">
-				                    	<select class="form-control" name="item_id">
+				                    	<select class="form-control" name="item_id" id="request_item_id">
 				                    		<option>SELECT AN ITEM</option>
 				                    		<?php
 				                    		if($items_query->num_rows() > 0)
@@ -52,6 +52,7 @@ if($request_approval_status == 0)
 				                    				# code...
 				                    				$item_id = $key->item_id;
 				                    				$item_name = $key->item_name;
+													$item_hiring_price=$key->item_hiring_price;
 
 				                    				echo '<option value="'.$item_id.'">'.$item_name.'</option>';
 				                    			}
@@ -63,11 +64,21 @@ if($request_approval_status == 0)
 				                    </div>
 				                </div>
 				              </div>
-				              <div class="col-md-6">
+				              <div class="col-md-4">
 					                <div class="form-group">
 					                	<label class="col-lg-2 control-label">Item Quantity</label>
 					                    <div class="col-lg-8">
 					                    	 <input type="text" class="form-control" name="quantity" placeholder="Quantity">
+					                    </div>
+					                </div>
+					            </div>
+				            
+                            <div class="col-md-4">
+					                <div class="form-group">
+					                	<label class="col-lg-2 control-label">Item Price</label>
+					                    <div class="col-lg-8">
+					                    	 <input type="text" class="form-control" name="request_item_price" placeholder="Item Price" id="request_item_price">
+                                             <input type="hidden" name="minimum_hiring_price" id="minimum_hiring_price" />
 					                    </div>
 					                </div>
 					            </div>
@@ -139,7 +150,7 @@ else if($request_approval_status == 2 || $request_approval_status == 3)
 					{
 						?>
 		            		<a class="btn btn-success btn-sm" href="<?php echo base_url();?>inventory/send-for-approval/<?php echo $request_id;?>/<?php echo $next_order_status;?>" onclick="return confirm('Do you want to send request for next approval?');">Approve Qoute</a>
-                            <a class="btn btn-warning btn-sm fa fa-print" href="<?php echo base_url();?>inventory/generate-lpo/<?php echo $request_id;?>" target="_blank"> View Qoutation </a>
+                            <a class="btn btn-warning btn-sm fa fa-print" href="<?php echo base_url();?>inventory/generate-lpo/<?php echo $request_id;?>/<?php echo $request_number;?>" target="_blank"> View Qoutation </a>
 						<?php
 					}
 					else if($request_approval_status == 4 )
@@ -203,6 +214,9 @@ else if($request_approval_status == 2 || $request_approval_status == 3)
 							  <th class="table-sortable:default table-sortable" title="Click to sort">#</th>
 							  <th class="table-sortable:default table-sortable" title="Click to sort">Item Name</th>
 							  <th class="table-sortable:default table-sortable" title="Click to sort">Quantity</th>
+							  							  <th class="table-sortable:default table-sortable" title="Click to sort">Price Per Item</th>
+														  <th class="table-sortable:default table-sortable" title="Click to sort">Total</th>
+														  
 							  '.$col.'
 							</tr>
 						  </thead>
@@ -210,6 +224,7 @@ else if($request_approval_status == 2 || $request_approval_status == 3)
 						';
 						$count = 0;
 						$invoice_total = 0;
+						$total= 0;
 						foreach($request_item_query->result() as $res)
 						{
 							$request_id = $res->request_id;
@@ -217,16 +232,12 @@ else if($request_approval_status == 2 || $request_approval_status == 3)
 							$request_item_quantity = $res->request_item_quantity;
 							$request_item_id = $res->request_item_id;
 							$supplier_unit_price = $res->supplier_unit_price;
-							$item_unit_price = $res->item_unit_price;
-
-
-
-							?>
-
-
-		                    <?php
+							$item_hiring_price = $res->item_hiring_price;
+							$request_item_price = $res->request_item_price;
+							$total = $request_item_price*$request_item_quantity;
+							$invoice_total=$invoice_total+$total;
 		                    $count++;
-
+								
 							
 
 								if($request_approval_status == 0)
@@ -236,12 +247,14 @@ else if($request_approval_status == 2 || $request_approval_status == 3)
 													<td>'.$count.'</td>
 													<td>'.$item_name.'</td>
 													<td><input type="text" class="form-control" name="quantity" value="'.$request_item_quantity.'"></td>
+													<td><input type="text" class="form-control" name="request_item_price" value="'.$request_item_price.'"></td>
+													<td><input type="text" class="form-control" name="total" value="'.$total.'"></td>
 													<td><a href="'.site_url().'inventory/update-request-item/'.$request_item_id.'/'.$request_id.'/'.$request_number.'"><button class="btn btn-success btn-sm" type="submit"><i class="fa fa-pencil"></i> Edit Request</button></td>
 													<td><a href="'.site_url().'inventory/delete-request-item/'.$request_item_id.'/'.$request_id.'/'.$request_number.'"  onclick="return confirm("Do you want to delete '.$item_name.'?")" title="Delete '.$item_name.' class="btn btn-danger btn-sm">Delete</a></td>
 												</tr>
 												'.form_close().'
 												';
-												
+													
 								}
 								else if($request_approval_status == 4)
 								{
@@ -251,10 +264,11 @@ else if($request_approval_status == 2 || $request_approval_status == 3)
 													<td>'.$count.'</td>
 													<td>'.$item_name.'</td>
 													<td><input type="text" class="form-control" name="quantity" value="'.$request_item_quantity.'" readonly></td>
-													<td><input type="text" class="form-control" name="unit_price" value="'.$item_unit_price.'"></td>
+													<td><input type="text" class="form-control" name="request_item_price" value="'.$request_item_price.'"></td>
 													<td>'.number_format($total_price,2).'</td>
 													<td><button class="btn btn-warning btn-sm" type="submit"><i class="fa fa-pencil"></i> Update Price</button></td>
 												</tr>
+												
 												'.form_close().'
 												';
 								}
@@ -266,9 +280,9 @@ else if($request_approval_status == 2 || $request_approval_status == 3)
 									 $result .= ' 
 												<tr>
 													<td>'.$count.'</td>
-													<td>'.$product_name.'</td>
+													<td>'.$item_name.'</td>
 													<td><input type="text" class="form-control" name="quantity" value="'.$request_item_quantity.'" readonly></td>
-													<td><input type="text" class="form-control" name="unit_price" value="'.$supplier_unit_price.'" readonly></td>
+													<td><input type="text" class="form-control" name="request_item_price" value="'.$request_item_price.'" readonly></td>
 													<td>'.number_format($total_price,2).'</td>
 												</tr>
 												';
@@ -284,9 +298,11 @@ else if($request_approval_status == 2 || $request_approval_status == 3)
 												</tr>
 												';
 								}
+						
 							
 		                    ?>
 		                    <?php
+							$total_item_price=$total+$total;
 						}
 						if($request_approval_status == 5 || $request_approval_status == 6)
 						{
@@ -300,8 +316,17 @@ else if($request_approval_status == 2 || $request_approval_status == 3)
 												</tr>
 												';
 						}
-						
+						if($invoice_total > 0)
+						{
+							$result .= '<tr>
+											<td colspan="3"></td>
+											<td>TOTAL AMOUNT</td>
+											<td>KES '.number_format($invoice_total,2).'</td>
+											<td colspan="2"></td>
+										</tr>';
+						}
 						$result .= '
+						
 							</tbody>
 						</table>
 						';

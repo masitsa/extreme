@@ -66,7 +66,7 @@
 								  <thead> 
 		                                <th>#</th>
 		                                <th class="table-sortable:default table-sortable" title="Click to sort">Item Name</th>
-		                                <th class="table-sortable:default table-sortable" title="Click to sort">Unit of Measure</th>
+		                                <th class="table-sortable:default table-sortable" title="Click to sort">Minimum Hiring Price</th>
 		                                <th class="table-sortable:default table-sortable" title="Click to sort">Quantity</th>
 		                                '.$cols_items.'
 		                                <th class="table-sortable:default table-sortable" title="Click to sort">Description</th>
@@ -84,7 +84,7 @@
 								$item_id = $row->item_id;
 								$item_name = $row->item_name;
 								$item_status_id = $row->item_status_id;
-								$item_unit_price = $row->item_unit_price;
+								$minimum_hiring_price = $row->minimum_hiring_price;
 								$item_description = $row->item_description;
 								//$store_name = $row->store_name;
 								$branch_code = $row->branch_code;
@@ -96,7 +96,7 @@
 								//$store_id = $row->store_id;
 								$quantity = $row->quantity;
 
-								//$item_unit_of_measure = $row->item_unit_of_measure_id;
+								$item_hiring_price = $row->item_hiring_price;
 		                        
 		                        $item_deleted = $row->product_deleted;
 		                       
@@ -164,7 +164,7 @@
 									<tr>
 										<td>'.$count.'</td>
 										<td>'.$item_name.'</td>
-		                              <td>'.$item_unit_price.'</td>
+		                              <td>'.$minimum_hiring_price.'</td>
 									   <td>'.$quantity.'</td>
 									   <td>'.$item_description.'</td>
 		                                <td>'.$status.'</td>

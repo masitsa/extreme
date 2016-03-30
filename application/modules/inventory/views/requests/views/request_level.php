@@ -158,19 +158,19 @@
 							//pending request
 							if($request_approval_status == 0)
 							{
-								$status = '<span class="label label-info ">Wainting for First Approval</span>';
+								$status = '<span class="label label-info ">Wainting for Order Creation</span>';
 								$button = '<td><a href="'.site_url().'vendor/cancel-request/'.$request_number.'" class="btn btn-danger btn-sm pull-right" onclick="return confirm(\'Do you really want to cancel this request '.$request_number.'?\');">Cancel</a></td>';
 								$button2 = '';
 							}
 							else if($request_approval_status == 1)
 							{
-								$status = '<span class="label label-info"> Waiting for Second Approval</span>';
+								$status = '<span class="label label-info"> Waiting for First Approval</span>';
 								$button = '';
 								$button2 = '';
 							}
 							else if($request_approval_status == 2)
 							{
-								$status = '<span class="label label-info"> Wainting for Third Approval</span>';
+								$status = '<span class="label label-info"> Wainting for Second Approval</span>';
 								$button = '';
 							}
 							else if($request_approval_status == 3)
@@ -200,9 +200,11 @@
 						
 
 							$count++;
+							$button2='';
 							$result .= 
 							'
 								<tr>
+								
 									<td>'.$count.'</td>
 									<td>'.date('jS M Y H:i a',strtotime($created)).'</td>
 									<td>'.$client_name.'</td>

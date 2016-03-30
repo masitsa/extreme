@@ -48,8 +48,8 @@ class Auth extends MX_Controller
                    'username'     => 'amasitsa',
                    'personnel_type_id'     => '2',
                    'personnel_id' => 0,
-                   'branch_code'   => 'AAR',
-                   'branch_name'     => 'AAR Nairobi Branch',
+                   'branch_code'   => 'XMSK',
+                   'branch_name'     => 'XMSK Nairobi Branch',
                    'branch_id' => 2
                );
 
@@ -58,7 +58,7 @@ class Auth extends MX_Controller
 				$personnel_type_id = $this->session->userdata('personnel_type_id');
 				if(!empty($personnel_type_id) && ($personnel_type_id != 1))
 				{
-					redirect('doctor/dashboard');
+					redirect('dashboard');
 				}
 				
 				else

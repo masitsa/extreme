@@ -44,3 +44,30 @@ $(document).on("change",".parent_sections select",function()
 	return false;
 });
 
+//get item price
+$(document).on("change","select#request_item_id",function()
+{
+	//get value of the selected item
+	var item_id = $(this).val();
+	
+	$.ajax({
+		type:'POST',
+		url: base_url+'inventory/requests/get_item_price/'+item_id,
+		cache:false,
+		contentType: false,
+		processData: false,
+		dataType: 'json',
+		success:function(data)
+		{
+			$("#request_item_price").val(data.item_price);
+			$("#minimum_hiring_price").val(data.minimum_hiring_price);
+		},
+		error: function(xhr, status, error) 
+		{
+			alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+		}
+	});
+	
+	return false;
+});
+

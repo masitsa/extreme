@@ -150,7 +150,7 @@ else
                                                                     }
                                                                     else
                                                                     {
-                                                                        echo '<option value="'.$res->item_category_id.'">'.$res->category_name.' '.$res->item_category_id.'</option>';
+                                                                        echo '<option value="'.$res->item_category_id.'">'.$res->category_name.' </option>';
                                                                     }
                                                                 }
                                                             }
@@ -158,26 +158,12 @@ else
                                                         </select>
                                                     </div>
                                                 </div> 
-                                                 <!--<div class="form-group">
-                                                        <label class="col-lg-4 control-label">Drug Type: </label>
-                                                        
-                                                        <div class="col-lg-8">
-                                                            <select class="form-control" name="drug_type_id">
-                                                                <?php
-                                                                ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>-->
-                                                    <!-- Activate checkbox -->
+                                             
                                                  <div class="form-group">
-                                                    <label class="col-lg-4 control-label">Unit of measure: </label>
+                                                 <label class="col-lg-4 control-label">Unit of measure: </label>
                                                     
                                                     <div class="col-lg-8">
-                                                    <select name="unit_of_measure" class="form-control">
-                                                    <option value="Weekly">Weekly</option>
-                                                    <option value="Daily">Daily</option>
-                                                    <option value="Daily">Hourly</option>
-                                                    </select>
+                                                       <input type="text" class="form-control" name="unit_of_measure" placeholder="Unit of Measure" value="<?php echo set_value('unit_of_measure');?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -208,18 +194,18 @@ else
                                         	</div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="col-lg-4 control-label">Unit Price: </label>
+                                                    <label class="col-lg-4 control-label">Hiring Price: </label>
                                                     
                                                     <div class="col-lg-8">
                                                  
-                                                      <input type="text" class="form-control" name="product_unitprice" placeholder="Unit Price" value="<?php echo set_value('product_unit_price');?>">
+                                                      <input type="text" class="form-control" name="item_hiring_price" placeholder="Hiring Price" value="<?php echo set_value('item_hiring_price');?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-4 control-label">Asset Price: </label>
+                                                    <label class="col-lg-4 control-label">Minimum Hiring Price: </label>
                                                     
                                                     <div class="col-lg-8">
-                                                        <input type="text" class="form-control" name="product_pack_size" placeholder="Asset Price" value="<?php echo set_value('product_pack_size');?>">
+                                                        <input type="text" class="form-control" name="minimum_hiring_price" placeholder="Minimum Price" value="<?php echo set_value('minimum_hiring_price');?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">

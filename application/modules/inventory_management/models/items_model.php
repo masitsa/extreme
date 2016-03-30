@@ -13,7 +13,12 @@ class Items_model extends CI_Model
 		
 		return $query;
 	}
-	
+	public function all_unselected_items($request_id){
+		
+		$query = $this->db->query('select * from item where item_status_id=1 and item_id not in(select item_id from request_item where request_id='.$request_id.')');
+		
+		return $query;
+	}
 	public function get_all_items($table, $where, $per_page, $page)
 	{
 		$this->db->from($table);
@@ -45,7 +50,8 @@ class Items_model extends CI_Model
 				'item_status_id'=>$this->input->post('item_status_id'),
 				'supplier_id'=>$this->input->post('store_id'),
 				'quantity'=>$this->input->post('quantity'),
-				'item_unit_price'=>$this->input->post('item_unit_price'),
+				'item_hiring_price'=>$this->input->post('item_hiring_price'),
+				'minimum_hiring_price'=>$this->input->post('minimum_hiring_price'),
 				'item_description'=>$this->input->post('item_description'),
 				'item_category_id'=>$this->input->post('item_category_id'),
 				'created'=>date('Y-m-d H:i:s'),
