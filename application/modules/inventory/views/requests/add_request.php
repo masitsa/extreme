@@ -2,7 +2,7 @@
     <header class="panel-heading">
          <h2 class="panel-title pull-left"><?php echo $title;?></h2>
          <div class="widget-icons pull-right">
-            	<a href="<?php echo base_url();?>requests" class="btn btn-success btn-sm">Back to Requests</a>
+            	<a href="<?php echo base_url();?>requests" class="btn btn-primary btn-sm">Back to Requests</a>
           </div>
           <div class="clearfix"></div>
     </header>
@@ -22,11 +22,24 @@
             
             <?php echo form_open($this->uri->uri_string(), array("class" => "form-horizontal", "role" => "form"));?>
      		<div class="row">
-                <div class="col-md-6">
+            <div class="col-md-6 col-md-offset-3">
+     				 <!-- brand Name -->
+			            <div class="form-group">
+                
+				<label class="col-lg-2 control-label">Date:</label>
+              <div class="col-lg-8">
+																	
+				 <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="request_date" placeholder="Request Date" value="<?php echo set_value('request_date');;?>" />
+               
+                 </div>
+																</div>
+															</div>
+                                                            </div>                                                            <br/>
+                <div class="col-md-6 col-md-offset-3">
                 	 <!-- brand Name -->
 			            <div class="form-group">
 			                <label class="col-lg-2 control-label">Client</label>
-			                <div class="col-lg-10">
+			                <div class="col-lg-8">
 			                	<select class="form-control" name="client_id">
                                 <?php
                                 	if($clients_query->num_rows() > 0)
@@ -45,18 +58,30 @@
                                 </select>
 			                </div>
 			            </div>
+                        
                 </div>
-     			<div class="col-md-6">
+                <br/>
+                <br/>
+	             <br/>
+                
+     			<div class="col-md-6 col-md-offset-3">
      				 <!-- brand Name -->
 			            <div class="form-group">
 			                <label class="col-lg-2 control-label">Request Instructions</label>
 			                <div class="col-lg-8">
-			                	<textarea class="form-control" name="request_instructions"><?php echo set_value('request_instructions');?></textarea>
+                              <textarea id="request_instructions" class="cleditor" rows="10" name="request_instructions"><?php echo set_value('request_instructions');?></textarea>
 			                </div>
 			            </div>
      			</div>
-     		</div>
-     		<br>
+     		
+           	
+            <br/>
+       
+                                                            <br/>
+														</div>
+                                                        <br/>
+                                                        <br/>	
+                                                        
      		<div class="row">
 	            <div class="form-actions center-align">
 	                <button class="submit btn btn-primary btn-sm" type="submit">

@@ -14,6 +14,7 @@
 		$search_result2 ='<div class="alert alert-success">'.$success.'</div>';
 		$this->session->unset_userdata('success_message');
 	}
+	
 			
 	$search = $this->session->userdata('requests_search');
 	
@@ -22,8 +23,7 @@
 		$search_result = '<a href="'.site_url().'inventory/close-requests-search" class="btn btn-danger">Close Search</a>';
 	}
 
-
-	$result = '<div class="padd">';	
+	$result = '<div class="padd">';
 	$result .= ''.$search_result2.'';
 	$result .= '';
 	
@@ -34,15 +34,18 @@
 		
 		$result .= 
 		'
+	
+						
 		<div class="row">
-			<div class="col-md-12">
+					<div class="col-md-12">
 				<table class="example table-autosort:0 table-stripeclass:alternate table table-hover table-brequested " id="TABLE_2">
 				  <thead>
 					<tr>
 					  <th >#</th>
-					  <th class="table-sortable:default table-sortable" title="Click to sort">Date Created</th>
-					  <th class="table-sortable:default table-sortable" title="Click to sort">Client Name</th>
-					  <th class="table-sortable:default table-sortable" title="Click to sort">request Number</th>
+					    <th><a href="'.site_url().'inventory/requests/created/'.$order_method.'/'.$page.'">Date Created</a></th>
+					  <th><a href="'.site_url().'inventory/requests/client_name/'.$order_method.'/'.$page.'">Client Name</a></th>
+					  <th><a href="'.site_url().'inventory/requests/request_number/'.$order_method.'/'.$page.'">Request Number</a></th>
+					  <th class="table-sortable:default table-sortable" title="Click to sort">Turnaround Time (Days)</th>
 					  <th class="table-sortable:default table-sortable" title="Click to sort">Status</th>
 					  <th colspan="2">Actions</th>
 					</tr>
@@ -50,6 +53,7 @@
 				  <tbody>
 				';
 		
+				
 					//get all administrators
 					$personnel_query = $this->personnel_model->get_all_personnel();
 					
@@ -72,7 +76,12 @@
 						//echo $request_details->num_rows();die();
 						$total_price = 0;
 						$total_items = 0;
+						$turn_around_time=$this->requests_model->get_turnaround_time($request_id);
+						$turn_around_time=round ($turn_around_time);
+
 						//creators & editors
+						
+						
 						
 						if($personnel_query->num_rows() > 0)
 						{
@@ -102,6 +111,7 @@
 						
 						if($request_details->num_rows() > 0)
 						{
+
 							$items = '
 							<p><strong>Last Modified:</strong> '.date('jS M Y H:i a',strtotime($last_modified)).'<br/>
 							<strong>Modified by:</strong> '.$created_by.'</strong></br>
@@ -158,13 +168,13 @@
 							//pending request
 							if($request_approval_status == 0)
 							{
-								$status = '<span class="label label-info ">Wainting for Order Creation</span>';
+								$status = '<span class="label label-warning ">Wainting for Order Creation</span>';
 								$button = '<td><a href="'.site_url().'vendor/cancel-request/'.$request_number.'" class="btn btn-danger btn-sm pull-right" onclick="return confirm(\'Do you really want to cancel this request '.$request_number.'?\');">Cancel</a></td>';
 								$button2 = '';
 							}
 							else if($request_approval_status == 1)
 							{
-								$status = '<span class="label label-info"> Waiting for First Approval</span>';
+								$status = '<span class="label label-danger"> Waiting for First Approval</span>';
 								$button = '';
 								$button2 = '';
 							}
@@ -182,20 +192,9 @@
 							{
 								$status = '<span class="label label-success"> Approved </span>';
 								$button = '';
-								$button2 = '<a href="'.site_url().'vendor/print-invoice/'.$request_id.'" class="btn btn-primary  btn-sm fa fa-print" onclick="return confirm(\'Do you really want to print the invoice '.$request_number.'?\');"> Print Invoice</a>';
+								$button2 = '<a href="'.site_url().'vendor/print-invoice/'.$request_id.'" class="btn btn-primary  btn-sm fa fa-print" onclick="return confirm(\'Do you really want to print the quote '.$request_number.'?\');"> Print Quotation</a>';
 							}
-							else if($request_approval_status == 5)
-							{
-								$status = '<span class="label label-info"> Waiting for '.$status_name.'</span>';
-								$button = '';
-							}
-							else if($request_approval_status == 6)
-							{
-								$status = '<span class="label label-danger">Waiting for '.$status_name.'</span>';
-								$button = '<a href="'.site_url().'vendor/cancel-request/'.$request_id.'" class="btn btn-danger  btn-sm" onclick="return confirm(\'Do you really want to cancel this request '.$request_number.'?\');">Cancel</a>';
-								$button2 = '';
-							}
-
+							
 							// just to mark for the next two stages
 						
 
@@ -209,6 +208,7 @@
 									<td>'.date('jS M Y H:i a',strtotime($created)).'</td>
 									<td>'.$client_name.'</td>
 									<td>'.$request_number.'</td>
+									<td>'.$turn_around_time.'</td>
 									<td>'.$status.'</td>
 									<td><a href="'.site_url().'inventory/add-request-item/'.$request_id.'/'.$request_number.'" class="btn btn-success  btn-sm fa fa-folder"> Request Items</a></td>
 									<td>'.$button2.'</td>
@@ -231,9 +231,12 @@
 				'
 						  </tbody>
 						</table>
+						
 					</div>
+				
 				</div>
 				';
+				
 			}
 			
 			else
@@ -241,5 +244,10 @@
 				$result .= "There are no requests";
 			}
 			$result .= '</div>';
+			
 			echo $result;
+			if (isset($links))
+			{
+				echo $links;
+			}
 ?>

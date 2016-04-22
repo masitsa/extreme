@@ -19,6 +19,27 @@ class Users_model extends CI_Model
 		return $this->db->count_all_results();
 	}
 	
+	public function count_services($table, $where, $limit = NULL)
+	{
+		if($limit != NULL)
+		{
+			$this->db->limit($limit);
+		}
+		$this->db->from($table);
+		$this->db->where($where);
+		return $this->db->count_all_results();
+	}
+	public function count_clients($table, $where, $limit = NULL)
+	{
+		if($limit != NULL)
+		{
+			$this->db->limit($limit);
+		}
+		$this->db->from($table);
+		$this->db->where($where);
+		return $this->db->count_all_results();
+	}
+	
 	/*
 	*	Retrieve all users
 	*	@param string $table

@@ -110,14 +110,42 @@ $request_details = $this->requests_model->get_request_items($supplier_request_id
 	            
 	            </div>-->
 	            
-	        	<div class="col-md-5 pull-right">
+	        	<div class="col-md-5 pull-left">
 	            	<div class="row">
-	                	<div class="col-md-10">
+	                	<div class="col-md-8">
 	                		<div class="col-md-6">
 	                		<strong>Request No: </strong>
-	                    	 <?php echo $request_number;?><br>
+                            <?php echo $request_number;?><br>
+                            </div>
+                            </div>
+                            
+	                		<strong>Request On: </strong>
+                            <?php
+							$request_date=$this->requests_model->get_request_date($supplier_request_id);
+							?>
+                            <?php echo $request_date;?><br>
+                            </div>
+                            </div>
+                            
+                            
+                            
+                            <div class="col-md-5 pull-right">
+	            	<div class="row">
+	                	<div class="col-md-8">
+	                		<div class="col-md-5">
+                            
 	                    	 <strong>Date :</strong> <?php echo date('jS F Y',strtotime(date("Y-m-d"))); ?><br>
-	                    	 These particulars must be quoted on all invoices and statements.
+                             </div>
+                             </div>
+                             </div>
+                             </div>
+                             </div>
+                           
+                             <br>
+                             <div class="col-md-12 center-align">
+	            				<div class="row">
+	                    	 These particulars cannot be changed.
+                             </div>
 
 	                    	 </div>
 	                    </div>
@@ -128,9 +156,12 @@ $request_details = $this->requests_model->get_request_items($supplier_request_id
             
         </div>
         
-    	<div class="row receipt_bottom_border">
-        	<div class="col-md-12">
-            	Please supply the following goods/services on or before <strong> <?php echo date('jS F Y',strtotime(date("Y-m-d"))); ?> </strong>  and submit the invoice without delay
+    	<div class="row receipt_bottom_border center-align">
+        	<div class="col-md-12 center-align">
+            <?php
+			$as_at=$this->requests_model->request_approved_on($supplier_request_id);
+			?>
+            	This is a copy of the items requested as at <strong> <?php echo $as_at; ?> </strong>
             </div>
         </div>
         
@@ -143,23 +174,18 @@ $request_details = $this->requests_model->get_request_items($supplier_request_id
 	                                  <th>DESCRIPTION</th>
 	                                  <th>QTY</th>
 	                                  <th>UNIT PRICE</th>
-	                                  <th colspan="2">AMOUNT</th>
+                                      <th>DAYS</th>
+	                                  <th colspan="2">AMOUNT (KSHS)</th>
 	                                </tr>
-	                                 <tr>
-	                                  <th></th>
-	                                  <th></th>
-	                                  <th></th>
-	                                  <th></th>
-	                                  <th>SHS</th>
-	                                  <th>CTS</th>
-	                                </tr>
+	                               
                                 </thead>
-                                <tbody>
+                                 <tbody>
                                 	<?php
                                 	$item_no = 0;
+									$total_amount = 0;
                                 	if($request_details->num_rows() > 0)
                                 	{
-                                		$total_amount = 0;
+                                		
                                 		foreach ($request_details->result() as $key) {
                                 			# code...
                                 			$request_id = $key->request_id;
@@ -168,17 +194,18 @@ $request_details = $this->requests_model->get_request_items($supplier_request_id
 											$request_item_quantity = $key->request_item_quantity;
 											$request_item_id = $key->request_item_id;
 											$item_hiring_price = $key->item_hiring_price;
-
-											$total_cost = $item_hiring_price * $request_item_quantity;
+											$request_item_price = $key->request_item_price;
+											$total_cost = $request_item_price * $request_item_quantity;
 											$item_no++;
 											?>
 											<tr>
 		                                        <td><?php echo $item_no;?></td>
 		                                        <td><?php echo $item_name;?></td>
 		                                        <td><?php echo $request_item_quantity;?></td>
-		                                        <td><?php echo $item_hiring_price;?></td>
+		                                        <td><?php echo $request_item_price;?></td>
+                                                <td></td>
 		                                        <td><?php echo $total_cost;?></td>
-		                                        <td>00</td>
+		                                        
 											</tr>
 											<?php
 											$total_amount = $total_amount + $total_cost;
@@ -188,10 +215,11 @@ $request_details = $this->requests_model->get_request_items($supplier_request_id
                                 	?>
 									 
                                       <tr>
-                                      	<td colspan="3"></td>
+                                      	<td colspan="4"></td>
+                                        
                                         <td><strong>Total Amount :</strong></td>
                                         <td><strong> <?php echo $total_amount;?></strong></td>
-                                        <td>00</td>
+                                        
                                       </tr>
                                       <?php
 
@@ -206,7 +234,8 @@ $request_details = $this->requests_model->get_request_items($supplier_request_id
         	<div class="col-md-8 pull-left">
 	            <div class="col-md-6 pull-left">
                 <?php 
-				$personnel_name = $this->requests_model->get_personnel_name($created_by);
+				$personnel_name = $this->requests_model->get_request_creator($supplier_request_id);
+				$approved_by_name=$this->requests_model->get_request_approver($supplier_request_id);
 				
 				?>
 	            	Prepared by:<?php echo $personnel_name;?>
@@ -215,6 +244,22 @@ $request_details = $this->requests_model->get_request_items($supplier_request_id
 	              Signature by: .....................................
 	            </div>
 	          </div>
+              <br />
+              <br>
+              <div class="row" style="font-style:italic; font-size:11px;">
+        	<div class="col-md-8 pull-left">
+	            <div class="col-md-6 pull-left">
+                <?php 
+				$approved_by_name=$this->requests_model->get_request_approver($supplier_request_id);
+				
+				?>
+	              Approved by:<?php echo $approved_by_name;?>
+	            </div>
+	            <div class="col-md-6 pull-left">
+	              Signature by: .....................................
+	            </div>
+	          </div>
+              
         	<div class="col-md-4 pull-right">
             	<?php echo date('jS M Y H:i a'); ?> Thank you
             </div>
@@ -222,7 +267,7 @@ $request_details = $this->requests_model->get_request_items($supplier_request_id
         <?php
         // get office who officiated the transaction
 
-        $authorising_officer =  $this->requests_model->get_lpo_authorising_personnel($request_id);
+        $authorising_officer =  $this->requests_model->get_lpo_authorising_personnel($supplier_request_id);
         ?>
         <div class="row" style="font-style:bold; font-size:11px; margin-top:10px">
         	<div class="col-md-8 pull-left">
@@ -238,7 +283,7 @@ $request_details = $this->requests_model->get_request_items($supplier_request_id
         <br>
          <div class="row" >
         	<div class="col-md-12">
-        		<strong> *Merchants are warned not to supply goods against any order than this form fully completed</strong>
+        		<strong> &nbsp;  &nbsp; Only the Items in this quote will be rented out to you</strong>
         	</div>
         </div>
     </body>

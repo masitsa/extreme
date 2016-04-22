@@ -151,6 +151,24 @@ class Charts extends auth
 		echo json_encode($result);
 	}
 	
+	function get_total_quote_amount($timestamp)
+	{
+		$date = gmdate("Y-m-d", ($timestamp/1000));
+		
+		//initialize required variables
+		$highest_bar = 0;
+		$total_quotes=$this->charts_model->get_total_daily_quotes($date);
+		
+		if ($total_quotes > $highest_bar)
+		{
+			$highest_bar = $total_quotes;
+		}
+		
+		$result[strtolower('total_quotes')] = $total_quotes;
+		$result['highest_bar'] = $highest_bar;
+		//var_dump($result['highest_bar']); die();
+		echo json_encode($result);
+	}
 	function patient_type_totals($timestamp)
 	{
 		$date = gmdate("Y-m-d", ($timestamp/1000));
@@ -266,7 +284,54 @@ class Charts extends auth
 		$result['highest_bar'] = $highest_bar;//var_dump($result['bars']);
 		echo json_encode($result);
 	}
-	
+	 function item_type_totals()
+	 {
+		 $item_result =$this->reports_model->get_all_item_types();
+		 $totals = '';
+		 $names = '';
+		 $highest_bar = 0;
+		 $r = 1;
+		
+		if($item_result->num_rows() > 0)
+		{
+			$result = $item_result->result();
+			
+			foreach($result as $res)
+			{
+				$service_id = $res->item_id;
+				$service_name = $res->item_name;
+				
+				//get service total
+				$total = $this->reports_model->get_total_item_amount($service_id);
+				
+				//mark the highest bar
+				if($total > $highest_bar)
+				{
+					$highest_bar = $total;
+				}
+				
+				if($r == $item_result->num_rows())
+				{
+					$totals .= $total;
+					$names .= $service_name;
+				}
+				
+				else
+				{
+					$totals .= $total.',';
+					$names .= $service_name.',';
+				}
+				$r++;
+			}
+		}
+		
+		$result['total_items'] = $item_result->num_rows();
+		$result['names'] = $names;
+		$result['bars'] = $totals;
+		$result['highest_bar'] = $highest_bar;
+		echo json_encode($result);
+		
+	 }
 	function service_type_totals()
 	{	
 		//get all service types

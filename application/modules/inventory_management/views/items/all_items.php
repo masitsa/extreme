@@ -1,7 +1,5 @@
 <?php 
-
-
-
+echo $this->load->view('inventory/search/search_items', '' , TRUE);
 ?>
 <div class="row">
     <div class="col-md-12">
@@ -17,6 +15,18 @@
 		          <div class="clearfix"></div>
 		    </header>
 		    <div class="panel-body">
+            <?php
+    $search = $this->session->userdata('item_search');
+		
+	if(!empty($search))
+	{
+		echo '
+		<a href="'.site_url().'items/close-request-search" class="btn btn-warning btn-sm ">Close Search</a>
+		';
+	}
+	
+	?>
+            
 				<?php
 
 						$error = $this->session->userdata('error_message');
@@ -65,13 +75,14 @@
 								 
 								  <thead> 
 		                                <th>#</th>
-		                                <th class="table-sortable:default table-sortable" title="Click to sort">Item Name</th>
-		                                <th class="table-sortable:default table-sortable" title="Click to sort">Minimum Hiring Price</th>
-		                                <th class="table-sortable:default table-sortable" title="Click to sort">Quantity</th>
-		                                '.$cols_items.'
+		                                <th><a href="'.site_url().'inventory/items/item_name/'.$order_method.'/'.$page.'">Item Name</a></th>
+										<th><a href="'.site_url().'inventory/items/item.item_category_id/'.$order_method.'/'.$page.'">Category Parent</a></th>
+		                                <th><a href="'.site_url().'inventory/items/minimum_hiring_price/'.$order_method.'/'.$page.'">Minimum Hiring Price</a></th>
+		                                <th><a href="'.site_url().'inventory/items/quantity/'.$order_method.'/'.$page.'">Quantity</a></th>
+		                                
 		                                <th class="table-sortable:default table-sortable" title="Click to sort">Description</th>
 		                                <th>Status</th>
-		                                <th colspan="'.$colspan.'">Actions</th>
+		                                <th colspan=5"'.$colspan.'">Actions</th>
 		                            </thead>
 								  <tbody>
 							';
@@ -79,8 +90,10 @@
 							//get all administrators
 							$personnel_query = $this->personnel_model->get_all_personnel();
 							
+							
 							foreach ($query->result() as $row)
 							{
+								
 								$item_id = $row->item_id;
 								$item_name = $row->item_name;
 								$item_status_id = $row->item_status_id;
@@ -100,8 +113,26 @@
 		                        
 		                        $item_deleted = $row->product_deleted;
 		                       
+							   
+							   	$button_two = ' <td><a href="'.site_url().'inventory/edit-item/'.$item_id.'" class="btn btn-sm btn-primary">Edit</a></td>';
+								$button_three= '<td><a href="'.site_url().'inventory/delete-item/'.$item_id.'" class="btn btn-sm btn-danger">Delete</a></td>
+								';
 
+								$parent_query=$this->items_model->get_item_category($item_id);
 								
+								if($parent_query->num_rows() > 0)
+								{
+									$parent_result = $parent_query->result();
+									
+									foreach($parent_result as $parent)
+									{
+										$parent_category = $parent->category_name;
+										
+									}
+								}
+								else{
+									$parent_category ='-';
+									}
 								//status
 								if($item_status_id == 1)
 								{
@@ -159,18 +190,24 @@
 
 								$count++;
 								
+								
 								$result .= 
 								'
 									<tr>
 										<td>'.$count.'</td>
 										<td>'.$item_name.'</td>
+										<td>'.$parent_category.'</td>
 		                              <td>'.$minimum_hiring_price.'</td>
 									   <td>'.$quantity.'</td>
 									   <td>'.$item_description.'</td>
 		                                <td>'.$status.'</td>
 		                                <td>'.$button.'</td>
+										<td>'.$button_two.'</td>
+										<td>'.$button_three.'</td>
+										
 									</tr> 
 								';
+							
 								
 							}
 							
@@ -185,7 +222,8 @@
 						
 						else
 						{
-							$result .= '';
+							$result .= 'No Item Matches Your Search';
+							
 						}
 						
 						$result .= '</div>';

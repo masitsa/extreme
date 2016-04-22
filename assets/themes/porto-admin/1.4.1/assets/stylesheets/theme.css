@@ -5927,7 +5927,7 @@ html.ie11 .scroll-to-top {
 }
 
 .panel-title {
-	color: #33353f;
+	color: #5bc0de;
 	font-size: 17px;
 	font-weight: 400;
 	line-height: 20px;
@@ -6033,7 +6033,7 @@ html.ie11 .scroll-to-top {
 }
 
 .panel-featured {
-	border-top: 3px solid #33353f;
+	border-top: 3px solid #5bc0de;
 }
 
 .panel-featured .panel-heading {
@@ -6041,19 +6041,19 @@ html.ie11 .scroll-to-top {
 }
 
 .panel-featured-top {
-	border-top: 3px solid #33353f;
+	border-top: 3px solid #5bc0de;
 }
 
 .panel-featured-right {
-	border-right: 3px solid #33353f;
+	border-right: 3px solid #5bc0de;
 }
 
 .panel-featured-bottom {
-	border-bottom: 3px solid #33353f;
+	border-bottom: 3px solid #5bc0de;
 }
 
 .panel-featured-left {
-	border-left: 3px solid #33353f;
+	border-left: 3px solid #5bc0de;
 }
 
 .panel-featured-primary {
@@ -8507,7 +8507,7 @@ html.dark .panel-group .panel-accordion .form-control {
 }
 
 .chart-data-selector h2 {
-	color: #33353f;
+	color: #5bc0de;
 	font-size: 20px;
 	line-height: 20px;
 	margin: 0;

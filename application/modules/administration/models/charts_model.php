@@ -14,6 +14,29 @@ class Charts_model extends CI_Model
 		return $result->queue_total;
 	}
 	
+	public function get_total_daily_quotes($date = NULL)
+	{
+		if ($date == NULL)
+		{
+			$date = date ('Y-m-d');
+		}
+		//select the total quotes from the database
+		$this->db->select('requests.*, SUM(request_item.request_item_quantity * request_item.request_item_price) AS total_quotes');
+		$this->db->where('requests.request_id = request_item.request_id AND requests.request_date = \''.$date.'\'');
+		$this->db->from('requests, request_item');
+		$query= $this->db->get();
+		
+		$result = $query->row();
+		$total = $result->total_quotes;
+		
+		if(empty($total) || ($total == NULL))
+		{
+			$total = 0;
+		}
+		return $total;
+	}
+	
+	
 	public function get_daily_balance($date = NULL)
 	{
 		if($date == NULL)

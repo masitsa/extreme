@@ -8,17 +8,28 @@ if($item_id > 0)
 	
 	$category_id = $product[0]->category_id;
 	$product_id = $product[0]->product_id;
+	$checked_out = $product[0]->checked_out;
+	$location = $product[0]->location;
 	$product_name = $product[0]->product_name;
 	$product_status = $product[0]->product_status;
 	$product_description = $product[0]->product_description;
 	$category_name = $product[0]->category_name;
     $unit_of_measure = $product[0]->unit_of_measure;
+	$model = $product[0]->model;
+	$purchase_price= $product[0]->purchase_price;
+	$scrap_value= $product[0]->scrap_value;
+	$brand = $product[0]->brand;
+	$manufacturer = $product[0]->manufacturer;
+	$asset_id = $product[0]->asset_id;
+	$serial_number = $product[0]->serial_number;
     $reorder_level = $product[0]->reorder_level;
     $brand_id = $product[0]->brand_id;
     $generic_id = $product[0]->generic_id;
     $class_id = $product[0]->class_id;
     $drug_type_id = $product[0]->drug_type_id;
-
+	$status = $product[0]->product;
+	$condition_id = $product[0]->condition_id;
+	$condition = $product[0]->condition;
 	$v_errors = validation_errors();
 	
 
@@ -33,7 +44,18 @@ else
 	$product_description = set_value('product_description');
 	$category_id = '';
 	$category_name = set_value('category_name');
-
+	$condition_id = set_value ('condition_id');
+	$asset_id = set_value('asset_id');
+	$asset_barcode = set_value('asset_barcode');
+	$serial_number = set_value('serial_number');
+	$condition_id = set_value('condition_id');
+	$condition = set_value('condition');
+	$scrap_value = set_value('scrap_value');
+	$status = set_value('status');
+	$purchase_price = set_value('purchase_price');
+	$model = set_value('model');
+	$brand = set_value('brand');
+	$manufacturer = set_value('manufacturer');
     $reorder_level = set_value('reorder_level');
     $brand_id = set_value('brand_id');
     $generic_id = set_value('generic_id');
@@ -47,10 +69,10 @@ else
 <link href="<?php echo base_url()."assets/themes/jasny/css/jasny-bootstrap.css"?>" rel="stylesheet"/>
 <section class="panel panel-featured panel-featured-info">
     <header class="panel-heading">
-        <h2 class="panel-title">Add new Item</h2>
+        <h2 class="panel-title">Add New Item</h2>
     </header>
     <div class="panel-body">
-          	<a href="<?php echo site_url().'inventory/item';?>" class="btn btn-sm btn-info pull-right">Back to items</a>
+          	<a href="<?php echo site_url().'inventory/item';?>" class="btn btn-sm btn-info pull-right">Back to Items</a>
             
             <div class="row">
                 <div class="col-md-12">
@@ -158,12 +180,60 @@ else
                                                         </select>
                                                     </div>
                                                 </div> 
-                                             
+                                             <div class="form-group">
+                                                 <label class="col-lg-4 control-label">Condition ID:</label>
+                                                    
+                                                    <div class="col-lg-8">
+                                                       <input type="text" class="form-control" name="condition_id" placeholder="Condition ID" value="<?php echo set_value('condition_id');?>">
+                                                    </div>
+                                                    </div>
                                                  <div class="form-group">
                                                  <label class="col-lg-4 control-label">Unit of measure: </label>
                                                     
                                                     <div class="col-lg-8">
                                                        <input type="text" class="form-control" name="unit_of_measure" placeholder="Unit of Measure" value="<?php echo set_value('unit_of_measure');?>">
+                                                    </div>
+                                                </div>
+                                                 <div class="form-group">
+                                                 <label class="col-lg-4 control-label">Asset Id: </label>
+                                                    
+                                                    <div class="col-lg-8">
+                                                       <input type="text" class="form-control" name="asset_id" placeholder="Asset Id" value="<?php echo set_value('asset_id');?>">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                 <label class="col-lg-4 control-label">Checked Out: </label>
+                                                    
+                                                    <div class="col-lg-8">
+                                                       <input type="text" class="form-control" name="checked_out" placeholder="Checked Out" value="<?php echo set_value('checked_out');?>">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                 <label class="col-lg-4 control-label">Location: </label>
+                                                    
+                                                    <div class="col-lg-8">
+                                                       <input type="text" class="form-control" name="location" placeholder="Location" value="<?php echo set_value('location');?>">
+                                                    </div>
+                                                </div>
+                                                 <div class="form-group">
+                                                 <label class="col-lg-4 control-label">Asset Barcode:</label>
+                                                    
+                                                    <div class="col-lg-8">
+                                                       <input type="text" class="form-control" name="asset_barcode" placeholder="Asset Barcode" value="<?php echo set_value('asset_barcode');?>">
+                                                    </div>
+                                                </div>
+                                                    <div class="form-group">
+                                                 <label class="col-lg-4 control-label">Serial Number:</label>
+                                                    
+                                                    <div class="col-lg-8">
+                                                       <input type="text" class="form-control" name="serial_number" placeholder="Serial Number" value="<?php echo set_value('serial_number');?>">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                 <label class="col-lg-4 control-label">Status:</label>
+                                                    
+                                                    <div class="col-lg-8">
+                                                       <input type="text" class="form-control" name="status" placeholder="Status" value="<?php echo set_value('status');?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -215,11 +285,55 @@ else
                                                         <input type="text" class="form-control" name="item_unit_price" placeholder="Price:" value="<?php echo set_value('item_unit_price');?>">
                                                     </div>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Purchase Price: </label>
+                                                    
+                                                    <div class="col-lg-8">
+                                                        <input type="text" class="form-control" name="purchase_price" placeholder="Purchase Price:" value="<?php echo set_value('purchase_price');?>">
+                                                    </div>
+                                                    </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label
+                                                </div>                                                    
+">Scrap Value: </label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" class="form-control" name="scrap_value" placeholder="Scrap Value:" value="<?php echo set_value('scrap_value');?>">
+                                                    </div>
+                                                </div>
+                                                 <div class="form-group">
+                                                    <label class="col-lg-4 control-label
+                                                </div>                                                    
+">Condition: </label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" class="form-control" name="condition" placeholder="Condition" value="<?php echo set_value('condition');?>">
+                                                    </div>
+                                                </div>
                	   <div class="form-group">
                                                     <label class="col-lg-4 control-label">Quantity: </label>
                                                     
                                                     <div class="col-lg-8">
                                                         <input type="text" class="form-control" name="quantity" placeholder="quantity" value="<?php echo set_value('quantity');?>">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                 <label class="col-lg-4 control-label">Model:</label>
+                                                    
+                                                    <div class="col-lg-8">
+                                                       <input type="text" class="form-control" name="model" placeholder="Model" value="<?php echo set_value('model');?>">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                 <label class="col-lg-4 control-label">Brand:</label>
+                                                    
+                                                    <div class="col-lg-8">
+                                                       <input type="text" class="form-control" name="brand" placeholder="Brand" value="<?php echo set_value('brand');?>">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                 <label class="col-lg-4 control-label">Manufacturer:</label>
+                                                    
+                                                    <div class="col-lg-8">
+                                                       <input type="text" class="form-control" name="manufacturer" placeholder="Manufacturer" value="<?php echo set_value('manufacturer');?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">

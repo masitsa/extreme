@@ -3,11 +3,12 @@
 
 class items extends MX_Controller  
 {
+	var $csv_path;
 
-	
 	function __construct()
 	{
 		parent:: __construct();
+		$this->load->model('auth/auth_model');
 		$this->load->model('admin/users_model');
 		$this->load->model('items_model');
 		$this->load->model('inventory/suppliers_model');
@@ -16,8 +17,13 @@ class items extends MX_Controller
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
 		$this->load->model('administration/personnel_model');
-		
 		//path to image directory
+		$this->csv_path = realpath(APPPATH . '../assets/csv');
+		
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
 	}
     
 	/*
@@ -25,9 +31,9 @@ class items extends MX_Controller
 	*	Default action is to show all the items
 	*
 	*/
-	public function index() 
+	public function index($order = 'item_name', $order_method = 'ASC') 
 	{
-		$where = 'item.item_category_id = item_category.item_category_id';
+		$where = 'item.item_category_id = item_category.item_category_id AND item.product_deleted=0';
 		$table = 'item, item_category';
 
 		$item_search = $this->session->userdata('item_search');
@@ -36,10 +42,10 @@ class items extends MX_Controller
 		{
 			$where .= $item_search;
 		}
-		$segment = 3;
+		$segment = 5;
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = base_url().'inventory/items';
+		$config['base_url'] = base_url().'inventory/items'.$order.'/'.$order_method;
 		$config['total_rows'] = $this->users_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -71,15 +77,28 @@ class items extends MX_Controller
 		
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $data["links"] = $this->pagination->create_links();
-		$query = $this->items_model->get_all_items($table, $where, $config["per_page"], $page);
+		$query = $this->items_model->get_all_items($table, $where, $config["per_page"], $page,$order,$order_method);
+		
+		//change of order method 
+		if($order_method == 'DESC')
+		{
+			$order_method = 'ASC';
+		}
+		
+		else
+		{
+			$order_method = 'DESC';
+		}
+		$v_data['order'] = $order;
+		$v_data['order_method'] = $order_method;
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
-		$v_data['title'] = 'All items';
+		$v_data['title'] = 'All Items';
 		$v_data['all_categories'] = $this->items_categories_model->all_categories();
 
 		$data['content'] = $this->load->view('items/all_items', $v_data, true);
-		$data['title'] = 'All items';
+		$data['title'] = 'All Items';
 		
 		$this->load->view('admin/templates/general_page', $data);
 	}
@@ -145,7 +164,7 @@ class items extends MX_Controller
 			// redirect('inventory/add-item');
 		}
 		//open the add new item
-		$data['title'] = 'Add New item';
+		$data['title'] = 'Add New Item';
 		$v_data['item_id'] = $item_id;
 		$v_data['all_suppliers'] = $this->suppliers_model->all_suppliers();
 		$v_data['all_categories'] = $this->items_categories_model->all_categories();
@@ -164,7 +183,7 @@ class items extends MX_Controller
 		//form validation rules
 		$this->form_validation->set_rules('item_name', 'item Name', 'required|xss_clean');
 		$this->form_validation->set_rules('item_status', 'item Status', 'xss_clean');
-		$this->form_validation->set_rules('category_id', 'item Category', 'required|xss_clean');
+		$this->form_validation->set_rules('item_category_id', 'item Category', 'required|xss_clean');
 		
 		//if form has been submitted
 		if ($this->form_validation->run())
@@ -173,20 +192,20 @@ class items extends MX_Controller
 			//update item
 			if($this->items_model->update_item($item_id))
 			{
-				$this->session->set_userdata('success_message', 'Could not update item. Please try again');
-				redirect('inventory/items');
+				$this->session->set_userdata('success_message', 'Updated Successfully');
+				redirect('inventory/item');
 			}
 			
 			else
 			{
 				$this->session->set_userdata('error_message', 'Could not update item. Please try again');
-				redirect('inventory/items');
+				redirect('inventory/item');
 			}
 			
 		}
 		
-		//open the add new item
-		$data['title'] = 'Edit item';
+		//open the editw item
+		$data['title'] = 'Edit Item';
 		
 		//select the item from the database
 		$query = $this->items_model->get_item($item_id);
@@ -194,6 +213,7 @@ class items extends MX_Controller
 		if ($query->num_rows() > 0)
 		{
 			$v_data['all_categories'] = $this->items_categories_model->all_categories();
+			$v_data['all_suppliers'] = $this->suppliers_model->all_suppliers();
 			$v_data['item'] = $query->result();
 			$data['content'] = $this->load->view('items/edit_item', $v_data, true);
 		}
@@ -206,7 +226,104 @@ class items extends MX_Controller
 		$this->load->view('admin/templates/general_page', $data);
 	}
     
+	//search
 	
+	public function item_search()
+	{
+		$item_name = $this->input->post('item_name');
+		$item_category_id=$this->input->post('item_category_id');
+		$search_title ='';
+		
+		
+		if(!empty($item_name))
+		{
+			$search_title .= ' Item Name <strong>'.$item_name.'</strong>';
+			$item_name= ' AND item.item_name LIKE \'%'.$item_name.'%\'';
+		}
+		if(!empty($item_category_id))
+			{
+				$item_category_id= ' AND item.item_category_id LIKE \'%'.$item_category_id.'%\'';
+				$search_title .= 'Item Category ';
+			}
+			else 
+			{
+				$item_category_id = '';
+				
+				}
+				
+		$search = $item_name.$item_category_id;
+		$this->session->set_userdata('item_search', $search);
+		$this->session->set_userdata('search_title', $search_title);
+		
+		$this->index();
+	}
+	public function close_item_search()
+	{
+			$this->session->unset_userdata('item_search');
+			redirect('inventory/item');
+	
+	}
+	
+	//impoting items
+	function import_template()
+	{
+		//export products template in excel 
+		 $this->items_model->import_template();
+	}
+	
+	function import_items()
+	{
+		//open the add new product
+		$v_data['title'] = 'Import Assets';
+		$data['title'] = 'Import assets';
+		$data['content'] = $this->load->view('items/import_items', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	
+	function do_drugs_import()
+	{
+		if(isset($_FILES['import_csv']))
+		{
+			if(is_uploaded_file($_FILES['import_csv']['tmp_name']))
+			{
+				//import products from excel 
+				$response = $this->items_model->import_csv_items($this->csv_path);
+				
+				if($response == FALSE)
+				{
+				}
+				
+				else
+				{
+					if($response['check'])
+					{
+						$v_data['import_response'] = $response['response'];
+					}
+					
+					else
+					{
+						$v_data['import_response_error'] = $response['response'];
+					}
+				}
+			}
+			
+			else
+			{
+				$v_data['import_response_error'] = 'Please select a file to import.';
+			}
+		}
+		
+		else
+		{
+			$v_data['import_response_error'] = 'Please select a file to import.';
+		}
+		
+		//open the add new product
+		$v_data['title'] = 'Import drugs';
+		$data['title'] = 'Import drugs';
+		$data['content'] = $this->load->view('items/import_items', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
+	}
 	/*
 	*
 	*	Delete an existing item
@@ -221,23 +338,23 @@ class items extends MX_Controller
 		if ($query->num_rows() > 0)
 		{
 			$result = $query->result();
-			$image = $result[0]->item_image_name;
+			//$image = $result[0]->item_image_name;
 			
 			//delete image
-			$this->file_model->delete_file($this->items_path."\\".$image, $this->items_path);
+			//$this->file_model->delete_file($this->items_path."\\".$image, $this->items_path);
 			//delete thumbnail
-			$this->file_model->delete_file($this->items_path."\\thumbnail_".$image, $this->items_path);
+			//$this->file_model->delete_file($this->items_path."\\thumbnail_".$image, $this->items_path);
 		}
 		
 		//delete gallery images
-		$query = $this->items_model->get_gallery_images($item_id);
+		/*$query = $this->items_model->get_gallery_images($item_id);
 		
 		if ($query->num_rows() > 0)
 		{
 			$result = $query->result();
 			foreach($result as $res)
 			{
-				$image = $res->item_image_name;
+				//$image = $res->item_image_name;
 				$thumb = $res->item_image_thumb;
 				
 				//delete image
@@ -247,10 +364,10 @@ class items extends MX_Controller
 			}
 			
 			$this->items_model->delete_gallery_images($item_id);
-		}
+		}*/
 		
 		//delete features
-		$query = $this->items_model->get_features($item_id);
+		/*$query = $this->items_model->get_features($item_id);
 		
 		if ($query->num_rows() > 0)
 		{
@@ -267,11 +384,11 @@ class items extends MX_Controller
 			}
 			
 			$this->items_model->delete_features($item_id);
-		}
+		}*/
 		
 		$this->items_model->delete_item($item_id);
-		$this->session->set_userdata('success_message', 'item has been deleted');
-		redirect('inventory/items');
+		$this->session->set_userdata('success_message', 'Item Has Been Deleted');
+		redirect('inventory/item');
 	}
     
 	/*
@@ -550,26 +667,12 @@ class items extends MX_Controller
 		 $this->items_model->export_items();
 	}
 	
-	function import_template()
-	{
-		//export items template in excel 
-		 $this->items_model->import_template();
-	}
-	
 	function import_categories()
 	{
 		//export item categories in excel 
 		$this->items_model->import_categories();
 	}
 	
-	function import_items()
-	{
-		//open the add new item
-		$v_data['title'] = 'Import items';
-		$data['title'] = 'Import items';
-		$data['content'] = $this->load->view('items/import_item', $v_data, true);
-		$this->load->view('admin/templates/general_page', $data);
-	}
 	
 	function do_items_import()
 	{
@@ -612,7 +715,7 @@ class items extends MX_Controller
 		//open the add new item
 		$v_data['title'] = 'Import items';
 		$data['title'] = 'Import items';
-		$data['content'] = $this->load->view('items/import_item', $v_data, true);
+		$data['content'] = $this->load->view('items/import_items', $v_data, true);
 		$this->load->view('admin/templates/general_page', $data);
 	}
 	
@@ -655,11 +758,7 @@ class items extends MX_Controller
 		
 		$this->index();
 	}
-	public function close_item_search($page = NULL)
-	{
-		$this->session->unset_userdata('item_search');
-		redirect('inventory/items');
-	}
+	
 
 
 }

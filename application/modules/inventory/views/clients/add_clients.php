@@ -1,11 +1,11 @@
  
 <link href="<?php echo base_url();?>assets/jasny/jasny-bootstrap.css" rel="stylesheet">
 <script src="<?php echo base_url();?>assets/jasny/jasny-bootstrap.js"></script>
- <section class="panel">
+ <section class="panel panel-featured panel-featured-info">
             <header class="panel-heading">
-              <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
+              <h4 class="panel-title pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
               <div class="widget-icons pull-right">
-                    <a href="<?php echo base_url();?>inventory-setup/clients" class="btn btn-primary pull-right btn-sm">Back to clients</a>
+                    <a href="<?php echo base_url();?>inventory-setup/clients" class="btn btn-primary pull-right btn-sm">Back to Clients</a>
               </div>
               <div class="clearfix"></div>
         </header>
@@ -54,20 +54,20 @@
                 	<div class="form-group">
                         <label class="col-lg-6 control-label">Clients Phone</label>
                         <div class="col-lg-6">
-                        	<input type="text" class="form-control" name="clients_phone" placeholder="clients Phone" value="<?php echo set_value('clients_phone');?>" required>
+                        	<input type="text" class="form-control" name="clients_phone" placeholder="Client Phone" value="<?php echo set_value('clients_phone');?>" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-lg-6 control-label">Clients Email</label>
                         <div class="col-lg-6">
-                        	<input type="text" class="form-control" name="clients_email" placeholder="clients Email" value="<?php echo set_value('clients_email');?>" required>
+                        	<input type="text" class="form-control" name="clients_email" placeholder="Client Email" value="<?php echo set_value('clients_email');?>" required>
                         </div>
                     </div>
                     <!-- Activate checkbox -->
                   
                     <div class="form-actions center-align">
                         <button class="submit btn btn-primary btn-sm" type="submit">
-                            Add Clients
+                            Add Client
                         </button>
                     </div>
                 </div>

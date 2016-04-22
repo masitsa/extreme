@@ -1,7 +1,9 @@
- 
- <section class="panel">
+ <?php
+ echo $this->load->view('inventory/search/search_categories', '' , TRUE); 
+ ?>
+ <section class="panel panel-featured panel-featured-info">
     <header class="panel-heading">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
+          <h4 class="panel-title pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
           <div class="widget-icons pull-right">
             	<a href="<?php echo base_url();?>inventory-setup/item_add-category" class="btn btn-primary pull-right btn-sm">Add Item Category</a>
           </div>
@@ -65,9 +67,10 @@
 								  <thead>
 									<tr>
 									  <th class="table-sortable:default table-sortable" title="Click to sort">#</th>
-									  <th class="table-sortable:default table-sortable" title="Click to sort">Item Category Name</th>
-									  <th class="table-sortable:default table-sortable" title="Click to sort">Date Created</th>
-									  <th class="table-sortable:default table-sortable" title="Click to sort">Last Modified</th>
+									  <th><a href="'.site_url().'inventory/item-categories/category_name/'.$order_method.'/'.$page.'">Item Category Name</a></th>
+									 <th><a href="'.site_url().'inventory/item-categories/category_parent/'.$order_method.'/'.$page.'">Item Category Parent</a></th>
+									  <th><a href="'.site_url().'inventory/item-categories/created/'.$order_method.'/'.$page.'">Date Creared</a></th>
+									  <th><a href="'.site_url().'inventory/item-categories/last_modified/'.$order_method.'/'.$page.'">Last Modified</a></th>
 									  <th>Status</th>
 									  <th colspan="3">Actions</th>
 									</tr>
@@ -83,6 +86,7 @@
 							{
 								$item_category_id = $row->item_category_id;
 								$category_name = $row->category_name;
+								$category_parent=$row->category_parent;
 								$parent = $row->category_parent;
 								$category_status = $row->category_status;
 								$image = $row->category_image_name;
@@ -180,6 +184,7 @@
 									<tr>
 										<td>'.$count.'</td>
 										<td>'.$category_name.'</td>
+										<td>'.$category_parent.'</td>
 										<td>'.date('jS M Y H:i a',strtotime($row->created)).'</td>
 										<td>'.date('jS M Y H:i a',strtotime($row->last_modified)).'</td>
 										<td>'.$status.'</td>

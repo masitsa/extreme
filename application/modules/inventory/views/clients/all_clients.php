@@ -1,13 +1,15 @@
- 
- <section class="panel">
+ <?php 
+	echo $this->load->view('inventory/search/search_clients','', TRUE); ?>
+ <section class="panel panel-featured panel-featured-info">
     <header class="panel-heading">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
+          <h4 class="panel-title pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
           <div class="widget-icons pull-right">
-            	<a href="<?php echo base_url();?>inventory-setup/add-clients" class="btn btn-primary pull-right btn-sm">Add clients</a>
+            	<a href="<?php echo base_url();?>inventory-setup/add-clients" class="btn btn-primary pull-right btn-sm">Add Client</a>
           </div>
           <div class="clearfix"></div>
         </header>
       	<div class="panel-body">
+        
 		<?php 
 		$v_data['view_type'] = 0;
 		//echo $this->load->view('inventory-setup/search/search_categories', $v_data, TRUE); ?>
@@ -33,7 +35,7 @@
 				
 				if(!empty($search))
 				{
-					$search_result = '<a href="'.site_url().'inventory-setup/close-categories-search" class="btn btn-danger">Close Search</a>';
+					$search_result = '<a href="'.site_url().'clients/close-item-search" class="btn btn-warning">Close Search</a>';
 				}
 
 
@@ -65,9 +67,9 @@
 								  <thead>
 									<tr>
 									  <th class="table-sortable:default table-sortable" title="Click to sort">#</th>
-									  <th class="table-sortable:default table-sortable" title="Click to sort">Clients Name</th>
-									  <th class="table-sortable:default table-sortable" title="Click to sort">Date Created</th>
-									  <th class="table-sortable:default table-sortable" title="Click to sort">Last Modified</th>
+									  <th><a href="'.site_url().'inventory/clients/client_name/'.$order_method.'/'.$page.'">Client Name</a></th>
+									  <th><a href="'.site_url().'inventory/clients/created/'.$order_method.'/'.$page.'">Date Created</a></th>
+									   <th><a href="'.site_url().'inventory/clients/last_modified/'.$order_method.'/'.$page.'">Last Modified</a></th>
 									  <th>Status</th>
 									  <th colspan="3">Actions</th>
 									</tr>

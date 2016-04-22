@@ -2,11 +2,13 @@
 
 
 class clients extends MX_Controller {
-	var $clients_path;
+	
+	var $csv_path;
 	
 	function __construct()
 	{
 		parent:: __construct();
+		$this->load->model('auth/auth_model');
 		$this->load->model('admin/users_model');
 		$this->load->model('clients_model');
 		$this->load->model('admin/file_model');
@@ -14,7 +16,15 @@ class clients extends MX_Controller {
 		$this->load->model('admin/admin_model');
 		$this->load->model('site/site_model');
 		$this->load->model('administration/personnel_model');
+		
 		//path to image directory
+		$this->csv_path = realpath(APPPATH . '../assets/csv');
+		
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
+		
 	}
     
 	/*
@@ -22,11 +32,69 @@ class clients extends MX_Controller {
 	*	Default action is to show all the clients
 	*
 	*/
-
-	public function index() 
+	function import_clients()
+	{
+		//open the add new product
+		$v_data['title'] = 'Import Clients';
+		$data['title'] = 'Import clients';
+		$data['content'] = $this->load->view('clients/import_clients', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	
+	function import_template()
+	{
+		//export products template in excel 
+		 $this->clients_model->import_template();
+	}
+	function do_clients_import()
+	{
+		if(isset($_FILES['import_csv']))
+		{
+			if(is_uploaded_file($_FILES['import_csv']['tmp_name']))
+			{
+				//import clients from excel 
+				$response = $this->clients_model->import_csv_clients($this->csv_path);
+				
+				if($response == FALSE)
+				{
+				}
+				
+				else
+				{
+					if($response['check'])
+					{
+						$v_data['import_response'] = $response['response'];
+					}
+					
+					else
+					{
+						$v_data['import_response_error'] = $response['response'];
+					}
+				}
+			}
+			
+			else
+			{
+				$v_data['import_response_error'] = 'Please select a file to import.';
+			}
+		}
+		
+		else
+		{
+			$v_data['import_response_error'] = 'Please select a file to import.';
+		}
+		
+		//open the add new item
+		$v_data['title'] = 'Import clients';
+		$data['title'] = 'Import clients';
+		$data['content'] = $this->load->view('clients/import_clients', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	
+	public function index($order = 'client_name', $order_method = 'ASC') 
 	{
 		//$where = 'created_by IN (0, '.$this->session->userdata('vendor_id').')';
-		$where = 'branch_code = "'.$this->session->userdata('branch_code').'"';
+		$where = 'branch_code = "'.$this->session->userdata('branch_code').'" AND deleted = 0';
 		$table = 'client';
 
 		$clients_search = $this->session->userdata('clients_search');
@@ -35,11 +103,11 @@ class clients extends MX_Controller {
 		{
 			$where .= $clients_search;
 		}
-		$segment = 3;
+		$segment = 5;
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'clients';
-		$config['total_rows'] = $this->users_model->count_items($table, $where);
+		$config['total_rows'] = $this->users_model->count_clients($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
 		$config['num_links'] = 5;
@@ -71,10 +139,24 @@ class clients extends MX_Controller {
 		
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $data["links"] = $this->pagination->create_links();
-		$query = $this->clients_model->get_all_clients($table, $where, $config["per_page"], $page);
+		$query = $this->clients_model->get_all_clients($table, $where, $config["per_page"], $page, $order, $order_method);
+		
+		if($order_method == 'DESC')
+		{
+			$order_method = 'ASC';
+		}
+		
+		else
+		{
+			$order_method = 'DESC';
+		}
+		$v_data['order'] = $order;
+		$v_data['order_method'] = $order_method;
 		
 		if ($query->num_rows() > 0)
 		{
+			//change of order method 
+		
 			$v_data['query'] = $query;
 			$v_data['page'] = $page;
 			$v_data['title'] = 'All clients';
@@ -86,7 +168,7 @@ class clients extends MX_Controller {
 		{
 			$data['content'] = '<a href="'.site_url().'inventory-setup/add-clients" class="btn btn-success pull-right">Add clients</a><br>There are no clients';
 		}
-		$data['title'] = 'All clients';
+		$data['title'] = 'All Clients';
 		
 		$this->load->view('admin/templates/general_page', $data);
 	}
@@ -99,7 +181,8 @@ class clients extends MX_Controller {
 	public function add_clients() 
 	{
 		//form validation rules
-		$this->form_validation->set_rules('clients_name', 'clients Name', 'required|xss_clean');
+		$this->form_validation->set_rules('clients_name', 'Client Name', 'required|xss_clean');
+		$this->form_validation->set_rules('clients_email', 'Client Email', 'valid_email','xss_clean');
 		
 		//if form has been submitted
 		if ($this->form_validation->run())
@@ -119,8 +202,8 @@ class clients extends MX_Controller {
 		}
 		
 		//open the add new clients
-		$data['title'] = 'Add New clients';
-		$v_data['title'] = 'Add New clients';
+		$data['title'] = 'Add New Clients';
+		$v_data['title'] = 'Add New Clients';
 		$data['content'] = $this->load->view('clients/add_clients', $v_data, true);
 		$this->load->view('admin/templates/general_page', $data);
 	}
@@ -155,7 +238,7 @@ class clients extends MX_Controller {
 		
 		//open the add new client
 		$data['title'] = 'Edit Client';
-		$v_data['title'] = 'Edit clients';
+		$v_data['title'] = 'Edit Clients';
 		
 		//select the clients from the database
 		$query = $this->clients_model->get_clients($clients_id);
@@ -227,20 +310,26 @@ class clients extends MX_Controller {
 		$this->session->set_userdata('success_message', 'clients disabled successfully');
 		redirect('inventory-setup/clients');
 	}
+	//search using clients' name
 	public function search_clients()
 	{
+	$search_title = '';
+	$client_name = $this->input->post('clients_name');
 
-		$clients_name = $this->input->post('clients_name');
 
-
-		if(!empty($clients_name))
+		if(!empty($client_name))
 		{
-			$clients_name = ' AND clients.clients_name LIKE \'%'.mysql_real_escape_string($clients_name).'%\' ';
+			$search_title .= ' Client name <strong>'.$client_name.'</strong>';
+			$client_name= ' AND client.client_name LIKE \'%'.$client_name.'%\'';
 		}
 		
-		
-		$search = $clients_name;
+		else
+		{
+			$client_name = '';
+		}
+		$search = $client_name;
 		$this->session->set_userdata('clients_search', $search);
+		$this->session->set_userdata('clients_search_title', $search_title);
 		
 		$this->index();
 		

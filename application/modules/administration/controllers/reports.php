@@ -12,6 +12,13 @@ class Reports extends administration
 		$this->load->model('accounts/accounts_model');
 	}
 	
+	function get_request_reports()
+	{
+		$data['content']=$this->load->view('request_dashboard','',TRUE);
+		$data['title']="Reports";
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	
 	public function all_reports($module = '__')
 	{
 		$this->session->unset_userdata('all_transactions_search');

@@ -1,9 +1,11 @@
- 
- <section class="panel">
+<?php
+echo $this->load->view('inventory/search/search_suppliers',' ' , TRUE); 
+?> 
+ <section class="panel panel-featured panel-featured-info">
     <header class="panel-heading">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
+          <h4 class="panel-title pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
           <div class="widget-icons pull-right">
-            	<a href="<?php echo base_url();?>inventory-setup/add-supplier" class="btn btn-primary pull-right btn-sm">Add supplier</a>
+            	<a href="<?php echo base_url();?>inventory-setup/add-supplier" class="btn btn-primary pull-right btn-sm">Add Supplier</a>
           </div>
           <div class="clearfix"></div>
         </header>
@@ -33,7 +35,7 @@
 				
 				if(!empty($search))
 				{
-					$search_result = '<a href="'.site_url().'inventory-setup/close-categories-search" class="btn btn-danger">Close Search</a>';
+					$search_result = '<a href="'.site_url().'inventory-setup/close-suppliers-search" class="btn btn-danger">Close Search</a>';
 				}
 
 
@@ -65,9 +67,9 @@
 								  <thead>
 									<tr>
 									  <th class="table-sortable:default table-sortable" title="Click to sort">#</th>
-									  <th class="table-sortable:default table-sortable" title="Click to sort">Supplier Name</th>
-									  <th class="table-sortable:default table-sortable" title="Click to sort">Date Created</th>
-									  <th class="table-sortable:default table-sortable" title="Click to sort">Last Modified</th>
+									  <th><a href="'.site_url().'inventory/suppliers/supplier_name/'.$order_method.'/'.$page.'">Supplier Name</a></th>
+									  <th><a href="'.site_url().'inventory/suppliers/created/'.$order_method.'/'.$page.'">Date Created</a></th>
+									 <th><a href="'.site_url().'inventory/suppliers/last_modified/'.$order_method.'/'.$page.'">Last Modified</a></th>
 									  <th>Status</th>
 									  <th colspan="3">Actions</th>
 									</tr>
@@ -177,7 +179,7 @@
 										<td>'.$status.'</td>
 										<td><a href="'.site_url().'inventory-setup/edit-supplier/'.$supplier_id.'" class="btn btn-sm btn-success">Edit</a></td>
 										<td>'.$button.'</td>
-										<td><a href="'.site_url().'inventory-setup/delete-supplier/'.$supplier_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$supplier_name.'?\');">Delete</a></td>
+										<td><a href="'.site_url().'inventory-setup/delete-supplier/'.$supplier_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete '.$supplier_name.'?\');"><i class="fa fa-trash"></i>Delete</a></td>
 										
 									
 									</tr> 
