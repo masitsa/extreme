@@ -2,18 +2,19 @@
 
 class Leave_model extends CI_Model 
 {
-	public function get_assigned_leave($year, $month)
+	public function get_assigned_leave($date = NULL)
 	{
-		$table = "leave_duration";
-		$where = "start_date LIKE '".$year."-".$month."-%'";
-		$items = "DISTINCT(start_date) AS start_";
-		$order = "start_";
+		if($date == NULL)
+		{
+			$date = date('Y-m-d');
+		}
+		$where = 'leave_duration.personnel_id = personnel.personnel_id AND leave_duration.leave_type_id = leave_type.leave_type_id AND leave_duration.start_date >= \''.$date.'\'';
 		
+		$this->db->select('personnel.personnel_id, personnel.personnel_fname, personnel.personnel_onames, leave_type.leave_type_name, leave_duration.start_date, leave_duration.end_date, leave_duration.leave_duration_status');
 		$this->db->where($where);
-		$this->db->order_by($order);
-		$this->db->select($items);
+		$query = $this->db->get('leave_duration, personnel, leave_type');
 		
-		return $this->db->get($table);
+		return $query;
 	}
 	
 	public function get_day_leave($date)

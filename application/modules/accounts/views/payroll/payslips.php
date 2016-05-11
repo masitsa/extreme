@@ -49,7 +49,7 @@ $created_by = $this->session->userdata('first_name');
                 <div class="row">
                     <div class="col-xs-12">
                     	<div class="center-align">
-                        	<h5>Payslip preview for <?php echo $personnel_name;?> <?php echo $personnel_number;?></h5>
+                        	<h5>Payslip for <?php echo $personnel_name;?> <?php echo $personnel_number;?></h5>
                         </div>
                     </div>
                 </div>

@@ -16,7 +16,7 @@
 | environments.
 |
 */
-$config['base_url'] = 'http://localhost/erp/';
+$config['base_url'] = 'http://localhost/extreme/';
 #$config['base_url'] = 'http://192.168.9.105/';
 #$config['base_url'] = 'http://159.203.78.242/';
 #$config['base_url'] = 'http://192.168.9.105/';

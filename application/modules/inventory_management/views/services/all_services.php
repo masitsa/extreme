@@ -75,9 +75,9 @@ echo $this->load->view('inventory/search/search_services', '' , TRUE);
 								 
 								  <thead> 
 		                                <th>#</th>
-		                                <th><a href="'.site_url().'inventory/services/service_name/'.$order_method.'/'.$page.'">Service Name</a></th>
-										<th><a href="'.site_url().'inventory/services/service.service_category_id/'.$order_method.'/'.$page.'">Servce Cost</a></th>
-		                                <th><a href="'.site_url().'inventory/services/minimum_hiring_price/'.$order_method.'/'.$page.'">Service Price</a></th>
+		                                <th>Service Name</th>
+										<th>Servce Cost</th>
+										<th>Service Price</th>
 		                                <th class="table-sortable:default table-sortable" title="Click to sort">Description</th>
 		                                <th>Status</th>
 		                                <th colspan=5"'.$colspan.'">Actions</th>
@@ -109,7 +109,7 @@ echo $this->load->view('inventory/search/search_services', '' , TRUE);
 		                       
 							   
 							   	$button_two = ' <td><a href="'.site_url().'inventory/edit-service/'.$service_id.'" class="btn btn-sm btn-primary">Edit</a></td>';
-								$button_three= '<td><a href="'.site_url().'inventory/delete-service/'.$service_id.'" class="btn btn-sm btn-danger">Delete</a></td>
+								$button_three= '<td><a href="'.site_url().'inventory-management/delete-service/'.$service_id.'" class="btn btn-sm btn-danger">Delete</a></td>
 								';
 
 								//status
@@ -128,13 +128,13 @@ echo $this->load->view('inventory/search/search_services', '' , TRUE);
 								if($service_status_id == 0)
 								{
 									$status = '<span class="label label-danger">Deactivated</span>';
-									$button = '<a class="btn btn-info btn-sm" href="'.site_url().'inventory/activation/activate/'.$service_id.'" onclick="return confirm(\'Do you want to activate '.$service_name.'?\');">Activate</a>';
+									$button = '<a class="btn btn-info btn-sm" href="'.site_url().'inventory-management/activation/activate/'.$service_id.'" onclick="return confirm(\'Do you want to activate '.$service_name.'?\');">Activate</a>';
 								}
 								//create activated status display
 								else 
 								{
 									$status = '<span class="label label-success">Active</span>';
-									$button = '<a class="btn btn-default btn-sm" href="'.site_url().'inventory/activation/deactivate/'.$service_id.'" onclick="return confirm(\'Do you want to deactivate '.$service_name.'?\');">Deactivate</a>';
+									$button = '<a class="btn btn-default btn-sm" href="'.site_url().'inventory-management/activation/deactivate/'.$service_id.'" onclick="return confirm(\'Do you want to deactivate '.$service_name.'?\');">Deactivate</a>';
 								}
 
 								

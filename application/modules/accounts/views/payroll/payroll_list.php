@@ -26,7 +26,7 @@
 						<th>NHIF</th>
 						<th>Deductions</th>
 						<th>Net</th>
-						<th colspan="5">Actions</th>
+						<th colspan="6">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -157,7 +157,10 @@
 						<td>'.number_format($nhif, 2).'</td>
 						<td>'.number_format($deductions, 2).'</td>
 						<td>'.number_format($net, 2).'</td>
+						<td><a href="'.site_url().'accounts/print-month-payslips/'.$payroll_id.'" class="btn btn-sm btn-primary" title="Print '.$payroll_name.'" target="_blank">Payslips</a></td>
+
 						<td><a href="'.site_url().'accounts/print-payroll/'.$payroll_id.'" class="btn btn-sm btn-success" title="Print '.$payroll_name.'" target="_blank"><i class="fa fa-print"></i></a></td>
+
 						<td>'.$button.'</td>
 					</tr> 
 				';

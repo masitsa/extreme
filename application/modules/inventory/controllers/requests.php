@@ -13,6 +13,7 @@ class requests extends MX_Controller
 		$this->load->model('inventory_management/products_model');
 		$this->load->model('requests_model');
 		$this->load->model('clients_model');
+		$this->load->model('events_model');
 		$this->load->model('suppliers_model');
 		$this->load->model('categories_model');
 		$this->load->model('site/site_model');
@@ -153,7 +154,6 @@ class requests extends MX_Controller
 		$this->load->view('admin/templates/general_page', $data);
 	}
     
-
     public function add_request_item($request_id,$request_number)
     {
 
@@ -191,6 +191,7 @@ class requests extends MX_Controller
 		//$v_data['request_status_query'] = $this->requests_model->get_request_status();
 		$v_data['items_query'] = $this->items_model->all_unselected_items($request_id);
 		$v_data['request_number'] = $request_number;
+		$v_data['request_details'] = $this->requests_model->get_request_details($request_id);
 		$v_data['request_id'] = $request_id;
 		$v_data['request_item_query'] = $this->requests_model->get_request_items($request_id);
 		$v_data['request_suppliers'] = $this->requests_model->get_request_suppliers($request_id);
@@ -338,7 +339,7 @@ class requests extends MX_Controller
 			$data['content'] = 'request does not exist';
 		}
 		
-		$this->load->view('admin/templates/general_page', $data);
+		$this->load->view('admin/templates/general_page', $data); 
 	}
     
 	public function send_request_for_correction($request_id)
@@ -568,6 +569,49 @@ class requests extends MX_Controller
 			$this->session->unset_userdata('request_search');
 			redirect('requests');
 	
+	}
+	//request event
+	public function add_request_event($request_id,$request_number)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('event_name', 'Event Name', 'required|xss_clean');
+		$this->form_validation->set_rules('venue', 'Venue', 'required|xss_clean');
+		$request_event_id =$this->requests_model->add_request_event($request_id);
+		//if form has been submitted
+		if ($this->form_validation->run())
+		{
+			//$request_id = $this->requests_model->add_request();
+			//update request
+			if($request_event_id > 0)
+			{
+				$this->session->set_userdata('success_message', 'request event created successfully');
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'Could not add event request. Please try again');
+			}
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', validation_errors());
+		}
+		
+		$v_data['title'] = 'Add Event to '.$request_number;
+		//$v_data['request_status_query'] = $this->requests_model->get_request_status();
+		$v_data['items_query'] = $this->items_model->all_unselected_items($request_id);
+		$v_data['event_query'] = $this->events_model->all_events();
+		$v_data['request_number'] = $request_number;
+		$v_data['request_details'] = $this->requests_model->get_request_details($request_id);
+		$v_data['request_id'] = $request_id;
+		$v_data['request_item_query'] = $this->requests_model->get_request_items($request_id);
+		$v_data['request_suppliers'] = $this->requests_model->get_request_suppliers($request_id);
+
+		$v_data['suppliers_query'] = $this->suppliers_model->all_suppliers();
+		$data['content'] = $this->load->view('requests/request_event', $v_data, true);
+
+		$this->load->view('admin/templates/general_page', $data);
 	}
 }
 ?>

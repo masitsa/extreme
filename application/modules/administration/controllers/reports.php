@@ -14,8 +14,8 @@ class Reports extends administration
 	
 	function get_request_reports()
 	{
-		$data['content']=$this->load->view('request_dashboard','',TRUE);
 		$data['title']="Reports";
+		$data['content']=$this->load->view('request_dashboard','',TRUE);
 		$this->load->view('admin/templates/general_page', $data);
 	}
 	

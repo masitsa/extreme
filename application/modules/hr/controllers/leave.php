@@ -11,96 +11,7 @@ class Leave extends hr
 	
 	function calender()
 	{
-		//Create calender from listed options
-		$prefs = array (
-		   'start_day'    => 'sunday',
-		   'month_type'   => 'long',
-		   'day_type'     => 'short',
-		   'show_next_prev' => TRUE,
-		   'next_prev_url'   => site_url().'human-resource/leave/'
-		 );
-		 
-		 $prefs['template'] = '
-	
-		   {table_open}<table class="table table-condensed table-hover table-striped calender-table">{/table_open}
-		
-		   {heading_row_start}<thead><tr>{/heading_row_start}
-		
-		   {heading_previous_cell}<th><a href="{previous_url}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
-</a></th>{/heading_previous_cell}
-		   {heading_title_cell}<th colspan="{colspan}" class="center-align big-text">{heading}</th>{/heading_title_cell}
-		   {heading_next_cell}<th><a href="{next_url}" class="btn btn-info pull-right"><i class="fa fa-arrow-right"></i>
-</a></th>{/heading_next_cell}
-		
-		   {heading_row_end}</tr></thead>{/heading_row_end}
-		
-		   {week_row_start}<thead><tr>{/week_row_start}
-		   {week_day_cell}<td>{week_day}</td>{/week_day_cell}
-		   {week_row_end}</tr></thead>{/week_row_end}
-		
-		   {cal_row_start}<tr>{/cal_row_start}
-		   {cal_cell_start}<td>{/cal_cell_start}
-		
-		   {cal_cell_content}<a href="{content}"><div class="highlight">{day}</div></a>{/cal_cell_content}
-		   {cal_cell_content_today}<div class="highlight-current">{day}</div>{/cal_cell_content_today}
-		
-		   {cal_cell_no_content}{day}{/cal_cell_no_content}
-		   {cal_cell_no_content_today}<div class="highlight">{day}</div>{/cal_cell_no_content_today}
-		
-		   {cal_cell_blank}&nbsp;{/cal_cell_blank}
-		
-		   {cal_cell_end}</td>{/cal_cell_end}
-		   {cal_row_end}</tr>{/cal_row_end}
-		
-		   {table_close}</table>{/table_close}
-		';
-	
-		$this->load->library('calendar', $prefs);
-		
-		/*
-			--------------------------------------------------------------------------------------
-			Retrieve requiested year & month to view or load default current year & month
-			--------------------------------------------------------------------------------------
-		*/
-		$year = $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : date('Y');
-		$month = $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : date('m');
-		
-		/*
-			--------------------------------------------------------------------------------------
-			Retrieve assigned leave days for that year & month
-			--------------------------------------------------------------------------------------
-		*/
-  		$table = "leave_duration";
-		$where = "start_date LIKE '".$year."-".$month."-%'";
-		$items = "DISTINCT(start_date) AS start_";
-		$order = "start_";
-		
-		$result = $this->leave_model->get_assigned_leave($year, $month);
-		
-		if($result->num_rows() > 0)
-		{
-			foreach($result->result() as $res)
-			{
-				$start_date = $res->start_;
-				$date = explode('-', $start_date);
-				$day = intval($date[2]);
-				
-				$v_data['data'][$day] = site_url().'human-resource/view-leave/'.$start_date;
-			}
-		}
-		else
-		{
-			$v_data['data'] = NULL;
-		}
-		
-		/*
-			--------------------------------------------------------------------------------------
-			Load the interface
-			--------------------------------------------------------------------------------------
-		*/
-		$v_data['year'] = $year;
-		$v_data['month'] = $month;
-		$v_data['title'] = $data['title'] = 'Leave schedule';
+		$v_data['title'] = $data['title'] = 'Leave Schedule';
 		
 		$v_data['personnel'] = $this->personnel_model->retrieve_personnel();
 		$v_data['leave_types'] = $this->personnel_model->get_leave_types();
@@ -108,6 +19,61 @@ class Leave extends hr
 		$data['content'] = $this->load->view('leave/calender', $v_data, TRUE);
 		
 		$this->load->view('admin/templates/general_page', $data);
+	}
+	
+	public function leave_schedule()
+	{
+		$leave_result = $this->leave_model->get_assigned_leave();
+		
+		//initialize required variables
+		$totals = '';
+		$highest_bar = 0;
+		$r = 0;
+		$data = array();
+		
+		if($leave_result->num_rows() > 0)
+		{
+			$result = $leave_result->result();
+			
+			foreach($result as $res)
+			{
+				$personnel_id = $res->personnel_id;
+				$personnel_fname = $res->personnel_fname;
+				$personnel_onames = $res->personnel_onames;
+				$leave_type_name = $res->leave_type_name;
+				$leave_duration_status = $res->leave_duration_status;
+				$start_date = $res->start_date;
+				$end_date = $res->end_date;
+				$start_date = date('D M d Y',strtotime($start_date)); 
+				$end_date = date('D M d Y',strtotime($end_date)); 
+				$time_start = $start_date.' 8:00 AM:00 GMT+0300'; 
+				$time_end = $end_date.' 5:00 PM:00 GMT+0300';
+				//$color = $this->reception_model->random_color();
+				
+				if($leave_duration_status == 1)
+				{
+					$color = '#0088CC';
+				}
+				
+				else
+				{
+					$color = '#b71c1c';
+				}
+				$leave_days = $this->site_model->calculate_leave_days($start_date, $end_date);
+				
+				$data['title'][$r] = $personnel_fname.' '.$personnel_onames.' - '.$leave_type_name.'. '.$leave_days.' days';
+				$data['start'][$r] = $time_start;
+				$data['end'][$r] = $time_start;
+				$data['backgroundColor'][$r] = $color;
+				$data['borderColor'][$r] = $color;
+				$data['allDay'][$r] = TRUE;
+				$data['url'][$r] = site_url().'human-resource/edit-personnel/'.$personnel_id;
+				$r++;
+			}
+		}
+		
+		$data['total_events'] = $r;
+		echo json_encode($data);
 	}
 	
 	public function view_leave($date)
@@ -125,7 +91,7 @@ class Leave extends hr
 		$this->load->view('admin/templates/general_page', $data);
     }
 	
-	function add_leave($date)
+	function add_leave($date, $personnel_id)
 	{
 		$this->form_validation->set_rules('personnel_id', 'Personnel', 'trim|numeric|required|xss_clean');
 		$this->form_validation->set_rules('start_date', 'Start Date', 'trim|required|xss_clean');
@@ -144,7 +110,7 @@ class Leave extends hr
 				$this->session->set_userdata("error_message","Could not add personnel leave. Please try again");
 			}
 			
-			redirect('human-resource/view-leave/'.$date);
+			redirect('human-resource/edit-personnel/'.$personnel_id);
 		}
 		
 		else
@@ -160,7 +126,7 @@ class Leave extends hr
 	*	@param int $personnel_id
 	*
 	*/
-	public function activate_leave($personnel_leave_id, $date)
+	public function activate_leave($personnel_leave_id, $personnel_id)
 	{
 		if($this->leave_model->activate_leave_duration($personnel_leave_id))
 		{
@@ -171,7 +137,7 @@ class Leave extends hr
 		{
 			$this->session->set_userdata('error_message', 'Leave could not claimed');
 		}
-		redirect('human-resource/view-leave/'.$date);
+		redirect('human-resource/edit-personnel/'.$personnel_id);
 	}
 
 	/*
@@ -180,7 +146,7 @@ class Leave extends hr
 	*	@param int $personnel_id
 	*
 	*/
-	public function deactivate_leave($leave_duration_id, $date)
+	public function deactivate_leave($leave_duration_id, $personnel_id)
 	{
 		if($this->leave_model->deactivate_leave_duration($leave_duration_id))
 		{
@@ -191,7 +157,7 @@ class Leave extends hr
 		{
 			$this->session->set_userdata('error_message', 'Leave could not unclaimed');
 		}
-		redirect('human-resource/view-leave/'.$date);
+		redirect('human-resource/edit-personnel/'.$personnel_id);
 	}
 
 	/*
@@ -200,7 +166,7 @@ class Leave extends hr
 	*	@param int $personnel_id
 	*
 	*/
-	public function delete_leave($leave_duration_id, $date)
+	public function delete_leave($leave_duration_id, $personnel_id)
 	{
 		if($this->leave_model->delete_leave_duration($leave_duration_id))
 		{
@@ -211,7 +177,7 @@ class Leave extends hr
 		{
 			$this->session->set_userdata('error_message', 'Leave could not deleted');
 		}
-		redirect('human-resource/view-leave/'.$date);
+		redirect('human-resource/edit-personnel/'.$personnel_id);
 	}
 	
 	function add_calender_leave()
@@ -241,6 +207,50 @@ class Leave extends hr
 			$this->session->set_userdata("error_message", validation_errors());
 			$this->calender();
 		}
+	}
+	
+	public function leave_application($leave_type_id)
+	{
+		$this->form_validation->set_rules('personnel_id', 'Personnel', 'trim|numeric|required|xss_clean');
+		$this->form_validation->set_rules('start_date', 'Start Date', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('end_date', 'End Date', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('leave_type_id', 'Leave Type', 'trim|numeric|required|xss_clean');
+		
+		$start_date = $this->input->post('start_date');
+		$end_date = $this->input->post('end_date');
+		
+		if($end_date < $start_date)
+		{
+			$this->session->set_userdata("error_message","The leave end date cannot be earlier than the start date.");
+		}
+		
+		else if ($this->form_validation->run())
+		{
+			if($this->personnel_model->add_personnel_leave($this->input->post('personnel_id')))
+			{
+				$this->session->set_userdata("success_message", "Leave application successfully pending approval.");
+			
+				redirect('dashboard');
+			}
+			
+			else
+			{
+				$this->session->set_userdata("error_message","Could not apply for leave. Please try again");
+			}
+		}
+		
+		else
+		{
+			$this->session->set_userdata("error_message", validation_errors());
+		}
+		$v_data['title'] = $data['title'] = 'Leave Application';
+		$v_data['leave_types'] = $this->personnel_model->get_leave_types();
+		$v_data['personnel_id'] = $this->session->userdata('personnel_id');
+		$v_data['selected_leave_type_id'] = $leave_type_id;
+		
+		$data['content'] = $this->load->view('leave/leave_application', $v_data, TRUE);
+		
+		$this->load->view('admin/templates/general_page', $data);
 	}
 }
 ?>

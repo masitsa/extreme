@@ -118,6 +118,9 @@ if(!empty($validation_error))
 										<a class="text-center" data-toggle="tab" href="#general"><i class="fa fa-user"></i> General details</a>
 									</li>
 									<li>
+										<a class="text-center" data-toggle="tab" href="#uploads">Uploads</a>
+									</li>
+									<li>
 										<a class="text-center" data-toggle="tab" href="#account"><i class="fa fa-lock"></i> Account details</a>
 									</li>
 									<li>
@@ -136,6 +139,9 @@ if(!empty($validation_error))
 								<div class="tab-content">
 									<div class="tab-pane active" id="general">
 										<?php echo $this->load->view('edit/about', '', TRUE);?>
+									</div>
+									<div class="tab-pane" id="uploads">
+										<?php echo $this->load->view('edit/uploads', '', TRUE);?>
 									</div>
 									<div class="tab-pane" id="account">
 										<?php echo $this->load->view('edit/account', '', TRUE);?>

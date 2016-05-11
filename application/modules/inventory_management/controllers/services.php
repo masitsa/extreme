@@ -179,8 +179,6 @@ class services extends MX_Controller
 	{
 		//form validation rules
 		$this->form_validation->set_rules('service_name', 'service Name', 'required|xss_clean');
-		$this->form_validation->set_rules('service_status', 'service Status', 'xss_clean');
-		$this->form_validation->set_rules('service_category_id', 'service Category', 'required|xss_clean');
 		
 		//if form has been submitted
 		if ($this->form_validation->run())
@@ -203,22 +201,13 @@ class services extends MX_Controller
 		
 		//open the editw service
 		$data['title'] = 'Edit Service';
-		
+		$title =$data['title'];
 		//select the service from the database
 		$query = $this->services_model->get_service($service_id);
-		
-		if ($query->num_rows() > 0)
-		{
-			$v_data['all_categories'] = $this->services_categories_model->all_categories();
-			$v_data['all_suppliers'] = $this->suppliers_model->all_suppliers();
-			$v_data['service'] = $query->result();
-			$data['content'] = $this->load->view('services/edit_service', $v_data, true);
-		}
-		
-		else
-		{
-			$data['content'] = 'service does not exist';
-		}
+		$v_data['service_id'] = $this->services_model->update_service($service_id);
+		$v_data['all_suppliers'] = $this->suppliers_model->all_suppliers();
+		$v_data['service'] = $query->result();
+		$data['content'] = $this->load->view('services/edit_service', $v_data, true);
 		
 		$this->load->view('admin/templates/general_page', $data);
 	}
@@ -318,17 +307,6 @@ class services extends MX_Controller
 	*/
 	public function delete_service($service_id)
 	{
-		//delete service image
-		$query = $this->services_model->get_service($service_id);
-		
-		if ($query->num_rows() > 0)
-		{
-			$result = $query->result();
-		
-		}
-		
-		//delete gallery images
-	
 		$this->services_model->delete_service($service_id);
 		$this->session->set_userdata('success_message', 'Service Has Been Deleted');
 		redirect('inventory/services');
@@ -372,7 +350,7 @@ class services extends MX_Controller
 	{
 		$this->services_model->activate_service($service_id);
 		$this->session->set_userdata('success_message', 'service activated successfully');
-		redirect('inventory/service');
+		redirect('inventory/services');
 	}
     
 	/*
@@ -385,7 +363,7 @@ class services extends MX_Controller
 	{
 		$this->services_model->deactivate_service($service_id);
 		$this->session->set_userdata('success_message', 'service disabled successfully');
-		redirect('inventory/service');
+		redirect('inventory/services');
 	}
 	
 	public function upload_images() 

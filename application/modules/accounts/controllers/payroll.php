@@ -109,6 +109,7 @@ class Payroll extends accounts
 		
 		$this->load->view('admin/templates/general_page', $data);
 	}
+
     
 	/*
 	*
@@ -132,7 +133,7 @@ class Payroll extends accounts
 				$this->session->set_userdata('branch_name', $branch_name);
 			}
 			
-			else
+			else 
 			{
 				$where = 'personnel_type_id = 1 AND personnel_status != 0';
 			}
@@ -428,7 +429,52 @@ class Payroll extends accounts
 		$this->pdf->render();
 		$this->pdf->stream("Payroll for ".$data['month']." ".$data['year'].".pdf");*/
 	}
+	public function print_monthly_payslips($payroll_id)
+	{
+		$where = 'personnel_status = 1 AND personnel_type_id = 1';
+		
+		$this->db->where('payroll.branch_id = branch.branch_id AND payroll.payroll_id = '.$payroll_id);
+		$branches = $this->db->get('payroll, branch');
+		
+		if($branches->num_rows() > 0)
+		{
+			$row = $branches->result();
+			$branch_id = $row[0]->branch_id;
+			$branch_name = $row[0]->branch_name;
+			$branch_image_name = $row[0]->branch_image_name;
+			$branch_address = $row[0]->branch_address;
+			$branch_post_code = $row[0]->branch_post_code;
+			$branch_city = $row[0]->branch_city;
+			$branch_phone = $row[0]->branch_phone;
+			$branch_email = $row[0]->branch_email;
+			$branch_location = $row[0]->branch_location;
+			$where .= ' AND branch_id = '.$branch_id;
+		}
+		
+		$data['branch_name'] = $branch_name;
+		$data['branch_image_name'] = $branch_image_name;
+		$data['branch_id'] = $branch_id;
+		$data['branch_address'] = $branch_address;
+		$data['branch_post_code'] = $branch_post_code;
+		$data['branch_city'] = $branch_city;
+		$data['branch_phone'] = $branch_phone;
+		$data['branch_email'] = $branch_email;
+		$data['branch_location'] = $branch_location;
+		
+		$data['payroll_id'] = $payroll_id;
+		$data['payroll'] = $this->payroll_model->get_payroll($payroll_id);
+		$data['query'] = $this->personnel_model->retrieve_payroll_personnel($where);
+			
+		$data['payments'] = $this->payroll_model->get_all_payments();
+		$data['benefits'] = $this->payroll_model->get_all_benefits();
+		$data['allowances'] = $this->payroll_model->get_all_allowances();
+		$data['deductions'] = $this->payroll_model->get_all_deductions();
+		$data['savings'] = $this->payroll_model->get_all_savings();
+		$data['loan_schemes'] = $this->payroll_model->get_all_loan_schemes();
+		$data['other_deductions'] = $this->payroll_model->get_all_other_deductions();
 	
+		$this->load->view('payroll/monthly_payslips', $data);
+	}
 	public function add_new_nhif()
 	{
 		$this->form_validation->set_rules('nhif_from', 'From', 'required|numeric|xss_clean');

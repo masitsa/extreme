@@ -54,17 +54,17 @@ class Reports_model extends CI_Model
 		}
 		if($where == NULL)
 		{
-			$where = 'visit.visit_id = visit_department.visit_id AND visit.close_card = 0 AND visit.visit_date = \''.$date.'\'';
+			$where = 'requests.deleted = 0 AND requests.created = \''.$date.'\'';
 		}
 		
 		else
 		{
-			$where .= ' AND visit.visit_id = visit_department.visit_id AND visit.close_card = 0 AND visit.visit_date = \''.$date.'\' ';
+			$where = 'requests.deleted = 0 AND requests.created = \''.$date.'\'';
 		}
 		
-		$this->db->select('COUNT(visit.visit_id) AS queue_total');
+		$this->db->select('COUNT(requests.request_id) AS queue_total');
 		$this->db->where($where);
-		$query = $this->db->get('visit, visit_department');
+		$query = $this->db->get('requests');
 		
 		$result = $query->row();
 		
@@ -105,8 +105,9 @@ class Reports_model extends CI_Model
 	
 	public function get_all_payment_methods()
 	{
+		$this->db->from('requests');
 		$this->db->select('*');
-		$query = $this->db->get('payment_method');
+		$query = $this->db->get('');
 		
 		return $query;
 	}

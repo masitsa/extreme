@@ -21,13 +21,79 @@ class Items_model extends CI_Model
 		return $query;
 		
 	}
-	
-	public function all_unselected_items($request_id){
+	public function all_unselected_items($request_id)
+	{
 		
 		$query = $this->db->query('select * from item where item_status_id = 1 and item_id not in(select item_id from request_item where request_id='.$request_id.')');
 		
 		return $query;
 	}
+	
+	//get the condition where the item is at
+	public function get_condition_name($condition_id)
+	{
+		$this->db->select('condition_name');
+		$this->db->where('condition_id ='.$condition_id);		
+		$query = $this->db->get('conditions');
+		
+		return $query;
+	}
+	
+	//get the location of the item
+	public function get_location_name($location_id)
+	{
+		$this->db->select('location_name');
+		$this->db->where('location_id = '.$location_id);		
+		$query = $this->db->get('location');
+	
+		return $query;
+	}
+	
+	// edit the inventory item selected
+	public function update_inventory_item($inventory_id)
+	{
+		$data = array(
+				'condition_id'=>$this->input->post('condition_id'),
+				'location_id'=>$this->input->post('location_id'),
+				'usage_status_id' =>$this->input->post('status_id'),
+				'serial_number'=>$this->input->post('serial_number'),
+				'barcode_name'=>$this->input->post('asset_barcode'),
+				'inventory_description'=>$this->input->post('inventory_description'),
+				);
+		$this->db->where('inventory_id', $inventory_id);
+		if($this->db->update('inventory', $data))
+		{
+			//update invetory item
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	//delete an item in the inventory
+	public function delete_inventory_item($inventory_id)
+	{
+		$this->db->where('inventory_id', $inventory_id);	
+			if($this->db->delete('inventory'))
+			{
+				return TRUE;
+			}
+			else{
+				return FALSE;
+			}
+	}
+	
+	//name of the item in the inventory
+		public function get_item_name($item_id)
+	{
+		$this->db->select('item_name');
+		$this->db->where('item_id = '.$item_id);		
+		$query = $this->db->get('item');
+	
+		return $query;
+	}
+	
 	public function get_all_items($table, $where, $per_page, $page, $order, $order_method)
 	{
 		$this->db->from($table);
@@ -56,41 +122,33 @@ class Items_model extends CI_Model
 		
 		$data = array(
 				'item_name'=>ucwords(strtolower($this->input->post('item_name'))),
-				'item_status_id'=>$this->input->post('item_status_id'),
-				'supplier_id'=>$this->input->post('store_id'),
-				'quantity'=>$this->input->post('quantity'),
-				'item_unit_price'=>$this->input->post('item_unit_price'),
-				'asset_id'=>$this->input->post('asset_id'),
-				'purchase_price'=>$this->input->post('purchase_price'),
-				'scrap_value'=>$this->input->post('scrap_value'),
-				'condition'=>$this->input->post('condition'),
-				'serial_number'=>$this->input->post('serial_number'),
-				'asset_barcode'=>$this->input->post('asset_barcode'),
-				'condition_id'=>$this->input->post('condition_id'),
-				'status'=>$this->input->post('status'),
-				'model'=>$this->input->post('model'),
-				'brand'=>$this->input->post('brand'),
-				'location'=>$this->input->post('location'),
-				'manufacturer'=>$this->input->post('manufacturer'),
-				'minimum_hiring_price'=>$this->input->post('minimum_hiring_price'),
-				'item_description'=>$this->input->post('item_description'),
 				'item_category_id'=>$this->input->post('item_category_id'),
+				'supplier_id'=>$this->input->post('store_id'),
+				'manufacturer_id' =>$this->input->post('manufacturer_id'),
+				'brand_id'=>$this->input->post('brand_id'),
+				'model_id'=>$this->input->post('model_id'),
+				'item_hiring_price'=>$this->input->post('item_hiring_price'),
+				'minimum_hiring_price'=>$this->input->post('minimum_hiring_price'),
+				'purchase_price'=>$this->input->post('purchase_price'),
+				'current_value'=>$this->input->post('current_value'),
+				'scrap_value'=>$this->input->post('scrap_value'),
+				'item_status_id'=>$this->input->post('item_status_id'),
+				'item_description'=>$this->input->post('item_description'),
+				'created'=>date('Y-m-d H:i:s'),
+				'created_by'=>$this->session->userdata('personnel_id'),
 				'last_modified'=>date('Y-m-d H:i:s'),
 				'modified_by'=>$this->session->userdata('personnel_id'),
-				'created'=>date('Y-m-d H:i:s'),
 				'product_deleted'=>0,
-				//'deleted_on'=>date('Y-m-d H:i:s'),
-				//'deleted_by'=>$this->session->userdata('personnel_id'),
-				'created_by'=>$this->session->userdata('personnel_id'),
 				
 			);
 			
-		if($this->db->insert('item', $data))
+		if($this->db->insert('item',$data))
 		{
 			
 			return TRUE;
 		}
-		else{
+		else
+		{
 			return FALSE;
 		}
 		
@@ -105,16 +163,22 @@ class Items_model extends CI_Model
 	{
 		$data = array(
 				'item_name'=>ucwords(strtolower($this->input->post('item_name'))),
-				'item_status_id'=>$this->input->post('item_status_id'),
-				'item_description'=>$this->input->post('item_description'),
+				'item_category_id'=>$this->input->post('item_category_id'),
+				'supplier_id'=>$this->input->post('store_id'),
+				'manufacturer_id' =>$this->input->post('manufacturer_id'),
+				'brand_id'=>$this->input->post('brand_id'),
+				'model_id'=>$this->input->post('model_id'),
 				'item_hiring_price'=>$this->input->post('item_hiring_price'),
 				'minimum_hiring_price'=>$this->input->post('minimum_hiring_price'),
-				'item_unit_price'=>$this->input->post('item_unit_price'),
-				'item_category_id'=>$this->input->post('item_category_id'),
+				'purchase_price'=>$this->input->post('purchase_price'),
+				'current_value'=>$this->input->post('current_value'),
+				'scrap_value'=>$this->input->post('scrap_value'),
+				'item_status_id'=>$this->input->post('item_status_id'),
+				'item_description'=>$this->input->post('item_description'),
 				'created'=>date('Y-m-d H:i:s'),
-				'quantity'=>$this->input->post('quantity'),
 				'created_by'=>$this->session->userdata('personnel_id'),
 				'modified_by'=>$this->session->userdata('personnel_id'),
+				'last_modified'=>date('Y-m-d H:i:s'),
 			);
 			
 		$this->db->where('item_id', $item_id);
@@ -128,7 +192,88 @@ class Items_model extends CI_Model
 		}
 	}
 	
+	//all models 
+	public function get_all_models()
+	{
+		$this->db->select('models.*');
+		$this->db->from('models');
+		$query = $this->db->get();
+		return $query;
+	}
 	
+	//get all status
+	public function get_all_status()
+	{
+		$this->db->select('item_status.*');
+		$this->db->from('item_status');
+		$query = $this->db->get();
+		return $query;
+	}
+	//get all locations
+	public function get_all_locations()
+	{
+		$this->db->select('location.*');
+		$this->db->from('location');
+		$query = $this->db->get();
+		return $query;
+	}
+	//get all brands available
+	public function get_all_brands()
+	{
+		$this->db->select('brand.*');
+		$this->db->from('brand');
+		$query = $this->db->get();
+		return $query;
+	}
+	
+	//inventory items insertion
+	public function add_inventory_item($item_id)
+	{
+		$data = array(
+				'item_id'=>$item_id,
+				'condition_id'=>$this->input->post('condition_id'),
+				'barcode_name'=>$this->input->post('asset_barcode'),
+				'location_id' =>$this->input->post('location_id'),
+				'serial_number'=>$this->input->post('serial_number'),
+				'usage_status_id'=>$this->input->post('status_id'),
+				'inventory_description'=>$this->input->post('inventory_description'),
+				);
+				if($this->db->insert('inventory',$data))
+				{
+			
+					return TRUE;
+				}
+				else
+				{
+					return FALSE;
+				}
+	}
+	
+	//get inventory for a particular item
+	public function get_item_inventory($item_id)
+	{
+		$this->db->select('inventory.*');
+		$this->db->from('inventory');
+		$this->db->where('item_id = '.$item_id);
+		$query = $this->db->get();
+		return $query;
+	}
+	//get all conditions
+	public function all_conditions()
+	{
+		$this->db->select('conditions.*');
+		$this->db->from('conditions');
+		$query = $this->db->get();
+		return $query;
+	}
+	//get all manufacturers
+	public function get_all_manufacturers()
+	{
+		$this->db->select('manufacturer.*');
+		$this->db->from('manufacturer');
+		$query = $this->db->get();
+		return $query;
+	}
 	
 	/*
 	*	get a single item's details
@@ -251,7 +396,7 @@ class Items_model extends CI_Model
 	{
 		$this->db->from('item_category');
 		$this->db->select('category_name');
-		$this->db->where('item_category_id ='.$item_category_id);
+		$this->db->where('item_category_id = '.$item_category_id);
 		$query = $this->db->get('');
 		$category = $query->result();
 		if($category > 0)
@@ -264,10 +409,10 @@ class Items_model extends CI_Model
 		return $category_name;
 	}
 		
-	public function check_current_number_exisits($asset_id)
+	public function check_current_number_exisits($item_id)
 	{
 		$this->db->from('item');
-		$this->db->where('asset_id', $asset_id);
+		$this->db->where('item_id', $item_id);
 		
 		$query = $this->db->get('');
 		
@@ -392,6 +537,7 @@ class Items_model extends CI_Model
 	{
 		//count total rows
 		$total_rows = count($array);
+		//echo $total_rows;
 		$total_columns = count($array[0]);//var_dump($array);die();
 		
 		//if products exist in array
@@ -416,7 +562,7 @@ class Items_model extends CI_Model
 			//retrieve the data from array
 			for($r = 1; $r < $total_rows; $r++)
 			{
-				$asset_id = $array[$r][0];
+				$item_id = $array[$r][0];
 				$asset_barcode = $array[$r][1];
 				$serial_number = $array[$r][2];
 				$model = $array[$r][3];
@@ -429,38 +575,41 @@ class Items_model extends CI_Model
 				$brand = $array[$r][10];
 				$manufacturer = $array[$r][11];
 				$item_category_id = $array[$r][12];
+				echo $item_category_id;
 				$location = $array[$r][13];
 				$status = $array[$r][14];
 				$condition = $array[$r][15];
 				$item_description = $array[$r][16];
 				
-				$category_name = $this->get_category_name($item_category_id);
+				$category_name = $this->items_model->get_category_name($array[$r][12]);
 				
 				$items['item_name'] = $item_name;
-				$items['asset_barcode'] = $asset_barcode;
-				$items['asset_id'] = $asset_id;
-				$items['model'] = $model;
-				$items['condition_id'] = $condition_id;
+				$items['item_id'] = $item_id;
+				$items['model_id'] = $model;
+				$items['purchase_price'] = $item_price;
 				$items['scrap_value'] = $scrap_value;
-				$items['purchase_price'] = $purchase_price;
-				$items['checked_out'] = $checked_out;
-				$items['brand'] = $brand;
-				$items['manufacturer'] = $manufacturer;
-				$items['item_category_id'] = $item_category_id;
-				$items['location'] = $location;
-				$items['status'] = $status;
 				$items['item_description'] = $item_description;
-				$items['condition'] = $condition;
-				$items['serial_number'] = $serial_number;
-				$items['item_unit_price'] = $item_price;
+				$items['purchase_price'] = $purchase_price;
+				$items['brand_id'] = $brand;
+				$items['manufacturer_id'] = $manufacturer;
+				$items['item_category_id'] = $item_category_id;
+				$items1['location_id'] = $location;
+				$items1['usage_status_id'] = $status;
+				$items1['condition_id'] = $condition;
+				$items1['barcode_name'] = $asset_barcode;
+				$items1['serial_number'] = $serial_number;
+				$items1['item_id'] = $item_id;
+				
 				// check if item exist
 				$comment ='';
 				if(!empty($items['item_name']))
 				{
-					if(!empty($items['asset_id']))
+					
+					if(!empty($items['item_id']))
 					{
+						
 						// check if the number already exists
-						if($this->check_current_number_exisits($asset_id))
+						if($this->check_current_number_exisits($item_id))
 						{
 							//number exists
 							$comment = '<br/>Duplicate item entered';
@@ -469,11 +618,13 @@ class Items_model extends CI_Model
 						else
 						{
 							// number does not exisit
-							//save product in the db
+							//save product in the db								$this->db->insert('inventory', $items1);
+							//var_dump($items); die();
+
 							if($this->db->insert('item', $items))
 							{
 								$item_id = $this->db->insert_id();
-							
+								$this->db->insert('inventory', $items1);
 								$comment = '<br/>Item successfully added to the database';
 								$class = 'success';
 							}
@@ -503,7 +654,7 @@ class Items_model extends CI_Model
 							<td>'.$r.'</td>
 							<td>'.$items['item_name'].'</td>
 							<td>'.$category_name.'</td>
-							<td>'.$items['item_unit_price'].'</td>
+							<td>'.$items['purchase_price'].'</td>
 							<td>1</td>
 							<td>'.$items['item_description'].'</td>
 							<td>'.$comment.'</td>

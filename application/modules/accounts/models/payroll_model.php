@@ -440,7 +440,7 @@ class Payroll_model extends CI_Model
 	
 	public function get_table_id($table_name)
 	{
-		$table = "table";
+		$table = "tables";
 		$where = "table_name = '$table_name'";
 		
 		$this->db->where($where);

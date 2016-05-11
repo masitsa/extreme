@@ -58,50 +58,14 @@ class Charts extends auth
 	{
 		$highest_bar = 0;
 		//nurse total
-		$nurse_total = $this->reports_model->get_queue_total(NULL, 'visit_department.department_id = 7');
+		$nurse_total = $this->reports_model->get_queue_total(NULL, 'requests.request_id = 0');
 		$result['bars'] = $nurse_total;
 		
 		if($nurse_total > $highest_bar)
 		{
 			$highest_bar = $nurse_total;
 		}
-		
-		//doctor total
-		$doctor_total = $this->reports_model->get_queue_total(NULL, 'visit_department.department_id = 2');
-		$result['bars'] .= $doctor_total.',';
-		
-		if($doctor_total > $highest_bar)
-		{
-			$highest_bar = $doctor_total;
-		}
-		
-		//dental total
-		$dental_total = $this->reports_model->get_queue_total(NULL, 'visit_department.department_id = 10');
-		$result['bars'] .= $dental_total.',';
-		
-		if($dental_total > $highest_bar)
-		{
-			$highest_bar = $dental_total;
-		}
-		
-		//lab total
-		$lab_total = $this->reports_model->get_queue_total(NULL, 'visit_department.department_id = 4');
-		$result['bars'] .= $lab_total.',';
-		
-		if($lab_total > $highest_bar)
-		{
-			$highest_bar = $lab_total;
-		}
-		
-		//pharmacy total
-		$pharmacy_total = $this->reports_model->get_queue_total(NULL, 'visit_department.department_id = 5');
-		$result['bars'] .= $pharmacy_total;
-		
-		if($pharmacy_total > $highest_bar)
-		{
-			$highest_bar = $pharmacy_total;
-		}
-		
+
 		$result['highest_bar'] = $highest_bar;
 		
 		echo json_encode($result);
@@ -111,7 +75,7 @@ class Charts extends auth
 	{
 		//get all payment methods
 		$methods_result = $this->reports_model->get_all_payment_methods();
-		
+		$payment_method_id = 0;
 		$totals = '';
 		$highest_bar = 0;
 		$r = 0;
@@ -122,7 +86,8 @@ class Charts extends auth
 			
 			foreach($result as $res)
 			{
-				$payment_method_id = $res->payment_method_id;
+
+				$payment_method_id = $res->request_id;
 				
 				//get method total
 				$total = $this->reports_model->get_payment_method_total($payment_method_id);

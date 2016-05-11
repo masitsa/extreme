@@ -9,6 +9,7 @@ class Hr extends MX_Controller
 		$this->load->model('auth/auth_model');
 		$this->load->model('site/site_model');
 		$this->load->model('admin/users_model');
+		$this->load->model('admin/file_model');
 		$this->load->model('admin/sections_model');
 		$this->load->model('admin/admin_model');
 		$this->load->model('personnel_model');
@@ -16,6 +17,7 @@ class Hr extends MX_Controller
 		$this->load->model('hr_model');
 		$this->load->model('schedules_model');
 		$this->load->model('admin/branches_model');
+		$this->load->model('tutorial_model');
 		
 		if(!$this->auth_model->check_login())
 		{

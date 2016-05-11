@@ -45,7 +45,7 @@
                             </div>
                         </div>
                         <div class="summary-footer">
-                            <!--<a class="text-muted text-uppercase" href="<?php echo base_url()."data/reports/patients.php";?>">(report)</a>-->
+                            <!--<a class="text-muted text-uppercase" href="<?php echo base_url()."requests-reports";?>">(report)</a>-->
                         </div>
                     </div>
                 </div>
@@ -133,29 +133,4 @@ $.ajax({
 	}
 });
 
-//Get payment methods
-$.ajax({
-	type:'POST',
-	url: config_url+"administration/charts/payment_methods",
-	cache:false,
-	contentType: false,
-	processData: false,
-	dataType: "json",
-	success:function(data){
-		
-		var bars = data.bars;
-		var queue_total = bars.split(',').map(function(item) {
-			return parseInt(item, 10);
-		});
-		
-		$("#payment_methods").sparkline(queue_total, {
-			type: 'bar',
-			height: data.highest_bar,
-			barWidth: 4,
-    		barColor: '#94B86E'});
-	},
-	error: function(xhr, status, error) {
-		alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
-	}
-});
 		</script>

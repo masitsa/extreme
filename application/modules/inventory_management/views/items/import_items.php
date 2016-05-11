@@ -59,7 +59,7 @@
                         <li>Download the import template <a href="<?php echo site_url().'item/import-template';?>">here.</a></li>
                         
                         <li>Save your file as a <strong>csv</strong> file before importing</li>
-                        <li>After adding your patients to the import template please import them using the button below</li>
+                        <li>After adding your items to the import template please import them using the button below</li>
                     </ul>
                 </div>
             </div>

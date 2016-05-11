@@ -261,6 +261,7 @@ $route['accounts/payroll/print-payslip/(:num)/(:num)'] = 'accounts/payroll/print
 $route['accounts/payroll/download-payslip/(:num)/(:num)'] = 'accounts/payroll/download_payslip/$1/$2';
 $route['accounts/payroll-payslips/(:num)'] = 'accounts/payroll/payroll_payslips/$1';
 $route['accounts/salary-data'] = 'accounts/payroll/salaries';
+$route['print-payslip/(:num)'] = 'admin/payslip_details/$1';
 $route['accounts/search-payroll'] = 'accounts/payroll/search_payroll';
 $route['accounts/close-payroll-search'] = 'accounts/payroll/close_payroll_search';
 $route['accounts/create-payroll'] = 'accounts/payroll/create_payroll';
@@ -314,7 +315,7 @@ $route['accounts/payroll/view-payslip/(:num)'] = 'accounts/payroll/view_payslip/
 
 $route['accounts/insurance-invoices'] = 'administration/reports/debtors_report_invoices/0';
 $route['accounts/insurance-invoices/(:num)'] = 'administration/reports/debtors_report_invoices/$1';
-
+$route['accounts/print-month-payslips/(:num)'] = 'accounts/payroll/print_monthly_payslips/$1';
 //Always comes last
 $route['accounts/payroll/(:any)/(:any)'] = 'accounts/payroll/payrolls/$1/$2';
 $route['accounts/payroll/(:any)/(:any)/(:num)'] = 'accounts/payroll/payrolls/$1/$2/$3';
@@ -655,7 +656,10 @@ $route['inventory/add-item'] = 'inventory_management/items/add_item';
 $route['inventory/activation/activate/(:num)'] = 'inventory_management/items/activate_item/$1';
 $route['inventory/activation/deactivate/(:num)'] = 'inventory_management/items/deactivate_item/$1';
 $route['inventory/edit-item/(:num)'] = 'inventory_management/items/edit_item/$1';
+$route['inventory/edit-service/(:num)'] = 'inventory_management/services/edit_service/$1';
 $route['inventory/delete-item/(:num)'] = 'inventory_management/items/delete_item/$1';
+$route['inventory-management/delete-service/(:num)'] = 'inventory_management/services/delete_service/$1';
+
 $route['item/validate-import'] = 'inventory_management/items/do_items_import';
 $route['item/import-template'] = 'inventory_management/items/import_template';
 $route['import/import-assets'] = 'inventory_management/items/import_items';
@@ -664,6 +668,8 @@ $route['service/import-template'] = 'inventory_management/services/import_templa
 $route['inventory/services'] = 'inventory_management/services';
 $route['inventory/add-service'] = 'inventory_management/services/add_service';
 $route['service/validate-import'] = 'inventory_management/services/do_services_import';
+$route['inventory-management/activation/activate/(:num)'] = 'inventory_management/services/activate_service/$1';
+$route['inventory-management/activation/deactivate/(:num)'] = 'inventory_management/services/deactivate_service/$1';
 
 $route['inventory/product-details/(:num)'] = 'inventory_management/manage_product/$1';
 $route['inventory/manage-store'] = 'inventory_management/manage_store';
@@ -692,5 +698,10 @@ $route['inventory/close-product-search'] = 'inventory_management/close_inventory
 
 $route['orders'] = 'inventory/orders/index';
 
+//inventory routes
+$route['inventory/inventory-add-item/(:num)'] = 'inventory_management/items/add_inventory_item/$1';
+$route['inventory/inventory-edit-item/(:num)']= 'inventory_management/items/edit_inventory_item/$1';
+$route['inventory/delete-inventory-item/(:num)']='inventory_management/items/delete_inventory_item/$1';
 
-
+//events
+$route['inventory/add-request-event/(:num)/(:any)'] = 'inventory/requests/add_request_event/$1/$2';

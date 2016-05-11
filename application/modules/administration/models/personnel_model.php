@@ -18,6 +18,15 @@ class Personnel_model extends CI_Model
 		return $query;
 	}
 	
+	//all personnel
+	public function all_personnel()
+	{
+		$this->db->where('personnel_status = 1');
+		$query = $this->db->get('personnel');
+		
+		return $query;
+	}
+	
 	public function get_personnel_departments($personnel_id)
 	{
 		$this->db->from('personnel_department, departments');

@@ -105,9 +105,6 @@ class requests_model extends CI_Model
 	
 	public function get_request_creator($request_id)
 	{
-  
- 
-		$this->db->from('request_status');
 		$this->db->select('requests.*,  personnel.personnel_onames, personnel.personnel_fname');
 		$this->db->where('requests.created_by = personnel.personnel_id AND requests.request_id ='.$request_id);
 		$query = $this->db->get('requests,personnel');
@@ -120,8 +117,6 @@ class requests_model extends CI_Model
 	
 	public function get_request_approver($request_id)
 	{
-		
-		$this->db->from('request_status');
 		$this->db->select('requests.*,  personnel.personnel_onames, personnel.personnel_fname');
 		$this->db->where('requests.approved_by = personnel.personnel_id AND requests.request_id ='.$request_id);
 		$query = $this->db->get('requests,personnel');
@@ -129,8 +124,10 @@ class requests_model extends CI_Model
 		{
 			$personnel_fname=$key->personnel_fname;
 		}		
-		return $personnel_fname;		
-		}
+		return $personnel_fname;
+				
+	}
+	
 		
 		public function get_request_date($request_id)
 		{
@@ -148,9 +145,11 @@ class requests_model extends CI_Model
 		$this->db->select('requests.*,  personnel.personnel_onames, personnel.personnel_fname');
 		$this->db->where('requests.approved_by = personnel.personnel_id AND requests.request_id ='.$request_id);
 		$query = $this->db->get('requests,personnel');
+		$last_modified = '';
+		
 		foreach ($query->result() as $key)
 		{
-		$last_modified=$key->last_modified;	
+			$last_modified = $key->last_modified;	
 		}		
 		return $last_modified;
 	}
@@ -161,9 +160,9 @@ class requests_model extends CI_Model
 		$this->db->select('requests.*, client.client_name, personnel.personnel_onames, 	personnel.personnel_fname, request_status.request_status_name');
 		$this->db->where('requests.client_id = client.client_id 
 		AND requests.created_by = personnel.personnel_id
-		AND requests.deleted = 0		
-		AND requests.request_status_id= request_status.request_status_id	
-		AND requests.modified_by = personnel.personnel_id AND requests.request_id = '.$request_id);
+		AND requests.request_status_id= request_status.request_status_id
+		AND requests.deleted = 0
+		AND requests.request_id = '.$request_id);
 		$query = $this->db->get('requests,client,personnel,request_status');
 		
 		return $query;
@@ -171,7 +170,10 @@ class requests_model extends CI_Model
 		
 		/*
 	*	Retrieve all request items of an request
-	*
+	*	
+				
+		AND requests.request_status_id= request_status.request_status_id	
+		AND requests.modified_by = personnel.personnel_id 
 	*/
 	public function get_request_items($request_id)
 	{
@@ -247,9 +249,18 @@ class requests_model extends CI_Model
 		$result = $query->result();
 		foreach($result AS $key)
 		{
-		return $key->personnel_fname;
+			return $key->personnel_fname;
 		}
 	}
+		public function get_client_name($request_id){
+		$query=$this->db->query('select client_name from client where client_id in (select client_id from requests where request_id =' .$request_id.')');
+		$result = $query->result();
+		foreach($result AS $key)
+		{
+		return $key->client_name;
+		}
+	}
+	
 	public function add_request()
 	{
 
@@ -686,4 +697,36 @@ class requests_model extends CI_Model
 		}
 		return $item;
 	}
-}
+	
+	//request_event
+	public function add_request_event($request_id)
+	{
+		$event_id = $this->input->post('event_id');
+		$event_name = $this->input->post('event_name');
+		$event_venue = $this->input->post('venue');
+		$start_date = $this->input->post('start_date');
+		$end_date = $this->input->post('end_date');
+		$budget = $this->input->post('budget');
+		$event_pax = $this->input->post('pax');
+		$data = array(
+						
+			'request_id'=>$request_id,
+			'event_id'=>$event_id,
+			'request_event_name'=>$event_name,
+			'request_event_venue'=>$event_venue,
+			'request_event_start_date'=>$start_date,
+			'request_event_end_date'=>$end_date,
+			'request_event_budget'=>$budget,
+			'request_event_start_date'=>$start_date
+		);
+				
+		if($this->db->insert('request_event', $data))
+		{
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+	}

@@ -1,4 +1,13 @@
 <?php
+$request_number = set_value();
+$request_date = set_value();
+$created = set_value();
+$request_instructions = set_value();
+$request_status_name = set_value();
+$client_name = set_value();
+$personnel_fname = set_value();
+$personnel_onames = set_value();
+
 $request_approval_status = $this->requests_model->get_request_approval_status($request_id);
 
 if($request_approval_status == 0)
@@ -7,20 +16,21 @@ if($request_approval_status == 0)
 
 	<?php
 		$request_details=$this->requests_model->get_request_details($request_id);
-		
+		//var_dump ($request_details);
+		//die();
 		foreach($request_details->result() as $results)
 		{
 			$request_id = $results->request_id;
 			$request_number = $results->request_number;
-			$request_date=$results->request_date;
-			$created=$results->created;
-			$request_instructions=$results->request_instructions;
-			$request_status_name=$results->request_status_name;
-			$client_name=$results->client_name;
-			$personnel_fname=$results->personnel_fname;
-			$personnel_onames=$results->personnel_onames;
+			$request_date = $results->request_date;
+			$created = $results->created;
+			$request_instructions = $results->request_instructions;
+			$request_status_name = $results->request_status_name;
+			$client_name = $results->client_name;
+			$personnel_fname = $results->personnel_fname;
+			$personnel_onames = $results->personnel_onames;
 			
-					}
+		}
 	
 	
 	?>
@@ -29,9 +39,9 @@ if($request_approval_status == 0)
 	    <header class="panel-heading">
 	        <h2 class="panel-title pull-left">Add Request Item</h2>
 	        <div class="widget-icons pull-right">
-	            <a href="<?php echo base_url();?>requests" class="btn btn-primary btn-sm">Back to Requests</a>
-	          </div>
-	          <div class="clearfix"></div>
+	          <a href="<?php echo base_url();?>requests" class="btn btn-primary btn-sm">Back to Requests</a>
+	        </div>
+	        <div class="clearfix"></div>
 	    </header>
 	    <div class="panel-body">
 	    	<?php
@@ -70,7 +80,8 @@ if($request_approval_status == 0)
 				                    		<?php
 				                    		if($items_query->num_rows() > 0)
 				                    		{
-				                    			foreach ($items_query->result() as $key ) {
+				                    			foreach ($items_query->result() as $key ) 
+												{
 				                    				# code...
 				                    				$item_id = $key->item_id;
 				                    				$item_name = $key->item_name;
@@ -149,20 +160,23 @@ else if($request_approval_status == 2 || $request_approval_status == 3)
 						
 					<?php
 		$request_details=$this->requests_model->get_request_details($request_id);
-		
-		foreach($request_details->result() as $results)
+		if($request_details->num_rows() > 0)
 		{
-			$request_id = $results->request_id;
-			$request_number = $results->request_number;
-			$request_date=$results->request_date;
-			$created=$results->created;
-			$request_instructions=$results->request_instructions;
-			$request_status_name=$results->request_status_name;
-			$client_name=$results->client_name;
-			$personnel_fname=$results->personnel_fname;
-			$personnel_onames=$results->personnel_onames;
+			foreach($request_details->result() as $results)
+			{
+				$request_id = $results->request_id;
+				$request_number = $results->request_number;
+				$request_date = $results->request_date;
+				$created = $results->created;
+				$request_instructions = $results->request_instructions;
+				$request_status_name = $results->request_status_name;
+				$client_name = $results->client_name;
+				$personnel_fname = $results->personnel_fname;
+				$personnel_onames = $results->personnel_onames;
+				
+			}
 			
-					}
+		}
 	
 	
 	?>
@@ -494,7 +508,7 @@ else if($request_approval_status == 2 || $request_approval_status == 3)
 							else
 							{
 								echo '
-									<div class="alert alert-info">Your Request Has Been Approved</div>
+									<div class="alert alert-info"></div>
 								';
 							}
 							?>

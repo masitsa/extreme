@@ -100,14 +100,14 @@ echo $this->load->view('inventory/search/search_items', '' , TRUE);
 								$minimum_hiring_price = $row->minimum_hiring_price;
 								$item_description = $row->item_description;
 								//$store_name = $row->store_name;
-								$branch_code = $row->branch_code;
+								//$branch_code = $row->branch_code;
 								$created = $row->created;
 								$created_by = $row->created_by;
 								$last_modified = $row->last_modified;
 								//$modified_by = $row->modified_by;
 								$category_id = $row->item_category_id;
 								//$store_id = $row->store_id;
-								$quantity = $row->quantity;
+								//$quantity = $row->quantity;
 
 								$item_hiring_price = $row->item_hiring_price;
 		                        
@@ -198,7 +198,7 @@ echo $this->load->view('inventory/search/search_items', '' , TRUE);
 										<td>'.$item_name.'</td>
 										<td>'.$parent_category.'</td>
 		                              <td>'.$minimum_hiring_price.'</td>
-									   <td>'.$quantity.'</td>
+									   <td></td>
 									   <td>'.$item_description.'</td>
 		                                <td>'.$status.'</td>
 		                                <td>'.$button.'</td>

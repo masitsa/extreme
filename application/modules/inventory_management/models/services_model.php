@@ -18,7 +18,7 @@ class Services_model extends CI_Model
 	
 	public function all_unselected_services($request_id){
 		
-		$query = $this->db->query('select * from service where service_status_id = 1 and service_id not in(select service_id from request_service where request_id='.$request_id.')');
+		$query = $this->db->query('select * from services where service_status_id = 1 and service_id not in(select service_id from request_service where request_id='.$request_id.')');
 		
 		return $query;
 	}
@@ -87,20 +87,24 @@ class Services_model extends CI_Model
 	{
 		$data = array(
 				'service_name'=>ucwords(strtolower($this->input->post('service_name'))),
-				'service_status_id'=>$this->input->post('service_status_id'),
+				'preffered_vendor'=>$this->input->post('store_id'),
+				'quantity_on_hand'=>$this->input->post('quantity_on_hand'),
+				'service_cost'=>$this->input->post('service_cost'),
+				'service_price'=>$this->input->post('service_price'),
+				'reorder_point'=>$this->input->post('reorder_point'),
+				'quantity_on_sales_order'=>$this->input->post('quantity_on_sales_order'),
+				'quantity_on_purchase_order'=>$this->input->post('quantity_on_purchase_order'),
 				'service_description'=>$this->input->post('service_description'),
-				'service_hiring_price'=>$this->input->post('service_hiring_price'),
-				'minimum_hiring_price'=>$this->input->post('minimum_hiring_price'),
-				'service_unit_price'=>$this->input->post('service_unit_price'),
-				'service_category_id'=>$this->input->post('service_category_id'),
-				'created'=>date('Y-m-d H:i:s'),
-				'quantity'=>$this->input->post('quantity'),
-				'created_by'=>$this->session->userdata('personnel_id'),
 				'modified_by'=>$this->session->userdata('personnel_id'),
+				'created'=>date('Y-m-d H:i:s'),
+				'last_modified'=>date('Y-m-d H:i:s'),
+				'service_deleted'=>0,
+				'service_status_id'=>1,
+				'created_by'=>$this->session->userdata('personnel_id'),
 			);
 			
 		$this->db->where('service_id', $service_id);
-		if($this->db->update('service', $data))
+		if($this->db->update('services', $data))
 		{
 			//save locations
 			return TRUE;
@@ -117,20 +121,20 @@ class Services_model extends CI_Model
 	*	@param int $service_id
 	*
 	*/
-	public function get_service($service_id, $personnel_id = NULL)
+	public function get_service($service_id)
 	{
 		//retrieve all users
-		$this->db->from('service, service_category');
-		$this->db->select('service.*, service_category.category_name');
+		$this->db->from('services');
+		$this->db->select('services.*');
 		
-		if($personnel_id == NULL)
+		if($service_id != NULL)
 		{
-			$this->db->where('service.service_category_id = service_category.service_category_id AND service_id = '.$service_id);
+			$this->db->where('service_id = '.$service_id);
 		}
 		
 		else
 		{
-			$this->db->where('service.category_id = category.category_id AND service_id = '.$service_id.' AND service.created_by = '.$personnel_id);
+			$this->db->where('service_id = '.$service_id);
 		}
 		$query = $this->db->get();
 		
@@ -145,7 +149,7 @@ class Services_model extends CI_Model
 	public function get_service_shipping($service_id, $personnel_id = NULL)
 	{
 		//retrieve all users
-		$this->db->from('service');
+		$this->db->from('services');
 		
 		$this->db->where('service_id = '.$service_id.' AND service.created_by = '.$personnel_id);
 		$query = $this->db->get();
@@ -155,7 +159,7 @@ class Services_model extends CI_Model
 	public function recently_viewed_services()
 	{
 		//retrieve all users
-		$this->db->from('service, service_category');
+		$this->db->from('services, service_category');
 		$this->db->select('service.*, category.category_name');
 		$this->db->where('service.category_id = service_category.cservice_ategory_id  AND service.service_status_id = 1');
 		$this->db->order_by('service.last_viewed_date','desc');
@@ -172,12 +176,12 @@ class Services_model extends CI_Model
 	public function delete_service($service_id)
 	{
 		$data = array(
-			'product_deleted'=>1,
+			'service_deleted'=>1,
 			'deleted_on'=>date('Y-m-d H:i:s'),
 			'deleted_by'=>$this->session->userdata('personnel_id'),
 		);
 		$this->db->where('service_id', $service_id);	
-			if($this->db->update('service',$data))
+			if($this->db->update('services',$data))
 			{
 				return TRUE;
 			}
@@ -198,7 +202,7 @@ class Services_model extends CI_Model
 			);
 		$this->db->where('service_id', $service_id);
 		
-		if($this->db->update('service', $data))
+		if($this->db->update('services', $data))
 		{
 			return TRUE;
 		}
@@ -220,7 +224,7 @@ class Services_model extends CI_Model
 			);
 		$this->db->where('service_id', $service_id);
 		
-		if($this->db->update('service', $data))
+		if($this->db->update('services', $data))
 		{
 			return TRUE;
 		}
@@ -409,6 +413,7 @@ class Services_model extends CI_Model
 				$services['quantity_on_sales_order'] = $quantity_on_sales_order;
 				$services['quantity_on_purchase_order'] = $quantity_on_purchase_order;
 				$services['reorder_point'] = $reorder_point;
+				$services['service_status_id'] = 1;
 				$services['created_by'] = $this->session_userdata('personnel_id');
 				
 				// check if service exist

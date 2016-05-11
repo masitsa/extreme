@@ -4,9 +4,21 @@ require_once "./application/modules/hr/controllers/hr.php";
 
 class Personnel extends hr 
 {
+	var $document_upload_path;
+	var $document_upload_location;
+	var $personnel_path;
+	var $personnel_location;
+	
 	function __construct()
 	{
 		parent:: __construct();
+		
+		$this->load->library('image_lib');
+		$this->load->model('site/site_model');
+		$this->document_upload_path = realpath(APPPATH . '../assets/document_uploads');
+		$this->document_upload_location = base_url().'assets/document_uploads/';
+		$this->personnel_path = realpath(APPPATH . '../assets/personnel');
+		$this->personnel_location = base_url().'assets/personnel/';
 	}
     
 	/*
@@ -140,12 +152,35 @@ class Personnel extends hr
 	*	@param int $personnel_id
 	*
 	*/
-	public function edit_personnel($personnel_id) 
+	public function edit_personnel($personnel_id, $image_location = NULL) 
 	{
 		//open the add new personnel
 		$data['title'] = 'Edit ';
 		$v_data['title'] = $data['title'];
+		$v_data['personnel'] = $this->personnel_model->get_personnel($personnel_id);
+		$row = $v_data['personnel']->row();
 		
+		if($image_location == NULL)
+		{
+			$img = $row->image;
+			
+			if((empty($img)) || ($img == '0'))
+			{
+				$image_location = 'http://placehold.it/300x300?text=image';
+			}
+			
+			else
+			{
+				$image_location = $this->personnel_location.$img;
+			}
+		}
+		
+		else
+		{
+			$image_location = $this->personnel_location.$image_location;
+		}
+		
+		$v_data['image_location'] = $image_location;
 		$v_data['personnel_id'] = $personnel_id;
 		$v_data['branches'] = $this->branches_model->all_branches();
 		$v_data['relationships'] = $this->personnel_model->get_relationship();
@@ -154,12 +189,12 @@ class Personnel extends hr
 		$v_data['titles'] = $this->personnel_model->get_title();
 		$v_data['genders'] = $this->personnel_model->get_gender();
 		$v_data['job_titles_query'] = $this->personnel_model->get_job_titles();
-		$v_data['personnel'] = $this->personnel_model->get_personnel($personnel_id);
 		$v_data['emergency_contacts'] = $this->personnel_model->get_emergency_contacts($personnel_id);
 		$v_data['dependants'] = $this->personnel_model->get_personnel_dependants($personnel_id);
 		$v_data['jobs'] = $this->personnel_model->get_personnel_jobs($personnel_id);
-		$v_data['leave'] = $this->personnel_model->get_personnel_leave($personnel_id);
 		$v_data['roles'] = $this->personnel_model->get_personnel_roles($personnel_id);
+		$v_data['leave'] = $this->personnel_model->get_personnel_leave($personnel_id);
+		$v_data['personnel_other_documents'] = $this->personnel_model->get_document_uploads($personnel_id);
 		$v_data['leave_types'] = $this->personnel_model->get_leave_types();
 		$v_data['departments'] = $this->personnel_model->get_departments();
 		$v_data['personnel_types'] = $this->personnel_model->get_personnel_types();
@@ -230,6 +265,27 @@ class Personnel extends hr
     
     public function update_personnel_about_details($personnel_id)
     {
+		$resize['width'] = 400;
+		$resize['height'] = 400;
+		$image_location = 'http://placehold.it/300x300?text=image';
+		$image_error = '';
+		$this->session->unset_userdata('upload_error_message');
+		$image_upload_name = 'personnel_document_name';
+		$previous_image = $this->input->post('previous_image');
+		
+		//upload image if it has been selected
+		$response = $this->personnel_model->upload_image($this->personnel_path, $this->personnel_location, $resize, $image_upload_name, 'personnel_image', $previous_image);
+		
+		if($response)
+		{
+			$image_location = $this->personnel_location.$this->session->userdata($image_upload_name);
+		}
+		
+		else
+		{
+			$image_error = $this->session->userdata('upload_error_message');
+		}
+		
 		$this->form_validation->set_rules('branch_id', 'Branch', 'xss_clean');
     	$this->form_validation->set_rules('personnel_onames', 'Other Names', 'required|xss_clean');
 		$this->form_validation->set_rules('personnel_fname', 'First Name', 'required|xss_clean');
@@ -254,24 +310,49 @@ class Personnel extends hr
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{
-			
-			if($this->personnel_model->edit_personnel($personnel_id))
+			//update if no image upload errors
+			if(empty($image_error))
 			{
-				$this->session->set_userdata("success_message", "Personnel updated successfully updated");
-				redirect('human-resource/edit-personnel/'.$personnel_id);
+				//update personnel
+				$personnel = $this->personnel_model->get_personnel($personnel_id);
+				$row = $personnel->row();
+				
+				$image = $this->session->userdata($image_upload_name);
+				if(empty($image))
+				{
+					$image = $row->image;
+				}
+				
+				if($this->personnel_model->edit_personnel($personnel_id, $image))
+				{
+					$this->session->set_userdata('success_message', 'personnel\'s general details updated successfully');
+					$this->session->unset_userdata($image_upload_name);
+					redirect('human-resource/edit-personnel/'.$personnel_id);
+				}
+				
+				else
+				{
+					$this->session->set_userdata('error_message', 'Could not update personnel\'s general details. Please try again');
+				}
 			}
 			
+			//else return to form to fix upload errors
 			else
 			{
-				$this->session->set_userdata("error_message","Could not add personnel. Please try again");
-				redirect('human-resource/edit-personnel/'.$personnel_id);
+				$error = '';
+				if(!empty($image_error))
+				{
+					$error .= '<br/><strong>Signature upload error!</strong> '.$image_error;
+				}
+				$this->session->set_userdata('error_message', $error);
 			}
 		}
 		else
 		{
 			$this->session->set_userdata("error_message","Could not add personnel. Please try again");
-			redirect('human-resource/edit-personnel/'.$personnel_id);
 		}
+		
+		$this->edit_personnel($personnel_id, $this->session->userdata($image_upload_name));
     }
 	/*
 	*
@@ -401,6 +482,26 @@ class Personnel extends hr
 			$this->session->set_userdata('error_message', 'Personnel could not deleted');
 		}
 		redirect('human-resource/personnel');
+	}
+    
+	/*
+	*
+	*	Delete an existing personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function delete_document_scan($document_upload_id, $personnel_id)
+	{
+		if($this->personnel_model->delete_document_scan($document_upload_id))
+		{
+			$this->session->set_userdata('success_message', 'Document has been deleted');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Document could not deleted');
+		}
+		redirect('human-resource/edit-personnel/'.$personnel_id);
 	}
     
 	/*
@@ -813,5 +914,57 @@ class Personnel extends hr
 
 		}
     }
+
+	/*
+	*
+	*	Add documents 
+	*	@param int $personnel_id
+	*
+	*/
+	public function upload_documents($personnel_id) 
+	{
+		$image_error = '';
+		$this->session->unset_userdata('upload_error_message');
+		$document_name = 'document_scan';
+		
+		//upload image if it has been selected
+		$response = $this->personnel_model->upload_any_file($this->document_upload_path, $this->document_upload_location, $document_name, 'document_scan');
+		if($response)
+		{
+			$document_upload_location = $this->document_upload_location.$this->session->userdata($document_name);
+		}
+		
+		//case of upload error
+		else
+		{
+			$image_error = $this->session->userdata('upload_error_message');
+			$this->session->unset_userdata('upload_error_message');
+		}
+
+		$document = $this->session->userdata($document_name);
+		$this->form_validation->set_rules('document_place', 'Place of issue', 'xss_clean');
+		
+		//if form has been submitted
+		if ($this->form_validation->run())
+		{
+
+			if($this->personnel_model->upload_personnel_documents($personnel_id, $document))
+			{
+				$this->session->set_userdata('success_message', 'Document uploaded successfully');
+				$this->session->unset_userdata($document_name);
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'Could not upload document. Please try again');
+			}
+		}
+		else
+		{
+			$this->session->set_userdata('error_message', 'Could not upload document. Please try again');
+		}
+		
+		redirect('human-resource/edit-personnel/'.$personnel_id);
+	}
 }
 ?>

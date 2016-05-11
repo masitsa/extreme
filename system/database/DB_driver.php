@@ -328,6 +328,7 @@ class CI_DB_driver {
 												$error_msg,
 												$sql
 											)
+
 										);
 			}
 
