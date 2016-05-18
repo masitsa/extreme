@@ -15,13 +15,13 @@ class Accounts extends MX_Controller
 		$this->load->model('admin/branches_model');
 		$this->load->model('petty_cash_model');
 		$this->load->model('accounts_model');
-		$this->load->model('nurse/nurse_model');
+		/*$this->load->model('nurse/nurse_model');
 		$this->load->model('reception/reception_model');
 		$this->load->model('reception/database');
 		$this->load->model('medical_admin/medical_admin_model');
 		$this->load->model('pharmacy/pharmacy_model');
 		$this->load->model('hospital_accounts_model');
-		$this->load->model('administration/sync_model');
+		$this->load->model('administration/sync_model');*/
 		//$this->load->model('administration/personnel_model');
 		
 		$this->load->model('auth/auth_model');

@@ -261,6 +261,7 @@ $route['accounts/payroll/print-payslip/(:num)/(:num)'] = 'accounts/payroll/print
 $route['accounts/payroll/download-payslip/(:num)/(:num)'] = 'accounts/payroll/download_payslip/$1/$2';
 $route['accounts/payroll-payslips/(:num)'] = 'accounts/payroll/payroll_payslips/$1';
 $route['accounts/salary-data'] = 'accounts/payroll/salaries';
+$route['print-payslip/(:num)'] = 'admin/payslip_details/$1';
 $route['accounts/search-payroll'] = 'accounts/payroll/search_payroll';
 $route['accounts/close-payroll-search'] = 'accounts/payroll/close_payroll_search';
 $route['accounts/create-payroll'] = 'accounts/payroll/create_payroll';
@@ -314,7 +315,7 @@ $route['accounts/payroll/view-payslip/(:num)'] = 'accounts/payroll/view_payslip/
 
 $route['accounts/insurance-invoices'] = 'administration/reports/debtors_report_invoices/0';
 $route['accounts/insurance-invoices/(:num)'] = 'administration/reports/debtors_report_invoices/$1';
-
+$route['accounts/print-month-payslips/(:num)'] = 'accounts/payroll/print_monthly_payslips/$1';
 //Always comes last
 $route['accounts/payroll/(:any)/(:any)'] = 'accounts/payroll/payrolls/$1/$2';
 $route['accounts/payroll/(:any)/(:any)/(:num)'] = 'accounts/payroll/payrolls/$1/$2/$3';
@@ -578,6 +579,9 @@ $route['inventory-setup/edit-supplier/(:num)'] = 'inventory/suppliers/edit_suppl
 $route['inventory-setup/deactivate-supplier/(:num)']='inventory/suppliers/deactivate_supplier/$1';
 $route['inventory-setup/activate-supplier/(:num)']='inventory/suppliers/activate_supplier/$1';
 $route['inventory-setup/delete-supplier/(:num)']='inventory/suppliers/delete_supplier/$1';
+$route['import/import-suppliers'] = 'inventory/suppliers/import_suppliers';
+$route['suppliers/validate-import'] = 'inventory/suppliers/do_suppliers_import';
+$route['suppliers/import-template'] = 'inventory/suppliers/import_template';
 
 $route['inventory-setup/clients'] = 'inventory/clients/index';
 $route['inventory-setup/clients/(:num)'] = 'inventory/clients/index/$1';
@@ -586,13 +590,16 @@ $route['inventory-setup/delete-clients/(:num)']='inventory/clients/delete_client
 $route['inventory-setup/activate-clients/(:num)']='inventory/clients/activate_clients/$1';
 $route['inventory-setup/deactivate-clients/(:num)']='inventory/clients/deactivate_clients/$1';
 $route['inventory-setup/edit-clients/(:num)'] = 'inventory/clients/edit_clients/$1';
+$route['import/import-clients'] = 'inventory/clients/import_clients';
+$route['clients/validate-import'] = 'inventory/clients/do_clients_import';
+$route['clients/import-template'] = 'inventory/clients/import_template';
+
 
 $route['inventory/orders'] = 'inventory/orders/index';
 $route['inventory/orders/(:num)'] = 'inventory/orders/index/$1';
 $route['inventory/add-order'] = 'inventory/orders/add_order';
 $route['inventory/add-order-item/(:num)/(:any)'] = 'inventory/orders/add_order_item/$1/$2';
 $route['inventory/update-order-item/(:num)/(:any)/(:num)'] = 'inventory/orders/update_order_item/$1/$2/$3';
-
 
 $route['requests'] = 'inventory/requests/index';
 $route['inventory/requests/(:num)'] = 'inventory/requests/index/$1';
@@ -601,9 +608,32 @@ $route['inventory/add-request-item/(:num)/(:any)'] = 'inventory/requests/add_req
 $route['inventory/delete-request-item/(:num)/(:num)/(:any)']='inventory/requests/delete_request_item/$1/$2/$3';
 $route['inventory/update-request-item/(:num)/(:any)/(:num)'] = 'inventory/requests/update_request_item/$1/$2/$3';
 $route['inventory/send-request-for-approval/(:num)/(:num)'] = 'inventory/requests/send_request_for_approval/$1';
+$route['requests-reports']='administration/reports/get_request_reports';
 
 
-$route['inventory/update-supplier-prices/(:num)/(:any)/(:num)'] = 'inventory/orders/update_supplier_prices/$1/$2/$3';
+//searches for extreme modules
+$route['requests/requests-search']='inventory/requests/requests_search';
+$route['inventory/items-search']='inventory_management/items/item_search';
+$route['inventory/services-search']='inventory_management/services/service_search';
+$route['requests/close-request-search']='inventory/requests/close_request_search';
+$route['inventory/search-items']='inventory_management/items/item_search';
+$route['clients/close-item-search']='inventory/clients/close_clients_search';
+$route['items/close-request-search']='inventory_management/items/close_item_search';
+$route['inventory/clients-search']='inventory/clients/search_clients';
+$route['inventory/search-categories']='inventory/items_categories/search_categories';
+$route['inventory-setup/close-categories-search']='inventory/items_categories/close_categories_search';
+$route['inventory/search-suppliers']='inventory/suppliers/search_suppliers';
+$route['inventory-setup/close-suppliers-search']='inventory/suppliers/close_suppliers_search';
+
+//sorting routes for extreme inventory
+$route['inventory/requests/(:any)/(:any)/(:num)'] = 'inventory/requests/index/$1/$2/$3';
+$route['inventory/suppliers/(:any)/(:any)/(:num)'] = 'inventory/suppliers/index/$1/$2/$3';
+$route['inventory/item-categories/(:any)/(:any)/(:num)']='inventory/items_categories/index/$1/$2/$3';
+$route['inventory/items/(:any)/(:any)/(:num)']='inventory_management/items/index/$1/$2/$3';
+$route['inventory/clients/(:any)/(:any)/(:num)']='inventory/clients/index/$1/$2/$3';
+
+
+$route['inventory/update-supplier-prices/(:num)/(:any)/(:num)'] = 'inventory/requests/update_supplier_prices/$1/$2/$3';
 $route['inventory/send-for-correction/(:num)'] = 'inventory/requests/send_request_for_correction/$1';
 $route['inventory/send-for-approval/(:num)'] = 'inventory/requests/send_request_for_approval/$1';
 $route['inventory/send-for-approval/(:num)/(:num)'] = 'inventory/requests/send_request_for_approval/$1/$2';
@@ -625,7 +655,21 @@ $route['inventory/items/(:num)'] = 'inventory_management/index/$1';
 $route['inventory/add-item'] = 'inventory_management/items/add_item';
 $route['inventory/activation/activate/(:num)'] = 'inventory_management/items/activate_item/$1';
 $route['inventory/activation/deactivate/(:num)'] = 'inventory_management/items/deactivate_item/$1';
-$route['inventory/edit-item/(:num)'] = 'inventory_management/edit_item/$1';
+$route['inventory/edit-item/(:num)'] = 'inventory_management/items/edit_item/$1';
+$route['inventory/edit-service/(:num)'] = 'inventory_management/services/edit_service/$1';
+$route['inventory/delete-item/(:num)'] = 'inventory_management/items/delete_item/$1';
+$route['inventory-management/delete-service/(:num)'] = 'inventory_management/services/delete_service/$1';
+
+$route['item/validate-import'] = 'inventory_management/items/do_items_import';
+$route['item/import-template'] = 'inventory_management/items/import_template';
+$route['import/import-assets'] = 'inventory_management/items/import_items';
+$route['import/import-services'] = 'inventory_management/services/import_services';
+$route['service/import-template'] = 'inventory_management/services/import_template';
+$route['inventory/services'] = 'inventory_management/services';
+$route['inventory/add-service'] = 'inventory_management/services/add_service';
+$route['service/validate-import'] = 'inventory_management/services/do_services_import';
+$route['inventory-management/activation/activate/(:num)'] = 'inventory_management/services/activate_service/$1';
+$route['inventory-management/activation/deactivate/(:num)'] = 'inventory_management/services/deactivate_service/$1';
 
 $route['inventory/product-details/(:num)'] = 'inventory_management/manage_product/$1';
 $route['inventory/manage-store'] = 'inventory_management/manage_store';
@@ -651,7 +695,13 @@ $route['inventory/close-product-search'] = 'inventory_management/close_inventory
 
 
 
+
 $route['orders'] = 'inventory/orders/index';
 
+//inventory routes
+$route['inventory/inventory-add-item/(:num)'] = 'inventory_management/items/add_inventory_item/$1';
+$route['inventory/inventory-edit-item/(:num)']= 'inventory_management/items/edit_inventory_item/$1';
+$route['inventory/delete-inventory-item/(:num)']='inventory_management/items/delete_inventory_item/$1';
 
-
+//events
+$route['inventory/add-request-event/(:num)/(:any)'] = 'inventory/requests/add_request_event/$1/$2';

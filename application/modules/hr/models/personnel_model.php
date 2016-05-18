@@ -2,6 +2,148 @@
 
 class Personnel_model extends CI_Model 
 {	
+	public function upload_image($path, $location, $resize, $name, $upload, $edit = NULL)
+	{
+		if(!empty($_FILES[$upload]['tmp_name']))
+		{
+			$image = $this->session->userdata($name);
+			
+			if((!empty($image)) || ($edit != NULL))
+			{
+				if($edit != NULL)
+				{
+					$image = $edit;
+				}
+				
+				//delete any other uploaded image
+				if($this->file_model->delete_file($path."\\".$image, $location))
+				{
+					//delete any other uploaded thumbnail
+					$this->file_model->delete_file($path."\\thumbnail_".$image, $location);
+				}
+				
+				else
+				{
+					$this->file_model->delete_file($path."/".$image, $location);
+					$this->file_model->delete_file($path."/thumbnail_".$image, $location);
+				}
+			}
+			//Upload image
+			$response = $this->file_model->upload_file($path, $upload, $resize);
+			if($response['check'])
+			{
+				$file_name = $response['file_name'];
+				$thumb_name = $response['thumb_name'];
+					
+				//Set sessions for the image details
+				$this->session->set_userdata($name, $file_name);
+			
+				return TRUE;
+			}
+		
+			else
+			{
+				$this->session->set_userdata('upload_error_message', $response['error']);
+				
+				return FALSE;
+			}
+		}
+		
+		else
+		{
+			$this->session->set_userdata('upload_error_message', '');
+			return FALSE;
+		}
+	}
+	public function upload_any_file($path, $location, $name, $upload, $edit = NULL)
+	{
+		if(!empty($_FILES[$upload]['tmp_name']))
+		{
+			$image = $this->session->userdata($name);
+			
+			if((!empty($image)) || ($edit != NULL))
+			{
+				if($edit != NULL)
+				{
+					$image = $edit;
+				}
+				
+				//delete any other uploaded image
+				if($this->file_model->delete_file($path."\\".$image, $location))
+				{
+					//delete any other uploaded thumbnail
+					$this->file_model->delete_file($path."\\thumbnail_".$image, $location);
+				}
+				
+				else
+				{
+					$this->file_model->delete_file($path."/".$image, $location);
+					$this->file_model->delete_file($path."/thumbnail_".$image, $location);
+				}
+			}
+			//Upload image
+			$response = $this->file_model->upload_any_file($path, $upload);
+			if($response['check'])
+			{
+				$file_name = $response['file_name'];
+					
+				//Set sessions for the image details
+				$this->session->set_userdata($name, $file_name);
+			
+				return TRUE;
+			}
+		
+			else
+			{
+				$this->session->set_userdata('upload_error_message', $response['error']);
+				
+				return FALSE;
+			}
+		}
+		
+		else
+		{
+			$this->session->set_userdata('upload_error_message', '');
+			return FALSE;
+		}
+	}
+
+	function upload_personnel_documents($personnel_id, $document)
+	{
+		$data = array(
+			'document_name'=> $this->input->post('document_item_name'),
+			'document_upload_name'=> $document,
+			'created_by'=> $this->session->userdata('personnel_id'),
+			'modified_by'=> $this->session->userdata('personnel_id'),
+			'created'=> date('Y-m-d H:i:s'),
+			'personnel_id'=>$personnel_id
+		);
+		
+		if($this->db->insert('personnel_document_uploads', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	//edit_order_authorize
+	public function edit_order_authorize($personnel_id)
+	{
+		$data = array(
+				'approval_status_id' => $this->input->post('approval_role_id')
+			);
+		$this->db->where('personnel_id', $personnel_id);
+		
+
+		if($this->db->update('personnel_approval', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}	
+	}
 	/*
 	*	Retrieve all personnel
 	*
@@ -120,7 +262,7 @@ class Personnel_model extends CI_Model
 	*	@param int $personnel_id
 	*
 	*/
-	public function edit_personnel($personnel_id)
+	public function edit_personnel($personnel_id, $image)
 	{
 		$data = array(
 			'personnel_onames'=>ucwords(strtolower($this->input->post('personnel_onames'))),
@@ -142,6 +284,7 @@ class Personnel_model extends CI_Model
 			'personnel_kra_pin' => $this->input->post('personnel_kra_pin'),
 			'personnel_nhif_number' => $this->input->post('personnel_nhif_number'),
 			'personnel_national_id_number' => $this->input->post('personnel_national_id_number'),
+			'image' => $image,
 			'personnel_type_id'=>$this->input->post('personnel_type_id')
 		);
 		
@@ -153,6 +296,16 @@ class Personnel_model extends CI_Model
 		else{
 			return FALSE;
 		}
+	}
+	
+	function get_document_uploads($personnel_id)
+	{
+		$this->db->from('personnel_document_uploads');
+		$this->db->select('*');
+		$this->db->where('personnel_id = '.$personnel_id);
+		$query = $this->db->get();
+		
+		return $query;
 	}
 
 	public function update_personnel_account_details($personnel_id)
@@ -293,6 +446,23 @@ class Personnel_model extends CI_Model
 	{
 		//delete parent
 		if($this->db->delete('personnel', array('personnel_id' => $personnel_id)))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Delete an existing personnel
+	*	@param int $personnel_id
+	*
+	*/
+	public function delete_document_scan($document_upload_id)
+	{
+		//delete parent
+		if($this->db->delete('personnel_document_uploads', array('document_upload_id' => $document_upload_id)))
 		{
 			return TRUE;
 		}
@@ -468,11 +638,24 @@ class Personnel_model extends CI_Model
 		
 		return $query;
 	}
+	
 	public function get_personnel_leave($personnel_id)
 	{
 		//retrieve all users
 		$this->db->from('leave_duration, leave_type');
-		$this->db->select('leave_duration.*, leave_type.leave_type_name');
+		$this->db->select('leave_duration.*, leave_type.leave_type_name, leave_type.leave_type_count, leave_type.leave_days');
+		$this->db->order_by('leave_type.leave_type_name');
+		$this->db->where('leave_duration.leave_type_id = leave_type.leave_type_id AND leave_duration.personnel_id = '.$personnel_id);
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	
+	public function get_leave_balance($personnel_id, $leave_type_id)
+	{
+		//retrieve all users
+		$this->db->from('leave_duration, leave_type');
+		$this->db->select('leave_duration.*, leave_type.leave_type_name, leave_type.leave_type_count, leave_type.leave_days');
 		$this->db->order_by('leave_type.leave_type_name');
 		$this->db->where('leave_duration.leave_type_id = leave_type.leave_type_id AND leave_duration.personnel_id = '.$personnel_id);
 		$query = $this->db->get();
@@ -901,25 +1084,6 @@ class Personnel_model extends CI_Model
 		
 
 		if($this->db->update('personnel', $data))
-		{
-			return TRUE;
-		}
-		else{
-			return FALSE;
-		}
-	}
-
-public function edit_order_authorize($personnel_id)
-	{
-		$data = array(
-				'approval_status_id' => $this->input->post('approval_role_id'),
-				'personnel_id' => $personnel_id,
-				'created'=> date("Y-m-d H:i:s"),
-				
-			);
-		
-
-		if($this->db->insert('personnel_approval', $data))
 		{
 			return TRUE;
 		}

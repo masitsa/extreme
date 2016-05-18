@@ -210,8 +210,10 @@
 													$allowance_name = $row2->allowance_name;
 													$allowance_taxable = $row2->allowance_taxable;
                                                     
-                                                    if($personnel_allowances->num_rows() > 0){
-                                                        foreach($personnel_allowances->result() as $allow){
+                                                    if($personnel_allowances->num_rows() > 0)
+													{
+                                                        foreach($personnel_allowances->result() as $allow)
+														{
                                                             $id = $allow->id;
                                                             
                                                             if($id == $allowance_id){
@@ -219,7 +221,8 @@
                                                                 break;
                                                             }
                                                     
-                                                            else{
+                                                            else
+															{
                                                                 $amount = 0;
                                                             }
                                                         }

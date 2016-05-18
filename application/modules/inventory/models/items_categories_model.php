@@ -8,7 +8,7 @@ class Items_categories_model extends CI_Model
 	*/
 	public function all_categories()
 	{
-		$this->db->where('category_status = 1');
+		$this->db->where('category_status = 1 AND deleted = 0');
 		$this->db->order_by('category_name');
 		$query = $this->db->get('item_category');
 		
@@ -22,7 +22,7 @@ class Items_categories_model extends CI_Model
 	{
 		$this->db->limit(1);
 		$this->db->order_by('created', 'DESC');
-		$query = $this->db->get('category');
+		$query = $this->db->get('item_category');
 		
 		return $query;
 	}
@@ -32,9 +32,9 @@ class Items_categories_model extends CI_Model
 	*/
 	public function all_parent_categories()
 	{
-		$this->db->where('category_status = 1 AND category_parent = 0 AND branch_code = "'.$this->session->userdata('branch_code').'"');
+		$this->db->where('category_status = 1 AND deleted = 0 AND category_parent = 0 AND branch_code = "'.$this->session->userdata('branch_code').'"');
 		$this->db->order_by('category_name', 'ASC');
-		$query = $this->db->get('category');
+		$query = $this->db->get('item_category');
 		
 		return $query;
 	}
@@ -44,9 +44,9 @@ class Items_categories_model extends CI_Model
 	*/
 	public function all_child_categories()
 	{
-		$this->db->where('category_status = 1 AND category_parent > 0');
+		$this->db->where('category_status = 1 AND category_parent > 0 AND deleted = 0');
 		$this->db->order_by('category_name', 'ASC');
-		$query = $this->db->get('category');
+		$query = $this->db->get('item_category');
 		
 		return $query;
 	}
@@ -57,13 +57,13 @@ class Items_categories_model extends CI_Model
 	* 	@param string $where
 	*
 	*/
-	public function get_all_categories($table, $where, $per_page, $page)
+	public function get_all_categories($table, $where, $per_page, $page, $order, $order_method)
 	{
 		//retrieve all users
 		$this->db->from($table);
 		$this->db->select('*');
 		$this->db->where($where);
-		$this->db->order_by('category_name, category_parent');
+		$this->db->order_by( $order, $order_method);
 		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
@@ -175,13 +175,19 @@ class Items_categories_model extends CI_Model
 	*/
 	public function delete_category($category_id)
 	{
-		if($this->db->delete('item_category', array('item_category_id' => $category_id)))
-		{
-			return TRUE;
-		}
-		else{
-			return FALSE;
-		}
+		$data = array(
+			'deleted'=>1,
+			'deleted_on'=>date('Y-m-d H:i:s'),
+			'deleted_by'=>$this->session->userdata('personnel_id'),
+		);
+		$this->db->where('item_category_id', $category_id);	
+			if($this->db->update('item_category',$data))
+			{
+				return TRUE;
+			}
+			else{
+				return FALSE;
+			}
 	}
 	
 	/*

@@ -11,14 +11,14 @@
 	    <div class="widget-content">
 	    	<div class="">
 				<?php
-				echo form_open("vendor/search-categories", array("class" => "form-inline"));
+				echo form_open("inventory/search-categories", array("class" => "form-inline"));
 	            ?>
                 <div class="row">
                     <div class="col-md-12 col-lg-12 center-align">
                         <div class="form-group">
-                            <label class="control-label">Category Name: </label>
+                            <label class="control-label">Item Category Name: </label>
                             <div class="input-group">
-                                <input type="text" class="form-control" name="category_name" placeholder="Category name">
+                                <input type="text" class="form-control" name="category_name" placeholder="Item Category Name">
                             </div>
                                 <button type="submit" class="btn btn-info btn-lg">Search</button>
                         </div>

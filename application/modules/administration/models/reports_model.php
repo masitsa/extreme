@@ -2,6 +2,50 @@
 
 class Reports_model extends CI_Model 
 {
+	
+	public function get_requests_total()
+	{
+		$this->db->select('COUNT(requests.request_id) AS requests_total');
+		$this->db->where('requests.deleted = 0');
+		$query = $this->db->get('requests');
+		
+		$result = $query->row();
+		
+		return $result->requests_total;
+	}
+	
+	public function get_approved_requests()
+	{
+		$this->db->select('COUNT(requests.request_id) AS approved_requests');
+		$this->db->where('requests.request_approval_status = 4');
+		$query = $this->db->get('requests');
+		
+		$result = $query->row();
+		
+		return $result->approved_requests;
+	}
+	public function get_pending_requests()
+	{
+		$this->db->select('COUNT(requests.request_id) AS pending_requests');
+		$this->db->where('requests.request_approval_status <=3 ');
+		$query = $this->db->get('requests');
+		
+		$result = $query->row();
+		
+		return $result->pending_requests;
+	}
+	
+		public function get_total_item_amount($item_id)
+	{
+		$this->db->select('item.item_name, item.item_id, SUM(request_item.request_item_quantity * request_item.request_item_price) AS total_item_amount');
+		$this->db->where ('requests.request_approval_status =4 AND requests.request_id = request_item.request_id AND item.item_id = request_item.item_id AND item.item_id = '.$item_id);
+	$this->db->from ('item, requests, request_item');
+
+			$query= $this->db->get();
+			$result = $query->row();
+		return $result->total_item_amount;
+	}
+	
 	public function get_queue_total($date = NULL, $where = NULL)
 	{
 		if($date == NULL)
@@ -10,17 +54,17 @@ class Reports_model extends CI_Model
 		}
 		if($where == NULL)
 		{
-			$where = 'visit.visit_id = visit_department.visit_id AND visit.close_card = 0 AND visit.visit_date = \''.$date.'\'';
+			$where = 'requests.deleted = 0 AND requests.created = \''.$date.'\'';
 		}
 		
 		else
 		{
-			$where .= ' AND visit.visit_id = visit_department.visit_id AND visit.close_card = 0 AND visit.visit_date = \''.$date.'\' ';
+			$where = 'requests.deleted = 0 AND requests.created = \''.$date.'\'';
 		}
 		
-		$this->db->select('COUNT(visit.visit_id) AS queue_total');
+		$this->db->select('COUNT(requests.request_id) AS queue_total');
 		$this->db->where($where);
-		$query = $this->db->get('visit, visit_department');
+		$query = $this->db->get('requests');
 		
 		$result = $query->row();
 		
@@ -61,8 +105,9 @@ class Reports_model extends CI_Model
 	
 	public function get_all_payment_methods()
 	{
+		$this->db->from('requests');
 		$this->db->select('*');
-		$query = $this->db->get('payment_method');
+		$query = $this->db->get('');
 		
 		return $query;
 	}
@@ -129,6 +174,16 @@ class Reports_model extends CI_Model
 		$this->db->select('*');
 		$this->db->where('service_delete', 0);
 		$query = $this->db->get('service');
+		
+		return $query;
+	}
+	
+	public function get_all_item_types()
+	{
+		$this->db->select('*');
+		$this->db->where('item_id > 0 AND product_deleted = 0');
+		$this->db->order_by('item_name');
+		$query = $this->db->get('item');
 		
 		return $query;
 	}

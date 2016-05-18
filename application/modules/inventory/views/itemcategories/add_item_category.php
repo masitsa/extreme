@@ -1,11 +1,11 @@
  
 <link href="<?php echo base_url();?>assets/jasny/jasny-bootstrap.css" rel="stylesheet">
 <script src="<?php echo base_url();?>assets/jasny/jasny-bootstrap.js"></script>
- <section class="panel">
+ <section class="panel panel-featured panel-featured-info">
             <header class="panel-heading">
-              <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
+              <h4 class="panel-title pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
               <div class="widget-icons pull-right">
-                    <a href="<?php echo base_url();?>inventory-setup/item-categories" class="btn btn-primary pull-right btn-sm">Back to Item categories</a>
+                    <a href="<?php echo base_url();?>inventory-setup/item-categories" class="btn btn-primary pull-right btn-sm">Back to Item Categories</a>
               </div>
               <div class="clearfix"></div>
         </header>

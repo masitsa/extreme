@@ -162,7 +162,7 @@ class Nurse  extends MX_Controller
 	{
 		
 
-		$table = 'visit_department, visit, patients';
+		$table = 'visit_department, visit, patients, visit_type';
 		if($module == 1)
 		{
 			$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND (visit.close_card = 0 OR visit.close_card = 7) AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = '.$this->session->userdata('personnel_id');
@@ -900,7 +900,7 @@ class Nurse  extends MX_Controller
 			$where .= $vaccine_search;
 		}
 		
-		$table = 'service_charge,visit_type,service';
+		$table = 'service_charge, visit_type, service';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'nurse/vaccines/'.$visit_id;
@@ -2810,7 +2810,7 @@ class Nurse  extends MX_Controller
 
 		$where = 'service_charge.service_id = service.service_id AND (service.service_name = "Procedure" OR service.service_name = "procedure" OR service.service_name = "procedures" OR service.service_name = "Procedures" ) AND service.department_id = departments.department_id AND departments.department_name = "General practice" AND service.branch_code = "OSH" AND service_charge.visit_type_id = visit_type.visit_type_id  AND service_charge.visit_type_id = '.$visit_t;
 
-		$table = 'service_charge,visit_type,service, departments';
+		$table = 'service_charge, visit_type, service, departments';
 		$config["per_page"] = 0;
 		$procedure_query = $this->nurse_model->get_other_procedures($table, $where, $order);
 

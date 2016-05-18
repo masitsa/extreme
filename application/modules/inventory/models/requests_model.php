@@ -8,13 +8,13 @@ class requests_model extends CI_Model
 	* 	@param string $where
 	*
 	*/
-	public function get_all_requests($table, $where, $per_page, $page)
+	public function get_all_requests($table, $where, $per_page, $page, $order, $order_method)
 	{
 		//retrieve all requests
 		$this->db->from($table);
 		$this->db->select('requests.*,inventory_level_status.inventory_level_status_name, inventory_level_status.inventory_level_status_id, client.client_name');
 		$this->db->where($where);
-		$this->db->order_by('created, request_number');
+		$this->db->order_by($order,$order_method);
 		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
@@ -96,14 +96,89 @@ class requests_model extends CI_Model
 		return $query;
 	}
 	
-	/*
+	public function all_status()
+	{
+		$this->db->select('inventory_level_status.*'); 
+		$query = $this->db->get('inventory_level_status');
+		return $query;
+	}
+	
+	public function get_request_creator($request_id)
+	{
+		$this->db->select('requests.*,  personnel.personnel_onames, personnel.personnel_fname');
+		$this->db->where('requests.created_by = personnel.personnel_id AND requests.request_id ='.$request_id);
+		$query = $this->db->get('requests,personnel');
+		foreach ($query->result() as $key)
+		{
+			$personnel_fname=$key->personnel_fname;
+		}		
+		return $personnel_fname;
+	}
+	
+	public function get_request_approver($request_id)
+	{
+		$this->db->select('requests.*,  personnel.personnel_onames, personnel.personnel_fname');
+		$this->db->where('requests.approved_by = personnel.personnel_id AND requests.request_id ='.$request_id);
+		$query = $this->db->get('requests,personnel');
+		foreach ($query->result() as $key)
+		{
+			$personnel_fname=$key->personnel_fname;
+		}		
+		return $personnel_fname;
+				
+	}
+	
+		
+		public function get_request_date($request_id)
+		{
+				$this->db->select('requests.*');
+		$this->db->where('request_id ='.$request_id);
+		$query = $this->db->get('requests');
+		foreach ($query->result() as $key)
+		{
+		$request_date=$key->request_date;	
+		}		
+		return $request_date;
+			}
+	public function request_approved_on($request_id)
+	{
+		$this->db->select('requests.*,  personnel.personnel_onames, personnel.personnel_fname');
+		$this->db->where('requests.approved_by = personnel.personnel_id AND requests.request_id ='.$request_id);
+		$query = $this->db->get('requests,personnel');
+		$last_modified = '';
+		
+		foreach ($query->result() as $key)
+		{
+			$last_modified = $key->last_modified;	
+		}		
+		return $last_modified;
+	}
+	
+	// Retrieve request details to display on the request items page
+	public function get_request_details($request_id)
+	{
+		$this->db->select('requests.*, client.client_name, personnel.personnel_onames, 	personnel.personnel_fname, request_status.request_status_name');
+		$this->db->where('requests.client_id = client.client_id 
+		AND requests.created_by = personnel.personnel_id
+		AND requests.request_status_id= request_status.request_status_id
+		AND requests.deleted = 0
+		AND requests.request_id = '.$request_id);
+		$query = $this->db->get('requests,client,personnel,request_status');
+		
+		return $query;
+		}
+		
+		/*
 	*	Retrieve all request items of an request
-	*
+	*	
+				
+		AND requests.request_status_id= request_status.request_status_id	
+		AND requests.modified_by = personnel.personnel_id 
 	*/
 	public function get_request_items($request_id)
 	{
 		$this->db->select('item.*, request_item.*');
-		$this->db->where('item.item_id = request_item.item_id AND request_item.request_id = '.$request_id);
+		$this->db->where('item.item_id = request_item.item_id AND request_item.deleted = 0 AND request_item.request_id = '.$request_id);
 		$query = $this->db->get('request_item, item');
 		
 		return $query;
@@ -174,9 +249,18 @@ class requests_model extends CI_Model
 		$result = $query->result();
 		foreach($result AS $key)
 		{
-		return $key->personnel_fname;
+			return $key->personnel_fname;
 		}
 	}
+		public function get_client_name($request_id){
+		$query=$this->db->query('select client_name from client where client_id in (select client_id from requests where request_id =' .$request_id.')');
+		$result = $query->result();
+		foreach($result AS $key)
+		{
+		return $key->client_name;
+		}
+	}
+	
 	public function add_request()
 	{
 
@@ -185,10 +269,14 @@ class requests_model extends CI_Model
 		$data = array(
 				'request_number'=>$request_number,
 				'created_by'=>$this->session->userdata('personnel_id'),
+				'request_date'=>$this->input->post('request_date'),
 				'request_status_id'=>1,
+				'deleted'=>0,
 				'request_instructions'=>$this->input->post('request_instructions'),
 				'client_id'=>$this->input->post('client_id'),
 				'created'=>date('Y-m-d H:i:s'),
+				'last_modified'=>date('Y-m-d H:i:s'),
+				'approved_by'=>$this->session->userdata('personnel_id'),
 				'modified_by'=>$this->session->userdata('personnel_id')
 			);
 			
@@ -253,6 +341,30 @@ class requests_model extends CI_Model
 		}
 	}
 	
+	
+	/*
+	function to calculate the time 
+	taken from the request_date
+	 to date
+	 */
+	 
+	 public function get_turnaround_time($request_id)
+	 {
+		$this->db->from('requests');
+		$this->db->select('requests.request_date, requests.last_modified ');
+		$this->db->where('requests.request_id = '.$request_id);
+		$query = $this->db->get('');
+		 $result = $query->result();
+		foreach($result AS $key)
+		{
+			$request_date=strtotime($key->request_date);
+			$approved_date=strtotime($key->last_modified);
+			$turnaround_time=$approved_date-$request_date;
+			
+			}
+			return $turnaround_time/(24*3600);
+		 }
+	
 	/*
 	*	Update an request
 	*	@param int $request_id
@@ -265,7 +377,9 @@ class requests_model extends CI_Model
 				'created_by'=>$this->input->post('personnel_id'),
 				'request_status'=>1,
 				'request_instructions'=>$this->input->post('request_instructions'),
+				'approved_by'=>$this->session->userdata('personnel_id'),
 				'created'=>date('Y-m-d H:i:s'),
+				'last_modified'=>date('Y-m-d H:i:s'),
 				'modified_by'=>$this->session->userdata('personnel_id')
 			);
 		
@@ -320,6 +434,7 @@ class requests_model extends CI_Model
 			$data = array(
 					//'request_item_price'=>$item_hiring_price,
 					'request_item_quantity'=>$quantity,
+					'deleted'=>0,
 					'request_item_price'=>$request_item_price
 				);
 				
@@ -413,13 +528,19 @@ class requests_model extends CI_Model
 	*/
 	public function delete_request_item($request_item_id)
 	{
-		if($this->db->delete('request_item', array('request_item_id' => $request_item_id)))
-		{
-			return TRUE;
-		}
-		else{
-			return FALSE;
-		}
+		$data = array(
+			'deleted'=>1,
+			'deleted_on'=>date('Y-m-d H:i:s'),
+			'deleted_by'=>$this->session->userdata('personnel_id'),
+		);
+		$this->db->where('request_item_id', $request_item_id);	
+			if($this->db->update('request_item',$data))
+			{
+				return TRUE;
+			}
+			else{
+				return FALSE;
+			}
 	}
 	public function get_next_approval_status_name($status)
 	{
@@ -576,4 +697,36 @@ class requests_model extends CI_Model
 		}
 		return $item;
 	}
-}
+	
+	//request_event
+	public function add_request_event($request_id)
+	{
+		$event_id = $this->input->post('event_id');
+		$event_name = $this->input->post('event_name');
+		$event_venue = $this->input->post('venue');
+		$start_date = $this->input->post('start_date');
+		$end_date = $this->input->post('end_date');
+		$budget = $this->input->post('budget');
+		$event_pax = $this->input->post('pax');
+		$data = array(
+						
+			'request_id'=>$request_id,
+			'event_id'=>$event_id,
+			'request_event_name'=>$event_name,
+			'request_event_venue'=>$event_venue,
+			'request_event_start_date'=>$start_date,
+			'request_event_end_date'=>$end_date,
+			'request_event_budget'=>$budget,
+			'request_event_start_date'=>$start_date
+		);
+				
+		if($this->db->insert('request_event', $data))
+		{
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+	}

@@ -13,6 +13,7 @@ class requests extends MX_Controller
 		$this->load->model('inventory_management/products_model');
 		$this->load->model('requests_model');
 		$this->load->model('clients_model');
+		$this->load->model('events_model');
 		$this->load->model('suppliers_model');
 		$this->load->model('categories_model');
 		$this->load->model('site/site_model');
@@ -32,22 +33,31 @@ class requests extends MX_Controller
 	*	Default action is to show all the requests
 	*
 	*/
-	public function index() 
+	public function index($order = 'request_number', $order_method = 'ASC') 
 	{
 		// get my approval roles
 		$this->db->where('personnel_id ='.$this->session->userdata('personnel_id'));
 		$query = $this->db->get('personnel_approval');
 		$v_data['personnel_approval_query']=$query;
 		
+		
+		
 		//retrieve requests, clients
-		$where='requests.request_id = request_level_status.request_id AND client.client_id = requests.client_id AND inventory_level_status.inventory_level_status_id = request_level_status.inventory_level_status_id AND request_level_status.request_level_status_status = 1';
+		$where='requests.request_id = request_level_status.request_id AND client.client_id = requests.client_id AND inventory_level_status.inventory_level_status_id = request_level_status.inventory_level_status_id AND request_level_status.request_level_status_status = 1 AND requests.deleted = 0';
+		//$this->session->unset_userdata('request_search');
+		$request_search = $this->session->userdata('request_search');
+		
+		if(!empty($request_search))
+		{
+			$where .= $request_search;
+		}
 
 		$table = 'requests, request_level_status, client, inventory_level_status';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'inventory/requests';
+		$config['base_url'] = site_url().'inventory/requests/'.$order.'/'.$order_method;
 		$config['total_rows'] = $this->users_model->count_items($table, $where);
-		$config['uri_segment'] = 3;
+		$config['uri_segment'] = 5;
 		$config['per_page'] = 20;
 		$config['num_links'] = 5;
 		
@@ -75,14 +85,29 @@ class requests extends MX_Controller
 		$config['num_tag_close'] = '</li>';
 		$this->pagination->initialize($config);
 		
-		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-        $data["links"] = $this->pagination->create_links();
-		$query = $this->requests_model->get_all_requests($table, $where, $config["per_page"], $page);
+		$page = ($this->uri->segment(5)) ? $this->uri->segment(5) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->requests_model->get_all_requests($table, $where, $config["per_page"], $page, $order, $order_method);
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
+		$v_data['status_query'] = $this->requests_model->all_status();
 		//$v_data['request_status_query'] = $this->requests_model->get_request_status();
 		// $v_data['level_status'] = $this->requests_model->request_level_status();
-		$v_data['title'] = "All requests";
+
+		//change of order method 
+		if($order_method == 'DESC')
+		{
+			$order_method = 'ASC';
+		}
+		
+		else
+		{
+			$order_method = 'DESC';
+		}
+		$v_data['order'] = $order;
+		$v_data['order_method'] = $order_method;
+				
+		$v_data['title'] = "All Requests";
 		$data['content'] = $this->load->view('requests/all_requests', $v_data, true);
 		
 		$data['title'] = 'All requests';
@@ -100,11 +125,11 @@ class requests extends MX_Controller
 		//form validation rules
 		$this->form_validation->set_rules('request_instructions', 'request Instructions', 'required|xss_clean');
 		$this->form_validation->set_rules('client_id', 'Client name', 'required|xss_clean');
-		
+		$request_id = $this->requests_model->add_request();
 		//if form has been submitted
 		if ($this->form_validation->run())
 		{
-			$request_id = $this->requests_model->add_request();
+			//$request_id = $this->requests_model->add_request();
 			//update request
 			if($request_id > 0)
 			{
@@ -118,16 +143,17 @@ class requests extends MX_Controller
 		}
 		
 		//open the add new request
-		$data['title'] = 'Add request';
-		$v_data['title'] = 'Add request';
+		$data['title'] = 'Add Request';
+		$v_data['title'] = 'Add Request';
 //		$v_data['request_status_query'] = $this->requests_model->get_request_status();
 		$v_data['clients_query'] = $this->clients_model->all_clients();
+		$v_data['status_query'] = $this->requests_model->all_status();
+		$v_data['turnarounttime'] = $this->requests_model->get_turnaround_time($request_id);
 		$data['content'] = $this->load->view('requests/add_request', $v_data, true);
 		
 		$this->load->view('admin/templates/general_page', $data);
 	}
     
-
     public function add_request_item($request_id,$request_number)
     {
 
@@ -161,10 +187,11 @@ class requests extends MX_Controller
 		{
 			$this->session->set_userdata('error_message', validation_errors());
 		}
-		$v_data['title'] = 'Add request Item to '.$request_number;
+		$v_data['title'] = 'Add Request Item to '.$request_number;
 		//$v_data['request_status_query'] = $this->requests_model->get_request_status();
 		$v_data['items_query'] = $this->items_model->all_unselected_items($request_id);
 		$v_data['request_number'] = $request_number;
+		$v_data['request_details'] = $this->requests_model->get_request_details($request_id);
 		$v_data['request_id'] = $request_id;
 		$v_data['request_item_query'] = $this->requests_model->get_request_items($request_id);
 		$v_data['request_suppliers'] = $this->requests_model->get_request_suppliers($request_id);
@@ -312,7 +339,7 @@ class requests extends MX_Controller
 			$data['content'] = 'request does not exist';
 		}
 		
-		$this->load->view('admin/templates/general_page', $data);
+		$this->load->view('admin/templates/general_page', $data); 
 	}
     
 	public function send_request_for_correction($request_id)
@@ -345,6 +372,67 @@ class requests extends MX_Controller
 			redirect('edit-request/'.$request_id);
 		}
 	}
+	
+	
+	/*
+	request search function
+	*/
+	public function requests_search()
+	{
+		$request_number = $this->input->post('request_number');
+		$client_name = $this->input->post('clients_name');
+		$request_from=$this->input->post('request_from');
+		$request_to=$this->input->post('request_to');
+		$request_status=$this->input->post('request_status');
+		$search_title = '';
+		$request_date ='';
+		 
+		if(!empty($request_number))
+		{
+			$search_title .= ' request number <strong>'.$request_number.'</strong>';
+			$request_number= ' AND requests.request_number LIKE \'%'.$request_number.'%\'';
+		}
+		
+		if(!empty($request_from) && !empty($request_to))
+			{
+				$request_date = ' AND requests.request_date BETWEEN \''.$request_from.'\' AND \''.$request_to.'\'';
+				$search_title .= 'Request date from '.date('jS M Y', strtotime($request_from)).' to '.date('jS M Y', strtotime($request_to)).' ';
+			}
+			else 
+			{
+				$request_date = '';
+				
+				}
+		//search surname
+		if(!empty($client_name))
+		{
+			$search_title .= ' Client name <strong>'.$client_name.'</strong>';
+			$client_name= ' AND client.client_name LIKE \'%'.$client_name.'%\'';
+		}
+		
+		else
+		{
+			$client_name = '';
+		}
+		
+		if(!empty($request_status))
+		{
+			$search_title .= ' Request Status <strong>'.$request_status.'</strong>';
+			$request_status= ' AND requests.request_approval_status = '.$request_status;
+		}
+		
+		else
+		{
+			$request_status = '';
+		}
+		
+		$search = $client_name.$request_number.$request_date.$request_status;
+		$this->session->set_userdata('request_search', $search);
+		$this->session->set_userdata('request_search_title', $search_title);
+		
+		$this->index();
+	}
+	
     
 	/*
 	*
@@ -475,6 +563,55 @@ class requests extends MX_Controller
 		}
 		
 		echo json_encode($data);
+	}
+	public function close_request_search()
+	{
+			$this->session->unset_userdata('request_search');
+			redirect('requests');
+	
+	}
+	//request event
+	public function add_request_event($request_id,$request_number)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('event_name', 'Event Name', 'required|xss_clean');
+		$this->form_validation->set_rules('venue', 'Venue', 'required|xss_clean');
+		$request_event_id =$this->requests_model->add_request_event($request_id);
+		//if form has been submitted
+		if ($this->form_validation->run())
+		{
+			//$request_id = $this->requests_model->add_request();
+			//update request
+			if($request_event_id > 0)
+			{
+				$this->session->set_userdata('success_message', 'request event created successfully');
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'Could not add event request. Please try again');
+			}
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', validation_errors());
+		}
+		
+		$v_data['title'] = 'Add Event to '.$request_number;
+		//$v_data['request_status_query'] = $this->requests_model->get_request_status();
+		$v_data['items_query'] = $this->items_model->all_unselected_items($request_id);
+		$v_data['event_query'] = $this->events_model->all_events();
+		$v_data['request_number'] = $request_number;
+		$v_data['request_details'] = $this->requests_model->get_request_details($request_id);
+		$v_data['request_id'] = $request_id;
+		$v_data['request_item_query'] = $this->requests_model->get_request_items($request_id);
+		$v_data['request_suppliers'] = $this->requests_model->get_request_suppliers($request_id);
+
+		$v_data['suppliers_query'] = $this->suppliers_model->all_suppliers();
+		$data['content'] = $this->load->view('requests/request_event', $v_data, true);
+
+		$this->load->view('admin/templates/general_page', $data);
 	}
 }
 ?>

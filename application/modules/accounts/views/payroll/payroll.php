@@ -21,6 +21,7 @@ if ($query->num_rows() > 0)
 				<th>Personnel</th>
 				';
 	$total = 'total_';
+	$total_number_of_payments = 3;
 	//payments
 	if($payments->num_rows() > 0)
 	{
@@ -70,21 +71,29 @@ if ($query->num_rows() > 0)
 	$total_nssf = 0;
 	$total_nhif = 0;
 	$total_life_ins = 0;
+	$total_allowances = 0;
+	$total_savings = 0;
+	$total_loans = 0;
+	$total_schemes = 0;
+	$total_net = 0;
+	$total_personnel_benefits = $total_personnel_payments = $total_personnel_allowances = $total_personnel_deductions = $total_personnel_other_deductions = array();
 	
 	//deductions
 	if($deductions->num_rows() > 0)
 	{
 		foreach($deductions->result() as $res)
 		{
+			$deduction_name = $res->deduction_name;
 			$deduction_abbr = $res->deduction_name;
 			$deduction_id = $res->deduction_id;
 			$total.$deduction_abbr = 0;
 			
 			//display all except nssf nhif insurance & pension
-			if(($deduction_id != 1))
+			/*if(($deduction_id != 1))
 			{
 				$result .= '<th>'.$deduction_abbr.'</th>';
-			}
+			}*/
+			$result .= '<th>'.$deduction_name.'</th>';
 		}
 	}
 	
@@ -101,18 +110,13 @@ if ($query->num_rows() > 0)
 	}
 	
 	$result .= '
-				<th>Savings</th>
-				<th>Loans</th>
+				<!--<th>Savings</th>
+				<th>Loans</th>-->
 				<th>Net pay</th>
 			</tr>
 		</thead>
 		<tbody>
 	';
-	
-	$total_payments = 0;
-	$total_savings = 0;
-	$total_loans = 0;
-	$total_net = 0;
 	
 	foreach ($query->result() as $row)
 	{
@@ -151,6 +155,11 @@ if ($query->num_rows() > 0)
 				
 				$payment_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
 				$gross += $payment_amt;
+				if(!isset($total_personnel_payments[$payment_id]))
+				{
+					$total_personnel_payments[$payment_id] = 0;
+				}
+				$total_personnel_payments[$payment_id] += $payment_amt;
 				$result .= '<td>'.number_format($payment_amt, 2).'</td>';
 			}
 		}
@@ -168,6 +177,11 @@ if ($query->num_rows() > 0)
 				
 				$benefit_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
 				$total_benefits += $benefit_amt;
+				if(!isset($total_personnel_benefits[$benefit_id]))
+				{
+					$total_personnel_benefits[$benefit_id] = 0;
+				}
+				$total_personnel_benefits[$benefit_id] += $benefit_amt;
 				$result .= '<td>'.number_format($benefit_amt, 2).'</td>';
 			}
 		}
@@ -184,6 +198,11 @@ if ($query->num_rows() > 0)
 				
 				$allowance_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
 				$gross += $allowance_amt;
+				if(!isset($total_personnel_allowances[$allowance_id]))
+				{
+					$total_personnel_allowances[$allowance_id] = 0;
+				}
+				$total_personnel_allowances[$allowance_id] += $allowance_amt;
 				$result .= '<td>'.number_format($allowance_amt, 2).'</td>';
 			}
 		}
@@ -252,6 +271,11 @@ if ($query->num_rows() > 0)
 				$table_id = $deduction_id;
 				$deduction_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
 				$total_deductions += $deduction_amt;
+				if(!isset($total_personnel_deductions[$deduction_id]))
+				{
+					$total_personnel_deductions[$deduction_id] = 0;
+				}
+				$total_personnel_deductions[$deduction_id] += $deduction_amt;
 				$result .= '<td>'.number_format($deduction_amt, 2).'</td>';
 			}
 		}
@@ -269,12 +293,17 @@ if ($query->num_rows() > 0)
 				$table_id = $other_deduction_id;
 				$other_deduction_amt = $this->payroll_model->get_payroll_amount($personnel_id, $payroll_id, $table, $table_id);
 				$total_other_deductions += $other_deduction_amt;
+				if(!isset($total_personnel_other_deductions[$other_deduction_id]))
+				{
+					$total_personnel_other_deductions[$other_deduction_id] = 0;
+				}
+				$total_personnel_other_deductions[$other_deduction_id] += $other_deduction_amt;
 				$result .= '<td>'.number_format($other_deduction_amt, 2).'</td>';
 			}
 		}
 		
 		//savings
-		$rs_savings = $this->payroll_model->get_savings();
+		/*$rs_savings = $this->payroll_model->get_savings();
 		$total_savings = 0;
 		
 		if($rs_savings->num_rows() > 0)
@@ -325,7 +354,7 @@ if ($query->num_rows() > 0)
 			}
 		}
 		$total_loans += ($total_schemes + $interest);
-		$result .= '<th>'.number_format(($total_schemes + $interest), 2).'</th>';
+		$result .= '<th>'.number_format(($total_schemes + $interest), 2).'</th>';*/
 		
 		//total deductions
 		$total_deductions = $total_deductions + $total_other_deductions + $total_schemes + $total_savings + $insurance_amount;
@@ -343,8 +372,36 @@ if ($query->num_rows() > 0)
 	
 	$result .= '
 			<tr> 
-				<td colspan="8"></td>';
+				<td colspan="'.$total_number_of_payments.'"></td>';
+	if($payments->num_rows() > 0)
+	{
+		foreach($payments->result() as $res)
+		{
+			$payment_id = $res->payment_id;
+			$result .= '<th>'.number_format($total_personnel_payments[$payment_id], 2).'</th>';
+		}
+	}
 	
+	//benefits
+	$total_benefits = 0;
+	if($benefits->num_rows() > 0)
+	{
+		foreach($benefits->result() as $res)
+		{
+			$benefit_id = $res->benefit_id;
+			$result .= '<th>'.number_format($total_personnel_benefits[$benefit_id], 2).'</th>';
+		}
+	}
+	
+	//allowances
+	if($allowances->num_rows() > 0)
+	{
+		foreach($allowances->result() as $res)
+		{
+			$allowance_id = $res->allowance_id;
+			$result .= '<th>'.number_format($total_personnel_allowances[$allowance_id], 2).'</th>';
+		}
+	}
 	//gross
 	$result .= '
 			<th>'.number_format($total_gross, 2, '.', ',').'</th>
@@ -352,12 +409,31 @@ if ($query->num_rows() > 0)
 			<th>'.number_format($total_nssf, 2, '.', ',').'</th>
 			<th>'.number_format($total_nhif, 2, '.', ',').'</th>
 			<th>'.number_format($total_life_ins, 2, '.', ',').'</th>
-				<td></td>
 	';
 	
+	//deductions
+	if($deductions->num_rows() > 0)
+	{
+		foreach($deductions->result() as $res)
+		{
+			$deduction_id = $res->deduction_id;
+			$result .= '<th>'.number_format($total_personnel_deductions[$deduction_id], 2).'</th>';
+		}
+	}
+	
+	//other deductions
+	if($other_deductions->num_rows() > 0)
+	{
+		foreach($other_deductions->result() as $res)
+		{
+			$other_deduction_id = $res->other_deduction_id;
+			$result .= '<th>'.number_format($total_personnel_other_deductions[$other_deduction_id], 2).'</th>';
+		}
+	}
+	
 	$result .= '
-				<th>'.number_format($total_savings, 2, '.', ',').'</th>
-				<th>'.number_format($total_loans, 2, '.', ',').'</th>
+				<!--<th>'.number_format($total_savings, 2, '.', ',').'</th>
+				<th>'.number_format($total_loans, 2, '.', ',').'</th>-->
 				<th>'.number_format($total_net, 2, '.', ',').'</th>
 			</tr>
 	';

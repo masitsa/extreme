@@ -56,9 +56,9 @@
 				
 				$taxable = $payments + $benefits + $allowances;
 				$gross = ($payments + $allowances);
-				$paye = $this->payroll_model->calculate_paye($taxable);
-				$paye = $paye - ($insurance_relief + $monthly_relief);
 				$nssf = $this->payroll_model->nssf_view($gross);
+				$paye = $this->payroll_model->calculate_paye($taxable - $nssf);
+				$paye = $paye - ($insurance_relief + $monthly_relief);
 				$nhif = $this->payroll_model->nhif_view($gross);
 				$total_deductions = $nssf + $nhif + $deductions + $other_deductions + $paye + $savings + $loan_schemes;
 				$net = $gross - $total_deductions;
@@ -77,7 +77,7 @@
 						<td>'.number_format($nssf, 2).'</td>
 						<td>'.number_format($nhif, 2).'</td>
 						<td>'.number_format($total_deductions, 2).'</td>
-						<td>'.number_format($net, 2).'</td>
+						<td>'.number_format($net, 0).'.00</td>
 						<td><a href="'.site_url().'accounts/payment-details/'.$personnel_id.'" class="btn btn-sm btn-success" title="Edit '.$personnel_name.'"><i class="fa fa-pencil"></i></a></td>
 						<td><a href="'.site_url().'accounts/payroll/view-payslip/'.$personnel_id.'" class="btn btn-sm btn-info" title="Payslip for '.$personnel_name.'" target="_blank">Payslip</td>
 					</tr> 
@@ -96,13 +96,96 @@
 			$result .= "There are no personnel";
 		}
 ?>
+
+ <section class="panel">
+    <header class="panel-heading">
+        <h2 class="panel-title">Search personnel</h2>
+    </header>
+    
+    <!-- Widget content -->
+   <div class="panel-body">
+    	<div class="padd">
+			<?php
+            echo form_open("accounts/payroll/search_personnel", array("class" => "form-horizontal"));
+            ?>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Branch: </label>
                         
+                        <div class="col-md-8">
+                            <select class="form-control" name="branch_id">
+                            	<option value="">---Select Branch---</option>
+                                <?php
+                                    if($branches->num_rows() > 0){
+                                        foreach($branches->result() as $row):
+                                            $branch_name = $row->branch_name;
+                                            $branch_id= $row->branch_id;
+                                            ?><option value="<?php echo $branch_id; ?>" ><?php echo $branch_name; ?></option>
+                                        <?php	
+                                        endforeach;
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Personnel Number: </label>
+                        
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="personnel_number" placeholder="Personnel number">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">First name: </label>
+                        
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="personnel_fname" placeholder="First name">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Other names: </label>
+                        
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="personnel_onames" placeholder="Other names">
+                        </div>
+                    </div>
+            
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-4">
+                        	<div class="center-align">
+                            	<button type="submit" class="btn btn-info btn-sm">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php
+            echo form_close();
+            ?>
+    	</div>
+    </div>
+</section>
+
 						<section class="panel">
 							<header class="panel-heading">						
 								<h2 class="panel-title"><?php echo $title;?></h2>
 							</header>
 							<div class="panel-body">
                             	<?php
+								$search = $this->session->userdata('personnel_search_title');
+								
+								if(!empty($search))
+								{
+									echo '<h6>Filtered by: '.$search.'</h6>';
+									echo '<a href="'.site_url().'accounts/payroll/close_search" class="btn btn-sm btn-info pull-left">Close search</a>';
+								}
                                 $success = $this->session->userdata('success_message');
 		
 
@@ -135,6 +218,7 @@
                                 </div>
 							</div>
                             <div class="panel-footer">
+                           
                             	<?php if(isset($links)){echo $links;}?>
                             </div>
 						</section>

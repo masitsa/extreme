@@ -2,6 +2,170 @@
 $contacts = $this->site_model->get_contacts();
 $logo = $contacts['logo'];
 ?>
+<?php
+$success = $this->session->userdata('success_message');
+
+if(!empty($success))
+{
+	echo '<div class="alert alert-success"> <strong>Success!</strong> '.$success.' </div>';
+	$this->session->unset_userdata('success_message');
+}
+
+$error = $this->session->userdata('error_message');
+
+if(!empty($error))
+{
+	echo '<div class="alert alert-danger"> <strong>Oh snap!</strong> '.$error.' </div>';
+	$this->session->unset_userdata('error_message');
+}
+?>
+<section class="panel">
+    <header class="panel-heading">
+        <h2 class="panel-title">Leave Balance</h2>
+    </header>
+    <div class="panel-body">
+
+<div class="row">
+	
+    <?php 
+	
+	if($personnel_query->num_rows() > 0)
+	{
+		$row = $personnel_query->row();
+		$gender_id = $row->gender_id;
+	}
+	
+	else
+	{
+		$gender_id = 0;
+	}
+	
+	if($leave_types->num_rows() > 0)
+	{
+		foreach($leave_types->result() as $res)
+		{
+			$leave_type_id = $res->leave_type_id;
+			$leave_type_name = $res->leave_type_name;
+			$leave_balance = $res->leave_days;
+			
+			if($leave->num_rows() > 0)
+			{
+				foreach($leave->result() as $row)
+				{
+					$leave_type_id2 = $row->leave_type_id;
+					$leave_duration_status = $row->leave_duration_status;
+					
+					if(($leave_type_id == $leave_type_id2) && ($leave_duration_status == 1))
+					{
+						$leave_type_count = $row->leave_type_count;
+						$start_date = date('jS M Y',strtotime($row->start_date));
+						$end_date = date('jS M Y',strtotime($row->end_date));
+						$days_taken = $this->site_model->calculate_leave_days($start_date, $end_date, $leave_type_count);
+						$leave_balance -= $days_taken;
+					}
+				}
+			}
+			
+			//maternity & femail
+			if(($leave_type_id == 2) && ($gender_id == 2))
+			{
+				echo '
+				<div class="col-md-3 col-lg-3 col-xl-3">
+					<section class="panel panel-featured-left panel-featured-tertiary">
+						<div class="panel-body">
+							<div class="widget-summary">
+								<div class="widget-summary-col widget-summary-col-icon">
+									<div class="summary-icon bg-tertiary">
+										<i class="fa fa-calendar"></i>
+									</div>
+								</div>
+								<div class="widget-summary-col">
+									<div class="summary">
+										<h4 class="title">'.$leave_type_name.' Leave</h4>
+										<div class="info">
+											<strong class="amount">'.$leave_balance.' days</strong>
+										</div>
+									</div>
+									<div class="summary-footer">
+										<a class="text-muted text-uppercase" href="'.site_url().'hr/leave/leave_application/'.$leave_type_id.'">(apply)</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+				</div>
+				';
+			}
+			
+			//paternity & male
+			else if(($leave_type_id == 1) && ($gender_id == 1))
+			{
+				echo '
+				<div class="col-md-3 col-lg-3 col-xl-3">
+					<section class="panel panel-featured-left panel-featured-tertiary">
+						<div class="panel-body">
+							<div class="widget-summary">
+								<div class="widget-summary-col widget-summary-col-icon">
+									<div class="summary-icon bg-tertiary">
+										<i class="fa fa-calendar"></i>
+									</div>
+								</div>
+								<div class="widget-summary-col">
+									<div class="summary">
+										<h4 class="title">'.$leave_type_name.' Leave</h4>
+										<div class="info">
+											<strong class="amount">'.$leave_balance.' days</strong>
+										</div>
+									</div>
+									<div class="summary-footer">
+										<a class="text-muted text-uppercase" href="'.site_url().'hr/leave/leave_application/'.$leave_type_id.'">(apply)</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+				</div>
+				';
+			}
+			
+			else if($leave_type_id > 2)
+			{
+				echo '
+				<div class="col-md-3 col-lg-3 col-xl-3">
+					<section class="panel panel-featured-left panel-featured-tertiary">
+						<div class="panel-body">
+							<div class="widget-summary">
+								<div class="widget-summary-col widget-summary-col-icon">
+									<div class="summary-icon bg-tertiary">
+										<i class="fa fa-calendar"></i>
+									</div>
+								</div>
+								<div class="widget-summary-col">
+									<div class="summary">
+										<h4 class="title">'.$leave_type_name.' Leave</h4>
+										<div class="info">
+											<strong class="amount">'.$leave_balance.' days</strong>
+										</div>
+									</div>
+									<div class="summary-footer">
+										<a class="text-muted text-uppercase" href="'.site_url().'hr/leave/leave_application/'.$leave_type_id.'">(apply)</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+				</div>
+				';
+			}
+		}
+	}
+	?>
+    
+</div>
+	</div>
+</section>
+<?php echo $this->load->view('accounts/payroll/individual_payroll', '', true);?>
+
 <section class="panel">
 	<header class="panel-heading">
     	<h2 class="panel-title">Profile Details</h2>
@@ -116,4 +280,5 @@ $logo = $contacts['logo'];
 		</div>
 	</div>
 </section>
+
 	

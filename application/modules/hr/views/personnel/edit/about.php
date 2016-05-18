@@ -22,6 +22,7 @@ $personnel_kra_pin = $row->personnel_kra_pin;
 $personnel_national_id_number = $row->personnel_national_id_number;
 $personnel_nhif_number = $row->personnel_nhif_number;
 $personnel_type_id2 = $row->personnel_type_id;
+$image = $row->image;
 
 //repopulate data if validation errors occur
 $validation_error = validation_errors();
@@ -67,9 +68,31 @@ if(!empty($validation_error))
 
     ?>
             
-<?php echo form_open(''.site_url().'human-resource/edit-personnel-about/'.$personnel_id.'', array("class" => "form-horizontal", "role" => "form"));?>
+<?php echo form_open_multipart(''.site_url().'human-resource/edit-personnel-about/'.$personnel_id.'', array("class" => "form-horizontal", "role" => "form"));?>
+<input type="hidden" name="previous_image" value="<?php echo $image;?>" />
+
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-2">
+    	<!-- Image -->
+        <div class="form-group">
+            <div class="col-lg-12">
+                
+                <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="max-width:200px; max-height:200px;">
+                        <img src="<?php echo $image_location;?>" class="img-responsive">
+                    </div>
+                    <div>
+                        <span class="btn btn-file btn-success"><span class="fileinput-new">Select image</span><span class="fileinput-exists">Change</span><input type="file" name="personnel_image"></span>
+                        <a href="#" class="btn btn-info fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+	</div>
+    
+    <div class="col-md-5">
         <div class="form-group">
             <label class="col-lg-5 control-label">Branch: </label>
             
@@ -269,7 +292,7 @@ if(!empty($validation_error))
         </div>
 	</div>
     
-    <div class="col-md-6">
+    <div class="col-md-5">
         
         <div class="form-group">
             <label class="col-lg-5 control-label">Email Address: </label>

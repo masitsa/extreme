@@ -7,6 +7,7 @@ class Items_categories extends MX_Controller {
 	function __construct()
 	{
 		parent:: __construct();
+		$this->load->model('auth/auth_model');
 		$this->load->model('admin/users_model');
 		$this->load->model('items_categories_model');
 		$this->load->model('admin/file_model');
@@ -15,6 +16,12 @@ class Items_categories extends MX_Controller {
 		$this->load->model('site/site_model');
 		$this->load->model('administration/personnel_model');
 		//path to image directory
+	
+		if(!$this->auth_model->check_login())
+		{
+			redirect('login');
+		}
+		
 	}
     
 	/*
@@ -23,10 +30,10 @@ class Items_categories extends MX_Controller {
 	*
 	*/
 
-	public function index() 
+	public function index($order = 'category_name', $order_method = 'ASC') 
 	{
 		//$where = 'created_by IN (0, '.$this->session->userdata('vendor_id').')';
-		$where = 'branch_code = "'.$this->session->userdata('branch_code').'"';
+		$where = 'deleted = 0 AND branch_code = "'.$this->session->userdata('branch_code').'"';
 		$table = 'item_category';
 
 		$category_search = $this->session->userdata('category_search');
@@ -35,10 +42,10 @@ class Items_categories extends MX_Controller {
 		{
 			$where .= $category_search;
 		}
-		$segment = 3;
+		$segment = 5;
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = base_url().'item-categories';
+		$config['base_url'] = base_url().'item-categories'.$order.'/'.$order_method;;
 		$config['total_rows'] = $this->users_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -71,7 +78,21 @@ class Items_categories extends MX_Controller {
 		
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $data["links"] = $this->pagination->create_links();
-		$query = $this->items_categories_model->get_all_categories($table, $where, $config["per_page"], $page);
+		$query = $this->items_categories_model->get_all_categories($table, $where, $config["per_page"], $page,$order,$order_method);
+		
+		
+			//change of order method 
+		if($order_method == 'DESC')
+		{
+			$order_method = 'ASC';
+		}
+		
+		else
+		{
+			$order_method = 'DESC';
+		}
+		$v_data['order'] = $order;
+		$v_data['order_method'] = $order_method;
 	
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
@@ -225,7 +246,7 @@ class Items_categories extends MX_Controller {
 
 		if(!empty($category_name))
 		{
-			$category_name = ' AND category.category_name LIKE \'%'.mysql_real_escape_string($category_name).'%\' ';
+			$category_name = ' AND item_category.category_name LIKE \'%'.$category_name.'%\' ';
 		}
 		
 		

@@ -10,8 +10,11 @@ class Admin extends MX_Controller
 		$this->load->model('auth/auth_model');
 		$this->load->model('site/site_model');
 		$this->load->model('reports_model');
+		$this->load->model('users_model');
+		$this->load->model('branches_model');
 		$this->load->model('sections_model');
 		$this->load->model('hr/personnel_model');
+		$this->load->model('accounts/payroll_model');
 		
 		if(!$this->auth_model->check_login())
 		{
@@ -26,15 +29,149 @@ class Admin extends MX_Controller
 	*/
 	public function dashboard() 
 	{
-		$data['title'] = $this->site_model->display_page_title();
+		$branch_id = $this->session->userdata('branch_id');
+		$branch_name = $this->session->userdata('branch_name');
+		$branches = $this->branches_model->all_branches();
+		$where = 'month.month_id = payroll.month_id AND payroll_status = 1 ';
+		$title = $branch_name.' Payroll history';
+		
+		if(($branch_id == FALSE) || (empty($branch_id)))
+		{
+			if($branches->num_rows() > 0)
+			{
+				$row = $branches->result();
+				$branch_id = $row[0]->branch_id;
+				$branch_name = $row[0]->branch_name;
+				$where .= ' AND payroll.branch_id = '.$branch_id;
+				$this->session->set_userdata('branch_id', $branch_id);
+				$this->session->set_userdata('branch_name', $branch_name);
+			}
+		}
+		
+		else
+		{
+			$where .= ' AND payroll.branch_id = '.$branch_id;
+		}
+		
+		//search items
+		$search = $this->session->userdata('payroll_search');
+		
+		if(!empty($search))
+		{
+			$where .= $search;
+			$title = $branch_name.' '.$this->session->userdata('payroll_search_title');
+		}
+		$table = 'payroll, month';
+		//pagination
+		$segment = 2;
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'dashboard';
+		$config['total_rows'] = $this->users_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active">';
+		$config['cur_tag_close'] = '</li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $data["links"] = $this->pagination->create_links();
+		$query = $this->payroll_model->get_all_payrolls($table, $where, $config["per_page"], $page, $order='payroll.month_id', $order_method = 'DESC');
+		
+		$data['title'] = $v_data['title'] = $title;
+		$personnel_id = $this->session->userdata('personnel_id');
+		$v_data['leave'] = $this->personnel_model->get_personnel_leave($personnel_id);
+		$v_data['leave_types'] = $this->personnel_model->get_leave_types();
+		$v_data['personnel_query'] = $this->personnel_model->get_personnel($personnel_id);
+		$v_data['month'] = $this->payroll_model->get_months();
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['branches'] = $branches;
+		$v_data['payments'] = $this->payroll_model->get_all_payments();
+		$v_data['benefits'] = $this->payroll_model->get_all_benefits();
+		$v_data['allowances'] = $this->payroll_model->get_all_allowances();
+		$v_data['deductions'] = $this->payroll_model->get_all_deductions();
+		$v_data['savings'] = $this->payroll_model->get_all_savings();
+		$v_data['loan_schemes'] = $this->payroll_model->get_all_loan_schemes();
+		$v_data['other_deductions'] = $this->payroll_model->get_all_other_deductions();
+		$v_data['title'] = $this->site_model->display_page_title();
 		$v_data['title'] = $data['title'];
 		
-		// $data['content'] = $this->load->view('dashboard', $v_data, true);
 		$data['content'] = $this->load->view('profile_page', $v_data, true);
 		
 		$this->load->view('templates/general_page', $data);
 	}
     
+	
+	
+	//print individual payslip
+	public function payslip_details($payroll_id)
+	{
+		$where = 'personnel_status = 1 AND personnel_type_id = 1';
+		
+		$this->db->where('payroll.branch_id = branch.branch_id AND payroll.payroll_id = '.$payroll_id);
+		$branches = $this->db->get('payroll, branch');
+		
+		if($branches->num_rows() > 0)
+		{
+			$row = $branches->result();
+			$branch_id = $row[0]->branch_id;
+			$branch_name = $row[0]->branch_name;
+			$branch_image_name = $row[0]->branch_image_name;
+			$branch_address = $row[0]->branch_address;
+			$branch_post_code = $row[0]->branch_post_code;
+			$branch_city = $row[0]->branch_city;
+			$branch_phone = $row[0]->branch_phone;
+			$branch_email = $row[0]->branch_email;
+			$branch_location = $row[0]->branch_location;
+			$where .= ' AND branch_id = '.$branch_id;
+		}
+		
+		$data['branch_name'] = $branch_name;
+		$data['branch_image_name'] = $branch_image_name;
+		$data['branch_id'] = $branch_id;
+		$data['branch_address'] = $branch_address;
+		$data['branch_post_code'] = $branch_post_code;
+		$data['branch_city'] = $branch_city;
+		$data['branch_phone'] = $branch_phone;
+		$data['branch_email'] = $branch_email;
+		$data['branch_location'] = $branch_location;
+		
+		$data['payroll_id'] = $payroll_id;
+		$data['payroll'] = $this->payroll_model->get_payroll($payroll_id);
+		$data['query'] = $this->personnel_model->retrieve_payroll_personnel($where);
+			
+		$data['payments'] = $this->payroll_model->get_all_payments();
+		$data['benefits'] = $this->payroll_model->get_all_benefits();
+		$data['allowances'] = $this->payroll_model->get_all_allowances();
+		$data['deductions'] = $this->payroll_model->get_all_deductions();
+		$data['savings'] = $this->payroll_model->get_all_savings();
+		$data['loan_schemes'] = $this->payroll_model->get_all_loan_schemes();
+		$data['other_deductions'] = $this->payroll_model->get_all_other_deductions();
+
+		$this->load->view('accounts/payroll/individual_payslip', $data);
+    }
 	/*
 	*
 	*	Edit admin configuration

@@ -1,6 +1,6 @@
 	<section class="panel panel-featured panel-featured-info">
         <header class="panel-heading">
-            <h2 class="panel-title">Total visits for the last 7 days</h2>
+            <h2 class="panel-title">Total Quote Amounts for the last 7 days</h2>
         </header>   
 
           <!-- Widget content -->
@@ -20,7 +20,9 @@
         </div>
     
     </section>
+
 <script type="text/javascript">
+
 var config_url = $('#config_url').val();
 
 function get_date(year, month, day) {
@@ -30,14 +32,14 @@ function get_date(year, month, day) {
 /* Patients chart starts */
 //required variables
 var highest_bar;
-var inpatients = [], outpatients = [];
+var total_quotes = [];
 var current_date;
 
 //get the current day
 var d = new Date();
 var current_timestamp = d.getTime();
 //var current_timestamp = get_date(year, month, day);
-var url = config_url+"administration/charts/patient_type_totals/"+current_timestamp;
+var url = config_url+"administration/charts/get_total_quote_amount/"+current_timestamp;
 	
 //get data for the last 7 days
 for(r = 0; r < 8; r++)
@@ -53,11 +55,11 @@ for(r = 0; r < 8; r++)
 		success:function(data){
 			
 			//add the data to the array
-			inpatients.push([current_timestamp, data.inpatients]);
-			outpatients.push([current_timestamp, data.outpatients]);
+			//inpatients.push([current_timestamp, data.inpatients]);
+			total_quotes.push([current_timestamp, data.total_quotes]);
 			
 			current_timestamp = current_timestamp - 86400000;
-			url = config_url+"administration/charts/patient_type_totals/"+current_timestamp;
+			url = config_url+"administration/charts/get_total_quote_amount/"+current_timestamp;
 		},
 		error: function(xhr, status, error) {
 			alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
@@ -70,13 +72,10 @@ $(function () {
 	
 	var plot = $.plot($("#curve-chart"), 
 		[
+			
 			{
-				data: outpatients,
-				label: "Outpatients"
-			},
-			{
-				data: inpatients, 
-				label: "Inpatients"
+				data: total_quotes, 
+				label: "Total Quote Amount"
 			}
 		],
 		
@@ -87,7 +86,8 @@ $(function () {
 						fillColor: {
 						  colors: [{
 							opacity: 0.05
-						  }, {
+						  }],
+						  colors: [{
 							opacity: 0.01
 						  }]
 					  }
@@ -96,8 +96,8 @@ $(function () {
 		   },
 			grid: { hoverable: true, clickable: true, borderWidth:0 },
 			xaxis: {mode: "time",timeformat: "%d/%m/%y", axisLabel: "Day"},
-			yaxis: {axisLabel: "Total Patients"},
-			colors: ["#fa3031", "#54728C", "#94B86E", "#f0ad4e"]
+			yaxis: {axisLabel: "Total Amount Quoted"},
+			colors: ["#54728C", "#fa3031", "#94B86E", "#f0ad4e"]
 		}
 	);
 	

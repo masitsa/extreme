@@ -8,17 +8,28 @@ if($item_id > 0)
 	
 	$category_id = $product[0]->category_id;
 	$product_id = $product[0]->product_id;
+	$checked_out = $product[0]->checked_out;
+	$location = $product[0]->location;
 	$product_name = $product[0]->product_name;
 	$product_status = $product[0]->product_status;
 	$product_description = $product[0]->product_description;
 	$category_name = $product[0]->category_name;
     $unit_of_measure = $product[0]->unit_of_measure;
+	$model = $product[0]->model;
+	$purchase_price= $product[0]->purchase_price;
+	$scrap_value= $product[0]->scrap_value;
+	$brand = $product[0]->brand;
+	$manufacturer = $product[0]->manufacturer;
+	$asset_id = $product[0]->asset_id;
+	$serial_number = $product[0]->serial_number;
     $reorder_level = $product[0]->reorder_level;
     $brand_id = $product[0]->brand_id;
     $generic_id = $product[0]->generic_id;
     $class_id = $product[0]->class_id;
     $drug_type_id = $product[0]->drug_type_id;
-
+	$status = $product[0]->product;
+	$condition_id = $product[0]->condition_id;
+	$condition = $product[0]->condition;
 	$v_errors = validation_errors();
 	
 
@@ -33,7 +44,18 @@ else
 	$product_description = set_value('product_description');
 	$category_id = '';
 	$category_name = set_value('category_name');
-
+	$condition_id = set_value ('condition_id');
+	$asset_id = set_value('asset_id');
+	$asset_barcode = set_value('asset_barcode');
+	$serial_number = set_value('serial_number');
+	$condition_id = set_value('condition_id');
+	$condition = set_value('condition');
+	$scrap_value = set_value('scrap_value');
+	$status = set_value('status');
+	$purchase_price = set_value('purchase_price');
+	$model = set_value('model');
+	$brand = set_value('brand');
+	$manufacturer = set_value('manufacturer');
     $reorder_level = set_value('reorder_level');
     $brand_id = set_value('brand_id');
     $generic_id = set_value('generic_id');
@@ -47,10 +69,10 @@ else
 <link href="<?php echo base_url()."assets/themes/jasny/css/jasny-bootstrap.css"?>" rel="stylesheet"/>
 <section class="panel panel-featured panel-featured-info">
     <header class="panel-heading">
-        <h2 class="panel-title">Add new Item</h2>
+        <h2 class="panel-title">Add New Item</h2>
     </header>
     <div class="panel-body">
-          	<a href="<?php echo site_url().'inventory/item';?>" class="btn btn-sm btn-info pull-right">Back to items</a>
+          	<a href="<?php echo site_url().'inventory/item';?>" class="btn btn-sm btn-info pull-right">Back to Items</a>
             
             <div class="row">
                 <div class="col-md-12">
@@ -96,7 +118,34 @@ else
 									echo form_open('inventory/add-item', array("class" => "form-horizontal", "role" => "form"));
 									?>
                                      	<div class="row">
+                                        
                                         	<div class="col-md-6">
+                                            <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Item Category <span class="required">*</span></label>
+                                                    <div class="col-lg-8">
+                                                        <select name="item_category_id" id="category_id" class="form-control">
+                                                            <?php
+                                                            echo '<option value="0">No Category </option>';
+                                                            if($all_categories->num_rows() > 0)
+                                                            {
+                                                                $result = $all_categories->result();
+                                                                
+                                                                foreach($result as $res)
+                                                                {
+                                                                    if($res->item_category_id == $item_category_id)
+                                                                    {
+                                                                        echo '<option value="'.$res->item_category_id.'" selected>'.$res->category_name.' '.$res->item_category_id.'</option>';
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        echo '<option value="'.$res->item_category_id.'">'.$res->category_name.' </option>';
+                                                                    }
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div> 
                                                 
                                                 <!-- product Name -->
                                                 <div class="form-group">
@@ -131,69 +180,92 @@ else
                                                         </select>
                                                     </div>
                                                 </div> 
-                                                <!-- Product Category -->
                                                 <div class="form-group">
-                                                    <label class="col-lg-4 control-label">Item Category <span class="required">*</span></label>
+                                                 <label class="col-lg-4 control-label">Manufacturer:</label>
+                                                    
                                                     <div class="col-lg-8">
-                                                        <select name="item_category_id" id="category_id" class="form-control">
+                                                       <select name="manufacturer_id" id="manufacturer_id" class="form-control">
                                                             <?php
-                                                            echo '<option value="0">No Category </option>';
-                                                            if($all_categories->num_rows() > 0)
+                                                            echo '<option value="0">No Manufacturer </option>';
+                                                            if($all_manufacturers->num_rows() > 0)
                                                             {
-                                                                $result = $all_categories->result();
+                                                                $result = $all_manufacturers->result();
                                                                 
                                                                 foreach($result as $res)
                                                                 {
-                                                                    if($res->item_category_id == $item_category_id)
+                                                                    if($res->manufacturer_id == $manufacturer_id)
                                                                     {
-                                                                        echo '<option value="'.$res->item_category_id.'" selected>'.$res->category_name.' '.$res->item_category_id.'</option>';
+                                                                        echo '<option value="'.$res->manufacturer_id.'" selected>'.$res->manufacturer_name.' '.$res->manufacturer_id.'</option>';
                                                                     }
                                                                     else
                                                                     {
-                                                                        echo '<option value="'.$res->item_category_id.'">'.$res->category_name.' </option>';
+                                                                        echo '<option value="'.$res->manufacturer_id.'">'.$res->manufacturer_name.' </option>';
                                                                     }
                                                                 }
                                                             }
                                                             ?>
                                                         </select>
                                                     </div>
-                                                </div> 
-                                             
+                                                </div>
                                                  <div class="form-group">
-                                                 <label class="col-lg-4 control-label">Unit of measure: </label>
+                                                 <label class="col-lg-4 control-label">Brand:</label>
                                                     
                                                     <div class="col-lg-8">
-                                                       <input type="text" class="form-control" name="unit_of_measure" placeholder="Unit of Measure" value="<?php echo set_value('unit_of_measure');?>">
+                                                                         <select name="brand_id" id="model_id" class="form-control">
+                                                            <?php
+                                                            echo '<option value="0">No Brand </option>';
+                                                            if($all_brands->num_rows() > 0)
+                                                            {
+                                                                $result = $all_brands->result();
+                                                                
+                                                                foreach($result as $res)
+                                                                {
+                                                                    if($res->brand_id == $brand_id)
+                                                                    {
+                                                                        echo '<option value="'.$res->brand_id.'" selected>'.$res->brand_name.' '.$res->brand_id.'</option>';
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        echo '<option value="'.$res->brand_id.'">'.$res->brand_name.' </option>';
+                                                                    }
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-4 control-label">Activate item?</label>
-                                                    <div class="col-lg-8">
-                                                        <div class="radio">
-                                                            <label>
-                                                                <?php
-                                                                if($product_status == 1){echo '<input id="optionsRadios1" type="radio" checked value="1" name="product_status">';}
-                                                                else{echo '<input id="optionsRadios1" type="radio" value="1" name="product_status">';}
-                                                                ?>
-                                                                Yes
-                                                            </label>
-                                                        </div>
-                                                        <div class="radio">
-                                                            <label>
-                                                                <?php
-                                                                if($product_status == 0){echo '<input id="optionsRadios1" type="radio" checked value="0" name="product_status">';}
-                                                                else{echo '<input id="optionsRadios1" type="radio" value="0" name="product_status">';}
-                                                                ?>
-                                                                No
-                                                            </label>
-                                                        </div>
+                                                 <div class="form-group">
+                                                 <label class="col-lg-4 control-label">Model:</label>
+                                                    
+                                                     <div class="col-lg-8">
+                                                        <select name="model_id" id="model_id" class="form-control">
+                                                            <?php
+                                                            echo '<option value="0">No Model </option>';
+                                                            if($all_models->num_rows() > 0)
+                                                            {
+                                                                $result = $all_models->result();
+                                                                
+                                                                foreach($result as $res)
+                                                                {
+                                                                    if($res->model_id == $model_id)
+                                                                    {
+                                                                        echo '<option value="'.$res->model_id.'" selected>'.$res->model_name.' '.$res->model_id.'</option>';
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        echo '<option value="'.$res->model_id.'">'.$res->model_name.' </option>';
+                                                                    }
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </select>
                                                     </div>
-                                                </div> 
+                                                </div>
 
-                                              
+                                               
                                         	</div>
                                             <div class="col-md-6">
-                                                <div class="form-group">
+                                             <div class="form-group">
                                                     <label class="col-lg-4 control-label">Hiring Price: </label>
                                                     
                                                     <div class="col-lg-8">
@@ -208,27 +280,65 @@ else
                                                         <input type="text" class="form-control" name="minimum_hiring_price" placeholder="Minimum Price" value="<?php echo set_value('minimum_hiring_price');?>">
                                                     </div>
                                                 </div>
+                                                
                                                 <div class="form-group">
-                                                    <label class="col-lg-4 control-label">Item Price: </label>
+                                                    <label class="col-lg-4 control-label">Purchase Price: </label>
                                                     
                                                     <div class="col-lg-8">
-                                                        <input type="text" class="form-control" name="item_unit_price" placeholder="Price:" value="<?php echo set_value('item_unit_price');?>">
+                                                        <input type="text" class="form-control" name="purchase_price" placeholder="Purchase Price:" value="<?php echo set_value('purchase_price');?>">
                                                     </div>
-                                                </div>
-               	   <div class="form-group">
-                                                    <label class="col-lg-4 control-label">Quantity: </label>
+                                                    </div>
+                                                 <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Current Value: </label>
                                                     
                                                     <div class="col-lg-8">
-                                                        <input type="text" class="form-control" name="quantity" placeholder="quantity" value="<?php echo set_value('quantity');?>">
+                                                        <input type="text" class="form-control" name="current_value" placeholder="Current Value:" value="<?php echo set_value('current_value');?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
+                                                    <label class="col-lg-4 control-label
+                                                </div>                                                    
+">Scrap Value: </label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" class="form-control" name="scrap_value" placeholder="Scrap Value:" value="<?php echo set_value('scrap_value');?>">
+                                                    </div>
+                                                </div>
+                                               
+                                                 <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Activate item?</label>
+                                                    <div class="col-lg-4">
+                                                        <div class="radio">
+                                                            <label>
+                                                                <?php
+                                                                if($product_status == 1){echo '<input id="optionsRadios1" type="radio" checked value="1" name="product_status">';}
+                                                                else{echo '<input id="optionsRadios1" type="radio" value="1" name="product_status">';}
+                                                                ?>
+                                                                Yes
+                                                            </label>
+                                                        </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                        <div class="radio">
+                                                            <label>
+                                                                <?php
+                                                                if($product_status == 0){echo '<input id="optionsRadios1" type="radio" checked value="0" name="product_status">';}
+                                                                else{echo '<input id="optionsRadios1" type="radio" value="0" name="product_status">';}
+                                                                ?>
+                                                                No
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+											</div>
+                                            </div>
+                                       
+                                  <br/>
+                                             <div class="form-group">
                                                   <label class="col-lg-2 control-label">Item Description</label>
                                                   <div class="col-lg-10">
-                                                    <textarea name="item_description" class="form-control"><?php echo $product_description;?></textarea>
+                                                    <textarea name="item_description" class="cleditor"><?php echo $product_description;?></textarea>
                                                   </div>
                                                 </div>
-                                        	</div>
                                         </div>
                                         <br>
                                          <div class="row">   
@@ -249,8 +359,7 @@ else
             </div>
 		</div>
     </section>
-<script src="<?php echo base_url().'assets/themes/tinymce/js/';?>tinymce.min.js"></script>
-<script>tinymce.init({selector:'textarea'});</script>
+
 <script type="text/javascript">
      function discount_type(id){
 

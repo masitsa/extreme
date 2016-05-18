@@ -18,15 +18,15 @@
 						<th><a href="'.site_url().'accounts/payroll/created/'.$order_method.'/'.$page.'">Created</a></th>
 						<th><a href="'.site_url().'accounts/payroll/created_by/'.$order_method.'/'.$page.'">Created by</a></th>
 						<th><a href="'.site_url().'accounts/payroll/payroll_status/'.$order_method.'/'.$page.'">Status</a></th>
-						<th>Payments</th>
+						<!--<th>Payments</th>
 						<th>Benefits</th>
 						<th>Allowances</th>
 						<th>PAYE</th>
 						<th>NSSF</th>
 						<th>NHIF</th>
 						<th>Deductions</th>
-						<th>Net</th>
-						<th colspan="5">Actions</th>
+						<th>Net</th>-->
+						<th colspan="6">Reports</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -47,7 +47,7 @@
 				$payroll_name = $month_name.' '.$payroll_year;
 				
 				//payments
-				$table = $this->payroll_model->get_table_id("payment");
+				/*$table = $this->payroll_model->get_table_id("payment");
 				$payment = $this->payroll_model->get_payroll_amount2($payroll_id, $table);
 				
 				//benefits
@@ -108,7 +108,7 @@
 				$total_deductions = $deductions + $nssf + $nhif + $paye + $insurance_amount;
 				$gross = $payment + $allowance;
 				
-				$net = $gross - $total_deductions;
+				$net = $gross - $total_deductions;*/
 				
 				//get branch
 				if($administrators->num_rows() > 0)
@@ -140,7 +140,7 @@
 				}
 				
 				$count++;
-				$result .= 
+				/*$result .= 
 				'
 					<tr>
 						<td>'.$count.'</td>
@@ -157,7 +157,28 @@
 						<td>'.number_format($nhif, 2).'</td>
 						<td>'.number_format($deductions, 2).'</td>
 						<td>'.number_format($net, 2).'</td>
+						<td><a href="'.site_url().'accounts/print-month-payslips/'.$payroll_id.'" class="btn btn-sm btn-primary" title="Print '.$payroll_name.'" target="_blank">Payslips</a></td>
+
 						<td><a href="'.site_url().'accounts/print-payroll/'.$payroll_id.'" class="btn btn-sm btn-success" title="Print '.$payroll_name.'" target="_blank"><i class="fa fa-print"></i></a></td>
+
+						<td>'.$button.'</td>
+					</tr> 
+				';*/
+				$result .= 
+				'
+					<tr>
+						<td>'.$count.'</td>
+						<td>'.$month_name.'</td>
+						<td>'.$payroll_year.'</td>
+						<td>'.$created.'</td>
+						<td>'.$created_by.'</td>
+						<td>'.$status.'</td>
+						<td><a href="'.site_url().'accounts/print-paye-report/'.$payroll_id.'" class="btn btn-sm btn-danger" title="Print '.$payroll_name.' PAYE report" target="_blank">PAYE</a></td>
+						<td><a href="'.site_url().'accounts/print-nhif-report/'.$payroll_id.'" class="btn btn-sm btn-info" title="Print '.$payroll_name.' NHIF report" target="_blank">NHIF</a></td>
+						<td><a href="'.site_url().'accounts/print-nssf-report/'.$payroll_id.'" class="btn btn-sm btn-warning" title="Print '.$payroll_name.' NSSF report" target="_blank">NSSF</a></td>
+						<td><a href="'.site_url().'accounts/print-payroll/'.$payroll_id.'" class="btn btn-sm btn-success" title="Print '.$payroll_name.'" target="_blank">Payroll</a></td>
+						<td><a href="'.site_url().'accounts/print-month-payslips/'.$payroll_id.'" class="btn btn-sm btn-primary" title="Print '.$payroll_name.'" target="_blank">Payslips</a></td>
+
 						<td>'.$button.'</td>
 					</tr> 
 				';
