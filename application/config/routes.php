@@ -713,10 +713,10 @@ $route['inventory/delete-inventory-item/(:num)']='inventory_management/items/del
 //events
 $route['inventory/add-request-event/(:num)/(:any)'] = 'inventory/requests/add_request_event/$1/$2';
 
-<<<<<<< HEAD
+
 //duplicates for contractual clients
 $route['inventory/duplicate-request/(:num)/(:any)']='inventory/requests/duplicate_request/$1/$2';
-=======
+
 //import personnel routes
 $route['import/personnel'] = 'hr/personnel/import_personnel';
 $route['import/personnel-template'] = 'hr/personnel/import_personnel_template';
@@ -726,4 +726,6 @@ $route['import/import-personnel'] = 'hr/personnel/do_personnel_import';
 $route['import/payroll-data'] = 'hr/import_payroll';
 $route['import/payroll-template'] = 'hr/import_payroll_template';
 $route['import/import-payroll']= 'hr/do_payroll_import';
->>>>>>> 092ed31ece0f3dac29471575ad8477ba6dfcc725
+
+//event personnel routes
+$route['inventory/add-request-personnel/(:num)/(:num)']='inventory/requests/add_request_personnel/$1/$2';

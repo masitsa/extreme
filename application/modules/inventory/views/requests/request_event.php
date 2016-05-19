@@ -11,6 +11,10 @@ $request_status_name = '';
 $client_name = '';
 $personnel_fname = '';
 $personnel_onames = '';
+$personnel_onames = '';
+$date = '';
+$start_time = '';
+$end_time = '';
 
 $request_approval_status = $this->requests_model->get_request_approval_status($request_id);
 
@@ -126,11 +130,15 @@ if(($request_approval_status == 0)&&($request_approval_status < 4))
     <div class="panel-body">
 	
     	<div class="row">
+			<?php
+				if(($request_approval_status == 0)&&($request_approval_status < 4)){
+			?>
 			<div class="col-md-offset-8 col-md-2">
             	<button type="button" class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#add_event">
                 	Add Event
                 </button>
             </div>
+			<?php }?>
 			<div class="col-md-2">
             	<a href="<?php echo base_url();?>requests" class="btn btn-info btn-sm pull-right">Back to Requests</a>
             </div>
@@ -238,7 +246,7 @@ if(($request_approval_status == 0)&&($request_approval_status < 4))
 					else if($request_approval_status == 4 )
 					{
 						?>
-							 <a class="btn btn-warning btn-sm fa fa-print" href="<?php echo base_url();?>inventory/generate-lpo/<?php echo $request_id;?>/<?php echo $request_number;?>" target="_blank"> View Qoutation </a>
+							 <a class="btn btn-warning btn-sm fa fa-print" href="<?php echo base_url();?>inventory/generate-lpo/<?php echo $request_id;?>/<?php echo $request_number;?>" target="_blank"> View Quotation </a>
                             <?php
                             echo '<div class="alert alert-info">Your Request Has Been Approved</div>';
 							?>
@@ -326,6 +334,7 @@ if(($request_approval_status == 0)&&($request_approval_status < 4))
 													 <input type="hidden" name="minimum_hiring_price" id="minimum_hiring_price<?php echo $request_event_id;?>" />
 												</div>
 											</div>
+
 									<div class="center-align">
 										<button class="btn btn-primary btn-sm" type="submit">Add Event Item</button>
 									</div>
@@ -431,9 +440,14 @@ if(($request_approval_status == 0)&&($request_approval_status < 4))
 							</div>
 						</section> 
                         
-                        <h2 class="panel-title"> Request Items for <?php echo $event_name;?> <button type="button" class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#add_event_item<?php echo $request_event_id?>">
-									Add Event Item
-								</button>
+						<h2 class="panel-title"> Request Items for <?php echo $event_name;?> 
+                        <?php
+							if(($request_approval_status == 0)&&($request_approval_status < 4)){
+						?>
+						<button type="button" class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#add_event_item<?php echo $request_event_id?>">
+							Add Event Item
+						</button>
+						<?php }?>
                         </h2>
 			<div class="panel-body">
 			
@@ -686,9 +700,16 @@ if(($request_approval_status == 0)&&($request_approval_status < 4))
 					?>
 				</div>
         	</div>
-	<h2 class="panel-title"> Logistics for <?php echo $event_name;?><button type="button" class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#add_event_logistics<?php echo $request_event_id?>">
-									Add Event Lodistics
-								</button></h2>
+	<h2 class="panel-title"> Logistics for <?php echo $event_name;?>
+	
+	<?php
+		if(($request_approval_status == 0)&&($request_approval_status < 4)){
+	?>
+	<button type="button" class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#add_event_logistics<?php echo $request_event_id?>">
+		Add Event Logistics
+	</button>
+	<?php }?>
+	</h2>
 	<div class="panel-body">
 		
     	<?php
@@ -784,6 +805,7 @@ if(($request_approval_status == 0)&&($request_approval_status < 4))
 							
 
 								if($request_approval_status == 0)
+
 								{
 				                    $result .= ' '.form_open('inventory/update-request-logistic/'.$logistic_id.'/'.$request_event_id.'/'.$request_number.'/'.$request_id).'
 												<tr>
@@ -937,6 +959,136 @@ if(($request_approval_status == 0)&&($request_approval_status < 4))
 						';
 						echo $result;
 								
+				}
+				?>
+                <div class="modal fade" id="add_event_personnel<?php echo $request_event_id;?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Add Event Personnel</h4>
+			</div>
+			<div class="modal-body">
+								<?php echo form_open('inventory/add-request-personnel/'.$request_id.'/'.$request_event_id, array("class" => "form-horizontal", "role" => "form","request_event_id"=>$request_event_id));?>
+										<div class="form-group">
+											<label class="col-lg-12 ">Personnel Name</label>
+											<div class="col-lg-12">
+												<select class="form-control" name="personnel_id" id="personnel_id" request_event_id="<?php echo $request_event_id;?>">
+													<option>SELECT PERSONNEL</option>
+													<?php
+													$personnel_query = $this->requests_model->get_personnel();
+													if($personnel_query->num_rows() > 0)
+													{
+														foreach ($personnel_query->result() as $key ) 
+														{
+															# code...
+															$personnel_id = $key->personnel_id;
+															$personnel_fname = $key->personnel_fname;
+															$personnel_onames = $key->personnel_onames;
+
+															echo '<option value="'.$personnel_id.'">'.$personnel_fname. $personnel_onames.'</option>';
+														}
+													}
+													?>
+
+												</select>
+									  			</div>
+                                      		</div>
+									   		<div class="form-group">
+                                                <label class="col-lg-12 ">Date</label>
+                                                <div class="col-lg-12">
+                                                     <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="date" placeholder="Date" value="<?php echo set_value('date');?>" />
+                                                </div>
+                                        	</div>
+											<div class="form-group">
+												<label class="col-lg-12 ">Start Time</label>
+												<div class="col-lg-12">
+													 <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-clock-o"></i>
+                                                        </span>
+                                                        <input type="text" class="form-control" data-plugin-timepicker="" name="start_time">
+                                                    </div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-lg-12 ">End Time</label>
+												<div class="col-lg-12">
+													 <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-clock-o"></i>
+                                                        </span>
+                                                        <input type="text" class="form-control" data-plugin-timepicker="" name="end_time">
+                                                    </div>
+
+												</div>
+											</div>
+									<div class="center-align">
+										<button class="btn btn-primary btn-sm" type="submit">Add Event Pesonnel</button>
+									</div>
+								<?php echo form_close();?>
+                                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      		</div>
+		</div>
+	</div>
+</div>
+				<h2 class="panel-title"> Event Personnel for <?php echo $event_name;?> 
+                        <?php
+							if(($request_approval_status == 0)&&($request_approval_status < 4)){
+						?>
+						<button type="button" class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#add_event_personnel<?php echo $request_event_id?>">
+							Add Event Personnel
+						</button>
+						<?php }?>
+                        </h2>
+			<div class="panel-body">
+			
+			<?php
+			$request_event_personnel_query = $this->requests_model->get_request_personnel($request_event_id);
+			//var_dump ($request_event_personnel_query);die();
+				$result ='';
+				if($request_event_personnel_query->num_rows() > 0)
+				{	
+					$result .= 
+					'
+					<div class="row">
+						<div class="col-md-12">
+							<table class="example table-autosort:0 table-stripeclass:alternate table table-hover table-bordered " id="TABLE_2">
+							  <thead>
+								<tr>
+								  <th>Personnel Name</th>
+								  <th>Date</th>
+								  <th>Start Time</th>
+								  <th>End Time</th>
+								</tr>
+							  </thead>
+							  <tbody>
+							';
+									
+					foreach($request_event_personnel_query->result() as $request_personnel)
+					{
+						$personnel_fname = $request_personnel->personnel_fname;
+						$personnel_onames=$request_personnel->personnel_onames;
+						$date = $request_personnel->personnel_event_date;
+						$start_time = $request_personnel->start_time;
+						$end_time = $request_personnel->end_time;
+						
+						$result .='
+							<tr>
+								<td>'.$personnel_fname.' '.$personnel_onames.'</td>
+								<td>'.$date.'</td>
+								<td>'.$start_time.'</td>
+								<td>'.$end_time.'</td>
+							</tr>
+								';
+					}
+					$result .= '
+								</tbody>
+							</table>
+							';
+							echo $result;
 				}
 						?>
 						</div>

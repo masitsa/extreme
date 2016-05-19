@@ -1,5 +1,23 @@
 <?php
-
+$quote_amount = 0;
+$request_details=$this->requests_model->get_request_details($supplier_request_id);
+if($request_details->num_rows() > 0)
+{
+	foreach($request_details->result() as $results)
+	{
+		$request_id = $results->request_id;
+		$request_number = $results->request_number;
+		$request_date = $results->request_date;
+		$created = $results->created;
+		$request_instructions = $results->request_instructions;
+		$request_status_name = $results->request_status_name;
+		$client_name = $results->client_name;
+		$personnel_fname = $results->personnel_fname;
+		$personnel_onames = $results->personnel_onames;
+		$client_contact = $results->client_contact_person;
+	
+	}
+}
 // COMPANY DETAILS
 $data['contacts'] = $this->site_model->get_contacts();
 ?>
@@ -42,97 +60,75 @@ echo base_url() . "assets/themes/porto-admin/1.4.1/";
 			.row .col-md-12 .title-item{float:left;width: 130px; font-weight:bold; text-align:right; padding-right: 20px;}
 			.title-img{float:left; padding-left:30px;}
 			img.logo{max-height:70px; margin:0 auto;}
+			.custom-table .table-content{padding:0 50px 0 0;}
 		</style>
     </head>
     <body class="receipt_spacing">
-    <div class="col-md-12 receipt_bottom_border">
-			<div class = "col-md-6  align="left"">
-                <div>
-                    <img src="<?php echo base_url() . 'assets/logo/' . $contacts['logo'];?>" alt="<?php echo $contacts['company_name'];?>" class="img-responsive logo"/>
-                </div>
-			<div>
-			<div class="row">
-				<div class="row">
-					<strong>
-						<?php 
-						echo $contacts['company_name'];?><br/>
-						P.O. Box <?php echo $contacts['address'];?> <?php echo $contacts['post_code'];?>, <?php echo $contacts['city'];?><br/>
-						E-mail: <?php echo $contacts['email'];?>
-						Tel : <?php echo $contacts['phone'];?><br/>
-						<?php echo $contacts['location'];?>, 
-						<?php echo $contacts['building'];?>, <?php echo $contacts['floor'];?><br/>
-					</strong>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-      
-        <?php
-		$quote_amount = 0;
-		$request_details=$this->requests_model->get_request_details($supplier_request_id);
-		if($request_details->num_rows() > 0)
-		{
-			foreach($request_details->result() as $results)
-			{
-				$request_id = $results->request_id;
-				$request_number = $results->request_number;
-				$request_date = $results->request_date;
-				$created = $results->created;
-				$request_instructions = $results->request_instructions;
-				$request_status_name = $results->request_status_name;
-				$client_name = $results->client_name;
-				$personnel_fname = $results->personnel_fname;
-				$personnel_onames = $results->personnel_onames;
-				$client_contact = $results->client_contact_person;
+    	<div class="col-md-12 receipt_bottom_border">
+    		<table class="custom-table">
+            	<tr>
+                	<td class="table-content">
+                     <img src="<?php echo base_url() . 'assets/logo/' . $contacts['logo'];?>" alt="<?php echo $contacts['company_name'];?>" class="img-responsive logo"/>
+                    </td>
+                	<!--About company-->
+                	<td class="table-content">
+                        <?php 
+							echo $contacts['company_name'];?><br/>
+							P.O. Box <?php echo $contacts['address'];?> <?php echo $contacts['post_code'];?>, <?php echo $contacts['city'];?><br/>
+							E-mail: <?php echo $contacts['email'];?><br/>
+							Tel : <?php echo $contacts['phone'];?><br/>
+							<?php echo $contacts['location'];?>, 
+							<?php echo $contacts['building'];?>, <?php echo $contacts['floor'];?>
+
+                    </td>
+                	<!-- End About company-->
+                	<!--Request Details-->
+                    <td class="table-content">
+                    	 <table>
+                            <tr>
+                                <td align="right">Quotation No:</td>
+                                <td align="left"><?php echo $request_number;?></td>
+                            </tr>
+                            <tr>
+                                <td align="right">Requested On <?php $request_date = $this->requests_model->get_request_date($supplier_request_id);?>:</td>
+                                <td align="left"><?php echo date('jS F Y', strtotime($request_date));?></td>
+                            </tr>
+                            <tr>
+                                <td align="right">Pin No: </td>
+                                <td align="left"><?php echo $contacts['branch_pin'];?></td>
+                            </tr>
+                            <tr>
+                                <td align="right">VAT No: </td>
+                                <td align="left"><?php echo $contacts['branch_vat'];?></td>
+                            </tr>
+                        </table>
+                    </td>
+                    <!--End Request Details-->
+                    <!--Client Details-->
+                    <td class="table-content">
+                    	<table>
+                        	<tr>
+                                <td align="right">Request Number:</td>
+                                <td align="left"><?php echo $request_number;?></td>
+                            </tr>
+                            <tr>
+                                <td align="right">Client Name :</td>
+                                <td align="left"><?php echo $client_name;?></td>
+                            </tr>
+                            <tr>
+                                <td align="right">Client Contact :</td>
+                                <td align="left"><?php echo $client_contact;?></td>
+                            </tr>
+                            <tr>
+                                <td align="right">Date :</td>
+                                <td align="left"><?php echo date('jS F Y', strtotime(date("Y-m-d")));?></td>
+                            </tr>
+                        </table>
+                    </td>
+                    <!--End CLient Details-->
+                </tr>
+            </table>
 			
-			}
-		}
-		?>
-        <!-- Client Details -->
-			<div class="row">
-				<div class="row">
-					<strong>
-                    <table>
-                    	<tr>
-                        	<td align="right">Quotation No:</td>
-                            <td align="left"><?php echo $request_number;?></td>
-                        </tr>
-                        <tr>
-                        	<td align="right">Requested On <?php $request_date = $this->requests_model->get_request_date($supplier_request_id);?>:</td>
-                            <td align="left"><?php echo date('jS F Y', strtotime($request_date));?></td>
-                        </tr>
-                    	<tr>
-                        	<td align="right">Pin No: </td>
-                            <td align="left"><?php echo $contacts['branch_pin'];?></td>
-                        </tr>
-                        <tr>
-                        	<td align="right">VAT No: </td>
-                            <td align="left"><?php echo $contacts['branch_vat'];?></td>
-                        </tr>
-                        <tr>
-                        	<td align="right">Request Number:</td>
-                            <td align="left"><?php echo $request_number;?></td>
-                        </tr>
-                        <tr>
-                        	<td align="right">Client Name :</td>
-                            <td align="left"><?php echo $client_name;?></td>
-                        </tr>
-                        <tr>
-                        	<td align="right">Client Contact :</td>
-                            <td align="left"><?php echo $client_contact;?></td>
-                        </tr>
-                        <tr>
-                        	<td align="right">Date :</td>
-                            <td align="left"><?php echo date('jS F Y', strtotime(date("Y-m-d")));?></td>
-                        </tr>
-                    </table>
-					</strong>
-				</div>
-			</div>
-		</div>
-	</div>
-    </div>  
 	   <?php
 		$request_event_details = $this->events_model->get_request_event($request_id);
 		//var_dump($request_event_details); die();

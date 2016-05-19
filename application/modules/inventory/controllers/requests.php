@@ -737,5 +737,44 @@ class requests extends MX_Controller
 
 		$this->load->view('admin/templates/general_page', $data);
 	}
+	
+	//request_personnel 
+	public function add_request_personnel($request_id,$request_event_id)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('personnel_id', 'Personnel Name', 'required|xss_clean');
+		$this->form_validation->set_rules('date', 'Date', 'required|xss_clean');
+		
+		//if form has been submitted
+		if ($this->form_validation->run())
+		{
+			//$request_id = $this->requests_model->add_request();
+			//update request
+			$request_event_personnel_id =$this->events_model->add_event_personnel($request_event_id);
+			if($request_event_personnel_id > 0)
+			{
+				$this->session->set_userdata('success_message', 'event personnel created successfully');
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'Could not add event personnel. Please try again');
+			}
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', validation_errors());
+		}
+		$request_number = $this->requests_model->get_request_number($request_id);
+		$v_data['title'] = 'Add Event to '.$request_number;
+		$v_data['request_id'] = $request_id;
+		$v_data['request_details'] = $this->requests_model->get_request_details($request_id);
+		$v_data['items_query'] = $this->items_model->all_unselected_items($request_id);
+		$v_data['event_query'] = $this->events_model->all_events();
+		$data['content'] = $this->load->view('requests/request_event', $v_data, true);
+
+		$this->load->view('admin/templates/general_page', $data);
+	}
 }
 ?>

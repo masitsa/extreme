@@ -862,7 +862,7 @@ class requests_model extends CI_Model
 							$request_item_price = $res->request_item_price;	
 							$data = array(
 								'request_event_id'=>$new_request_event_id,
-								'request_id'=>$request_id,
+								'request_id'=>$new_request_id,
 								'item_id'=>$item_id,
 								'days' =>$days,
 								'request_item_price'=>$request_item_price,
@@ -908,5 +908,20 @@ class requests_model extends CI_Model
 		}
 		return TRUE;
 	}
-	
+	//personnel for the eevents
+	public function get_request_personnel($request_event_id)
+	{
+		$this->db->select('personnel.*, request_event_personnel.*');
+		$this->db->where('request_event_personnel.personnel_id = personnel.personnel_id AND request_event_personnel.request_event_id = '.$request_event_id);
+		$query = $this->db->get('personnel,request_event_personnel');
+		
+		return $query;
+	}
+	// all available personnel to add to events
+	public function get_personnel()
+	{
+		$query = $this->db->get('personnel');
+		
+		return $query;
+	}
 }

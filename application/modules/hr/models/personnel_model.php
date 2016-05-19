@@ -229,8 +229,8 @@ class Personnel_model extends CI_Model
 			'personnel_city'=>$this->input->post('personnel_city'),
 			'personnel_post_code'=>$this->input->post('personnel_post_code'),
 			'personnel_national_id_number'=>$this->input->post('personnel_national_id_number'),
-			'personnel_post_code'=>$this->input->post('personnel_post_code'),
-			'personnel_kra_pin'=>$this->input->post('personnel_kra_pin')
+			'personnel_kra_pin' => $this->input->post('personnel_kra_pin'),
+			'personnel_type_id'=>$this->input->post('personnel_type_id')
 		);
 		
 		if($this->db->insert('personnel', $data))
@@ -1286,6 +1286,42 @@ class Personnel_model extends CI_Model
 		else
 		{
 			return FALSE;
+		}
+	}
+	
+	//edit_order_authorize
+	public function edit_order_authorize($personnel_id)
+	{
+		$data = array(
+				'personnel_id' => $personnel_id
+			);
+		$this->db->where($data);
+		$query = $this->db->get('personnel_approval');
+		if($query->num_rows() > 0)
+		{
+			$this->db->where($data);
+			if($this->db->update('personnel_approval', array(
+				'approval_status_id' => $this->input->post('approval_role_id'))))
+			{
+				return TRUE;
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		else
+		{
+			
+			if($this->db->insert('personnel_approval', array(
+				'approval_status_id' => $this->input->post('approval_role_id'),'personnel_id' => $personnel_id)))
+			{
+				return TRUE;
+			}
+			else
+			{
+				return FALSE;
+			}
 		}
 	}
 }
