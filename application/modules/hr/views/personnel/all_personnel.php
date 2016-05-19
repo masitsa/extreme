@@ -121,13 +121,94 @@
 			$result .= "There are no personnel";
 		}
 ?>
-
+<section class="panel">
+    <header class="panel-heading">
+        <h2 class="panel-title">Search personnel</h2>
+    </header>
+    
+    <!-- Widget content -->
+   <div class="panel-body">
+    	<div class="padd">
+			<?php
+            echo form_open("hr/personnel/search_personnel", array("class" => "form-horizontal"));
+            ?>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Branch: </label>
+                        
+                        <div class="col-md-8">
+                            <select class="form-control" name="branch_id">
+                            	<option value="">---Select Branch---</option>
+                                <?php
+                                    if($branches->num_rows() > 0){
+                                        foreach($branches->result() as $row):
+                                            $branch_name = $row->branch_name;
+                                            $branch_id= $row->branch_id;
+                                            ?><option value="<?php echo $branch_id; ?>" ><?php echo $branch_name; ?></option>
+                                        <?php	
+                                        endforeach;
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Personnel Number: </label>
+                        
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="personnel_number" placeholder="Personnel number">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">First name: </label>
+                        
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="personnel_fname" placeholder="First name">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Other names: </label>
+                        
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="personnel_onames" placeholder="Other names">
+                        </div>
+                    </div>
+            
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-4">
+                        	<div class="center-align">
+                            	<button type="submit" class="btn btn-info btn-sm">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php
+            echo form_close();
+            ?>
+    	</div>
+    </div>
+</section>
 						<section class="panel">
 							<header class="panel-heading">						
 								<h2 class="panel-title"><?php echo $title;?></h2>
 							</header>
 							<div class="panel-body">
                             	<?php
+								$search = $this->session->userdata('personnel_search_title2');
+								
+								if(!empty($search))
+								{
+									echo '<h6>Filtered by: '.$search.'</h6>';
+									echo '<a href="'.site_url().'hr/personnel/close_search" class="btn btn-sm btn-info pull-left">Close search</a>';
+								}
                                 $success = $this->session->userdata('success_message');
 		
 								if(!empty($success))

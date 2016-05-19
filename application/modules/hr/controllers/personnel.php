@@ -8,17 +8,19 @@ class Personnel extends hr
 	var $document_upload_location;
 	var $personnel_path;
 	var $personnel_location;
+	var $csv_path;
 	
 	function __construct()
 	{
 		parent:: __construct();
 		
 		$this->load->library('image_lib');
-		$this->load->model('site/site_model');
+
 		$this->document_upload_path = realpath(APPPATH . '../assets/document_uploads');
 		$this->document_upload_location = base_url().'assets/document_uploads/';
 		$this->personnel_path = realpath(APPPATH . '../assets/personnel');
 		$this->personnel_location = base_url().'assets/personnel/';
+		$this->csv_path = realpath(APPPATH . '../assets/csv');
 	}
     
 	/*
@@ -30,6 +32,12 @@ class Personnel extends hr
 	{
 		$where = 'personnel.personnel_type_id = personnel_type.personnel_type_id';
 		$table = 'personnel, personnel_type';
+		$personnel_search = $this->session->userdata('personnel_search2');
+		
+		if(!empty($personnel_search))
+		{
+			$where .= $personnel_search;
+		}
 		//pagination
 		$segment = 5;
 		$this->load->library('pagination');
@@ -965,6 +973,164 @@ class Personnel extends hr
 		}
 		
 		redirect('human-resource/edit-personnel/'.$personnel_id);
+	}
+	
+	//import personnel
+	function import_personnel()
+	{
+		$v_data['title'] = $data['title'] = $this->site_model->display_page_title();
+		
+		$data['content'] = $this->load->view('import/import_personnel', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	
+	function import_personnel_template()
+	{
+		//export products template in excel 
+		$this->personnel_model->import_personnel_template();
+	}
+	//do the personnel import
+	function do_personnel_import()
+	{
+		if(isset($_FILES['import_csv']))
+		{
+			if(is_uploaded_file($_FILES['import_csv']['tmp_name']))
+			{
+				//import products from excel 
+				$response = $this->personnel_model->import_csv_personnel($this->csv_path);
+				
+				if($response == FALSE)
+				{
+					$v_data['import_response_error'] = 'Something went wrong. Please try again.';
+				}
+				
+				else
+				{
+					if($response['check'])
+					{
+						$v_data['import_response'] = $response['response'];
+					}
+					
+					else
+					{
+						$v_data['import_response_error'] = $response['response'];
+					}
+				}
+			}
+			
+			else
+			{
+				$v_data['import_response_error'] = 'Please select a file to import.';
+			}
+		}
+		
+		else
+		{
+			$v_data['import_response_error'] = 'Please select a file to import.';
+		}
+		
+		$v_data['title'] = $data['title'] = $this->site_model->display_page_title();
+		
+		$data['content'] = $this->load->view('import/import_personnel', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	
+	public function search_personnel()
+	{
+		$personnel_number = $this->input->post('personnel_number');
+		$branch_id = $this->input->post('branch_id');
+		$search_title = '';
+		
+		/*if(!empty($personnel_number))
+		{
+			$search_title .= ' member number <strong>'.$personnel_number.'</strong>';
+			$personnel_number = ' AND personnel.personnel_number LIKE \'%'.$personnel_number.'%\'';
+		}*/
+		if(!empty($personnel_number))
+		{
+			$search_title .= ' personnel number <strong>'.$personnel_number.'</strong>';
+			$personnel_number = ' AND personnel.personnel_number = \''.$personnel_number.'\'';
+		}
+		
+		if(!empty($branch_id))
+		{
+			$search_title .= ' member type <strong>'.$branch_id.'</strong>';
+			$branch_id = ' AND personnel.branch_id = \''.$branch_id.'\' ';
+		}
+		
+		//search surname
+		if(!empty($_POST['personnel_fname']))
+		{
+			$search_title .= ' first name <strong>'.$_POST['personnel_fname'].'</strong>';
+			$surnames = explode(" ",$_POST['personnel_fname']);
+			$total = count($surnames);
+			
+			$count = 1;
+			$surname = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$surname .= ' personnel.personnel_fname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
+				}
+				
+				else
+				{
+					$surname .= ' personnel.personnel_fname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$surname .= ') ';
+		}
+		
+		else
+		{
+			$surname = '';
+		}
+		
+		//search other_names
+		if(!empty($_POST['personnel_onames']))
+		{
+			$search_title .= ' other names <strong>'.$_POST['personnel_onames'].'</strong>';
+			$other_names = explode(" ",$_POST['personnel_onames']);
+			$total = count($other_names);
+			
+			$count = 1;
+			$other_name = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$other_name .= ' personnel.personnel_onames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
+				}
+				
+				else
+				{
+					$other_name .= ' personnel.personnel_onames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$other_name .= ') ';
+		}
+		
+		else
+		{
+			$other_name = '';
+		}
+		
+		$search = $personnel_number.$branch_id.$surname.$other_name;
+		$this->session->set_userdata('personnel_search2', $search);
+		$this->session->set_userdata('personnel_search_title2', $search_title);
+		
+		$this->index();
+	}
+	
+	public function close_search()
+	{
+		$this->session->unset_userdata('personnel_search2', $search);
+		$this->session->unset_userdata('personnel_search_title2', $search_title);
+		
+		redirect('human-resource/personnel');
 	}
 }
 ?>

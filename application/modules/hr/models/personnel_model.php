@@ -127,23 +127,7 @@ class Personnel_model extends CI_Model
 			return FALSE;
 		}
 	}
-	//edit_order_authorize
-	public function edit_order_authorize($personnel_id)
-	{
-		$data = array(
-				'approval_status_id' => $this->input->post('approval_role_id')
-			);
-		$this->db->where('personnel_id', $personnel_id);
-		
-
-		if($this->db->update('personnel_approval', $data))
-		{
-			return TRUE;
-		}
-		else{
-			return FALSE;
-		}	
-	}
+	
 	/*
 	*	Retrieve all personnel
 	*
@@ -1128,6 +1112,179 @@ class Personnel_model extends CI_Model
 		$query = $this->db->get('personnel_type');
 		
 		return $query;
+	}
+	
+	//import template
+	function import_personnel_template()
+	{
+		$this->load->library('Excel');
+		
+		$title = 'Personnel Import Template';
+		$count=1;
+		$row_count=0;
+		
+		$report[$row_count][0] = 'Employee Number';
+		$report[$row_count][1] = 'First name';
+		$report[$row_count][2] = 'Niddle name';
+		$report[$row_count][3] = 'Last name';
+		$report[$row_count][4] = 'Date of Birth (i.e. YYYY-MM-DD)';
+		
+		$row_count++;
+		
+		//create the excel document
+		$this->excel->addArray ( $report );
+		$this->excel->generateXML ($title);
+	}
+	//import personnel
+	public function import_csv_personnel($upload_path)
+	{
+		//load the file model
+		$this->load->model('admin/file_model');
+		/*
+			-----------------------------------------------------------------------------------------
+			Upload csv
+			-----------------------------------------------------------------------------------------
+		*/
+		$response = $this->file_model->upload_csv($upload_path, 'import_csv');
+		
+		if($response['check'])
+		{
+			$file_name = $response['file_name'];
+			
+			$array = $this->file_model->get_array_from_csv($upload_path.'/'.$file_name);
+			//var_dump($array); die();
+			$response2 = $this->sort_personnel_data($array);
+		
+			if($this->file_model->delete_file($upload_path."\\".$file_name, $upload_path))
+			{
+			}
+			
+			return $response2;
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', $response['error']);
+			return FALSE;
+		}
+	}
+	//sort personnel imported data
+		public function sort_personnel_data($array)
+	{
+		//count total rows
+		$total_rows = count($array);
+		$total_columns = count($array[0]);//var_dump($array);die();
+		
+		//if products exist in array
+		if(($total_rows > 0) && ($total_columns == 5))
+		{
+			$items['modified_by'] = $this->session->userdata('personnel_id');
+			$response = '
+				<table class="table table-hover table-bordered ">
+					  <thead>
+						<tr>
+						  <th>#</th>
+						  <th>Member Number</th>
+						  <th>First Name</th>
+						  <th>Other Names</th>
+						  <th>Comment</th>
+						</tr>
+					  </thead>
+					  <tbody>
+			';
+			
+			//retrieve the data from array
+			for($r = 1; $r < $total_rows; $r++)
+			{
+				$personnel_id = $items['personnel_number'] = $array[$r][0];
+				$items['personnel_fname'] = mysql_real_escape_string(ucwords(strtolower($array[$r][1])));
+				$personnel_onames1 = mysql_real_escape_string(ucwords(strtolower($array[$r][2])));
+				$personnel_onames2 = mysql_real_escape_string(ucwords(strtolower($array[$r][3])));
+				$items['personnel_dob'] = date('Y-m-d',strtotime($array[$r][4]));
+				$items['created'] = date('Y-m-d H:i:s');
+				$items['modified_by'] = $this->session->userdata('personnel_id');
+				$items['created_by'] = $this->session->userdata('personnel_id');
+				$items['branch_id'] = $this->input->post('branch_id');
+				$items['personnel_onames'] = $personnel_onames1.' '.$personnel_onames2;
+				$comment = '';
+				
+				if(!empty($personnel_id))
+				{
+					// check if the number already exists
+					if($this->check_current_personnel_exisits($personnel_id))
+					{
+						//number exists
+						$comment .= '<br/>Duplicate member number entered';
+						$class = 'danger';
+					}
+					else
+					{
+						// number does not exisit
+						//save product in the db
+						if($this->db->insert('personnel', $items))
+						{
+							$comment .= '<br/>Personnel successfully added to the database';
+							$class = 'success';
+						}
+						
+						else
+						{
+							$comment .= '<br/>Internal error. Could not add mpersonnel to the database. Please contact the site administrator';
+							$class = 'warning';
+						}
+					}
+				}
+				
+				else
+				{
+					$comment .= '<br/>Not saved ensure you have a member number entered';
+					$class = 'danger';
+				}
+				
+				
+				$response .= '
+					
+						<tr class="'.$class.'">
+							<td>'.$r.'</td>
+							<td>'.$items['personnel_number'].'</td>
+							<td>'.$items['personnel_fname'].'</td>
+							<td>'.$items['personnel_onames'].'</td>
+							<td>'.$comment.'</td>
+						</tr> 
+				';
+			}
+			
+			$response .= '</table>';
+			
+			$return['response'] = $response;
+			$return['check'] = TRUE;
+		}
+		
+		//if no products exist
+		else
+		{
+			$return['response'] = 'Member data not found ';
+			$return['check'] = FALSE;
+		}
+		
+		return $return;
+	}
+	
+	public function check_current_personnel_exisits($personnel_id)
+	{
+		$this->db->where('personnel_number', $personnel_id);
+		
+		$query = $this->db->get('personnel');
+		
+		if($query->num_rows() > 0)
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
 	}
 }
 ?>
