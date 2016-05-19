@@ -110,10 +110,12 @@ class Personnel extends hr
 		$this->form_validation->set_rules('personnel_locality', 'Locality', 'xss_clean');
 		$this->form_validation->set_rules('title_id', 'Title', 'required|xss_clean');
 		$this->form_validation->set_rules('gender_id', 'Gender', 'required|xss_clean');
-		$this->form_validation->set_rules('personnel_number', 'Personnel number', 'xss_clean');
+		$this->form_validation->set_rules('personnel_number', 'Personnel number', 'xss_clean|is_unique[personnel.personnel_number]');
 		$this->form_validation->set_rules('personnel_city', 'City', 'xss_clean');
 		$this->form_validation->set_rules('personnel_post_code', 'Post code', 'xss_clean');
 		$this->form_validation->set_rules('personnel_type_id', 'Personnel_type', 'required|xss_clean');
+		$this->form_validation->set_rules('personnel_kra_pin', 'KRA PIN', 'required|xss_clean|is_unique[personnel.personnel_kra_pin]');
+		$this->form_validation->set_rules('personnel_national_id_number', 'National ID', 'required|xss_clean|is_unique[personnel.personnel_national_id_number]');
 		
 		//if form conatins invalid data
 		if ($this->form_validation->run())

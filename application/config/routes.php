@@ -604,10 +604,13 @@ $route['inventory/update-order-item/(:num)/(:any)/(:num)'] = 'inventory/orders/u
 $route['requests'] = 'inventory/requests/index';
 $route['inventory/requests/(:num)'] = 'inventory/requests/index/$1';
 $route['inventory/add-requests'] = 'inventory/requests/add_request';
-$route['inventory/add-request-item/(:num)/(:any)'] = 'inventory/requests/add_request_item/$1/$2';
+$route['inventory/add-request-item/(:num)/(:num)'] = 'inventory/requests/add_request_item/$1/$2';
+$route['inventory/add-event-logistic/(:num)/(:num)']='inventory/requests/add_event_logistic/$1/$2';
 $route['inventory/delete-request-item/(:num)/(:num)/(:any)']='inventory/requests/delete_request_item/$1/$2/$3';
-$route['inventory/update-request-item/(:num)/(:any)/(:num)'] = 'inventory/requests/update_request_item/$1/$2/$3';
+$route['inventory/delete-request-logistics/(:num)/(:num)/(:num)/(:any)']='inventory/requests/delete_request_logistics/$1/$2/$3/$4';
+$route['inventory/update-request-item/(:num)/(:num)/(:any)/(:num)'] = 'inventory/requests/update_request_item/$1/$2/$3/$4';
 $route['inventory/send-request-for-approval/(:num)/(:num)'] = 'inventory/requests/send_request_for_approval/$1';
+$route['inventory/update-request-logistic/(:num)/(:num)/(:any)/(:num)']='inventory/requests/update_request_logistic/$1/$2/$3/$4';
 $route['requests-reports']='administration/reports/get_request_reports';
 
 
@@ -639,7 +642,7 @@ $route['inventory/send-for-approval/(:num)'] = 'inventory/requests/send_request_
 $route['inventory/send-for-approval/(:num)/(:num)'] = 'inventory/requests/send_request_for_approval/$1/$2';
 $route['inventory/request-for-quotation/(:num)']='inventory/requests/print_lpo_new/$1';
 $route['inventory/submit-supplier/(:num)/(:any)'] = 'inventory/requests/submit_supplier/$1/$2';
-$route['inventory/generate-lpo/(:num)/(:any)'] = 'inventory/requests/print_lpo_new/$1/$2';
+$route['inventory/generate-lpo/(:num)/(:any)'] = 'inventory/requests/print_lpo_new/$1/$2/';
 $route['inventory/generate-rfq/(:num)/(:num)/(:any)'] = 'inventory/requests/print_rfq_new/$1/$2/$3';
 $route['inventory/edit_order/(:num)'] = 'inventory/orders/edit_order/$1';
 
@@ -660,9 +663,13 @@ $route['inventory/edit-service/(:num)'] = 'inventory_management/services/edit_se
 $route['inventory/delete-item/(:num)'] = 'inventory_management/items/delete_item/$1';
 $route['inventory-management/delete-service/(:num)'] = 'inventory_management/services/delete_service/$1';
 
+//import paths
 $route['item/validate-import'] = 'inventory_management/items/do_items_import';
 $route['item/import-template'] = 'inventory_management/items/import_template';
 $route['import/import-assets'] = 'inventory_management/items/import_items';
+$route['import/rate-card'] = 'inventory_management/items/import_rate_card';
+$route['import-rate-card-template']= 'inventory_management/items/import_rate_card_template';
+$route['validate-rate-card-template']='inventory_management/items/do_rate_card_import';
 $route['import/import-services'] = 'inventory_management/services/import_services';
 $route['service/import-template'] = 'inventory_management/services/import_template';
 $route['inventory/services'] = 'inventory_management/services';
@@ -705,3 +712,6 @@ $route['inventory/delete-inventory-item/(:num)']='inventory_management/items/del
 
 //events
 $route['inventory/add-request-event/(:num)/(:any)'] = 'inventory/requests/add_request_event/$1/$2';
+
+//duplicates for contractual clients
+$route['inventory/duplicate-request/(:num)/(:any)']='inventory/requests/duplicate_request/$1/$2';

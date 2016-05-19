@@ -21,6 +21,7 @@
             ?>
             
             <?php echo form_open($this->uri->uri_string(), array("class" => "form-horizontal", "role" => "form"));?>
+            <input type="hidden" value="old_request_id" name="old_request_id">
      		<div class="row">
             <div class="col-md-6 col-md-offset-3">
      				 <!-- brand Name -->

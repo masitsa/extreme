@@ -1,7 +1,11 @@
+<style>
+.datepicker{z-index:1151 !important;}
+</style>
 <?php
 $request_number = '';
 $request_date = '';
 $created = '';
+$item_hiring_price = '';
 $request_instructions = '';
 $request_status_name = '';
 $client_name = '';
@@ -10,169 +14,137 @@ $personnel_onames = '';
 
 $request_approval_status = $this->requests_model->get_request_approval_status($request_id);
 
-if($request_approval_status == 0)
+if(($request_approval_status == 0)&&($request_approval_status < 4))
 {
-	$request_details=$this->requests_model->get_request_details($request_id);
-	//var_dump ($request_details);
-	//die();
 	foreach($request_details->result() as $results)
-	{
-		$request_id = $results->request_id;
-		$request_number = $results->request_number;
-		$request_date = $results->request_date;
-		$created = $results->created;
-		$request_instructions = $results->request_instructions;
-		$request_status_name = $results->request_status_name;
-		$client_name = $results->client_name;
-		$personnel_fname = $results->personnel_fname;
-		$personnel_onames = $results->personnel_onames;
-	}
-	
+		{
+			$request_id = $results->request_id;
+			$request_number = $results->request_number;
+			$request_date = $results->request_date;
+			$created = $results->created;
+			$request_instructions = $results->request_instructions;
+			$request_status_name = $results->request_status_name;
+			$client_name = $results->client_name;
+			$personnel_fname = $results->personnel_fname;
+			$personnel_onames = $results->personnel_onames;
+		
+		}
 	?>
-	<!-- Add request event -->
-	<section class="panel panel-featured panel-featured-info">
-		<header class="panel-heading">
-			<h2 class="panel-title pull-left">Add Event</h2>
-			<div class="widget-icons pull-right">
-				<a href="<?php echo base_url();?>requests" class="btn btn-primary btn-sm">Back to Requests</a>
+    <!-- Modal -->
+<div class="modal fade" id="add_event" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Add Event</h4>
 			</div>
-			<div class="clearfix"></div>
-		</header>
-		<div class="panel-body">
-			<?php
-
-				$success = $this->session->userdata('success_message');
-				$error = $this->session->userdata('error_message');
-				
-				if(!empty($success))
-				{
-					echo '
-						<div class="alert alert-success">'.$success.'</div>
-					';
-					
-					$this->session->unset_userdata('success_message');
-				}
-				
-				if(!empty($error))
-				{
-					echo '
-						<div class="alert alert-danger">'.$error.'</div>
-					';
-					
-					$this->session->unset_userdata('error_message');
-				}
-				
-				echo form_open('inventory/add-request-event/'.$request_id.'/'.$request_number, array("class" => "form-horizontal", "role" => "form"));
-			?>
-				<div class="row">
-					<div class="col-md-3">
-						<div class="form-group">
-							<label class="col-lg-2 control-label">Type</label>
-							<div class="col-lg-8">
-								<select class="form-control" name="event_id" id="event_id">
-									<option>SELECT AN EVENT</option>
-									<?php
-									
-									if($event_query->num_rows() > 0)
-									{
-										foreach ($event_query->result() as $key ) 
+			<div class="modal-body">
+            	<?php
+				 echo form_open('inventory/add-request-event/'.$request_id.'/'.$request_number, array("class" => "form-horizontal", "role" => "form"));
+				?>
+							<div class="form-group">
+								<label class="col-lg-12 ">Type</label>
+								<div class="col-lg-12">
+									<select class="form-control" name="event_id" id="event_id">
+										<option>SELECT AN EVENT</option>
+										<?php
+										
+										if($event_query->num_rows() > 0)
 										{
-											# code...
-											$event_id = $key->event_id;
-											$event_name = $key->event_name;
+											foreach ($event_query->result() as $key ) 
+											{
+												# code...
+												$event_id = $key->event_id;
+												$event_name = $key->event_name;
 
-											echo '<option value="'.$event_id.'">'.$event_name.'</option>';
+												echo '<option value="'.$event_id.'">'.$event_name.'</option>';
+											}
 										}
-									}
-									?>
+										?>
 
-								</select>
-								
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="form-group">
-							<label class="col-lg-2 control-label">Venue</label>
-							<div class="col-lg-8">
-								<input type="text" class="form-control" name="venue" placeholder="Venue">
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="form-group">
-							<label class="col-lg-2 control-label">Name</label>
-							<div class="col-lg-8">
-								<input type="text" class="form-control" name="event_name" placeholder="Event Name" id="pax">
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="form-group">
-							<label class="col-lg-2 control-label">PAX</label>
-							<div class="col-lg-8">
-							<input type="text" class="form-control" name="pax" placeholder="Event Pax" id="pax">
-							</div>
-						</div>
-					</div>
-				</div>
-				
-				<br/>
-				
-				<div class="row">
-					<div class="col-md-4">
-						<div class="form-group">
-							<label class="col-lg-2 control-label">Start Date</label>
-							<div class="col-lg-8">
-								 <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="start_date" placeholder="Start Date" value="<?php echo set_value('start_date');?>" />
-							</div>
-						</div>
-					</div>
-						
-					<div class="col-md-4">
-						<div class="form-group">
-
-							<label class="col-lg-2 control-label">End Date</label>
-								<div class="col-lg-8">
-									 <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="end_date" placeholder="End Date" value="<?php echo set_value('end_date');?>" />
+									</select>
+									
 								</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="form-group">
-							<label class="col-lg-2 control-label">Budget</label>
-							<div class="col-lg-8">
-								<input type="text" class="form-control" name="budget" placeholder="Budget" id="pax">
 							</div>
+							<div class="form-group">
+								<label class="col-lg-12 ">Venue</label>
+								<div class="col-lg-12">
+									<input type="text" class="form-control" name="venue" placeholder="Venue">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-12 ">Name</label>
+								<div class="col-lg-12">
+									<input type="text" class="form-control" name="event_name" placeholder="Event Name" id="pax">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-12 ">PAX</label>
+								<div class="col-lg-12">
+								<input type="text" class="form-control" name="pax" placeholder="Event Pax" id="pax">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-12 ">Start Date</label>
+								<div class="col-lg-12">
+									 <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="start_date" placeholder="Start Date" value="<?php echo set_value('start_date');?>" />
+								</div>
+							</div>
+							<div class="form-group">
+
+								<label class="col-lg-12 ">End Date</label>
+									<div class="col-lg-12">
+										 <input data-format="yyyy-MM-dd" type="text" data-plugin-datepicker class="form-control" name="end_date" placeholder="End Date" value="<?php echo set_value('end_date');?>" />
+									</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-12 ">Budget</label>
+								<div class="col-lg-12">
+									<input type="text" class="form-control" name="budget" placeholder="Budget" id="pax">
+								</div>
+							</div>
+						<div class="center-align">
+							<button class="btn btn-primary btn-sm" type="submit">Add Request Event</button>
 						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="center-align">
-						<button class="btn btn-primary btn-sm" type="submit">Add Request Event</button>
-					</div>
-				</div>
-			<?php echo form_close();?>
+							<?php echo form_close();?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      		</div>
 		</div>
-	</section>
+	</div>
+</div>
 	<!-- end add request event -->
 	<?php
 } 
-
 ?>
-	
 <!-- Event request details -->
 <section class="panel panel-featured panel-featured-info">
     <header class="panel-heading">
-        <h2 class="panel-title">Event Requests for <?php echo $request_number;?></h2>
+        <h2 class="panel-title">Request<?php echo $request_number;?></h2>
     </header>
     <div class="panel-body">
 	
     	<div class="row">
+			<div class="col-md-offset-8 col-md-2">
+            	<button type="button" class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#add_event">
+                	Add Event
+                </button>
+            </div>
+			<div class="col-md-2">
+            	<a href="<?php echo base_url();?>requests" class="btn btn-info btn-sm pull-right">Back to Requests</a>
+            </div>
+        </div>
+	
+    	<div class="row">
 			<div class="col-md-12">
+            	<!-- Button trigger modal -->
+                
+                  
 						
 				<?php
 				$request_details=$this->requests_model->get_request_details($request_id);
+				//var_dump($request_details); die();
 				if($request_details->num_rows() > 0)
 				{
 					foreach($request_details->result() as $results)
@@ -186,13 +158,14 @@ if($request_approval_status == 0)
 						$client_name = $results->client_name;
 						$personnel_fname = $results->personnel_fname;
 						$personnel_onames = $results->personnel_onames;
-						
+					
 					}
 				}
-				?>
+                ?>
+				
 				<!-- Request details -->
 				<section class="panel panel-featured panel-featured-info">
-					<table class="example table-autosort:0 table-stripeclass:alternate table table-hover table-bordered " id="TABLE_2">
+					<table class="table table-hover table-striped table-bordered">
 						<thead>
 							<tr>
 								<th>Request Number</th>
@@ -220,27 +193,221 @@ if($request_approval_status == 0)
 							<td><?php echo $client_name; ?></td>
 						</tr>
 					</table>
+                    
 				</section>
-				<!-- End request details -->
+                <div class="row">
+			<div class="col-md-12">
+				<div class="center-align">
+                <?php
+		$request_approval_status = $this->requests_model->get_request_approval_status($request_id);
+					$rank = 2;
+					$next_order_status = $request_approval_status+1;
+						
+					// check if assigned the next level 
+					$check_level_approval = $this->requests_model->check_assigned_next_approval($request_approval_status);
+					
+		
+					if($request_approval_status == 0)
+					{
+						?>
+							<a class="btn btn-warning btn-sm" href="<?php echo base_url();?>inventory/send-request-for-approval/<?php echo $request_id;?>/<?php echo $next_order_status;?>" onclick="return confirm('Do you want to send request for next approval?');">Send Request for approval</a>
+						<?php
+					}
+
+					else if($request_approval_status == 1 AND $check_level_approval == TRUE )
+					{
+						?>
+							<a class="btn btn-warning btn-sm" href="<?php echo base_url();?>inventory/send-for-correction/<?php echo $request_id;?>" onclick="return confirm('Do you want to send request for review / correction?');">Send request for correction</a>
+		            		<a class="btn btn-success btn-sm" href="<?php echo base_url();?>inventory/send-for-approval/<?php echo $request_id;?>/<?php echo $next_order_status;?>" onclick="return confirm('Do you want to send order for next approval?');">Send Request for next approval</a>
+						<?php
+					}
+					else if($request_approval_status == 2 AND $check_level_approval == TRUE )
+					{
+						?>
+							<a class="btn btn-warning btn-sm" href="<?php echo base_url();?>inventory/send-for-correction/<?php echo $request_id;?>" onclick="return confirm('Do you want to send request for review / correction?');">Send request for correction</a>
+		            		<a class="btn btn-success btn-sm" href="<?php echo base_url();?>inventory/send-for-approval/<?php echo $request_id;?>/<?php echo $next_order_status;?>" onclick="return confirm('Do you want to send request for next approval?');">Send Request for next approval</a>
+						<?php
+					}
+					
+					else if(($request_approval_status == 3 AND $check_level_approval == TRUE ))
+					{
+						?>
+		            		<a class="btn btn-success btn-sm" href="<?php echo base_url();?>inventory/send-for-approval/<?php echo $request_id;?>/<?php echo $next_order_status;?>" onclick="return confirm('Do you want to send request for next approval?');">Approve Qoute</a>
+						<?php
+					}
+					else if($request_approval_status == 4 )
+					{
+						?>
+							 <a class="btn btn-warning btn-sm fa fa-print" href="<?php echo base_url();?>inventory/generate-lpo/<?php echo $request_id;?>/<?php echo $request_number;?>" target="_blank"> View Qoutation </a>
+                            <?php
+                            echo '<div class="alert alert-info">Your Request Has Been Approved</div>';
+							?>
+						<?php
+					}
+
+					else
+					{
+						
+					}
 				
-				<?php
+					?>
+	            	
+	            </div>
+			</div>
+		</div>
+		<br>
+				<!-- End request details -->
+                
+        <?php
 				$request_event_details = $this->events_model->get_request_event($request_id);
 				//var_dump($request_event_details); die();
 				if($request_event_details->num_rows()>0)
 				{
 					foreach($request_event_details->result() as $events)
 					{
-						//var_dump($request_event_details); die();
+						//var_dump($request_event_details);
 						$event_name = $events->request_event_name;
+						$request_event_id =$events->request_event_id;
 						$event_venue = $events->request_event_venue;
 						$start_date = $events->request_event_start_date;
 						$end_date = $events->request_event_end_date;
 						$budget = $events->request_event_budget;
 				
 						?>
+                        								    <!-- Modal -->
+<div class="modal fade" id="add_event_item<?php echo $request_event_id;?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Add Event Item</h4>
+			</div>
+			<div class="modal-body">
+								<?php echo form_open('inventory/add-request-item/'.$request_id.'/'.$request_event_id, array("class" => "form-horizontal", "role" => "form","request_event_id"=>$request_event_id));?>
+										<div class="form-group">
+											<label class="col-lg-12 ">Item Name</label>
+											<div class="col-lg-12">
+												<select class="form-control" name="item_id" id="request_item_id" request_event_id="<?php echo $request_event_id;?>">
+													<option>SELECT AN ITEM</option>
+													<?php
+													if($items_query->num_rows() > 0)
+													{
+														foreach ($items_query->result() as $key ) 
+														{
+															# code...
+															$item_id = $key->item_id;
+															$item_name = $key->item_name;
+															$item_hiring_price=$key->item_hiring_price_kshs;
+
+															echo '<option value="'.$item_id.'">'.$item_name.'</option>';
+														}
+													}
+													?>
+
+												</select>
+									  		</div>
+                                      </div>
+											<div class="form-group">
+												<label class="col-lg-12 ">Item Quantity</label>
+												<div class="col-lg-12">
+													 <input type="text" class="form-control" name="quantity" placeholder="Quantity">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-lg-12 ">Days</label>
+												<div class="col-lg-12">
+													 <input type="text" class="form-control" name="days" placeholder="Days">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-lg-12 ">Item Price</label>
+												<div class="col-lg-12">
+													 <input type="text" class="form-control" name="request_item_price" placeholder="Item Price" id="request_item_price<?php echo $request_event_id;?>">
+													 <input type="hidden" name="minimum_hiring_price" id="minimum_hiring_price<?php echo $request_event_id;?>" />
+												</div>
+											</div>
+									<div class="center-align">
+										<button class="btn btn-primary btn-sm" type="submit">Add Event Item</button>
+									</div>
+								<?php echo form_close();?>
+                                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      		</div>
+		</div>
+	</div>
+</div>
+                                <!-- Modal -->
+                                <div class="modal fade" id="add_event_logistics<?php echo $request_event_id;?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Add Event Logistic</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                <?php echo form_open('inventory/add-event-logistic/'.$request_id.'/'.$request_event_id, array("class" => "form-horizontal", "role" => "form","request_event_id"=>$request_event_id));?>
+										<div class="form-group">
+											<label class="col-lg-12 ">Type</label>
+											<div class="col-lg-12">
+												<select class="form-control" name="logistic_id" id="logistic_id" request_event_id="<?php echo $request_event_id;?>">
+                                                <?php 
+												
+		$logistic_query = $this->events_model->all_unselected_logistics($request_event_id);
+		?>
+													<option>SELECT LOGISTICS</option>
+													<?php
+													if($logistic_query->num_rows() > 0)
+													{
+														foreach ($logistic_query->result() as $logistics ) 
+														{
+															# code...
+															$logistic_id = $logistics->logistic_id;
+															$logistic_name = $logistics->logistic_name;
+															echo '<option value="'.$logistic_id.'">'.$logistic_name.'</option>';
+														}
+													}
+													?>
+
+												</select>
+											   
+											</div>
+										</div>
+											<div class="form-group">
+												<label class="col-lg-12 ">Qty</label>
+												<div class="col-lg-12">
+													 <input type="text" class="form-control" name="quantity" placeholder="Quantity">
+												</div>
+											</div>
+                                            
+											<div class="form-group">
+												<label class="col-lg-12 ">Days</label>
+												<div class="col-lg-12">
+													 <input type="text" class="form-control" name="days" placeholder="Days">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-lg-12 ">Cost</label>
+												<div class="col-lg-12">
+													 <input type="text" class="form-control" name="logistic_cost" placeholder="Cost" id="logistic_cost<?php echo $request_event_id;?>">
+													
+												</div>
+											</div>
+									<div class="center-align">
+										<button class="btn btn-primary btn-sm" type="submit">Add Event Logistics</button>
+									</div>
+								<?php echo form_close();?>
+                                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      		</div>
+		</div>
+	</div>
+</div>
 						<section class="panel panel-featured panel-featured-info">
 							<header class="panel-heading">
 								<h2 class="panel-title"><?php echo $event_name;?></h2>
+                                
 							</header>
 							<div class="panel-body">
 								<table class="table table-condensed table-hover table-striped">
@@ -260,106 +427,550 @@ if($request_approval_status == 0)
 										<td></td>
 										<td><?php echo $budget?></td>
 									</tr>
-								</table>
-								<?php
-						
-									$success = $this->session->userdata('success_message');
-									$error = $this->session->userdata('error_message');
-									
-									if(!empty($success))
-									{
-										echo '
-											<div class="alert alert-success">'.$success.'</div>
-										';
-										
-										$this->session->unset_userdata('success_message');
-									}
-									
-									if(!empty($error))
-									{
-										echo '
-											<div class="alert alert-danger">'.$error.'</div>
-										';
-										
-										$this->session->unset_userdata('error_message');
-									}
-									
-								?>
-								
-								<?php echo form_open($this->uri->uri_string(), array("class" => "form-horizontal", "role" => "form"));?>
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group">
-											<label class="col-lg-2 control-label">Item Name</label>
-											<div class="col-lg-8">
-												<select class="form-control" name="item_id" id="request_item_id">
-													<option>SELECT AN ITEM</option>
-													<?php
-													if($items_query->num_rows() > 0)
-													{
-														foreach ($items_query->result() as $key ) 
-														{
-															# code...
-															$item_id = $key->item_id;
-															$item_name = $key->item_name;
-															$item_hiring_price=$key->item_hiring_price;
-
-															echo '<option value="'.$item_id.'">'.$item_name.'</option>';
-														}
-													}
-													?>
-
-												</select>
-											   
-											</div>
-										</div>
-									  </div>
-									  <div class="col-md-3">
-											<div class="form-group">
-												<label class="col-lg-2 control-label">Item Quantity</label>
-												<div class="col-lg-8">
-													 <input type="text" class="form-control" name="quantity" placeholder="Quantity">
-												</div>
-											</div>
-										</div>
-										<div class="col-md-3">
-											<div class="form-group">
-												<label class="col-lg-2 control-label">Days</label>
-												<div class="col-lg-8">
-													 <input type="text" class="form-control" name="days" placeholder="Days">
-												</div>
-											</div>
-										</div>
-									
-									<div class="col-md-3">
-											<div class="form-group">
-												<label class="col-lg-2 control-label">Item Price</label>
-												<div class="col-lg-8">
-													 <input type="text" class="form-control" name="request_item_price" placeholder="Item Price" id="request_item_price">
-													 <input type="hidden" name="minimum_hiring_price" id="minimum_hiring_price" />
-												</div>
-											</div>
-										</div>
-									</div>
-								<div class="row">
-									<div class="center-align">
-										<button class="btn btn-primary btn-sm" type="submit">Add Request Item</button>
-									</div>
-								</div>
-								
-								<?php echo form_close();?>
-										
+								</table>	
 							</div>
-						</section>    
-							
-	
-					<?php
+						</section> 
+                        
+                        <h2 class="panel-title"> Request Items for <?php echo $event_name;?> <button type="button" class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#add_event_item<?php echo $request_event_id?>">
+									Add Event Item
+								</button>
+                        </h2>
+			<div class="panel-body">
+			
+			<?php
+			$request_item_query = $this->requests_model->get_request_items($request_event_id);
+				$result ='';
+				if($request_item_query->num_rows() > 0)
+				{
+					$col = '';
+					$message = '';
+					
+					if($request_approval_status == 0)
+					{
+						$col = '<th colspan="3">Actions</th>';
+
 					}
+					else if($request_approval_status == 4)
+					{
+						
+								
+				
+					}
+					else if($request_approval_status == 5 OR $request_approval_status == 6)
+					{
+						$col .= '
+								<th>Unit Price (KES)</th>
+								<th>Total Price (KES) </th>';
+
+					}
+
+					else
+					{
+						$col = '';
+					}
+					if($request_approval_status < 4){	
+					$result .= 
+					'
+					<div class="row">
+						<div class="col-md-12">
+							<table class="example table-autosort:0 table-stripeclass:alternate table table-hover table-bordered " id="TABLE_2">
+							  <thead>
+								<tr>
+								  <th>#</th>
+								  <th>Item Name</th>
+								  <th>Days</th>
+								  <th>Quantity</th>
+								  <th>Price Per Item (KES)</th>
+								  <th>Total (KES)</th>
+								  <th>Actions</th>
+															  
+								  '.$col.'
+								</tr>
+							  </thead>
+					
+							  <tbody>
+							';
+						}
+						else
+						{
+							$result .= 
+					'
+					<div class="row">
+						<div class="col-md-12">
+							<table class="example table-autosort:0 table-stripeclass:alternate table table-hover table-bordered " id="TABLE_2">
+							  <thead>
+								<tr>
+								  <th>#</th>
+								  <th>Item Name</th>
+								  <th>Days</th>
+								  <th>Quantity</th>
+								  <th>Price Per Item (KES)</th>
+								  <th>Total (KES)</th>
+															  
+								  '.$col.'
+								</tr>
+							  </thead>
+					
+							  <tbody>
+							';
+						}
+							$count = 0;
+							$invoice_total = 0;
+							$total= 0;
+							foreach($request_item_query->result() as $res)
+							{
+								$request_id = $res->request_id;
+								$item_name = $res->item_name;
+								$days =$res->days;
+								$request_item_quantity = $res->request_item_quantity;
+								$request_item_id = $res->request_item_id;
+								$supplier_unit_price = $res->supplier_unit_price;
+								$item_hiring_price = $res->item_hiring_price_kshs;
+								$request_item_price = $res->request_item_price;
+								$total = $request_item_price*$request_item_quantity*$days;
+								$invoice_total=$invoice_total+$total;
+								$count++;
+									if($request_approval_status == 0)
+									{
+										$result .= ' '.form_open('inventory/update-request-item/'.$request_item_id.'/'.$request_event_id.'/'.$request_number.'/'.$request_id).'
+													<tr>
+														<td>'.$count.'</td>
+														<td>'.$item_name.'</td>
+														<td><input type="text" class="form-control" name="days" value="'.$days.'"></td>
+														<td><input type="text" class="form-control" name="quantity" value="'.$request_item_quantity.'"></td>
+														<td><input type="text" class="form-control" name="request_item_price" value="'.$request_item_price.'" ></td>
+															<td>'.number_format($total,2).'</td>
+														<td><a href="'.site_url().'inventory/update-request-item/'.$request_item_id.'/'.$request_event_id.'"><button class="btn btn-success btn-sm" type="submit"><i class="fa fa-pencil"></i> Edit Request</button></td>
+														<td><a href="'.site_url().'inventory/delete-request-item/'.$request_item_id.'/'.$request_id.'/'.$request_number.'"  onclick="return confirm(\'Do you want to delete '.$item_name.'?\')" title="Delete '.$item_name.'" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a></td>
+													</tr>
+													'.form_close().'
+													';
+														
+									}
+									else if($request_approval_status == 1)
+									{
+										 $total_price = $request_item_price * $request_item_quantity*$days;
+										$result .= ' '.form_open('inventory/update-request-item/'.$request_item_id.'/'.$request_event_id.'/'.$request_number.'/'.$request_id).'
+													<tr>
+														<td>'.$count.'</td>
+														<td>'.$item_name.'</td>
+														<td><input type="text" class="form-control" name="days" value="'.$days.'"></td>
+														<td><input type="text" class="form-control" name="quantity" value="'.$request_item_quantity.'"></td>
+														<td><input type="text" class="form-control" name="request_item_price" value="'.$request_item_price.'" ></td>
+															<td>'.number_format($total,2).'</td>
+														<td><a href="'.site_url().'inventory/update-request-item/'.$request_item_id.'/'.$request_event_id.'"><button class="btn btn-success btn-sm" type="submit"><i class="fa fa-pencil"></i> Edit Request</button></td>
+														<td><a href="'.site_url().'inventory/delete-request-item/'.$request_item_id.'/'.$request_id.'/'.$request_number.'"  onclick="return confirm(\'Do you want to delete '.$item_name.'?\')" title="Delete '.$item_name.'" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a></td>
+													</tr>
+													
+													'.form_close().'
+													';
+									}
+									else if($request_approval_status == 2)
+									{
+										 $total_price = $request_item_price * $request_item_quantity*$days;
+										 $result .= ' '.form_open('inventory/update-request-item/'.$request_item_id.'/'.$request_event_id.'/'.$request_number.'/'.$request_id).'
+													<tr>
+														<td>'.$count.'</td>
+														<td>'.$item_name.'</td>
+														<td><input type="text" class="form-control" name="days" value="'.$days.'"></td>
+														<td><input type="text" class="form-control" name="quantity" value="'.$request_item_quantity.'"></td>
+														<td><input type="text" class="form-control" name="request_item_price" value="'.$request_item_price.'" ></td>
+															<td>'.number_format($total,2).'</td>
+														<td><a href="'.site_url().'inventory/update-request-item/'.$request_item_id.'/'.$request_event_id.'"><button class="btn btn-success btn-sm" type="submit"><i class="fa fa-pencil"></i> Edit Request</button></td>
+														<td><a href="'.site_url().'inventory/delete-request-item/'.$request_item_id.'/'.$request_id.'/'.$request_number.'"  onclick="return confirm(\'Do you want to delete '.$item_name.'?\')" title="Delete '.$item_name.'" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a></td>
+													</tr>
+													
+													'.form_close().'
+													';
+									}
+									else if($request_approval_status == 3)
+									{
+										 $total_price = $request_item_price * $request_item_quantity*$days;
+										 $result .= ' '.form_open('inventory/update-request-item/'.$request_item_id.'/'.$request_event_id.'/'.$request_number.'/'.$request_id).'
+													<tr>
+														<td>'.$count.'</td>
+														<td>'.$item_name.'</td>
+														<td><input type="text" class="form-control" name="days" value="'.$days.'"></td>
+														<td><input type="text" class="form-control" name="quantity" value="'.$request_item_quantity.'"></td>
+														<td><input type="text" class="form-control" name="request_item_price" value="'.$request_item_price.'" ></td>
+															<td>'.number_format($total,2).'</td>
+														<td><a href="'.site_url().'inventory/update-request-item/'.$request_item_id.'/'.$request_event_id.'"><button class="btn btn-success btn-sm" type="submit"><i class="fa fa-pencil"></i> Edit Request</button></td>
+														<td><a href="'.site_url().'inventory/delete-request-item/'.$request_item_id.'/'.$request_id.'/'.$request_number.'"  onclick="return confirm(\'Do you want to delete '.$item_name.'?\')" title="Delete '.$item_name.'" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a></td>
+													</tr>
+													
+													'.form_close().'
+													';
+									}
+									else if($request_approval_status == 4)
+									{
+										 $total_price = $request_item_price * $request_item_quantity;
+										 $result .= ' '.form_open('inventory/update-request-item/'.$request_item_id.'/'.$request_event_id.'/'.$request_number.'/'.$request_id).'
+													<tr>
+														<td>'.$count.'</td>
+														<td>'.$item_name.'</td>
+														<td>'.$days.'</td>
+														<td>'.$request_item_quantity.'</td>
+														<td>'.$request_item_price.'</td>
+															<td>'.number_format($total,2).'</td>
+														
+													</tr>
+													
+													'.form_close().'
+													';
+									}
+									else if($request_approval_status == 5 OR $request_approval_status == 6)
+									{
+										 $total_price = $supplier_unit_price * $request_item_quantity * $days;
+
+										 $invoice_total = $total_price + $invoice_total;
+										 $result .= ' 
+													<tr>
+														<td>'.$count.'</td>
+														<td>'.$item_name.'</td>
+														<td><input type="text" class="form-control" name="days" value="'.$days.'"></td>
+														<td><input type="text" class="form-control" name="quantity" value="'.$request_item_quantity.'"></td>
+														<td><input type="text" class="form-control" name="request_item_price" value="'.$request_item_price.'" ></td>
+															<td>'.number_format($total,2).'</td>
+														<td><a href="'.site_url().'inventory/update-request-item/'.$request_item_id.'/'.$request_event_id.'"><button class="btn btn-success btn-sm" type="submit"><i class="fa fa-pencil"></i> Edit Request</button></td>
+														<td><a href="'.site_url().'inventory/delete-request-item/'.$request_item_id.'/'.$request_id.'/'.$request_number.'"  onclick="return confirm(\'Do you want to delete '.$item_name.'?\')" title="Delete '.$item_name.'" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a></td>
+													</tr>
+													';
+										
+									}
+									else
+									{
+										 $result .= '
+													<tr>
+														<td>'.$count.'</td>
+														<td>'.$item_name.'</td>
+														<td><input type="text" class="form-control" name="quantity" value="'.$request_item_quantity.'" readonly></td>
+														<td><input type="text" class="form-control" name="request_item_price" value="'.$request_item_price.'"></td>
+															<td>'.number_format($total,2).'</td>
+													</tr>
+													';
+									}
+							
+								
+								?>
+								<?php
+								$total_item_price=$total+$total;
+							}
+							if($request_approval_status == 5 || $request_approval_status == 6)
+							{
+								$result .= ' 
+													<tr>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td>TOTAL AMOUNT</td>
+														<td> '.number_format($invoice_total,2).'</td>
+													</tr>
+													';
+							}
+							if($invoice_total > 0)
+							{
+								$result .= '<tr>
+												<td colspan="4"></td>
+												<th>TOTAL AMOUNT</th>
+												<th>'.number_format($invoice_total,2).'</th>
+											</tr>';
+							}
+							$result .= '
+							
+								</tbody>
+							</table>
+							';
+							echo $result;
 				}
-				?>
+					?>
+				</div>
+        	</div>
+	<h2 class="panel-title"> Logistics for <?php echo $event_name;?><button type="button" class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#add_event_logistics<?php echo $request_event_id?>">
+									Add Event Lodistics
+								</button></h2>
+	<div class="panel-body">
 		
-			</div>
+    	<?php
+		$event_logistic_query = $this->events_model->get_event_logistics($request_event_id);
+    		$result ='';
+			if($event_logistic_query->num_rows() > 0)
+			{
+				$col = '';
+				$message = '';
+				
+				if($request_approval_status == 0)
+				{
+					$col = '<th colspan="3">Actions</th>';
+
+				}
+				else if($request_approval_status == 4)
+				{
+					
+							
+			
+				}
+				else if($request_approval_status == 5 OR $request_approval_status == 6)
+				{
+					$col .= '
+							<th>Unit Price (KES)</th>
+							<th>Total Price (KES) </th>';
+
+				}
+
+				else
+				{
+					$col = '';
+				}
+				if($request_approval_status < 4)
+				{	
+				$result .= 
+				'
+				<div class="row">
+					<div class="col-md-12">
+						<table class="example table-autosort:0 table-stripeclass:alternate table table-hover table-bordered " id="TABLE_2">
+						  <thead>
+							<tr>
+							  <th>#</th>
+							  <th>Logistic</th>
+							  <th>Days</th>
+							  <th>Quantity</th>
+							  <th>Price(KES)</th>
+							  <th>Total (KES)</th>
+							  <th>Actions</th>
+							  '.$col.'
+							</tr>
+						  </thead>
+						  <tbody>
+						';
+						}
+						else
+						{
+							$result .= 
+				'
+				<div class="row">
+					<div class="col-md-12">
+						<table class="example table-autosort:0 table-stripeclass:alternate table table-hover table-bordered " id="TABLE_2">
+						  <thead>
+							<tr>
+							  <th>#</th>
+							  <th>Logistic</th>
+							  <th>Days</th>
+							  <th>Quantity</th>
+							  <th>Price(KES)</th>
+							  <th>Total (KES)</th>
+							  '.$col.'
+							</tr>
+						  </thead>
+						  <tbody>
+						';
+						}
+						$count = 0;
+						$invoice_total = 0;
+						$total= 0;
+						foreach($event_logistic_query->result() as $event_logistics)
+						{
+							$logistic_id = $event_logistics->logistic_id;
+							$logistic_name = $event_logistics->logistic_name;
+							//$logistic_name = $this->events_model->get_event_logistic_name($logistic_id );
+							$days =$event_logistics->request_event_logistic_days;
+							$event_logistic_quantity = $event_logistics->request_event_logistic_quantity;
+							$event_logistic_price = $event_logistics->request_event_logistic_price;
+							$request_event_id = $request_event_id;
+							$total = $event_logistic_price*$event_logistic_quantity *$days;
+							$invoice_total=$invoice_total+$total;
+		                    $count++;
+								
+							
+
+								if($request_approval_status == 0)
+								{
+				                    $result .= ' '.form_open('inventory/update-request-logistic/'.$logistic_id.'/'.$request_event_id.'/'.$request_number.'/'.$request_id).'
+												<tr>
+													<td>'.$count.'</td>
+													<td>'.$logistic_name.'</td>
+													<td><input type="text" class="form-control" name="days" value="'.$days.'"></td>
+													<td><input type="text" class="form-control" name="quantity" value="'.$event_logistic_quantity.'"></td>
+													<td><input type="text" class="form-control" name="request_item_price" value="'.$event_logistic_price.'" ></td>
+														<td>'.number_format($total,2).'</td>
+													<td><a href="'.site_url().'inventory/update-request-logistics/'.$logistic_id.'/'.$request_event_id.'"><button class="btn btn-success btn-sm" type="submit"><i class="fa fa-pencil"></i> Edit Logistic</button></td>
+													<td><a href="'.site_url().'inventory/delete-request-logistics/'.$logistic_id.'/'.$request_event_id.'/'.$request_id.'/'.$request_number.'"  onclick="return confirm(\'Do you want to delete '.$logistic_name.'?\')" title="Delete '.$logistic_name.'" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a></td>
+												</tr>
+												'.form_close().'
+												';
+													
+								}
+								else if($request_approval_status == 1)
+								{
+									 $total_price = $event_logistic_price * $event_logistic_quantity*$days;
+									 $result .= ' '.form_open('inventory/update-request-logistic/'.$logistic_id.'/'.$request_event_id.'/'.$request_number.'/'.$request_id).'
+												<tr>
+													<td>'.$count.'</td>
+													<td>'.$logistic_name.'</td>
+													<td><input type="text" class="form-control" name="days" value="'.$days.'"></td>
+													<td><input type="text" class="form-control" name="quantity" value="'.$event_logistic_quantity.'"></td>
+													<td><input type="text" class="form-control" name="request_item_price" value="'.number_format($event_logistic_price,2).'" ></td>
+														<td>'.number_format($total,2).'</td>
+													<td><a href="'.site_url().'inventory/update-request-logistics/'.$logistic_id.'/'.$request_event_id.'"><button class="btn btn-success btn-sm" type="submit"><i class="fa fa-pencil"></i> Edit Logistic</button></td>
+													<td><a href="'.site_url().'inventory/delete-request-logistics/'.$logistic_id.'/'.$request_event_id.'/'.$request_id.'/'.$request_number.'"  onclick="return confirm(\'Do you want to delete '.$logistic_name.'?\')" title="Delete '.$logistic_name.'" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a></td>
+												</tr>
+												
+												'.form_close().'
+												';
+								}
+								else if($request_approval_status == 2)
+								{
+									 $total_price = $event_logistic_price * $event_logistic_quantity*$days;
+									 $result .= ' '.form_open('inventory/update-request-logistic/'.$logistic_id.'/'.$request_event_id.'/'.$request_number.'/'.$request_id).'
+												<tr>
+													<td>'.$count.'</td>
+													<td>'.$logistic_name.'</td>
+													<td><input type="text" class="form-control" name="days" value="'.$days.'"></td>
+													<td><input type="text" class="form-control" name="quantity" value="'.$event_logistic_quantity.'"></td>
+													<td><input type="text" class="form-control" name="request_item_price" value="'.number_format($event_logistic_price,2).'" ></td>
+														<td>'.number_format($total,2).'</td>
+													<td><a href="'.site_url().'inventory/update-request-logistics/'.$logistic_id.'/'.$request_event_id.'"><button class="btn btn-success btn-sm" type="submit"><i class="fa fa-pencil"></i> Edit Logistic</button></td>
+													<td><a href="'.site_url().'inventory/delete-request-logistics/'.$logistic_id.'/'.$request_event_id.'/'.$request_id.'/'.$request_number.'"  onclick="return confirm(\'Do you want to delete '.$logistic_name.'?\')" title="Delete '.$logistic_name.'" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a></td>
+												</tr>
+												
+												'.form_close().'
+												';
+								}
+								else if($request_approval_status == 3)
+								{
+									 $total_price = $event_logistic_price * $event_logistic_quantity*$days;
+									 $result .= ' '.form_open('inventory/update-request-logistic/'.$logistic_id.'/'.$request_event_id.'/'.$request_number.'/'.$request_id).'
+												<tr>
+													<td>'.$count.'</td>
+
+													<td>'.$logistic_name.'</td>
+													<td><input type="text" class="form-control" name="days" value="'.$days.'"></td>
+													<td><input type="text" class="form-control" name="quantity" value="'.$event_logistic_quantity.'"></td>
+													<td><input type="text" class="form-control" name="request_item_price" value="'.number_format($event_logistic_price,2).'" ></td>
+														<td>'.number_format($total,2).'</td>
+													<td><a href="'.site_url().'inventory/update-request-logistics/'.$logistic_id.'/'.$request_event_id.'"><button class="btn btn-success btn-sm" type="submit"><i class="fa fa-pencil"></i> Edit Logistic</button></td>
+													<td><a href="'.site_url().'inventory/delete-request-logistics/'.$logistic_id.'/'.$request_event_id.'/'.$request_id.'/'.$request_number.'"  onclick="return confirm(\'Do you want to delete '.$logistic_name.'?\')" title="Delete '.$logistic_name.'" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a></td>
+												</tr>
+												
+												'.form_close().'
+												';
+								}
+								else if($request_approval_status == 4)
+								{
+									 $total_price = $event_logistic_price * $event_logistic_quantity;
+									$result .= ' '.form_open('inventory/update-request-logistic/'.$logistic_id.'/'.$request_event_id.'/'.$request_number.'/'.$request_id).'
+												<tr>
+													<td>'.$count.'</td>
+													<td>'.$logistic_name.'</td>
+													<td>'.$days.'</td>
+													<td>'.$event_logistic_quantity.'</td>
+													<td>'.number_format($event_logistic_price,2).'</td>
+													<td>'.number_format($total,2).'</td>
+												</tr>
+												
+												'.form_close().'
+												';
+								}
+								else if($request_approval_status == 5 OR $request_approval_status == 6)
+								{
+									 $total_price = $event_logistic_price * $event_logistic_quantity * $days;
+
+									 $invoice_total = $total_price + $invoice_total;
+									 $result .= ' 
+												<tr>
+													<td>'.$count.'</td>
+													<td>'.$logistic_name.'</td>
+													<td><input type="text" class="form-control" name="days" value="'.$days.'"></td>
+													<td><input type="text" class="form-control" name="quantity" value="'.$event_logistic_quantity.'"></td>
+													<td><input type="text" class="form-control" name="request_item_price" value="'.number_format($event_logistic_price,2).'" ></td>
+														<td>'.number_format($total,2).'</td>
+													<td><a href="'.site_url().'inventory/update-request-item/'.$request_item_id.'/'.$request_event_id.'"><button class="btn btn-success btn-sm" type="submit"><i class="fa fa-pencil"></i> Edit Request</button></td>
+													<td><a href="'.site_url().'inventory/delete-request-item/'.$request_item_id.'/'.$request_id.'/'.$request_number.'"  onclick="return confirm(\'Do you want to delete '.$item_name.'?\')" title="Delete '.$item_name.'" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a></td>
+												</tr>
+												';
+									
+								}
+								else
+								{
+									 $result .= '
+												<tr>
+													<td>'.$count.'</td>
+													<td>'.$item_name.'</td>
+													<td><input type="text" class="form-control" name="quantity" value="'.$request_item_quantity.'" readonly></td>
+													<td><input type="text" class="form-control" name="request_item_price" value="'.$request_item_price.'"></td>
+														<td>'.number_format($total).'</td>
+												</tr>
+												';
+								}
+						
+							
+		                    ?>
+		                    <?php
+							$total_item_price=$total+$total;
+						}
+						if($request_approval_status == 5 || $request_approval_status == 6)
+						{
+							$result .= ' 
+												<tr>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td>TOTAL AMOUNT</td>
+													<td> '.number_format($invoice_total).'</td>
+												</tr>
+												';
+						}
+						if($invoice_total > 0)
+						{
+							$result .= '<tr>
+											<td colspan="4"></td>
+											<th>TOTAL AMOUNT</th>
+											<th>'.number_format($invoice_total).'</th>
+											
+										</tr>';
+						}
+						$result .= '
+						
+							</tbody>
+						</table>
+						';
+						echo $result;
+								
+				}
+						?>
+						</div>
 		</div>
+	
+		<?php
+					
+					}
+						?>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="center-align">
+						<?php
+			            	$request_approval_status = $this->requests_model->get_request_approval_status($request_id);
+
+							if($request_approval_status >= 0 && $request_approval_status <=3)
+							{
+								echo '
+									<div class="alert alert-info">Your Request is being processed</div>
+								';
+							}
+							else
+							{
+								echo '
+									<div class="alert alert-info">Your Request Has Been Approved</div>
+								';
+							}
+							?>
+			            </div>
+					</div>
+				</div>
+                <?php
+				}
+					?>
 	</div>
 </section>
 <!-- End event request details -->

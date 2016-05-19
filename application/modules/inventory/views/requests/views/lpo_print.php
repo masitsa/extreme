@@ -2,8 +2,6 @@
 
 // COMPANY DETAILS
 $data['contacts'] = $this->site_model->get_contacts();
-// order details
-$request_details = $this->requests_model->get_request_items($supplier_request_id);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -95,28 +93,6 @@ echo $contacts['floor'];
         <!-- Patient Details -->
     	<div class="row receipt_bottom_border" style="margin-bottom: 10px;">
         	<div class="row">
-	        	<!--<div class="col-md-7 pull-left">
-	            	<div class="row">
-	                	<div class="col-md-10">
-	                		<div class="col-md-6">
-		                		<strong>Supplier :</strong> <?php
-echo $supplier_name;
-?><br>
-		                		<strong>Physical Address :</strong>  <?php
-echo $supplier_physical_address;
-?><br>
-		                		<strong>Phone :</strong> <?php
-echo $supplier_phone;
-?><br>
-		                		<strong>Email :</strong>  <?php
-echo $supplier_email;
-?><br>
-		                	</div>
-	                    </div>
-	                </div>
-	            
-	            </div>-->
-	            
 	             <div class="row" style="margin-left:20px;margin-right:20px;">
 	                   <div class="col-md-6 pull-left" >
 	                		<strong>Request No: </strong>
@@ -154,11 +130,9 @@ echo $supplier_email;
     	<div class="row receipt_bottom_border center-align">
         	<div class="col-md-12 center-align">
             <?php
-$as_at = $this->requests_model->request_approved_on($supplier_request_id);
-?>
-            	This is a copy of the items requested as at <strong> <?php
-echo $as_at;
-?> </strong>
+			$as_at = $this->requests_model->request_approved_on($supplier_request_id);
+			?>
+            This is a copy of the items requested as at <strong> <?php echo $as_at;?> </strong>
             </div>
         </div>
     	<div class="row">
@@ -169,6 +143,7 @@ echo $as_at;
 	                                <tr>
 	                                  <th>ITEM No.</th>
                                       <th>CLIENT</th>
+                                      <th>CATEGORY</th>
 	                                  <th>DESCRIPTION</th>
 	                                  <th>QTY</th>
 	                                  <th>UNIT PRICE</th>
@@ -182,51 +157,58 @@ echo $as_at;
 $client_name  = $this->requests_model->get_client_name($supplier_request_id);
 $item_no      = 0;
 $total_amount = 0;
-if ($request_details->num_rows() > 0) {
-    
-    foreach ($request_details->result() as $key) {
-        # code...
-        $request_id            = $key->request_id;
-        $item_name             = $key->item_name;
-        $created_by            = $key->created_by;
-        $request_item_quantity = $key->request_item_quantity;
-        $request_item_id       = $key->request_item_id;
-        $item_hiring_price     = $key->item_hiring_price;
-        $request_item_price    = $key->request_item_price;
-        $total_cost            = $request_item_price * $request_item_quantity;
-        $item_no++;
-?>
-											<tr>
-		                                        <td><?php
-        echo $item_no;
-?></td>
-                                                <td><?php
-        echo $client_name;
-?></td>
-		                                        <td><?php
-        echo $item_name;
-?></td>
-		                                        <td><?php
-        echo $request_item_quantity;
-?></td>
-		                                        <td><?php
-        echo $request_item_price;
-?></td>
-                                                <td></td>
-		                                        <td><?php
-        echo $total_cost;
-?></td>
-		                                        
-											</tr>
-											<?php
-        $total_amount = $total_amount + $total_cost;
-    }
-    
-}
+//retrieve request details
+//$request_event_id = $this->events_model->get_request_event_id($supplier_request_id);
+
+$result ='';
+$request_event_details = $this->events_model->get_request_event($supplier_request_id);
+if($request_event_details->num_rows()>0)
+{
+	foreach($request_event_details->result() as $events)
+	{
+		//var_dump($request_event_details);
+		$event_name = $events->request_event_name;
+		$request_event_id =$events->request_event_id;
+		$event_venue = $events->request_event_venue;
+		$start_date = $events->request_event_start_date;
+		$end_date = $events->request_event_end_date;
+		$budget = $events->request_event_budget;
+		$request_item_query = $this->requests_model->get_request_items($request_event_id);
+		$event_logistic_query = $this->events_model->get_event_logistics($request_event_id);
+		foreach ($request_item_query->result() as $key) 
+		{	
+			# code...
+			$request_id = $key->request_id;
+			$item_name = $key->item_name;
+			$days =$key->days;
+			$request_item_quantity = $key->request_item_quantity;
+			$item_category = $key->category_name;
+			$request_item_id = $key->request_item_id;
+			$supplier_unit_price = $key->supplier_unit_price;
+			$item_hiring_price = $key->item_hiring_price_kshs;
+			$request_item_price = $key->request_item_price;
+			$total_cost = $request_item_price * $request_item_quantity * $days;
+			$item_no++;
+		?>
+				<tr>
+					<td><?php  echo $item_no;?></td>
+					<td><?php  echo $client_name;?></td>
+					<td><?php  echo $item_category;?></td>
+					<td><?php  echo $item_name;?></td>
+					<td><?php  echo $request_item_quantity;?></td>
+					<td><?php  echo $request_item_price;?></td>
+					<td><?php  echo $days; ?></td>
+					<td><?php  echo $total_cost;?></td>
+					
+				</tr>
+												<?php
+		   		$total_amount = $total_amount + $total_cost;
+		}
+	}
 ?>
 									 
                                       <tr>
-                                      	<td colspan="5"></td>
+                                      	<td colspan="6"></td>
                                         
                                         <td><strong>Total Amount :</strong></td>
                                         <td><strong> <?php
@@ -235,9 +217,71 @@ echo $total_amount;
                                         
                                       </tr>
                                       <?php
-
+	
+}
+?>
 ?>
                                     
+                                </tbody>
+                              </table>
+						 <?php
+						 $request_event_id = $this->events_model->get_request_event_id($supplier_request_id);
+                         $logistic_details = $this->events_model->get_event_logistics($request_event_id);
+						 //var_dump($logistic_details);die();
+                         ?>
+                             <table class="table table-hover table-bordered table-striped col-md-12">
+                                <thead>
+	                                <tr>
+	                                  <th>Logistic No.</th>
+                                      <th>CLIENT</th>
+	                                  <th>LOGISTIC NAME</th>
+                                      <th>QTY</th>
+	                                  <th>UNIT PRICE</th>
+                                      <th>DAYS</th>
+	                                  <th colspan="2">AMOUNT (KSHS)</th>
+	                                </tr>
+	                               
+                                </thead>
+                                 <tbody>
+                                <?php
+								$logistic_no      = 0;
+								$total_logistic_amount = 0;
+								
+								if ($event_logistic_query->num_rows() > 0) 
+								{
+									foreach($event_logistic_query->result() as $event_logistics)
+									{
+										$logistic_id = $event_logistics->logistic_id;
+										$logistic_name = $event_logistics->logistic_name;
+										$days = $event_logistics->request_event_logistic_days;
+										$event_logistic_quantity = $event_logistics->request_event_logistic_quantity;
+										$event_logistic_price = $event_logistics->request_event_logistic_price;
+										$request_event_id = $request_event_id;
+										$logistic_amount = $event_logistic_price*$event_logistic_quantity *$days;
+										$total_logistic_amount=$invoice_total+$total;
+										$logistic_id++;
+											?>
+											<tr>
+                                            <td><?php echo $logistic_no;?></td>
+                                            <td><?php echo $client_name;?></td>
+                                            <td><?php echo $logistic_name;?></td>
+                                            <td><?php echo $logistic_qty;?></td>
+                                            <td><?php echo $logistic_price;?></td>
+                                            <td><?php echo $logistic_days;?></td>
+                                            <td><?php echo $logistic_amount;?></td>
+                                                                        
+                                        </tr>
+										<?php
+										$total_logistic_amount += $logistic_amount;
+									}
+								} 
+										?> 
+                                        <tr>
+                                            <td colspan="5"></td>
+                                            <td><strong>Total Amount :</strong></td>
+                                            <td><strong> <?php echo $total_logistic_amount;?></strong></td>
+                                        </tr>
+								                         
                                 </tbody>
                               </table>
             </div>

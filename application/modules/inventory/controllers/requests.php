@@ -33,7 +33,7 @@ class requests extends MX_Controller
 	*	Default action is to show all the requests
 	*
 	*/
-	public function index($order = 'request_number', $order_method = 'ASC') 
+	public function index($order = 'request_number', $order_method = 'DESC') 
 	{
 		// get my approval roles
 		$this->db->where('personnel_id ='.$this->session->userdata('personnel_id'));
@@ -154,9 +154,8 @@ class requests extends MX_Controller
 		$this->load->view('admin/templates/general_page', $data);
 	}
     
-    public function add_request_item($request_id,$request_number)
+    public function add_request_item($request_id,$request_event_id)
     {
-
 		$this->form_validation->set_rules('item_id', 'Item', 'required|xss_clean');
 		$this->form_validation->set_rules('quantity', 'Quantity', 'required|xss_clean');
 		$this->form_validation->set_rules('request_item_price', 'Item Price', 'required|numeric|xss_clean');
@@ -169,7 +168,7 @@ class requests extends MX_Controller
 			
 			if($request_item_price >= $minimum_hiring_price)
 			{
-				if($this->requests_model->add_request_item($request_id))
+				if($this->requests_model->add_request_item($request_id,$request_event_id))
 				{
 					$this->session->set_userdata('success_message', 'request created successfully');
 				}	
@@ -187,17 +186,19 @@ class requests extends MX_Controller
 		{
 			$this->session->set_userdata('error_message', validation_errors());
 		}
+		$request_number = $this->requests_model->get_request_number($request_id);
 		$v_data['title'] = 'Add Request Item to '.$request_number;
+		
 		//$v_data['request_status_query'] = $this->requests_model->get_request_status();
-		$v_data['items_query'] = $this->items_model->all_unselected_items($request_id);
-		$v_data['request_number'] = $request_number;
+		$v_data['items_query'] = $this->items_model->all_unselected_items($request_event_id);
+		$v_data['event_query'] = $this->events_model->all_events();
 		$v_data['request_details'] = $this->requests_model->get_request_details($request_id);
 		$v_data['request_id'] = $request_id;
-		$v_data['request_item_query'] = $this->requests_model->get_request_items($request_id);
+		$v_data['request_item_query'] = $this->requests_model->get_request_items($request_event_id);
 		$v_data['request_suppliers'] = $this->requests_model->get_request_suppliers($request_id);
 
 		$v_data['suppliers_query'] = $this->suppliers_model->all_suppliers();
-		$data['content'] = $this->load->view('requests/request_item', $v_data, true);
+		$data['content'] = $this->load->view('requests/request_event', $v_data, true);
 
 		$this->load->view('admin/templates/general_page', $data);
     }
@@ -205,11 +206,12 @@ class requests extends MX_Controller
 
     public function print_lpo_new($supplier_request_id,$request_number)
 	{
-		$data = array('supplier_request_id'=>$supplier_request_id, 'request_number'=>$request_number);
+		//echo $request_number; die();
+		$data = array('request_number'=>$request_number, 'supplier_request_id'=>$supplier_request_id);
 
 		$data['contacts'] = $this->site_model->get_contacts();
 		
-		$this->load->view('requests/views/lpo_print', $data);
+		$this->load->view('requests/views/print', $data);
 		
 	}
 	public function print_rfq_new($request_id,$supplier_id,$request_number)
@@ -222,14 +224,16 @@ class requests extends MX_Controller
 		
 	}
 
-    public function update_request_item($request_id,$request_number,$request_item_id)
+    public function update_request_item($request_item_id,$request_event_id,$request_number,$request_id)
     {
+		//echo $request_id;die();
     	$this->form_validation->set_rules('quantity', 'Quantity', 'numeric|required|xss_clean');
+		$this->form_validation->set_rules('days', 'Days', 'numeric|required|xss_clean');
 		
 		//if form has been submitted
 		if ($this->form_validation->run())
 		{
-	    	if($this->requests_model->update_request_item($request_id,$request_item_id))
+	    	if($this->requests_model->update_request_item($request_item_id,$request_event_id))
 			{
 				$this->session->set_userdata('success_message', 'request Item updated successfully');
 			}	
@@ -242,10 +246,10 @@ class requests extends MX_Controller
 		{
 			$this->session->set_userdata('success_message', 'Sorry, Please enter a number in the field');
 		}
-		redirect('inventory/add-request-item/'.$request_id.'/'.$request_number.'');
+		redirect('inventory/add-request-event/'.$request_id.'/'.$request_number.'');
 
     }
-    public function update_supplier_prices($request_id,$request_number,$request_item_id)
+    public function update_supplier_prices($request_id,$request_number,$request_number)
     {
     	$this->form_validation->set_rules('unit_price', 'Unit Price', 'numeric|required|xss_clean');
 		
@@ -474,7 +478,7 @@ class requests extends MX_Controller
 	{
 		if($this->requests_model->delete_request_item($request_item_id))
 		{
-			redirect('inventory/add-request-item/'.$request_id.'/'.$request_number);
+			redirect('inventory/add-request-event/'.$request_id.'/'.$request_number.'');
 		}
 	}
     
@@ -558,8 +562,8 @@ class requests extends MX_Controller
 		if($query->num_rows())
 		{
 			$row = $query->row();
-			$data['item_price'] = $row->item_hiring_price;
-			$data['minimum_hiring_price'] = $row->minimum_hiring_price;
+			$data['item_price'] = $row->item_hiring_price_kshs;
+			$data['minimum_hiring_price'] = $row->minimum_hiring_price_kshs;
 		}
 		
 		echo json_encode($data);
@@ -573,15 +577,16 @@ class requests extends MX_Controller
 	//request event
 	public function add_request_event($request_id,$request_number)
 	{
+		//echo $request_number;die();
 		//form validation rules
 		$this->form_validation->set_rules('event_name', 'Event Name', 'required|xss_clean');
 		$this->form_validation->set_rules('venue', 'Venue', 'required|xss_clean');
-		$request_event_id =$this->requests_model->add_request_event($request_id);
+		$request_event_id = 0;
 		//if form has been submitted
 		if ($this->form_validation->run())
 		{
-			//$request_id = $this->requests_model->add_request();
 			//update request
+			$request_event_id =$this->requests_model->add_request_event($request_id);
 			if($request_event_id > 0)
 			{
 				$this->session->set_userdata('success_message', 'request event created successfully');
@@ -597,7 +602,54 @@ class requests extends MX_Controller
 		{
 			$this->session->set_userdata('error_message', validation_errors());
 		}
+		$v_data['request_event_id'] = $request_event_id;
+		$request_number = $this->requests_model->get_request_number($request_id);
+		$v_data['title'] = 'Add Event to '.$request_number;
+		//$v_data['request_event_id'] = $request_event_id;
+		//$v_data['request_status_query'] = $this->requests_model->get_request_status();
+		$v_data['items_query'] = $this->items_model->all_unselected_items($request_id);
+		$v_data['logistic_query'] = $this->events_model->all_unselected_logistics($request_event_id);
+		$v_data['event_query'] = $this->events_model->all_events();
+		$v_data['request_number'] = $request_number;
+		$v_data['request_details'] = $this->requests_model->get_request_details($request_id);
+		$v_data['request_id'] = $request_id;
+		$v_data['request_suppliers'] = $this->requests_model->get_request_suppliers($request_id);
+
+		$v_data['suppliers_query'] = $this->suppliers_model->all_suppliers();
+		$data['content'] = $this->load->view('requests/request_event', $v_data, true);
+
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	
+	//event logistics
+	public function add_event_logistic($request_id,$request_event_id)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('logistic_id', 'Logistic Name', 'required|xss_clean');
+		$this->form_validation->set_rules('logistic_cost', 'Logistic Cost', 'required|xss_clean');
 		
+		//if form has been submitted
+		if ($this->form_validation->run())
+		{
+			//$request_id = $this->requests_model->add_request();
+			//update request
+			$event_logistic_id =$this->events_model->add_event_logistic($request_event_id);
+			if($event_logistic_id > 0)
+			{
+				$this->session->set_userdata('success_message', 'event logistics created successfully');
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'Could not add event request. Please try again');
+			}
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', validation_errors());
+		}
+		$request_number = $this->requests_model->get_request_number($request_id);
 		$v_data['title'] = 'Add Event to '.$request_number;
 		//$v_data['request_status_query'] = $this->requests_model->get_request_status();
 		$v_data['items_query'] = $this->items_model->all_unselected_items($request_id);
@@ -605,11 +657,83 @@ class requests extends MX_Controller
 		$v_data['request_number'] = $request_number;
 		$v_data['request_details'] = $this->requests_model->get_request_details($request_id);
 		$v_data['request_id'] = $request_id;
-		$v_data['request_item_query'] = $this->requests_model->get_request_items($request_id);
+		
 		$v_data['request_suppliers'] = $this->requests_model->get_request_suppliers($request_id);
 
 		$v_data['suppliers_query'] = $this->suppliers_model->all_suppliers();
 		$data['content'] = $this->load->view('requests/request_event', $v_data, true);
+
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	public function update_request_logistic($logistic_id,$request_event_id,$request_number,$request_id)
+    {
+    	$this->form_validation->set_rules('quantity', 'Quantity', 'numeric|required|xss_clean');
+		$this->form_validation->set_rules('days', 'Days', 'numeric|required|xss_clean');
+		
+		//if form has been submitted
+		if ($this->form_validation->run())
+		{
+	    	if($this->requests_model->update_request_logistic($logistic_id,$request_event_id))
+			{
+				$this->session->set_userdata('success_message', 'request logistics updated successfully');
+			}	
+			else
+			{
+				$this->session->set_userdata('error_message', 'request logistics were not updated');
+			}
+		}
+		else
+		{
+			$this->session->set_userdata('success_message', 'Sorry, Please enter a number in the field');
+		}
+		redirect('inventory/add-request-event/'.$request_id.'/'.$request_number.'');
+
+    }
+	public function delete_request_logistics($logistic_id, $request_event_id,$request_id, $request_number)
+	{
+		if($this->requests_model->delete_request_logistics($logistic_id,$request_event_id))
+		{
+			redirect('inventory/add-request-event/'.$request_id.'/'.$request_number.'');
+		}
+	}
+	
+	//request duplication
+	public function duplicate_request($request_id,$request_number)
+	{
+		
+		//form validation rules
+		$this->form_validation->set_rules('request_instructions', 'request Instructions', 'required|xss_clean');
+		$this->form_validation->set_rules('client_id', 'Client name', 'required|xss_clean');
+		//if form has been submitted
+		if ($this->form_validation->run())
+		{
+			$new_request_id = $this->requests_model->add_request();
+			$old_request_id = $request_id;
+			//update request
+			if($new_request_id > 0)
+			{
+				if($this->requests_model->duplicate_request($new_request_id,$old_request_id))
+				{
+					$this->session->set_userdata('success_message','Request Duplicated Successfully');
+				}
+				else
+				{
+					$this->session->set_userdata('error_message','Request Duplication Failed');
+				}
+				redirect('requests');
+				//die();
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'Could not update request. Please try again');
+			}
+		}
+		$request_number = $request_number;
+		$v_data['old_request_id']=$request_id;
+		$v_data['title'] = 'Request Duplication';
+		$v_data['clients_query'] = $this->clients_model->all_clients();
+		$data['content'] = $this->load->view('requests/add_request', $v_data, true);
 
 		$this->load->view('admin/templates/general_page', $data);
 	}

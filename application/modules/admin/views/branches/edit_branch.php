@@ -28,6 +28,8 @@
 			$branch_working_weekend = $branch->branch_working_weekend;
 			$branch_address = $branch->branch_address;
 			$branch_city = $branch->branch_city;
+			$branch_pin = $branch->branch_pin;
+			$branch_vat = $branch->branch_vat;
 			$branch_post_code = $branch->branch_post_code;
 			$branch_location = $branch->branch_location;
 			$branch_building = $branch->branch_building;
@@ -52,6 +54,8 @@
 				$branch_floor = set_value('branch_floor');
 				$branch_status = set_value('branch_status');
 				$branch_parent = set_value('branch_parent');
+				$branch_pin = set_value('branch_pin');
+				$branch_vat = set_value('branch_vat');
 				
                 echo '<div class="alert alert-danger"> Oh snap! '.$validation_errors.' </div>';
             }
@@ -126,6 +130,18 @@
                             </div>
                     	</div>
                     	<div class="col-md-6">
+                        	<div class="form-group">
+                                <label class="col-lg-4 control-label">Branch Pin</label>
+                                <div class="col-lg-6">
+                                    <input type="text" class="form-control" name="branch_pin" placeholder="Branch Pin" value="<?php echo $branch_pin;?>">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Branch VAT</label>
+                                <div class="col-lg-6">
+                                    <input type="text" class="form-control" name="branch_vat" placeholder="VAT Number" value="<?php echo $branch_vat;?>">
+                                </div>
+                            </div>
                         	<!-- Branch Parent -->
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Branch Parent</label>

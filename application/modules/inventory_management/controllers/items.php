@@ -826,7 +826,65 @@ class items extends MX_Controller
 		$this->index();
 	}
 	
-
+//import of the rates and prices for the items
+	function import_rate_card_template()
+	{
+		//export products template in excel 
+		 $this->items_model->import_rate_card_template();
+	}
+	
+	function import_rate_card()
+	{
+		//open the add new product
+		$v_data['title'] = 'Import Rate Card';
+		$data['title'] = 'Import rate card';
+		$data['content'] = $this->load->view('items/import_rate_card', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	function do_rate_card_import()
+	{
+		if(isset($_FILES['import_csv_rate_card']))
+		{
+			if(is_uploaded_file($_FILES['import_csv_rate_card']['tmp_name']))
+			{
+				//import items from excel 
+				$response = $this->items_model->import_csv_rate_card($this->csv_path);
+				
+				if($response == FALSE)
+				{
+				}
+				
+				else
+				{
+					if($response['check'])
+					{
+						$v_data['import_response'] = $response['response'];
+					}
+					
+					else
+					{
+						$v_data['import_response_error'] = $response['response'];
+					}
+				}
+			}
+			
+			else
+			{
+				$v_data['import_response_error'] = 'Please select a file to import.';
+			}
+		}
+		
+		else
+		{
+			$v_data['import_response_error'] = 'Please select a file to import.';
+		}
+		
+		//open the add new item
+		$v_data['title'] = 'Import Rate Card';
+		$data['title'] = 'Import rate card';
+		$data['content'] = $this->load->view('items/import_rate_card', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
+	}
 
 }
 ?>

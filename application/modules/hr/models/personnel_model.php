@@ -244,7 +244,9 @@ class Personnel_model extends CI_Model
 			'personnel_number'=>$this->input->post('personnel_number'),
 			'personnel_city'=>$this->input->post('personnel_city'),
 			'personnel_post_code'=>$this->input->post('personnel_post_code'),
-			'personnel_type_id'=>$this->input->post('personnel_type_id')
+			'personnel_national_id_number'=>$this->input->post('personnel_national_id_number'),
+			'personnel_post_code'=>$this->input->post('personnel_post_code'),
+			'personnel_kra_pin'=>$this->input->post('personnel_kra_pin')
 		);
 		
 		if($this->db->insert('personnel', $data))

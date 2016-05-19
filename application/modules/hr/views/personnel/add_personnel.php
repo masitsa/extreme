@@ -15,6 +15,8 @@ $personnel_number = set_value('personnel_number');
 $personnel_post_code = set_value('personnel_post_code');
 $branch_id = set_value('branch_id');
 $personnel_type_id2 = set_value('personnel_type_id');
+$personnel_national_id_number = set_value('personnel_national_id_number');
+$personnel_kra_pin = set_value('personnel_kra_pin');
 ?>          
           <section class="panel">
                 <header class="panel-heading">
@@ -49,14 +51,6 @@ $personnel_type_id2 = set_value('personnel_type_id');
 							
 							$this->session->unset_userdata('error_message');
 						}
-			
-						$validation_errors = validation_errors();
-						
-						if(!empty($validation_errors))
-						{
-							echo '<div class="alert alert-danger"> Oh snap! '.$validation_errors.' </div>';
-						}
-                    
 						$validation_errors = validation_errors();
 						
 						if(!empty($validation_errors))
@@ -182,8 +176,21 @@ $personnel_type_id2 = set_value('personnel_type_id');
             	<input type="text" class="form-control" name="personnel_number" placeholder="Personnel number" value="<?php echo $personnel_number;?>">
             </div>
         </div>
-        
         <div class="form-group">
+            <label class="col-lg-5 control-label">ID number: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="personnel_national_id_number" placeholder="ID number" value="<?php echo $personnel_national_id_number;?>">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-5 control-label">KRA pin: </label>
+            
+            <div class="col-lg-7">
+            	<input type="text" class="form-control" name="personnel_kra_pin" placeholder="KRA pin" value="<?php echo $personnel_kra_pin;?>">
+            </div>
+        </div>
+         <div class="form-group">
             <label class="col-lg-5 control-label">Date of Birth: </label>
             
             <div class="col-lg-7">
