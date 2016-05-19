@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="patient_search.php" server="192.168.170.16/sumc/" local="130580036712552821" remote="130586016600000000" Dst="0" />
-<file name="patient_search.php" server="192.168.170.16/sumc/development/" local="130580036712552821" remote="130612911000000000" Dst="0" />
+<file name="patient_search.php" server="192.168.170.16/sumc/" local="130580036712552821" remote="130586016600000000" />
+<file name="patient_search.php" server="192.168.170.16/sumc/development/" local="130580036712552821" remote="130612911000000000" />
+<file name="accounts_search.php" server="omnis.co.ke//var/www/html/insightmanagementconsultants/" local="131054306814190844" remote="131069100000000000" />
+<file name="patient_search.php" server="omnis.co.ke//var/www/html/insightmanagementconsultants/" local="131054306814190844" remote="131069100000000000" />
+<file name="search_account_statement.php" server="omnis.co.ke//var/www/html/insightmanagementconsultants/" local="131054306814290868" remote="131069100000000000" />
+<file name="search_petty_cash.php" server="omnis.co.ke//var/www/html/insightmanagementconsultants/" local="131054306814290868" remote="131069100000000000" />
 </dwsync>

@@ -253,7 +253,7 @@ class Payroll_model extends CI_Model
 			}
 		}
 		
-		return $total_tax;
+		return round($total_tax);
 	}
 	
 	public function get_all_allowances()
@@ -440,7 +440,7 @@ class Payroll_model extends CI_Model
 	
 	public function get_table_id($table_name)
 	{
-		$table = "tables";
+		$table = "table";
 		$where = "table_name = '$table_name'";
 		
 		$this->db->where($where);
@@ -531,7 +531,7 @@ class Payroll_model extends CI_Model
 							"table" => $table_payment,
 							"table_id" => $payment_id,
 							"personnel_id" => $personnel_id,
-							"payroll_item_amount" => $payment
+							"payroll_item_amount" => round($payment)
 						);
 				
 						$this->db->insert($table, $items);
@@ -564,7 +564,7 @@ class Payroll_model extends CI_Model
 							"table" => $table_benefit,
 							"table_id" => $benefit_id,
 							"personnel_id" => $personnel_id,
-							"payroll_item_amount" => $benefit
+							"payroll_item_amount" => round($benefit)
 						);
 				
 					$this->db->insert($table, $items);
@@ -597,7 +597,7 @@ class Payroll_model extends CI_Model
 							"table" => $table_allowance,
 							"table_id" => $allowance_id,
 							"personnel_id" => $personnel_id,
-							"payroll_item_amount" => $allowance
+							"payroll_item_amount" => round($allowance)
 						);
 				
 					$this->db->insert($table, $items);
@@ -643,6 +643,10 @@ class Payroll_model extends CI_Model
 				
 				$taxable = $gross_taxable - $nssf;
 				
+				/*if($personnel_id == 242)
+				{
+					var_dump($taxable); die();
+				}*/
 				if($taxable > 10164)
 				{
 					$paye = $this->payroll_model->calculate_paye($taxable);//echo $paye.'<br/>';
@@ -660,7 +664,7 @@ class Payroll_model extends CI_Model
 					"table" => $table_paye,
 					"table_id" => 1,
 					"personnel_id" => $personnel_id,
-					"payroll_item_amount" => $paye
+					"payroll_item_amount" => round($paye)
 				);
 			
 				$this->db->insert($table, $items);
@@ -677,7 +681,7 @@ class Payroll_model extends CI_Model
 					"table" => $table_relief,
 					"table_id" => 1,
 					"personnel_id" => $personnel_id,
-					"payroll_item_amount" => $monthly_relief
+					"payroll_item_amount" => round($monthly_relief)
 				);
 			
 				$this->db->insert($table, $items);
@@ -697,7 +701,7 @@ class Payroll_model extends CI_Model
 					"table" => $table_relief,
 					"table_id" => 1,
 					"personnel_id" => $personnel_id,
-					"payroll_item_amount" => $insurance_relief
+					"payroll_item_amount" => round($insurance_relief)
 				);
 			
 				$this->db->insert($table, $items);
@@ -709,7 +713,7 @@ class Payroll_model extends CI_Model
 					"table" => $table_relief,
 					"table_id" => 1,
 					"personnel_id" => $personnel_id,
-					"payroll_item_amount" => $insurance_amount
+					"payroll_item_amount" => round($insurance_amount)
 				);
 			
 				$this->db->insert($table, $items);
@@ -721,7 +725,7 @@ class Payroll_model extends CI_Model
 					"table" => $table_nssf,
 					"table_id" => 1,
 					"personnel_id" => $personnel_id,
-					"payroll_item_amount" => $nssf
+					"payroll_item_amount" => round($nssf)
 				);
 			
 				$this->db->insert($table, $items);
@@ -749,7 +753,7 @@ class Payroll_model extends CI_Model
 					"table" => $table_nhif,
 					"table_id" => 1,
 					"personnel_id" => $personnel_id,
-					"payroll_item_amount" => $nhif
+					"payroll_item_amount" => round($nhif)
 				);
 			
 				$this->db->insert($table, $items);
@@ -773,7 +777,7 @@ class Payroll_model extends CI_Model
 							"table" => $table_deduction,
 							"table_id" => $deduction_id,
 							"personnel_id" => $personnel_id,
-							"payroll_item_amount" => $deduction
+							"payroll_item_amount" => round($deduction)
 						);
 				
 					$this->db->insert($table, $items);
@@ -799,7 +803,7 @@ class Payroll_model extends CI_Model
 							"table" => $table_other_deduction,
 							"table_id" => $other_deduction_id,
 							"personnel_id" => $personnel_id,
-							"payroll_item_amount" => $other_deduction
+							"payroll_item_amount" => round($other_deduction)
 						);
 				
 					$this->db->insert($table, $items);
@@ -825,7 +829,7 @@ class Payroll_model extends CI_Model
 							"table" => $table_savings,
 							"table_id" => $savings_id,
 							"personnel_id" => $personnel_id,
-							"payroll_item_amount" => $savings
+							"payroll_item_amount" => round($savings)
 						);
 				
 					$this->db->insert($table, $items);
@@ -852,7 +856,7 @@ class Payroll_model extends CI_Model
 							"table" => $table_scheme,
 							"table_id" => $scheme_id,
 							"personnel_id" => $personnel_id,
-							"payroll_item_amount" => $amount
+							"payroll_item_amount" => round($amount)
 						);
 				
 					$this->db->insert($table, $items);

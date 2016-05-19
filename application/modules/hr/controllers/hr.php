@@ -2,6 +2,7 @@
 
 class Hr extends MX_Controller 
 {
+	var $csv_path;
 	function __construct()
 	{
 		parent:: __construct();
@@ -18,6 +19,7 @@ class Hr extends MX_Controller
 		$this->load->model('schedules_model');
 		$this->load->model('admin/branches_model');
 		$this->load->model('tutorial_model');
+		$this->csv_path = realpath(APPPATH . '../assets/csv');
 		
 		if(!$this->auth_model->check_login())
 		{
@@ -120,5 +122,65 @@ class Hr extends MX_Controller
 		
 		redirect('human-resource/configuration');
     }
+	
+	//payroll data import
+	public function import_payroll()
+	{
+		$v_data['title'] = $data['title'] = $this->site_model->display_page_title();
+		
+		$data['content'] = $this->load->view('import/import_payroll', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
+	}
+	//template for the payroll data
+	function import_payroll_template()
+	{
+		//export products template in excel 
+		$this->hr_model->import_payroll_template();
+	}
+	//import the payroll data
+	function do_payroll_import()
+	{
+		if(isset($_FILES['import_csv']))
+		{
+			if(is_uploaded_file($_FILES['import_csv']['tmp_name']))
+			{
+				//import products from excel 
+				$response = $this->hr_model->import_csv_payroll($this->csv_path);
+				
+				if($response == FALSE)
+				{
+					$v_data['import_response_error'] = 'Something went wrong. Please try again.';
+				}
+				
+				else
+				{
+					if($response['check'])
+					{
+						$v_data['import_response'] = $response['response'];
+					}
+					
+					else
+					{
+						$v_data['import_response_error'] = $response['response'];
+					}
+				}
+			}
+			
+			else
+			{
+				$v_data['import_response_error'] = 'Please select a file to import.';
+			}
+		}
+		
+		else
+		{
+			$v_data['import_response_error'] = 'Please select a file to import.';
+		}
+		
+		$v_data['title'] = $data['title'] = $this->site_model->display_page_title();
+		
+		$data['content'] = $this->load->view('import/import_payroll', $v_data, true);
+		$this->load->view('admin/templates/general_page', $data);
+	}
 }
 ?>

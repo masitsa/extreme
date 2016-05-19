@@ -118,38 +118,22 @@ class Payroll extends accounts
 	*/
 	public function salaries($order = 'personnel_onames', $order_method = 'ASC') 
 	{
+		$personnel_search = $this->session->userdata('personnel_search');
+		$where = 'personnel_type_id = 1 AND personnel_status != 0';
+		$table = 'personnel';
+		
+		if(!empty($personnel_search))
+		{
+			$where .= $personnel_search;
+		}
 		$branch_id = $this->session->userdata('branch_id');
 		$branch_name = $this->session->userdata('branch_name');
 		$branches = $this->branches_model->all_branches();
-		/*if(($branch_id == FALSE) || (empty($branch_id)))
-		{
-			if($branches->num_rows() > 0)
-			{
-				$row = $branches->result();
-				$branch_id = $row[0]->branch_id;
-				$branch_name = $row[0]->branch_name;
-				$where = 'personnel_type_id = 1 AND personnel_status != 0 AND branch_id = '.$branch_id;
-				$this->session->set_userdata('branch_id', $branch_id);
-				$this->session->set_userdata('branch_name', $branch_name);
-			}
-			
-			else 
-			{
-				$where = 'personnel_type_id = 1 AND personnel_status != 0';
-			}
-		}
 		
-
-		else
-		{
-			$where = 'personnel_type_id = 1 AND personnel_status != 0 AND branch_id = '.$branch_id;
-		}*/
-		$where = 'personnel_type_id = 1 AND personnel_status != 0';
-		$table = 'personnel';
 		//pagination
 		$segment = 5;
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'accounts/salaries/'.$order.'/'.$order_method;
+		$config['base_url'] = site_url().'accounts/salary-data/'.$order.'/'.$order_method;
 		$config['total_rows'] = $this->users_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -172,15 +156,15 @@ class Payroll extends accounts
 		$config['prev_link'] = 'Prev';
 		$config['prev_tag_close'] = '</li>';
 		
-		$config['cur_tag_open'] = '<li class="active">';
-		$config['cur_tag_close'] = '</li>';
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
 		
 		$config['num_tag_open'] = '<li>';
 		$config['num_tag_close'] = '</li>';
 		$this->pagination->initialize($config);
 		
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
-        $data["links"] = $this->pagination->create_links();
+        $v_data["links"] = $this->pagination->create_links();
 		$query = $this->personnel_model->get_all_personnel($table, $where, $config["per_page"], $page, $order, $order_method);
 		
 		//change of order method 
@@ -429,6 +413,128 @@ class Payroll extends accounts
 		$this->pdf->render();
 		$this->pdf->stream("Payroll for ".$data['month']." ".$data['year'].".pdf");*/
 	}
+	
+	public function print_paye_report($payroll_id)
+	{
+		$where = 'personnel_status = 1 AND personnel_type_id = 1';
+		
+		$this->db->where('payroll.branch_id = branch.branch_id AND payroll.payroll_id = '.$payroll_id);
+		$branches = $this->db->get('payroll, branch');
+		
+		if($branches->num_rows() > 0)
+		{
+			$row = $branches->result();
+			$branch_id = $row[0]->branch_id;
+			$branch_name = $row[0]->branch_name;
+			$branch_image_name = $row[0]->branch_image_name;
+			$branch_address = $row[0]->branch_address;
+			$branch_post_code = $row[0]->branch_post_code;
+			$branch_city = $row[0]->branch_city;
+			$branch_phone = $row[0]->branch_phone;
+			$branch_email = $row[0]->branch_email;
+			$branch_location = $row[0]->branch_location;
+			$where .= ' AND branch_id = '.$branch_id;
+		}
+		
+		$data['branch_name'] = $branch_name;
+		$data['branch_image_name'] = $branch_image_name;
+		$data['branch_id'] = $branch_id;
+		$data['branch_address'] = $branch_address;
+		$data['branch_post_code'] = $branch_post_code;
+		$data['branch_city'] = $branch_city;
+		$data['branch_phone'] = $branch_phone;
+		$data['branch_email'] = $branch_email;
+		$data['branch_location'] = $branch_location;
+		
+		$data['payments'] = $this->payroll_model->get_all_payments();
+		$data['benefits'] = $this->payroll_model->get_all_benefits();
+		$data['allowances'] = $this->payroll_model->get_all_allowances();
+		
+		$data['payroll_id'] = $payroll_id;
+		$data['payroll'] = $this->payroll_model->get_payroll($payroll_id);
+		$data['query'] = $this->personnel_model->retrieve_payroll_personnel($where);
+	
+		$this->load->view('payroll/paye_report', $data);
+	}
+	
+	public function print_nssf_report($payroll_id)
+	{
+		$where = 'personnel_status = 1 AND personnel_type_id = 1';
+		
+		$this->db->where('payroll.branch_id = branch.branch_id AND payroll.payroll_id = '.$payroll_id);
+		$branches = $this->db->get('payroll, branch');
+		
+		if($branches->num_rows() > 0)
+		{
+			$row = $branches->result();
+			$branch_id = $row[0]->branch_id;
+			$branch_name = $row[0]->branch_name;
+			$branch_image_name = $row[0]->branch_image_name;
+			$branch_address = $row[0]->branch_address;
+			$branch_post_code = $row[0]->branch_post_code;
+			$branch_city = $row[0]->branch_city;
+			$branch_phone = $row[0]->branch_phone;
+			$branch_email = $row[0]->branch_email;
+			$branch_location = $row[0]->branch_location;
+			$where .= ' AND branch_id = '.$branch_id;
+		}
+		
+		$data['branch_name'] = $branch_name;
+		$data['branch_image_name'] = $branch_image_name;
+		$data['branch_id'] = $branch_id;
+		$data['branch_address'] = $branch_address;
+		$data['branch_post_code'] = $branch_post_code;
+		$data['branch_city'] = $branch_city;
+		$data['branch_phone'] = $branch_phone;
+		$data['branch_email'] = $branch_email;
+		$data['branch_location'] = $branch_location;
+		
+		$data['payroll_id'] = $payroll_id;
+		$data['payroll'] = $this->payroll_model->get_payroll($payroll_id);
+		$data['query'] = $this->personnel_model->retrieve_payroll_personnel($where);
+	
+		$this->load->view('payroll/nssf_report', $data);
+	}
+	
+	public function print_nhif_report($payroll_id)
+	{
+		$where = 'personnel_status = 1 AND personnel_type_id = 1';
+		
+		$this->db->where('payroll.branch_id = branch.branch_id AND payroll.payroll_id = '.$payroll_id);
+		$branches = $this->db->get('payroll, branch');
+		
+		if($branches->num_rows() > 0)
+		{
+			$row = $branches->result();
+			$branch_id = $row[0]->branch_id;
+			$branch_name = $row[0]->branch_name;
+			$branch_image_name = $row[0]->branch_image_name;
+			$branch_address = $row[0]->branch_address;
+			$branch_post_code = $row[0]->branch_post_code;
+			$branch_city = $row[0]->branch_city;
+			$branch_phone = $row[0]->branch_phone;
+			$branch_email = $row[0]->branch_email;
+			$branch_location = $row[0]->branch_location;
+			$where .= ' AND branch_id = '.$branch_id;
+		}
+		
+		$data['branch_name'] = $branch_name;
+		$data['branch_image_name'] = $branch_image_name;
+		$data['branch_id'] = $branch_id;
+		$data['branch_address'] = $branch_address;
+		$data['branch_post_code'] = $branch_post_code;
+		$data['branch_city'] = $branch_city;
+		$data['branch_phone'] = $branch_phone;
+		$data['branch_email'] = $branch_email;
+		$data['branch_location'] = $branch_location;
+		
+		$data['payroll_id'] = $payroll_id;
+		$data['payroll'] = $this->payroll_model->get_payroll($payroll_id);
+		$data['query'] = $this->personnel_model->retrieve_payroll_personnel($where);
+	
+		$this->load->view('payroll/nhif_report', $data);
+	}
+	
 	public function print_monthly_payslips($payroll_id)
 	{
 		$where = 'personnel_status = 1 AND personnel_type_id = 1';
@@ -1129,7 +1235,7 @@ class Payroll extends accounts
 				$payment_id = $row2->payment_id;
 				$amount = $this->input->post("personnel_payment_amount".$payment_id);
 				
-				if($amount > 0)
+				if(($amount >= 0) || ($amount < 0))
 				{
 					$items = array(
 						"payment_id" => $payment_id,
@@ -1514,6 +1620,111 @@ class Payroll extends accounts
 		}
 		
 		redirect('accounts/payment-details/'.$personnel_id);
+	}
+	
+	public function search_personnel()
+	{
+		$personnel_number = $this->input->post('personnel_number');
+		$branch_id = $this->input->post('branch_id');
+		$search_title = '';
+		
+		/*if(!empty($personnel_number))
+		{
+			$search_title .= ' member number <strong>'.$personnel_number.'</strong>';
+			$personnel_number = ' AND personnel.personnel_number LIKE \'%'.$personnel_number.'%\'';
+		}*/
+		if(!empty($personnel_number))
+		{
+			$search_title .= ' personnel number <strong>'.$personnel_number.'</strong>';
+			$personnel_number = ' AND personnel.personnel_number = \''.$personnel_number.'\'';
+		}
+		
+		if(!empty($branch_id))
+		{
+			$search_title .= ' member type <strong>'.$branch_id.'</strong>';
+			$branch_id = ' AND personnel.branch_id = \''.$branch_id.'\' ';
+		}
+		
+		//search surname
+		if(!empty($_POST['personnel_fname']))
+		{
+			$search_title .= ' first name <strong>'.$_POST['personnel_fname'].'</strong>';
+			$surnames = explode(" ",$_POST['personnel_fname']);
+			$total = count($surnames);
+			
+			$count = 1;
+			$surname = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$surname .= ' personnel.personnel_fname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
+				}
+				
+				else
+				{
+					$surname .= ' personnel.personnel_fname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$surname .= ') ';
+		}
+		
+		else
+		{
+			$surname = '';
+		}
+		
+		//search other_names
+		if(!empty($_POST['personnel_onames']))
+		{
+			$search_title .= ' other names <strong>'.$_POST['personnel_onames'].'</strong>';
+			$other_names = explode(" ",$_POST['personnel_onames']);
+			$total = count($other_names);
+			
+			$count = 1;
+			$other_name = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$other_name .= ' personnel.personnel_onames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
+				}
+				
+				else
+				{
+					$other_name .= ' personnel.personnel_onames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$other_name .= ') ';
+		}
+		
+		else
+		{
+			$other_name = '';
+		}
+		
+		$search = $personnel_number.$branch_id.$surname.$other_name;
+		$this->session->set_userdata('personnel_search', $search);
+		$this->session->set_userdata('personnel_search_title', $search_title);
+		
+		$this->salaries();
+	}
+	
+	public function close_search()
+	{
+		$this->session->unset_userdata('personnel_search', $search);
+		$this->session->unset_userdata('personnel_search_title', $search_title);
+		
+		redirect('accounts/salary-data');
+	}
+	
+	public function calculate_personnel_paye($taxable)
+	{
+		echo $taxable.'<br/>';
+		$paye = $this->payroll_model->calculate_paye($taxable);
+		echo $paye;
 	}
 }
 ?>

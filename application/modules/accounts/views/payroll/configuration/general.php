@@ -268,8 +268,8 @@
                         ?>
                         <form action="<?php echo site_url("accounts/payroll/edit-paye/".$paye_id);?>" method="post">
                         <tr>
-                            <td><input type='text' name='paye_from<?php echo $paye_id;?>' value='<?php echo $paye_from;?>' class="form-control"></td>
-                            <td><input type='text' name='paye_to<?php echo $paye_id;?>' value='<?php echo $paye_to;?>' class="form-control"></td>
+                            <td><input type='text' name='paye_from<?php echo $paye_id;?>' value='<?php echo number_format($paye_from,0);?>' class="form-control"></td>
+                            <td><input type='text' name='paye_to<?php echo $paye_id;?>' value='<?php echo number_format($paye_to,0);?>' class="form-control"></td>
                             <td><input type='text' name='paye_amount<?php echo $paye_id;?>' value='<?php echo $paye_amount;?>' class="form-control"></td>
                             <td><button class='btn btn-success btn-xs' type='submit'><i class='fa fa-pencil'></i> Edit</button></td>
                             <td><a href="<?php echo site_url("accounts/payroll/delete-paye/".$paye_id);?>" onclick="return confirm('Do you want to delete <?php echo $paye_amount;?>?');" title="Delete <?php echo $paye_amount;?>"><button class='btn btn-danger btn-xs' type='button'><i class='fa fa-trash'></i> Delete</button></a></td>
