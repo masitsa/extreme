@@ -21,10 +21,10 @@ class Items_model extends CI_Model
 		return $query;
 		
 	}
-	public function all_unselected_items($request_id)
+	public function all_unselected_items($request_event_id)
 	{
 		
-		$query = $this->db->query('select * from item where item_status_id = 1 and item_id not in(select item_id from request_item where request_id='.$request_id.')');
+		$query = $this->db->query('select * from item where item_status_id = 1 and item_id not in(select item_id from request_item where request_event_id='.$request_event_id.')');
 		
 		return $query;
 	}
@@ -699,6 +699,163 @@ class Items_model extends CI_Model
 		return $category_id;
 	}
 	
-	
+	//import rate card template
+	public function import_rate_card_template()
+	{
+		$this->load->library('Excel');
+		
+		$title = 'Extreme Rate Card Template';
+		$count=1;
+		$r = 0;
+		
+		$array[$r][0] = 'Category';
+		$array[$r][1] = 'Item Description';
+		$array[$r][2] = 'Rate (KSHS)';
+		$array[$r][3] = 'Rate (Dollars)';
+		$array[$r][4] = 'Comment';
+		$r++;
+		
+		//create the excel document
+		$this->excel->addArray ($array);
+		$this->excel->generateXML ($title);
+	}
+	public function import_csv_rate_card($upload_path)
+	{
+		//load the file model
+		$this->load->model('admin/file_model');
+		/*
+			-----------------------------------------------------------------------------------------
+			Upload csv
+			-----------------------------------------------------------------------------------------
+		*/
+		$response = $this->file_model->upload_csv($upload_path, 'import_csv_rate_card');
+		
+		if($response['check'])
+		{
+			$file_name = $response['file_name'];
+			
+			$array = $this->file_model->get_array_from_csv($upload_path.'/'.$file_name);
+			//var_dump($array); die();
+			$response2 = $this->sort_rate_card_data($array);
+		
+			if($this->file_model->delete_file($upload_path."\\".$file_name, $upload_path))
+			{
+			}
+			
+			return $response2;
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', $response['error']);
+			return FALSE;
+		}
+	}
+	//sort the imported data
+	public function sort_rate_card_data($array)
+	{
+		//count total rows
+		$total_rows = count($array);
+		//echo $total_rows;
+		$total_columns = count($array[0]);//var_dump($array);die();
+		
+		//if products exist in array
+		if($total_rows > 0)
+		{
+			$response = '
+				<table class="table table-hover table-bordered ">
+					  <thead>
+						<tr>
+						  <th>#</th>
+						  <th>Item Name</th>
+						  <th>Item Category</th>
+						  <th>Hiring Price(Kshs)</th>
+						  <th>Hiring Price(USD)</th>
+						  <th>Description</th>
+						  <th>Comment</th>
+						</tr>
+					  </thead>
+					  <tbody>
+			';
+			
+			//retrieve the data from array
+			for($r = 1; $r < $total_rows; $r++)
+			{
+				$item_category_id = $array[$r][0];
+				$item_name = $array[$r][1];
+				$rate_shs = $array[$r][2];
+				$rate_dollars = $array[$r][3];
+				$description = $array[$r][4];
+				
+				
+				$category_name = $this->items_model->get_category_name($array[$r][0]);
+				
+				$items['item_name'] = $item_name;
+				$items['item_category_id'] = $item_category_id;
+				$items['item_hiring_price_kshs'] = $rate_shs;
+				$items['minimum_hiring_price_kshs'] = $rate_shs;
+				$items['minimum_hiring_price_dollars'] = $rate_dollars;
+				$items['item_hiring_price_dollars'] = $rate_dollars;
+				$items['item_description'] = $description;
+				$items['created']= date('Y-m-d H:i:s');
+				$items['created_by']= $this->session->userdata('personnel_id');
+				
+				
+				
+				// check if item name is empty
+				$comment ='';
+				if(!empty($items['item_name']))
+				{
+
+					if($this->db->insert('item', $items))
+					{
+						$comment = '<br/>Item successfully added to the database';
+						$class = 'success';
+					}					
+					else
+					{
+
+						$comment = '<br/>Internal error. Could not add item to the database. Please contact the site administrator. Item code '.$items['item_name'];
+						$class = 'warning';
+					}
+				}
+				
+				else
+				{
+					$comment = '<br/>Not saved ensure you have a item name entered'.$items['item_name'];
+					$class = 'danger';
+				}
+				
+				
+				$response .= '
+					
+						<tr class="'.$class.'">
+							<td>'.$r.'</td>
+							<td>'.$items['item_name'].'</td>
+							<td>'.$category_name.'</td>
+							<td>'.$items['item_hiring_price_kshs'].'</td>
+							<td>'.$items['item_hiring_price_dollars'].'</td>
+							<td>'.$items['item_description'].'</td>
+							<td>'.$comment.'</td>
+						</tr> 
+				';
+				
+			}
+			
+			$response .= '</table>';
+			
+			$return['response'] = $response;
+			$return['check'] = TRUE;
+		}
+		
+		//if no products exist
+		else
+		{
+			$return['response'] = 'Item data not found';
+			$return['check'] = FALSE;
+		}
+		
+		return $return;
+	}
 }
 ?>

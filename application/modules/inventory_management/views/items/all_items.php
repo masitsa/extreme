@@ -97,7 +97,7 @@ echo $this->load->view('inventory/search/search_items', '' , TRUE);
 								$item_id = $row->item_id;
 								$item_name = $row->item_name;
 								$item_status_id = $row->item_status_id;
-								$minimum_hiring_price = $row->minimum_hiring_price;
+								$minimum_hiring_price = $row->minimum_hiring_price_kshs;
 								$item_description = $row->item_description;
 								//$store_name = $row->store_name;
 								//$branch_code = $row->branch_code;
@@ -109,7 +109,7 @@ echo $this->load->view('inventory/search/search_items', '' , TRUE);
 								//$store_id = $row->store_id;
 								//$quantity = $row->quantity;
 
-								$item_hiring_price = $row->item_hiring_price;
+								$item_hiring_price = $row->item_hiring_price_kshs;
 		                        
 		                        $item_deleted = $row->product_deleted;
 		                       

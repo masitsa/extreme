@@ -49,6 +49,7 @@ $(document).on("change","select#request_item_id",function()
 {
 	//get value of the selected item
 	var item_id = $(this).val();
+	var request_event_id = $(this).attr('request_event_id');
 	
 	$.ajax({
 		type:'POST',
@@ -59,8 +60,8 @@ $(document).on("change","select#request_item_id",function()
 		dataType: 'json',
 		success:function(data)
 		{
-			$("#request_item_price").val(data.item_price);
-			$("#minimum_hiring_price").val(data.minimum_hiring_price);
+			$("#request_item_price"+request_event_id).val(data.item_price);
+			$("#minimum_hiring_price"+request_event_id).val(data.minimum_hiring_price);
 		},
 		error: function(xhr, status, error) 
 		{

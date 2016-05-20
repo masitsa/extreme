@@ -131,6 +131,8 @@ class Branches extends admin
 		$this->form_validation->set_rules('branch_floor', 'Floor', 'xss_clean');
 		$this->form_validation->set_rules('branch_status', 'Status', 'xss_clean');
 		$this->form_validation->set_rules('branch_parent', 'Branch parent', 'xss_clean');
+		$this->form_validation->set_rules('branch_pin', 'PIN', 'xss_clean');
+		$this->form_validation->set_rules('branch_vat', 'VAT Number', 'xss_clean');
 		
 		//if form has been submitted
 		if ($this->form_validation->run())

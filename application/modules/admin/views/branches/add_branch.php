@@ -96,6 +96,18 @@
                             </div>
                     	</div>
                     	<div class="col-md-6">
+                        	<div class="form-group">
+                                <label class="col-lg-4 control-label">Branch Pin</label>
+                                <div class="col-lg-6">
+                                    <input type="text" class="form-control" name="branch_pin" placeholder="Branch PIN" value="<?php echo set_value('branch_pin');?>">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Branch VAT No</label>
+                                <div class="col-lg-6">
+                                    <input type="text" class="form-control" name="branch_vat" placeholder="VAT Number" value="<?php echo set_value('branch_vat');?>">
+                                </div>
+                            </div>
                         	<!-- Branch Parent -->
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Branch Parent</label>

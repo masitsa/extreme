@@ -316,6 +316,8 @@ class Site_model extends CI_Model
 			$contacts['building'] = $row->branch_building;
 			$contacts['floor'] = $row->branch_floor;
 			$contacts['location'] = $row->branch_location;
+			$contacts['branch_pin']=$row->branch_pin;
+			$contacts['branch_vat']=$row->branch_vat;
 			$contacts['working_weekend'] = $row->branch_working_weekend;
 			$contacts['working_weekday'] = $row->branch_working_weekday;
 		}

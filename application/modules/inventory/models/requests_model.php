@@ -105,26 +105,51 @@ class requests_model extends CI_Model
 	
 	public function get_request_creator($request_id)
 	{
-		$this->db->select('requests.*,  personnel.personnel_onames, personnel.personnel_fname');
-		$this->db->where('requests.created_by = personnel.personnel_id AND requests.request_id ='.$request_id);
-		$query = $this->db->get('requests,personnel');
-		foreach ($query->result() as $key)
+		$personnel_fname = '';
+		$this->db->select('requests.*,  personnel.personnel_onames, personnel.personnel_fname, personnel_job.*, job_title.*,title.*');
+		$this->db->where('requests.created_by = personnel.personnel_id AND job_title.job_title_id = personnel_job.job_title_id AND personnel.personnel_id = personnel_job.personnel_id AND requests.request_id ='.$request_id);
+		$query = $this->db->get('requests,personnel,personnel_job,job_title,title');
+		if($query->num_rows() > 0)
 		{
-			$personnel_fname=$key->personnel_fname;
-		}		
-		return $personnel_fname;
+			foreach ($query->result() as $key)
+			{
+				$personnel_fname=$key->personnel_fname;
+				$personnel_onames=$key->personnel_onames;
+				$title_name = $key->title_name;
+				$job_title_name = $key->job_title_name;
+			$item = '<br>'.$title_name.' '.$personnel_fname.' '.$personnel_onames.' <br> '.$job_title_name.' <br> ';
+			}
+		}
+		else
+		{
+			$item = '';
+		}
+		return $item;
 	}
 	
 	public function get_request_approver($request_id)
 	{
-		$this->db->select('requests.*,  personnel.personnel_onames, personnel.personnel_fname');
+		$personnel_fname = '';
+		$this->db->select('requests.*,  personnel.personnel_onames, personnel.personnel_fname, personnel_job.*, job_title.*,title.*');
 		$this->db->where('requests.approved_by = personnel.personnel_id AND requests.request_id ='.$request_id);
-		$query = $this->db->get('requests,personnel');
-		foreach ($query->result() as $key)
+		$query = $this->db->get('requests,personnel,personnel_job,job_title,title');
+		
+		if($query->num_rows() > 0)
 		{
-			$personnel_fname=$key->personnel_fname;
-		}		
-		return $personnel_fname;
+			foreach ($query->result() as $key)
+			{
+				$personnel_fname=$key->personnel_fname;
+				$personnel_onames=$key->personnel_onames;
+				$title_name = $key->title_name;
+					$job_title_name = $key->job_title_name;
+				$item = '<br>'.$title_name.' '.$personnel_fname.' <br> '.$job_title_name.' '.$personnel_onames.'<br> ';
+			}
+		}
+		else
+		{
+			$item = '';
+		}
+		return $item;
 				
 	}
 	
@@ -157,16 +182,16 @@ class requests_model extends CI_Model
 	// Retrieve request details to display on the request items page
 	public function get_request_details($request_id)
 	{
-		$this->db->select('requests.*, client.client_name, personnel.personnel_onames, 	personnel.personnel_fname, request_status.request_status_name');
+		$this->db->select('requests.*, client.client_name, personnel.personnel_onames, client.client_contact_person, personnel.personnel_fname, request_status.request_status_name');
 		$this->db->where('requests.client_id = client.client_id 
 		AND requests.created_by = personnel.personnel_id
-		AND requests.request_status_id= request_status.request_status_id
+		AND requests.request_status_id= request_status.request_status_id 
 		AND requests.deleted = 0
 		AND requests.request_id = '.$request_id);
 		$query = $this->db->get('requests,client,personnel,request_status');
 		
 		return $query;
-		}
+	}
 		
 		/*
 	*	Retrieve all request items of an request
@@ -175,11 +200,11 @@ class requests_model extends CI_Model
 		AND requests.request_status_id= request_status.request_status_id	
 		AND requests.modified_by = personnel.personnel_id 
 	*/
-	public function get_request_items($request_id)
+	public function get_request_items($request_event_id)
 	{
-		$this->db->select('item.*, request_item.*');
-		$this->db->where('item.item_id = request_item.item_id AND request_item.deleted = 0 AND request_item.request_id = '.$request_id);
-		$query = $this->db->get('request_item, item');
+		$this->db->select('item.*, request_item.*, item_category.category_name');
+		$this->db->where('item.item_id = request_item.item_id AND item.item_category_id = item_category.item_category_id AND request_item.deleted = 0 AND request_item.request_event_id = '.$request_event_id);
+		$query = $this->db->get('request_item, item, item_category');
 		
 		return $query;
 	}
@@ -354,16 +379,18 @@ class requests_model extends CI_Model
 		$this->db->select('requests.request_date, requests.last_modified ');
 		$this->db->where('requests.request_id = '.$request_id);
 		$query = $this->db->get('');
-		 $result = $query->result();
-		foreach($result AS $key)
+		if($query->num_rows>0)
 		{
-			$request_date=strtotime($key->request_date);
-			$approved_date=strtotime($key->last_modified);
-			$turnaround_time=$approved_date-$request_date;
-			
+			foreach($query->result() as $key)
+			{
+				$request_date=strtotime($key->request_date);
+				$approved_date=strtotime($key->last_modified);
+				$turnaround_time=$approved_date-$request_date;
 			}
-			return $turnaround_time/(24*3600);
-		 }
+		return $turnaround_time/(24*3600);
+		}
+		
+	 }
 	
 	/*
 	*	Update an request
@@ -413,11 +440,12 @@ class requests_model extends CI_Model
 	*	Add a request item
 	*
 	*/
-	public function add_request_item($request_id)
+	public function add_request_item($request_id,$request_event_id)
 	{
 		$item_id = $this->input->post('item_id');
 		$quantity = $this->input->post('quantity');
 		$request_item_price=$this->input->post('request_item_price');
+		$days = $this->input->post('days');
 		
 		//Check if item exists
 		$this->db->select('*');
@@ -435,6 +463,7 @@ class requests_model extends CI_Model
 					//'request_item_price'=>$item_hiring_price,
 					'request_item_quantity'=>$quantity,
 					'deleted'=>0,
+					'days'=>$days,
 					'request_item_price'=>$request_item_price
 				);
 				
@@ -454,7 +483,9 @@ class requests_model extends CI_Model
 			$data = array(
 						
 					'request_id'=>$request_id,
+					'request_event_id'=>$request_event_id,
 					'item_id'=>$item_id,
+					'days' =>$days,
 					'request_item_price'=>$request_item_price,
 					'request_item_quantity'=>$quantity
 					
@@ -469,13 +500,15 @@ class requests_model extends CI_Model
 			}
 		}
 	}
-	public function update_request_item($request_id,$request_item_id)
+	public function update_request_item($request_item_id,$request_event_id)
 	{
 		$data = array(
-					'request_item_quantity'=>$this->input->post('quantity')
+					'request_item_quantity'=>$this->input->post('quantity'),
+					'request_item_price'=>$this->input->post('request_item_price'),
+					'days'=>$this->input->post('days')
 				);
 				
-		$this->db->where('request_item_id = '.$request_item_id);
+		$this->db->where('request_item_id = '.$request_item_id.' AND request_event_id='.$request_event_id);
 		if($this->db->update('request_item', $data))
 		{
 			return TRUE;
@@ -717,6 +750,7 @@ class requests_model extends CI_Model
 			'request_event_start_date'=>$start_date,
 			'request_event_end_date'=>$end_date,
 			'request_event_budget'=>$budget,
+			'event_pax'=>$event_pax,
 			'request_event_start_date'=>$start_date
 		);
 				
@@ -729,4 +763,165 @@ class requests_model extends CI_Model
 			return FALSE;
 		}
 	}
+	
+	public function get_request_number($request_id)
+	{
+		$this->db->where('request_id = '.$request_id);
+		$this->db->select('request_number');
+		$query = $this->db->get('requests');
+		if($query->num_rows>0)
+		{
+			foreach($query->result() as $key)
+			{
+				$request_number = $key->request_number;
+			}
+		return $request_number;
+		}
 	}
+	
+	public function update_request_logistic($logistic_id,$request_event_id)
+	{
+		$data = array(
+					'request_event_logistic_quantity'=>$this->input->post('quantity'),
+					'request_event_logistic_price'=>$this->input->post('request_item_price'),
+					'request_event_logistic_days'=>$this->input->post('days')
+				);
+				
+		$this->db->where('logistic_id = '.$logistic_id.' AND request_event_id='.$request_event_id);
+		if($this->db->update('request_event_logistic', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	public function delete_request_logistics($logistic_id,$request_event_id)
+	{
+		$data = array(
+			'deleted'=>1,
+			'deleted_on'=>date('Y-m-d H:i:s'),
+			'deleted_by'=>$this->session->userdata('personnel_id'),
+		);
+		$this->db->where('logistic_id', $logistic_id.' AND request_event_id='.$request_event_id);	
+			if($this->db->update('request_event_logistic',$data))
+			{
+				return TRUE;
+			}
+			else{
+				return FALSE;
+			}
+	}
+	
+	public function duplicate_request($new_request_id,$old_request_id)
+	{
+		$request_event_details = $this->events_model->get_request_event($old_request_id);
+		//var_dump($request_event_details); die();
+		if($request_event_details->num_rows()>0)
+		{
+			foreach($request_event_details->result() as $events)
+			{
+				//var_dump($request_event_details);
+				$event_name = $events->request_event_name;
+				$request_event_id =$events->request_event_id;
+				$event_id = $events->event_id;
+				$event_venue = $events->request_event_venue;
+				$start_date = $events->request_event_start_date;
+				$end_date = $events->request_event_end_date;
+				$budget = $events->request_event_budget;
+				$event_pax = $events->event_pax;
+				
+				//duplicate the request events
+				$data = array(
+						
+					'request_id'=>$new_request_id,
+					'event_id'=>$event_id,
+					'request_event_name'=>$event_name,
+					'request_event_venue'=>$event_venue,
+					'request_event_start_date'=>$start_date,
+					'request_event_end_date'=>$end_date,
+					'request_event_budget'=>$budget,
+					'event_pax'=>$event_pax
+				);
+						
+				if($this->db->insert('request_event', $data))
+				{
+					$new_request_event_id = $this->db->insert_id();
+					$event_logistic_query = $this->events_model->get_event_logistics($request_event_id);
+					$request_item_query = $this->requests_model->get_request_items($request_event_id);
+				
+					//duplicate request items
+					if($request_item_query->num_rows() > 0)
+					{
+						foreach($request_item_query->result() as $res)
+						{
+							$request_id = $res->request_id;
+							$item_id = $res->item_id;
+							$days =$res->days;
+							$request_item_quantity = $res->request_item_quantity;
+							$request_item_price = $res->request_item_price;	
+							$data = array(
+								'request_event_id'=>$new_request_event_id,
+								'request_id'=>$new_request_id,
+								'item_id'=>$item_id,
+								'days' =>$days,
+								'request_item_price'=>$request_item_price,
+								'request_item_quantity'=>$request_item_quantity
+								
+							);
+					
+							if($this->db->insert('request_item', $data))
+							{
+							}
+						}
+					}
+					
+					//duplicate event logistics
+					if($event_logistic_query->num_rows() > 0)
+					{
+						
+						foreach($event_logistic_query->result() as $event_logistics)
+						{
+							$logistic_id = $event_logistics->logistic_id;
+							$logistic_name = $event_logistics->logistic_name;
+							$days =$event_logistics->request_event_logistic_days;
+							$event_logistic_quantity = $event_logistics->request_event_logistic_quantity;
+							$event_logistic_price = $event_logistics->request_event_logistic_price;
+							$request_event_id = $request_event_id;
+						
+							$data = array(
+							
+								'logistic_id'=>$logistic_id,
+								'request_event_id'=>$new_request_event_id,
+								'request_event_logistic_quantity'=>$event_logistic_quantity,
+								'request_event_logistic_price'=>$event_logistic_price,
+								'request_event_logistic_days'=>$days
+							);
+							if($this->db->insert('request_event_logistic', $data))
+							{
+							}
+						}
+					}
+				
+				}
+			}
+		}
+		return TRUE;
+	}
+	//personnel for the eevents
+	public function get_request_personnel($request_event_id)
+	{
+		$this->db->select('personnel.*, request_event_personnel.*');
+		$this->db->where('request_event_personnel.personnel_id = personnel.personnel_id AND request_event_personnel.request_event_id = '.$request_event_id);
+		$query = $this->db->get('personnel,request_event_personnel');
+		
+		return $query;
+	}
+	// all available personnel to add to events
+	public function get_personnel()
+	{
+		$query = $this->db->get('personnel');
+		
+		return $query;
+	}
+}

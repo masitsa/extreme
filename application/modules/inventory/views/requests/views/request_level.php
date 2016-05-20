@@ -210,7 +210,8 @@
 									<td>'.$request_number.'</td>
 									<td>'.$turn_around_time.'</td>
 									<td>'.$status.'</td>
-									<td><a href="'.site_url().'inventory/add-request-item/'.$request_id.'/'.$request_number.'" class="btn btn-success  btn-sm fa fa-folder"> Request Items</a></td>
+									<td><a href="'.site_url().'inventory/add-request-event/'.$request_id.'/'.$request_number.'" class="btn btn-success  btn-sm fa fa-folder"> Request Items</a></td>
+									<td><a href="'.site_url().'inventory/duplicate-request/'.$request_id.'/'.$request_number.'" class="btn btn-warning  btn-sm fa fa-folder"> Duplicate Request</a></td>
 									<td>'.$button2.'</td>
 									
 									
