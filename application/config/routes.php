@@ -248,20 +248,24 @@ $route['hospital-administration/deactivate-insurance-company/(:num)'] = 'hospita
 /*
 *	Accounts Routes
 */
+$route['accounts/calculate-paye/(:num)'] = 'accounts/payroll/calculate_personnel_paye/$1';
 $route['accounts/creditors'] = 'accounts/creditors/index';
 $route['accounts/hospital-accounts'] = 'accounts/hospital_accounts/index';
 $route['accounts/petty-cash'] = 'accounts/petty_cash/index';
 $route['accounts/petty-cash/(:any)/(:any)'] = 'accounts/petty_cash/index/$1/$2';
 $route['accounts/petty-cash/(:any)'] = 'accounts/petty_cash/index/$1';
 $route['accounts/change-branch'] = 'accounts/payroll/change_branch';
+$route['accounts/print-paye-report/(:num)'] = 'accounts/payroll/print_paye_report/$1';
+$route['accounts/print-nhif-report/(:num)'] = 'accounts/payroll/print_nhif_report/$1';
+$route['accounts/print-nssf-report/(:num)'] = 'accounts/payroll/print_nssf_report/$1';
 $route['accounts/print-payroll/(:num)'] = 'accounts/payroll/print_payroll/$1';
+$route['accounts/print-month-payslips/(:num)'] = 'accounts/payroll/print_monthly_payslips/$1';
 $route['accounts/export-payroll/(:num)'] = 'accounts/payroll/export_payroll/$1';
 $route['accounts/print-payroll-pdf/(:num)'] = 'accounts/payroll/print_payroll_pdf/$1';
 $route['accounts/payroll/print-payslip/(:num)/(:num)'] = 'accounts/payroll/print_payslip/$1/$2';
 $route['accounts/payroll/download-payslip/(:num)/(:num)'] = 'accounts/payroll/download_payslip/$1/$2';
 $route['accounts/payroll-payslips/(:num)'] = 'accounts/payroll/payroll_payslips/$1';
 $route['accounts/salary-data'] = 'accounts/payroll/salaries';
-$route['print-payslip/(:num)'] = 'admin/payslip_details/$1';
 $route['accounts/search-payroll'] = 'accounts/payroll/search_payroll';
 $route['accounts/close-payroll-search'] = 'accounts/payroll/close_payroll_search';
 $route['accounts/create-payroll'] = 'accounts/payroll/create_payroll';
@@ -315,7 +319,7 @@ $route['accounts/payroll/view-payslip/(:num)'] = 'accounts/payroll/view_payslip/
 
 $route['accounts/insurance-invoices'] = 'administration/reports/debtors_report_invoices/0';
 $route['accounts/insurance-invoices/(:num)'] = 'administration/reports/debtors_report_invoices/$1';
-$route['accounts/print-month-payslips/(:num)'] = 'accounts/payroll/print_monthly_payslips/$1';
+
 //Always comes last
 $route['accounts/payroll/(:any)/(:any)'] = 'accounts/payroll/payrolls/$1/$2';
 $route['accounts/payroll/(:any)/(:any)/(:num)'] = 'accounts/payroll/payrolls/$1/$2/$3';
