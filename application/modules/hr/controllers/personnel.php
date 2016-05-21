@@ -14,6 +14,9 @@ class Personnel extends hr
 	{
 		parent:: __construct();
 		
+		
+		$this->load->model('accounts/payroll_model');
+		
 		$this->load->library('image_lib');
 
 		$this->document_upload_path = realpath(APPPATH . '../assets/document_uploads');
@@ -1133,6 +1136,126 @@ class Personnel extends hr
 		$this->session->unset_userdata('personnel_search_title2', $search_title);
 		
 		redirect('human-resource/personnel');
+	}
+	
+	//personnel timesheet
+	public function add_personnel_timesheet()
+	{
+		//form validation rules
+		$this->form_validation->set_rules('date', 'Date', 'required|xss_clean');
+		
+		//if form has been submitted
+		if ($this->form_validation->run())
+		{
+			$personnel_timesheet_id = $this->personnel_model->add_personnel_timesheet();
+			if($personnel_timesheet_id > 0)
+			{
+				$this->session->set_userdata('success_message', 'personnel timesheet created successfully');
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'Could not add your timesheet. Please try again');
+			}
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', validation_errors());
+		}
+		$personnel_id = $this->session->userdata('personnel_id');
+		$branch_id = $this->session->userdata('branch_id');
+		$branch_name = $this->session->userdata('branch_name');
+		$branches = $this->branches_model->all_branches();
+		$where = 'month.month_id = payroll.month_id AND payroll_status = 1 ';
+		$title = $branch_name.' Payroll history';
+		
+		if(($branch_id == FALSE) || (empty($branch_id)))
+		{
+			if($branches->num_rows() > 0)
+			{
+				$row = $branches->result();
+				$branch_id = $row[0]->branch_id;
+				$branch_name = $row[0]->branch_name;
+				$where .= ' AND payroll.branch_id = '.$branch_id;
+				$this->session->set_userdata('branch_id', $branch_id);
+				$this->session->set_userdata('branch_name', $branch_name);
+			}
+		}
+		
+		else
+		{
+			$where .= ' AND payroll.branch_id = '.$branch_id;
+		}
+		
+		//search items
+		$search = $this->session->userdata('payroll_search');
+		
+		if(!empty($search))
+		{
+			$where .= $search;
+			$title = $branch_name.' '.$this->session->userdata('payroll_search_title');
+		}
+		$table = 'payroll, month';
+		//pagination
+		$segment = 2;
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'dashboard';
+		$config['total_rows'] = $this->users_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active">';
+		$config['cur_tag_close'] = '</li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		$title = $branch_name.' Payroll history';
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $data["links"] = $this->pagination->create_links();
+		$query = $this->payroll_model->get_all_payrolls($table, $where, $config["per_page"], $page, $order='payroll.month_id', $order_method = 'DESC');
+		$v_data['leave'] = $this->personnel_model->get_personnel_leave($personnel_id);
+		$v_data['leave_types'] = $this->personnel_model->get_leave_types();
+		$v_data['personnel_query'] = $this->personnel_model->get_personnel($personnel_id);
+		$v_data['month'] = $this->payroll_model->get_months();
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['branches'] = $branches;
+		$v_data['payments'] = $this->payroll_model->get_all_payments();
+		$v_data['benefits'] = $this->payroll_model->get_all_benefits();
+		$v_data['allowances'] = $this->payroll_model->get_all_allowances();
+		$v_data['deductions'] = $this->payroll_model->get_all_deductions();
+		$v_data['savings'] = $this->payroll_model->get_all_savings();
+		$v_data['loan_schemes'] = $this->payroll_model->get_all_loan_schemes();
+		$v_data['other_deductions'] = $this->payroll_model->get_all_other_deductions();
+		$v_data['title'] = $this->site_model->display_page_title();
+		$v_data['personnel_id'] = $this->session->userdata('personnel_id');
+		$data['title'] = $v_data['title'] = $title;
+		$v_data['title'] = $data['title'];
+		
+		$data['content'] = $this->load->view('admin/add_timesheet', $v_data, true);
+		
+		$this->load->view('templates/general_page', $data);
+		
 	}
 }
 ?>

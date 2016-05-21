@@ -729,3 +729,6 @@ $route['import/import-payroll']= 'hr/do_payroll_import';
 
 //event personnel routes
 $route['inventory/add-request-personnel/(:num)/(:num)']='inventory/requests/add_request_personnel/$1/$2';
+
+//personnel_timesheets
+$route['timesheets/add-timesheet'] = 'hr/personnel/add_personnel_timesheet';

@@ -82,33 +82,19 @@ class events_model extends CI_Model
 	{
 		$personnel_id = $this->input->post('personnel_id');
 		$date = $this->input->post('date');
-		$start_time = $this->input->post('start_time');
-		$end_time = $this->input->post('end_time');
+		$description = $this->input->post ('description');
 		$data = array(
 						
 			'personnel_id'=>$personnel_id,
 			'request_event_id'=>$request_event_id,
 			'personnel_event_date'=>$date,
-			'start_time'=>$start_time,
-			'end_time'=>$end_time
+			'task_description' =>$description
 			);
 				
-		$this->db->insert('request_event_personnel', $data);
-		$request_event_personnel_id = $this->db->insert_id();
-		if($request_event_personnel_id > 0)
+		$request_event_personnel_id = $this->db->insert('request_event_personnel', $data);
+		if($request_event_personnel_id)
 		{
-			$data = array (
-				'personnel_id'=>$personnel_id,
-				'request_event_personnel_id'=>$request_event_personnel_id,
-				);
-			if($this->db->insert('personnel_timesheet', $data))
-			{
-				return TRUE;
-			}
-			else
-			{
-				return FALSE;
-			}
+			return TRUE;
 		}
 		else
 		{

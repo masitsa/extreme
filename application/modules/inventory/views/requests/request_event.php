@@ -700,10 +700,11 @@ if(($request_approval_status == 0)&&($request_approval_status < 4))
 					?>
 				</div>
         	</div>
+        </div>
 	<h2 class="panel-title"> Logistics for <?php echo $event_name;?>
 	
 	<?php
-		if(($request_approval_status == 0)&&($request_approval_status < 4)){
+	if(($request_approval_status == 0)&&($request_approval_status < 4)){
 	?>
 	<button type="button" class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#add_event_logistics<?php echo $request_event_id?>">
 		Add Event Logistics
@@ -961,6 +962,8 @@ if(($request_approval_status == 0)&&($request_approval_status < 4))
 								
 				}
 				?>
+                </div>
+                </div>
                 <div class="modal fade" id="add_event_personnel<?php echo $request_event_id;?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -1001,28 +1004,11 @@ if(($request_approval_status == 0)&&($request_approval_status < 4))
                                                 </div>
                                         	</div>
 											<div class="form-group">
-												<label class="col-lg-12 ">Start Time</label>
-												<div class="col-lg-12">
-													 <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <i class="fa fa-clock-o"></i>
-                                                        </span>
-                                                        <input type="text" class="form-control" data-plugin-timepicker="" name="start_time">
-                                                    </div>
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="col-lg-12 ">End Time</label>
-												<div class="col-lg-12">
-													 <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <i class="fa fa-clock-o"></i>
-                                                        </span>
-                                                        <input type="text" class="form-control" data-plugin-timepicker="" name="end_time">
-                                                    </div>
-
-												</div>
-											</div>
+			                <label class="col-lg-12">Description</label>
+			                <div class="col-lg-12">
+                              <textarea id="description" rows="10" class="form-control" name="description"><?php echo set_value('description');?></textarea>
+			                </div>
+			            </div>
 									<div class="center-align">
 										<button class="btn btn-primary btn-sm" type="submit">Add Event Pesonnel</button>
 									</div>
@@ -1060,8 +1046,7 @@ if(($request_approval_status == 0)&&($request_approval_status < 4))
 								<tr>
 								  <th>Personnel Name</th>
 								  <th>Date</th>
-								  <th>Start Time</th>
-								  <th>End Time</th>
+								  <th>Task</th>
 								</tr>
 							  </thead>
 							  <tbody>
@@ -1072,15 +1057,13 @@ if(($request_approval_status == 0)&&($request_approval_status < 4))
 						$personnel_fname = $request_personnel->personnel_fname;
 						$personnel_onames=$request_personnel->personnel_onames;
 						$date = $request_personnel->personnel_event_date;
-						$start_time = $request_personnel->start_time;
-						$end_time = $request_personnel->end_time;
+						$description = $request_personnel->task_description;
 						
 						$result .='
 							<tr>
 								<td>'.$personnel_fname.' '.$personnel_onames.'</td>
 								<td>'.$date.'</td>
-								<td>'.$start_time.'</td>
-								<td>'.$end_time.'</td>
+								<td>'.$description.'</td>
 							</tr>
 								';
 					}

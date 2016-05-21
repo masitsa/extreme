@@ -1324,5 +1324,42 @@ class Personnel_model extends CI_Model
 			}
 		}
 	}
+	
+	//add personnel timesheet
+	public function add_personnel_timesheet()
+	{
+		$personnel_id = $this->session->userdata('personnel_id');
+		$date = $this->input->post('date');
+		$start_time = $this->input->post('start_time');
+		$end_time = $this->input->post('end_time');
+		$description = $this->input->post('description');
+		$data = array(
+						
+			'personnel_id'=>$personnel_id,
+			'timesheet_date'=>$date,
+			'start_time'=>$start_time,
+			'end_time'=>$end_time,
+			'tasks_done' => $description
+			);
+				
+		$personnel_timesheet_id = $this->db->insert('personnel_timesheet', $data);
+		if($personnel_timesheet_id)
+		{
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+	//retrieve personnel timesheets
+	public function get_personnel_timesheet($personnel_id)
+	{
+		$this->db->where('personnel.personnel_id = '.$personnel_id);
+		$this->db->select('personnel.* , personnel_timesheet.*');
+		$result = $this->db->get('personnel, personnel_timesheet');
+		
+		return $result;
+	}
 }
 ?>

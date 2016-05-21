@@ -116,8 +116,8 @@ class Admin extends MX_Controller
 		$v_data['loan_schemes'] = $this->payroll_model->get_all_loan_schemes();
 		$v_data['other_deductions'] = $this->payroll_model->get_all_other_deductions();
 		$v_data['title'] = $this->site_model->display_page_title();
+		$v_data['personnel_id'] = $this->session->userdata('personnel_id');
 		$v_data['title'] = $data['title'];
-		
 		$data['content'] = $this->load->view('profile_page', $v_data, true);
 		
 		$this->load->view('templates/general_page', $data);
