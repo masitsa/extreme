@@ -7,7 +7,7 @@
     	</header>    
      </div>
     <div class="row">
-    <?php echo form_open('timesheet/add-timesheet/');?>
+    <?php echo form_open('timesheets/add-timesheet/');?>
         <div class="col-md-4">
             <div class="form-group">
                 <label class="col-lg-12 ">Date</label>
