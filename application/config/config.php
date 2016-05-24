@@ -16,7 +16,7 @@
 | environments.
 |
 */
-$config['base_url'] = 'http://localhost/extreme/';
+$config['base_url'] = 'http://localhost/xtreme/';
 
 /*
 |--------------------------------------------------------------------------
