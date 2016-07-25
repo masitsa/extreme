@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="BadResponseException.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232200000000" Dst="0" />
+<file name="ClientErrorResponseException.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232200000000" Dst="0" />
+<file name="CouldNotRewindStreamException.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232200000000" Dst="0" />
+<file name="MultiTransferException.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232200000000" Dst="0" />
+<file name="HttpException.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232200000000" Dst="0" />
+<file name="CurlException.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232800000000" Dst="0" />
+<file name="RequestException.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232800000000" Dst="0" />
+<file name="ServerErrorResponseException.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232800000000" Dst="0" />
+<file name="TooManyRedirectsException.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232800000000" Dst="0" />
+</dwsync>

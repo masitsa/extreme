@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="CHANGELOG.md" server="omnis.co.ke//var/www/html/" local="130887098360000000" remote="131064237600000000" Dst="0" />
+<file name="ContainerAwareEventDispatcher.php" server="omnis.co.ke//var/www/html/" local="130887098360000000" remote="131064237600000000" Dst="0" />
+<file name="Event.php" server="omnis.co.ke//var/www/html/" local="130887098360000000" remote="131064238200000000" Dst="0" />
+<file name="EventDispatcher.php" server="omnis.co.ke//var/www/html/" local="130887098360000000" remote="131064238200000000" Dst="0" />
+<file name="EventDispatcherInterface.php" server="omnis.co.ke//var/www/html/" local="130887098360000000" remote="131064238200000000" Dst="0" />
+<file name="EventSubscriberInterface.php" server="omnis.co.ke//var/www/html/" local="130887098360000000" remote="131064238200000000" Dst="0" />
+<file name="GenericEvent.php" server="omnis.co.ke//var/www/html/" local="130887098360000000" remote="131064238200000000" Dst="0" />
+<file name="ImmutableEventDispatcher.php" server="omnis.co.ke//var/www/html/" local="130887098360000000" remote="131064238200000000" Dst="0" />
+<file name="LICENSE" server="omnis.co.ke//var/www/html/" local="130887098360000000" remote="131064238200000000" Dst="0" />
+<file name="phpunit.xml.dist" server="omnis.co.ke//var/www/html/" local="130887098360000000" remote="131064238200000000" Dst="0" />
+<file name="README.md" server="omnis.co.ke//var/www/html/" local="130887098360000000" remote="131064238200000000" Dst="0" />
+</dwsync>

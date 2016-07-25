@@ -60,11 +60,12 @@ $route['change-password'] = 'admin/users/change_password';
 */
 $route['administration/configuration'] = 'admin/configuration';
 $route['administration/edit-configuration/(:num)'] = 'admin/edit_configuration/$1';
+
 $route['administration/sections'] = 'admin/sections/index';
+$route['administration/sections/(:any)/(:any)'] = 'admin/sections/index/$1/$2';
 $route['administration/sections/(:any)/(:any)/(:num)'] = 'admin/sections/index/$1/$2/$3';
 $route['administration/add-section'] = 'admin/sections/add_section';
 $route['administration/edit-section/(:num)'] = 'admin/sections/edit_section/$1';
-
 $route['administration/edit-section/(:num)/(:num)'] = 'admin/sections/edit_section/$1/$2';
 $route['administration/delete-section/(:num)'] = 'admin/sections/delete_section/$1';
 $route['administration/delete-section/(:num)/(:num)'] = 'admin/sections/delete_section/$1/$2';
@@ -75,6 +76,7 @@ $route['administration/deactivate-section/(:num)/(:num)'] = 'admin/sections/deac
 
 #$route['administration/company-profile'] = 'admin/contacts/show_contacts';
 $route['administration/branches'] = 'admin/branches/index';
+$route['administration/tutorial']='admin/tutorial/index';
 $route['administration/branches/(:any)/(:any)/(:num)'] = 'admin/branches/index/$1/$2/$3';
 $route['administration/branches/(:any)/(:any)'] = 'admin/branches/index/$1/$2';
 $route['administration/add-branch'] = 'admin/branches/add_branch';
@@ -86,6 +88,19 @@ $route['administration/activate-branch/(:num)'] = 'admin/branches/activate_branc
 $route['administration/activate-branch/(:num)/(:num)'] = 'admin/branches/activate_branch/$1/$2';
 $route['administration/deactivate-branch/(:num)'] = 'admin/branches/deactivate_branch/$1';
 $route['administration/deactivate-branch/(:num)/(:num)'] = 'admin/branches/deactivate_branch/$1/$2';
+
+$route['print-payslip/(:num)'] = 'admin/payslip_details/$1';
+
+//tutorial routes
+$route['tutorial/human-resource']='hr/tutorial/view_tutorials';
+$route['tutorial/administration/add-human-resource']='admin/tutorial/upload_tutorial';
+$route['administration/activate-tutorial/(:num)'] = 'admin/tutorial/activate_tutorial/$1';
+$route['administration/deactivate-tutorial/(:num)'] = 'admin/tutorial/deactivate_tutorial/$1';
+$route['administration/edit-tutorial/(:num)'] = 'admin/tutorial/edit_tutorial/$1';
+$route['administration/delete-tutorial/(:num)'] = 'admin/tutorial/delete_tutorial/$1';
+$route['tutorial/payroll']='hr/tutorial/payroll';
+$route['tutorial/leave']='hr/tutorial/leave';
+
 
 /*
 *	HR Routes
@@ -159,6 +174,7 @@ $route['human-resource/deactivate-personnel-leave/(:num)/(:num)'] = 'hr/personne
 $route['human-resource/delete-personnel-leave/(:num)/(:num)'] = 'hr/personnel/delete_personnel_leave/$1/$2';
 
 $route['human-resource/delete-personnel-role/(:num)/(:num)'] = 'hr/personnel/delete_personnel_role/$1/$2';
+$route['human-resource/delete-personnel-approvals_assigned/(:num)/(:num)'] = 'hr/personnel/delete_personnel_approvals_assigned/$1/$2';
 
 /*
 *	Hospital administration
@@ -248,20 +264,27 @@ $route['hospital-administration/deactivate-insurance-company/(:num)'] = 'hospita
 /*
 *	Accounts Routes
 */
+$route['accounts/calculate-paye/(:num)'] = 'accounts/payroll/calculate_personnel_paye/$1';
 $route['accounts/creditors'] = 'accounts/creditors/index';
 $route['accounts/hospital-accounts'] = 'accounts/hospital_accounts/index';
 $route['accounts/petty-cash'] = 'accounts/petty_cash/index';
 $route['accounts/petty-cash/(:any)/(:any)'] = 'accounts/petty_cash/index/$1/$2';
 $route['accounts/petty-cash/(:any)'] = 'accounts/petty_cash/index/$1';
 $route['accounts/change-branch'] = 'accounts/payroll/change_branch';
+$route['accounts/print-paye-report/(:num)'] = 'accounts/payroll/print_paye_report/$1';
+$route['accounts/print-cc-paye-report/(:num)'] = 'accounts/cc_payment/print_paye_report/$1';
+$route['accounts/print-nhif-report/(:num)'] = 'accounts/payroll/print_nhif_report/$1';
+$route['accounts/print-nssf-report/(:num)'] = 'accounts/payroll/print_nssf_report/$1';
 $route['accounts/print-payroll/(:num)'] = 'accounts/payroll/print_payroll/$1';
+$route['accounts/print-month-payslips/(:num)'] = 'accounts/payroll/print_monthly_payslips/$1';
 $route['accounts/export-payroll/(:num)'] = 'accounts/payroll/export_payroll/$1';
 $route['accounts/print-payroll-pdf/(:num)'] = 'accounts/payroll/print_payroll_pdf/$1';
 $route['accounts/payroll/print-payslip/(:num)/(:num)'] = 'accounts/payroll/print_payslip/$1/$2';
+$route['accounts/cc-payment/print-payslip/(:num)/(:num)'] = 'accounts/cc_payment/print_payslip/$1/$2';
 $route['accounts/payroll/download-payslip/(:num)/(:num)'] = 'accounts/payroll/download_payslip/$1/$2';
+$route['accounts/cc-payment/download-payslip/(:num)/(:num)'] = 'accounts/cc_payment/download_payslip/$1/$2';
 $route['accounts/payroll-payslips/(:num)'] = 'accounts/payroll/payroll_payslips/$1';
 $route['accounts/salary-data'] = 'accounts/payroll/salaries';
-$route['print-payslip/(:num)'] = 'admin/payslip_details/$1';
 $route['accounts/search-payroll'] = 'accounts/payroll/search_payroll';
 $route['accounts/close-payroll-search'] = 'accounts/payroll/close_payroll_search';
 $route['accounts/create-payroll'] = 'accounts/payroll/create_payroll';
@@ -277,6 +300,7 @@ $route['accounts/payroll/delete_saving/(:num)'] = 'accounts/payroll/delete_savin
 $route['accounts/payroll/edit_loan_scheme/(:num)'] = 'accounts/payroll/edit_loan_scheme/$1';
 $route['accounts/payroll/delete_loan_scheme/(:num)'] = 'accounts/payroll/delete_loan_scheme/$1';
 $route['accounts/payroll'] = 'accounts/payroll/payrolls';
+$route['accounts/all-payroll'] = 'accounts/payroll/all_payrolls';
 $route['accounts/payment-details/(:num)'] = 'accounts/payroll/payment_details/$1';
 $route['accounts/save-payment-details/(:num)'] = 'accounts/payroll/save_payment_details/$1';
 $route['accounts/update-savings/(:num)'] = 'accounts/payroll/update_savings/$1';
@@ -312,15 +336,94 @@ $route['accounts/payroll/edit-personnel-savings/(:num)'] = 'accounts/payroll/edi
 $route['accounts/payroll/edit-personnel-loan-schemes/(:num)'] = 'accounts/payroll/edit_personnel_loan_schemes/$1';
 $route['accounts/payroll/edit-personnel-relief/(:num)'] = 'accounts/payroll/edit_personnel_relief/$1';
 $route['accounts/payroll/view-payslip/(:num)'] = 'accounts/payroll/view_payslip/$1';
+$route['accounts/payroll/view-payslip/(:num)'] = 'accounts/cc_payment/view_payslip/$1';
+$route['accounts/payroll/bank'] = 'accounts/payroll/bank';
+$route['accounts/payroll/generate-bank-report/(:num)'] = 'accounts/payroll/generate_bank_report/$1';
+$route['accounts/print-bank-report/(:num)'] = 'accounts/payroll/print_monthly_payslips/$1';
+$route['accounts/export-bank-report/(:num)'] = 'accounts/payroll/export_payroll/$1';
 
 $route['accounts/insurance-invoices'] = 'administration/reports/debtors_report_invoices/0';
 $route['accounts/insurance-invoices/(:num)'] = 'administration/reports/debtors_report_invoices/$1';
-$route['accounts/print-month-payslips/(:num)'] = 'accounts/payroll/print_monthly_payslips/$1';
-//Always comes last
-$route['accounts/payroll/(:any)/(:any)'] = 'accounts/payroll/payrolls/$1/$2';
-$route['accounts/payroll/(:any)/(:any)/(:num)'] = 'accounts/payroll/payrolls/$1/$2/$3';
-$route['accounts/salary-data/(:any)/(:any)'] = 'accounts/payroll/salaries/$1/$2';
-$route['accounts/salary-data/(:any)/(:any)/(:num)'] = 'accounts/payroll/salaries/$1/$2/$3';
+$route['payroll/add-overtime-hours/(:num)'] = 'accounts/payroll/add_overtime_hours/$1';
+
+$route['accounts/print-cc-payment/(:num)'] = 'accounts/cc_payment/print_cc_payment/$1';
+$route['accounts/export-cc-payment/(:num)'] = 'accounts/cc_payment/export_cc_payment/$1';
+$route['accounts/print-cc-payment-pdf/(:num)'] = 'accounts/cc_payment/print_cc_payment_pdf/$1';
+$route['accounts/cc-payment/print-payslip/(:num)/(:num)'] = 'accounts/cc_payment/print_payslip/$1/$2';
+$route['accounts/cc-payment/download-payslip/(:num)/(:num)'] = 'accounts/cc_payment/download_payslip/$1/$2';
+$route['accounts/cc-payment-payslips/(:num)'] = 'accounts/cc_payment/cc_payment_payslips/$1';
+$route['accounts/salary-data'] = 'accounts/cc_payment/salaries';
+$route['accounts/print-cc-payment/(:num)'] = 'accounts/cc_payment/print_cc_payment/$1';
+$route['accounts/export-cc-payment/(:num)'] = 'accounts/cc_payment/export_cc_payment/$1';
+$route['accounts/print-cc-paymen-pdf/(:num)'] = 'accounts/cc_payment/print_cc_payment_pdf/$1';
+$route['print-payslip/(:num)'] = 'admin/payslip_details/$1';
+$route['accounts/search-cc-payment'] = 'accounts/cc_payment/search_cc_payment';
+$route['accounts/close-cc-payment-search'] = 'accounts/cc_payment/close_cc_payment_search';
+$route['accounts/print-cc-nhif-report/(:num)'] = 'accounts/cc_payment/print_nhif_report/$1';
+$route['accounts/export-cc-nhif-report/(:num)'] = 'accounts/cc_payment/export_nhif_report/$1';
+$route['accounts/print-cc-nhif-report-pdf/(:num)'] = 'accounts/cc_payment/print_nhif_report_pdf/$1';
+$route['accounts/print-cc-nssf-report/(:num)'] = 'accounts/cc_payment/print_nssf_report/$1';
+$route['accounts/export-cc-nssf-report/(:num)'] = 'accounts/cc_payment/export_nssf_report/$1';
+$route['accounts/print-cc-nssf-report-pdf/(:num)'] = 'accounts/cc_payment/print_nssf_report_pdf/$1';
+$route['accounts/create-cc-payment'] = 'accounts/cc_payment/create_cc_payment';
+$route['accounts/deactivate-cc-payment/(:num)'] = 'accounts/cc_payment/deactivate_cc_payment/$1';
+$route['accounts/print-payslips'] = 'accounts/cc_payment/print_payslips';
+$route['accounts/cc-payment/edit-payment/(:num)'] = 'accounts/cc_payment/edit_payment/$1';
+$route['accounts/cc-payment/edit_allowance/(:num)'] = 'accounts/cc_payment/edit_allowance/$1';
+$route['accounts/cc-payment/delete_allowance/(:num)'] = 'accounts/cc_payment/delete_allowance/$1';
+$route['accounts/cc-payment/edit_deduction/(:num)'] = 'accounts/cc_payment/edit_deduction/$1';
+$route['accounts/cc-payment/delete_deduction/(:num)'] = 'accounts/cc_payment/delete_deduction/$1';
+$route['accounts/cc-payment/edit_saving/(:num)'] = 'accounts/cc_payment/edit_saving/$1';
+$route['accounts/cc-payment/delete_saving/(:num)'] = 'accounts/cc_payment/delete_saving/$1';
+$route['accounts/cc-payment/edit_loan_scheme/(:num)'] = 'accounts/cc_payment/edit_loan_scheme/$1';
+$route['accounts/cc-payment/delete_loan_scheme/(:num)'] = 'accounts/cc_payment/delete_loan_scheme/$1';
+$route['accounts/cc-payment'] = 'accounts/cc_payment/index';
+$route['accounts/payment-details/(:num)'] = 'accounts/cc_payment/payment_details/$1';
+$route['accounts/save-payment-details/(:num)'] = 'accounts/cc_payment/save_payment_details/$1';
+$route['accounts/update-savings/(:num)'] = 'accounts/cc_payment/update_savings/$1';
+$route['accounts/update-loan-schemes/(:num)'] = 'accounts/cc_payment/update_loan_schemes/$1';
+$route['cc-payment/configuration'] = 'accounts/cc_payment/cc_payment_configuration';
+$route['accounts/cc-payment-configuration'] = 'accounts/cc_payment/cc_payment_configuration';
+$route['accounts/cc-payment/edit-cc-nssf/(:num)'] = 'accounts/cc_payment/edit_cc_nssf/$1';
+$route['accounts/cc-payment/edit-cc-nhif/(:num)'] = 'accounts/cc_payment/edit_cc_nhif/$1';
+$route['accounts/cc-payment/delete-cc-nhif/(:num)'] = 'accounts/cc_payment/delete_cc_nhif/$1';
+$route['accounts/cc-payment/edit-cc-paye/(:num)'] = 'accounts/cc_payment/edit_cc_paye/$1';
+$route['accounts/cc-payment/delete-cc-paye/(:num)'] = 'accounts/cc_payment/delete_cc_paye/$1';
+$route['accounts/cc-payment/add-new-payment/(:num)'] = 'accounts/cc_payment/add_new_payment/$1';
+$route['accounts/cc-payment/edit-payment/(:num)'] = 'accounts/cc_payment/edit_payment/$1';
+$route['accounts/cc-payment/delete-payment/(:num)'] = 'accounts/cc_payment/delete_payment/$1';
+$route['accounts/cc-payment/edit-benefit/(:num)'] = 'accounts/cc_payment/edit_benefit/$1';
+$route['accounts/cc-payment/delete-benefit/(:num)'] = 'accounts/cc_payment/delete_benefit/$1';
+$route['accounts/cc-payment/edit-allowance/(:num)'] = 'accounts/cc_payment/edit_allowance/$1';
+$route['accounts/cc-payment/delete-allowance/(:num)'] = 'accounts/cc_payment/delete_allowance/$1';
+$route['accounts/cc-payment/edit-deduction/(:num)'] = 'accounts/cc_payment/edit_deduction/$1';
+$route['accounts/cc-payment/edit-relief/(:num)'] = 'accounts/cc_payment/edit_relief/$1';
+$route['accounts/cc-payment/delete-deduction/(:num)'] = 'accounts/cc_payment/delete_deduction/$1';
+$route['accounts/cc-payment/edit-other-deduction/(:num)'] = 'accounts/cc_payment/edit_other_deduction/$1';
+$route['accounts/cc-payment/delete-other-deduction/(:num)'] = 'accounts/cc_payment/delete_other_deduction/$1';
+$route['accounts/cc-payment/edit-loan-scheme/(:num)'] = 'accounts/cc_payment/edit_loan_scheme/$1';
+$route['accounts/cc-payment/delete-loan-scheme/(:num)'] = 'accounts/cc_payment/delete_loan_scheme/$1';
+$route['accounts/cc-payment/edit-saving/(:num)'] = 'accounts/cc_payment/edit_saving/$1';
+$route['accounts/cc-payment/delete-saving/(:num)'] = 'accounts/cc_payment/delete_saving/$1';
+$route['accounts/cc-payment/edit-personnel-payments/(:num)'] = 'accounts/cc_payment/edit_personnel_payments/$1';
+$route['accounts/cc-payment/edit-personnel-allowances/(:num)'] = 'accounts/cc_payment/edit_personnel_allowances/$1';
+$route['accounts/cc-payment/edit-personnel-benefits/(:num)'] = 'accounts/cc_payment/edit_personnel_benefits/$1';
+$route['accounts/cc-payment/edit-personnel-deductions/(:num)'] = 'accounts/cc_payment/edit_personnel_deductions/$1';
+$route['accounts/cc-payment/edit-personnel-other-deductions/(:num)'] = 'accounts/cc_payment/edit_personnel_other_deductions/$1';
+$route['accounts/cc-payment/edit-personnel-savings/(:num)'] = 'accounts/cc_payment/edit_personnel_savings/$1';
+$route['accounts/cc-payment/edit-personnel-loan-schemes/(:num)'] = 'accounts/cc_payment/edit_personnel_loan_schemes/$1';
+$route['accounts/cc-payment/edit-personnel-relief/(:num)'] = 'accounts/cc_payment/edit_personnel_relief/$1';
+$route['accounts/cc-payment/view-payslip/(:num)'] = 'accounts/cc_payment/view_payslip/$1';
+$route['accounts/cc-payment/bank'] = 'accounts/cc_payments/bank';
+$route['accounts/cc-payment/generate-cc-bank-report/(:num)'] = 'accounts/cc_payment/generate_bank_report/$1';
+$route['accounts/print-bank-report/(:num)'] = 'accounts/cc_payment/print_monthly_payslips/$1';
+$route['accounts/export-cc-bank-report/(:num)'] = 'accounts/cc_payment/export_cc_payment/$1';
+
+$route['accounts/insurance-invoices'] = 'administration/reports/debtors_report_invoices/0';
+$route['accounts/insurance-invoices/(:num)'] = 'administration/reports/debtors_report_invoices/$1';
+$route['accounts/print-month-payslips/(:num)'] = 'accounts/cc_payment/print_monthly_payslips/$1';
+
+//Always comes last;;nt/cc_payment/$1/$2';
 
 
 /*
@@ -560,90 +663,23 @@ $route['inventory-setup/stores/(:num)'] = 'inventory/stores/index/$1';
 $route['inventory-setup/add-store'] = 'inventory/stores/add_store';
 $route['inventory-setup/edit-store/(:num)'] = 'inventory/stores/edit_store/$1';
 
-$route['inventory-setup/item-categories'] = 'inventory/items_categories/index';
-$route['inventory-setup/delete-category/(:num)']='inventory/items_categories/delete_category/$1';
-$route['inventory-setup/deactivate-category/(:num)']='inventory/items_categories/deactivate_category/$1';
-$route['inventory-setup/activate-category/(:num)']='inventory/items_categories/activate_category/$1';
-$route['inventory-setup/item-categories/(:num)'] = 'inventory/items_categories/index/$1';
-$route['inventory-setup/item_add-category'] = 'inventory/items_categories/add_item_category';
-$route['inventory-setup/edit-item-category/(:num)'] = 'inventory/items_categories/edit_category/$1';
-$route['inventory-setup/inventory-stores'] = 'inventory/stores/index';
-$route['inventory-setup/stores/(:num)'] = 'inventory/stores/index/$1';
-$route['inventory-setup/add-store'] = 'inventory/stores/add_store';
-$route['inventory-setup/edit-store/(:num)'] = 'inventory/stores/edit_store/$1';
-
 $route['inventory-setup/suppliers'] = 'inventory/suppliers/index';
 $route['inventory-setup/suppliers/(:num)'] = 'inventory/suppliers/index/$1';
 $route['inventory-setup/add-supplier'] = 'inventory/suppliers/add_supplier';
 $route['inventory-setup/edit-supplier/(:num)'] = 'inventory/suppliers/edit_supplier/$1';
-$route['inventory-setup/deactivate-supplier/(:num)']='inventory/suppliers/deactivate_supplier/$1';
-$route['inventory-setup/activate-supplier/(:num)']='inventory/suppliers/activate_supplier/$1';
-$route['inventory-setup/delete-supplier/(:num)']='inventory/suppliers/delete_supplier/$1';
-$route['import/import-suppliers'] = 'inventory/suppliers/import_suppliers';
-$route['suppliers/validate-import'] = 'inventory/suppliers/do_suppliers_import';
-$route['suppliers/import-template'] = 'inventory/suppliers/import_template';
-
-$route['inventory-setup/clients'] = 'inventory/clients/index';
-$route['inventory-setup/clients/(:num)'] = 'inventory/clients/index/$1';
-$route['inventory-setup/add-clients'] = 'inventory/clients/add_clients';
-$route['inventory-setup/delete-clients/(:num)']='inventory/clients/delete_clients/$1';
-$route['inventory-setup/activate-clients/(:num)']='inventory/clients/activate_clients/$1';
-$route['inventory-setup/deactivate-clients/(:num)']='inventory/clients/deactivate_clients/$1';
-$route['inventory-setup/edit-clients/(:num)'] = 'inventory/clients/edit_clients/$1';
-$route['import/import-clients'] = 'inventory/clients/import_clients';
-$route['clients/validate-import'] = 'inventory/clients/do_clients_import';
-$route['clients/import-template'] = 'inventory/clients/import_template';
-
 
 $route['inventory/orders'] = 'inventory/orders/index';
 $route['inventory/orders/(:num)'] = 'inventory/orders/index/$1';
 $route['inventory/add-order'] = 'inventory/orders/add_order';
 $route['inventory/add-order-item/(:num)/(:any)'] = 'inventory/orders/add_order_item/$1/$2';
 $route['inventory/update-order-item/(:num)/(:any)/(:num)'] = 'inventory/orders/update_order_item/$1/$2/$3';
-
-$route['requests'] = 'inventory/requests/index';
-$route['inventory/requests/(:num)'] = 'inventory/requests/index/$1';
-$route['inventory/add-requests'] = 'inventory/requests/add_request';
-$route['inventory/add-request-item/(:num)/(:num)'] = 'inventory/requests/add_request_item/$1/$2';
-$route['inventory/add-event-logistic/(:num)/(:num)']='inventory/requests/add_event_logistic/$1/$2';
-$route['inventory/delete-request-item/(:num)/(:num)/(:any)']='inventory/requests/delete_request_item/$1/$2/$3';
-$route['inventory/delete-request-logistics/(:num)/(:num)/(:num)/(:any)']='inventory/requests/delete_request_logistics/$1/$2/$3/$4';
-$route['inventory/update-request-item/(:num)/(:num)/(:any)/(:num)'] = 'inventory/requests/update_request_item/$1/$2/$3/$4';
-$route['inventory/send-request-for-approval/(:num)/(:num)'] = 'inventory/requests/send_request_for_approval/$1';
-$route['inventory/update-request-logistic/(:num)/(:num)/(:any)/(:num)']='inventory/requests/update_request_logistic/$1/$2/$3/$4';
-$route['requests-reports']='administration/reports/get_request_reports';
-
-
-//searches for extreme modules
-$route['requests/requests-search']='inventory/requests/requests_search';
-$route['inventory/items-search']='inventory_management/items/item_search';
-$route['inventory/services-search']='inventory_management/services/service_search';
-$route['requests/close-request-search']='inventory/requests/close_request_search';
-$route['inventory/search-items']='inventory_management/items/item_search';
-$route['clients/close-item-search']='inventory/clients/close_clients_search';
-$route['items/close-request-search']='inventory_management/items/close_item_search';
-$route['inventory/clients-search']='inventory/clients/search_clients';
-$route['inventory/search-categories']='inventory/items_categories/search_categories';
-$route['inventory-setup/close-categories-search']='inventory/items_categories/close_categories_search';
-$route['inventory/search-suppliers']='inventory/suppliers/search_suppliers';
-$route['inventory-setup/close-suppliers-search']='inventory/suppliers/close_suppliers_search';
-
-//sorting routes for extreme inventory
-$route['inventory/requests/(:any)/(:any)/(:num)'] = 'inventory/requests/index/$1/$2/$3';
-$route['inventory/suppliers/(:any)/(:any)/(:num)'] = 'inventory/suppliers/index/$1/$2/$3';
-$route['inventory/item-categories/(:any)/(:any)/(:num)']='inventory/items_categories/index/$1/$2/$3';
-$route['inventory/items/(:any)/(:any)/(:num)']='inventory_management/items/index/$1/$2/$3';
-$route['inventory/clients/(:any)/(:any)/(:num)']='inventory/clients/index/$1/$2/$3';
-
-
-$route['inventory/update-supplier-prices/(:num)/(:any)/(:num)'] = 'inventory/requests/update_supplier_prices/$1/$2/$3';
-$route['inventory/send-for-correction/(:num)'] = 'inventory/requests/send_request_for_correction/$1';
-$route['inventory/send-for-approval/(:num)'] = 'inventory/requests/send_request_for_approval/$1';
-$route['inventory/send-for-approval/(:num)/(:num)'] = 'inventory/requests/send_request_for_approval/$1/$2';
-$route['inventory/request-for-quotation/(:num)']='inventory/requests/print_lpo_new/$1';
-$route['inventory/submit-supplier/(:num)/(:any)'] = 'inventory/requests/submit_supplier/$1/$2';
-$route['inventory/generate-lpo/(:num)/(:any)'] = 'inventory/requests/print_lpo_new/$1/$2/';
-$route['inventory/generate-rfq/(:num)/(:num)/(:any)'] = 'inventory/requests/print_rfq_new/$1/$2/$3';
+$route['inventory/update-supplier-prices/(:num)/(:any)/(:num)'] = 'inventory/orders/update_supplier_prices/$1/$2/$3';
+$route['inventory/send-for-correction/(:num)'] = 'inventory/orders/send_order_for_correction/$1';
+$route['inventory/send-for-approval/(:num)'] = 'inventory/orders/send_order_for_approval/$1';
+$route['inventory/send-for-approval/(:num)/(:num)'] = 'inventory/orders/send_order_for_approval/$1/$2';
+$route['inventory/submit-supplier/(:num)/(:any)'] = 'inventory/orders/submit_supplier/$1/$2';
+$route['inventory/generate-lpo/(:num)'] = 'inventory/orders/print_lpo_new/$1';
+$route['inventory/generate-rfq/(:num)/(:num)/(:any)'] = 'inventory/orders/print_rfq_new/$1/$2/$3';
 $route['inventory/edit_order/(:num)'] = 'inventory/orders/edit_order/$1';
 
 $route['inventory/products'] = 'inventory_management/index';
@@ -652,31 +688,6 @@ $route['inventory/add-product'] = 'inventory_management/add_product';
 $route['inventory/activate-product/(:num)'] = 'inventory_management/products/activate_product/$1';
 $route['inventory/deactivate-product/(:num)'] = 'inventory_management/products/deactivate_product/$1';
 $route['inventory/edit-product/(:num)'] = 'inventory_management/edit_product/$1';
-
-$route['inventory/item'] = 'inventory_management/items';
-$route['inventory/items/(:num)'] = 'inventory_management/index/$1';
-$route['inventory/add-item'] = 'inventory_management/items/add_item';
-$route['inventory/activation/activate/(:num)'] = 'inventory_management/items/activate_item/$1';
-$route['inventory/activation/deactivate/(:num)'] = 'inventory_management/items/deactivate_item/$1';
-$route['inventory/edit-item/(:num)'] = 'inventory_management/items/edit_item/$1';
-$route['inventory/edit-service/(:num)'] = 'inventory_management/services/edit_service/$1';
-$route['inventory/delete-item/(:num)'] = 'inventory_management/items/delete_item/$1';
-$route['inventory-management/delete-service/(:num)'] = 'inventory_management/services/delete_service/$1';
-
-//import paths
-$route['item/validate-import'] = 'inventory_management/items/do_items_import';
-$route['item/import-template'] = 'inventory_management/items/import_template';
-$route['import/import-assets'] = 'inventory_management/items/import_items';
-$route['import/rate-card'] = 'inventory_management/items/import_rate_card';
-$route['import-rate-card-template']= 'inventory_management/items/import_rate_card_template';
-$route['validate-rate-card-template']='inventory_management/items/do_rate_card_import';
-$route['import/import-services'] = 'inventory_management/services/import_services';
-$route['service/import-template'] = 'inventory_management/services/import_template';
-$route['inventory/services'] = 'inventory_management/services';
-$route['inventory/add-service'] = 'inventory_management/services/add_service';
-$route['service/validate-import'] = 'inventory_management/services/do_services_import';
-$route['inventory-management/activation/activate/(:num)'] = 'inventory_management/services/activate_service/$1';
-$route['inventory-management/activation/deactivate/(:num)'] = 'inventory_management/services/deactivate_service/$1';
 
 $route['inventory/product-details/(:num)'] = 'inventory_management/manage_product/$1';
 $route['inventory/manage-store'] = 'inventory_management/manage_store';
@@ -702,33 +713,85 @@ $route['inventory/close-product-search'] = 'inventory_management/close_inventory
 
 
 
-
 $route['orders'] = 'inventory/orders/index';
 
-//inventory routes
-$route['inventory/inventory-add-item/(:num)'] = 'inventory_management/items/add_inventory_item/$1';
-$route['inventory/inventory-edit-item/(:num)']= 'inventory_management/items/edit_inventory_item/$1';
-$route['inventory/delete-inventory-item/(:num)']='inventory_management/items/delete_inventory_item/$1';
-
-//events
-$route['inventory/add-request-event/(:num)/(:any)'] = 'inventory/requests/add_request_event/$1/$2';
-
-
-//duplicates for contractual clients
-$route['inventory/duplicate-request/(:num)/(:any)']='inventory/requests/duplicate_request/$1/$2';
+//departments
+$route['departments'] = 'admin/departments/index';
+$route['administration/add-department'] = 'admini/departments/add_department';
+$route['administration/edit-department/(:num)'] = 'admin/departments/edit_department/$1';
+$route['administration/delete-department/(:num)'] = 'admini/departments/delete_department/$1';
+$route['administration/activate-department/(:num)'] = 'admini/departments/activate_department/$1';
+$route['administration/deactivate-department/(:num)'] = 'admin/departments/deactivate_department/$1';
 
 //import personnel routes
 $route['import/personnel'] = 'hr/personnel/import_personnel';
 $route['import/personnel-template'] = 'hr/personnel/import_personnel_template';
 $route['import/import-personnel'] = 'hr/personnel/do_personnel_import';
 
+//import personnel emails
+$route['import/personnel-emails'] = 'hr/personnel/import_personnel_emails';
+$route['import/personnel-emails-template'] = 'hr/personnel/import_personnel_emails_template';
+$route['import/import-personnel-emails'] = 'hr/personnel/do_personnel_emails_import';
+
+//import branches routes
+$route['import/branches'] = 'admin/branches/import_branches';
+$route['import/branches-template'] = 'admin/branches/import_branches_template';
+$route['import/import-branches'] = 'admin/branches/do_branches_import';
+
 //payroll data import
 $route['import/payroll-data'] = 'hr/import_payroll';
 $route['import/payroll-template'] = 'hr/import_payroll_template';
 $route['import/import-payroll']= 'hr/do_payroll_import';
 
-//event personnel routes
-$route['inventory/add-request-personnel/(:num)/(:num)']='inventory/requests/add_request_personnel/$1/$2';
+//import salary advances
+$route['salary-advance/import-salary-advance'] = 'accounts/salary_advance/import_salary_advance';
+$route['import/import-salary-advances'] = 'accounts/salary_advance/do_advance_import';
+$route['import/advance-template'] = 'accounts/salary_advance/advances_template';
+$route['download-salary-advance'] = 'accounts/salary_advance/download_salary_advance';
 
-//personnel_timesheets
+// p9 form
+$route['my-account/p9'] = 'accounts/payroll/generate_p9_form';
+$route['accounts/generate_p9_form'] = 'accounts/payroll/p9_form';
+
+//p10 form
+$route['accounts/p10'] = 'accounts/payroll/generate_p10_form';
+$route['accounts/generate_p10_form'] = 'accounts/payroll/p10_form';
+
+//timesheets
 $route['timesheets/add-timesheet'] = 'hr/personnel/add_personnel_timesheet';
+
+//bank reports
+
+
+//salary advances
+$route['salary-advance'] = 'accounts/salary_advance/index';
+$route['accounts/search-advances'] = 'accounts/salary_advance/search_salary_advance';
+$route['close-salary-advance-search'] = 'accounts/salary_advance/close_advance_search';
+$route['salary-advance/(:any)/(:any)'] = 'accounts/salary_advance/index/$1/$2';
+
+//payroll reports routes
+$route['accounts/payroll-reports'] = 'accounts/payroll/payroll_report';
+$route['accounts/search-payroll-reports'] = 'accounts/payroll/search_payroll_reports';
+
+//import overtime-hours
+$route['import/overtime'] = 'accounts/payroll/import_overtime';
+$route['import/overtime-template'] = 'accounts/payroll/import_overtime_template';
+$route['import/import-overtime'] = 'accounts/payroll/do_overtime_import';
+
+//send payslips to the specific personnel
+$route['accounts/send-month-payslips/(:num)'] = 'accounts/payroll/send_monthly_payslips/$1';
+$route['accounts/cc-payment/access-payslip/(:num)/(:num)'] = 'accounts/cc-payment/access_payslip/$1/$2';
+$route['accounts/send-cc-month-payslips/(:num)'] = 'accounts/cc_payment/send_monthly_payslips/$1';
+$route['accounts/cc-payment/access-payslip/(:num)/(:num)'] = 'accounts/cc-payment/access_payslip/$1/$2';
+
+//Always comes last
+$route['accounts/payroll/(:any)/(:any)'] = 'accounts/payroll/payrolls/$1/$2';
+$route['accounts/payroll/(:any)/(:any)/(:num)'] = 'accounts/payroll/payrolls/$1/$2/$3';
+$route['accounts/salary-data/(:any)/(:any)'] = 'accounts/payroll/salaries/$1/$2';
+$route['accounts/salary-data/(:any)/(:any)/(:num)'] = 'accounts/payroll/salaries/$1/$2/$3';
+$route['accounts/print-month-summary/(:num)/(:num)'] = 'accounts/payroll/month_summary/$1/$2';
+$route['accounts/cc-payment/(:any)/(:any)'] = 'accounts/cc_payment/cc_payments/$1/$2';
+$route['accounts/cc-payment/(:any)/(:any)/(:num)'] = 'accounts/cc_payment/cc_payments/$1/$2/$3';
+$route['accounts/salary-data/(:any)/(:any)'] = 'accounts/cc_payment/salaries/$1/$2';
+$route['accounts/salary-data/(:any)/(:any)/(:num)'] = 'accounts/cc_payment/salaries/$1/$2/$3';
+$route['accounts/print-cc-month-summary/(:num)/(:num)'] = 'accounts/cc_payment/month_summary/$1/$2';

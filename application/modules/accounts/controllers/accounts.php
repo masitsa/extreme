@@ -15,6 +15,7 @@ class Accounts extends MX_Controller
 		$this->load->model('admin/branches_model');
 		$this->load->model('petty_cash_model');
 		$this->load->model('accounts_model');
+		$this->load->model('cc_payment_model');
 		/*$this->load->model('nurse/nurse_model');
 		$this->load->model('reception/reception_model');
 		$this->load->model('reception/database');

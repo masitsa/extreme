@@ -147,10 +147,24 @@ class Personnel_model extends CI_Model
 	public function retrieve_payroll_personnel($where)
 	{
 		$this->db->where($where);
+		$query = $this->db->get('personnel,payroll_item');
+		
+		return $query;
+	}	
+	public function retrieve_cc_payment_personnel($where)
+	{
+		$this->db->where($where);
 		$query = $this->db->get('personnel');
 		
 		return $query;
 	}	
+	public function retrieve_cc_payment_ccpersonnel($where)
+	{
+		$this->db->where($where);
+		$query = $this->db->get('personnel,cc_payment_item');
+		
+		return $query;
+	}
 	/*
 	*	Retrieve all personnel
 	*

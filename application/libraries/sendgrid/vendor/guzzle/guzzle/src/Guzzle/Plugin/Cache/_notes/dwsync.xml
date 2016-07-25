@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="CacheKeyProviderInterface.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064234600000000" Dst="0" />
+<file name="CachePlugin.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064234600000000" Dst="0" />
+<file name="CacheStorageInterface.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064234600000000" Dst="0" />
+<file name="DefaultCacheKeyProvider.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064234600000000" Dst="0" />
+<file name="CallbackCanCacheStrategy.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064234600000000" Dst="0" />
+<file name="CanCacheStrategyInterface.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064234600000000" Dst="0" />
+<file name="DefaultCacheStorage.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064234600000000" Dst="0" />
+<file name="DefaultCanCacheStrategy.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064234600000000" Dst="0" />
+<file name="DefaultRevalidation.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064234600000000" Dst="0" />
+<file name="DenyRevalidation.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064234600000000" Dst="0" />
+<file name="RevalidationInterface.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064234600000000" Dst="0" />
+<file name="SkipRevalidation.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064234600000000" Dst="0" />
+</dwsync>
