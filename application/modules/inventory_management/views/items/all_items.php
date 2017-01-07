@@ -88,7 +88,7 @@ echo $this->load->view('inventory/search/search_items', '' , TRUE);
 							';
 							
 							//get all administrators
-							$personnel_query = $this->personnel_model->get_all_personnel();
+							$personnel_query = $this->personnel_model->all_personnel();
 							
 							
 							foreach ($query->result() as $row)
