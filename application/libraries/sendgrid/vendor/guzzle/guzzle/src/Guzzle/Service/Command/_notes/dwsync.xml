@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="AbstractCommand.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064236400000000" Dst="0" />
+<file name="ClosureCommand.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064236400000000" Dst="0" />
+<file name="CommandInterface.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064236400000000" Dst="0" />
+<file name="CreateResponseClassEvent.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064236400000000" Dst="0" />
+<file name="DefaultRequestSerializer.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064236400000000" Dst="0" />
+<file name="DefaultResponseParser.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064236400000000" Dst="0" />
+<file name="OperationCommand.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064237000000000" Dst="0" />
+<file name="OperationResponseParser.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064237000000000" Dst="0" />
+<file name="RequestSerializerInterface.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064237000000000" Dst="0" />
+<file name="ResponseClassInterface.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064237000000000" Dst="0" />
+<file name="ResponseParserInterface.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064237000000000" Dst="0" />
+</dwsync>

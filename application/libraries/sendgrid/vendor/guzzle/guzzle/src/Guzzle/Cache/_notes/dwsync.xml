@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="AbstractCacheAdapter.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="CacheAdapterFactory.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="CacheAdapterInterface.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="ClosureCacheAdapter.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="DoctrineCacheAdapter.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="NullCacheAdapter.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="Zf1CacheAdapter.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232200000000" Dst="0" />
+<file name="Zf2CacheAdapter.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232200000000" Dst="0" />
+</dwsync>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="AbstractEntityBodyDecorator.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232200000000" Dst="0" />
+<file name="CachingEntityBody.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232200000000" Dst="0" />
+<file name="Client.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232200000000" Dst="0" />
+<file name="ClientInterface.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232200000000" Dst="0" />
+<file name="EntityBody.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232200000000" Dst="0" />
+<file name="EntityBodyInterface.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232200000000" Dst="0" />
+<file name="IoEmittingEntityBody.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232800000000" Dst="0" />
+<file name="Mimetypes.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232800000000" Dst="0" />
+<file name="ReadLimitEntityBody.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232800000000" Dst="0" />
+<file name="QueryString.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232800000000" Dst="0" />
+<file name="RedirectPlugin.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232800000000" Dst="0" />
+<file name="StaticClient.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232800000000" Dst="0" />
+<file name="Url.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064232800000000" Dst="0" />
+</dwsync>

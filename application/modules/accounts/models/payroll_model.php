@@ -1,4 +1,5 @@
 <?php
+// require_once "./application/libraries/mpdf/Mpdf.php";
 
 class Payroll_model extends CI_Model 
 {	
@@ -324,8 +325,8 @@ class Payroll_model extends CI_Model
 	
 	public function get_personnel_details($personnel_id)
 	{
-		$table = "personnel";
-		$where = "personnel_id = $personnel_id";
+		$table = "personnel, branch";
+		$where = "personnel.branch_id = branch.branch_id AND personnel.personnel_id = ".$personnel_id;
 		$items = "*";
 		$order = "personnel_id";
 		
@@ -501,14 +502,18 @@ class Payroll_model extends CI_Model
 	{
 		//Delete salary for that month
 		$table = "payroll_item";
+		$total_benefit_amount = $total_payment_amount = $total_allowance_amount = $total_deduction_amount = $total_other_deduction_amount = $total_nssf_amount = $total_nhif_amount = $total_life_ins_amount = $total_paye_amount = $total_monthly_relief_amount = $total_insurance_amount = $total_scheme_amount = $total_savings_amount = $total_insurance_relief = array();
+		$total_benefits_array = $total_payments_array = $total_allowances_array = $total_deductions_array = $total_other_deductions_array = array();
 		
 		//get personnel
-		$this->db->where('branch_id = '.$branch_id.' AND personnel_type_id = 1');
+		$this->db->where('branch_id = '.$branch_id.' AND personnel_type_id = 1 AND personnel_status = 1');
 		$result = $this->db->get('personnel');//echo $result->num_rows();die();
 		if($result->num_rows() > 0)
 		{
 			foreach ($result->result() as $row):
 				$personnel_id = $row->personnel_id;
+				$personnel_number = $row->personnel_number;
+				$total_benefits = $total_payments = $total_allowances = $total_deductions = $total_other_deductions = 0;
 				
 				/*
 					--------------------------------------------------------------------------------------
@@ -517,7 +522,6 @@ class Payroll_model extends CI_Model
 				*/
 				$result2 = $this->payroll_model->get_personnel_payments($personnel_id);
 				$table_payment = $this->get_table_id("payment");
-				$total_payments = 0;
 				
 				if($result2->num_rows() > 0)
 				{
@@ -525,6 +529,11 @@ class Payroll_model extends CI_Model
 						$payment = $row2->amount;
 						$payment_id = $row2->id;
 						$total_payments += $payment;
+						
+						/*if($personnel_number == 'IH005')
+						{
+							var_dump($payment);die();
+						}*/
 				
 						$items = array(
 							"payroll_id" => $payroll_id,
@@ -533,6 +542,20 @@ class Payroll_model extends CI_Model
 							"personnel_id" => $personnel_id,
 							"payroll_item_amount" => round($payment)
 						);
+						
+						if(!isset($total_payment_amount[$personnel_id][$payment_id]))
+						{
+							$total_payment_amount[$personnel_id][$payment_id] = 0;
+						}
+						
+						$total_payment_amount[$personnel_id][$payment_id] = round($payment);
+						
+						if(!isset($total_payments_array[$payment_id]))
+						{
+							$total_payments_array[$payment_id] = 0;
+						}
+						
+						$total_payments_array[$payment_id] += round($payment);
 				
 						$this->db->insert($table, $items);
 					endforeach;
@@ -566,6 +589,20 @@ class Payroll_model extends CI_Model
 							"personnel_id" => $personnel_id,
 							"payroll_item_amount" => round($benefit)
 						);
+						
+						if(!isset($total_benefit_amount[$personnel_id][$benefit_id]))
+						{
+							$total_benefit_amount[$personnel_id][$benefit_id] = 0;
+						}
+						
+						$total_benefit_amount[$personnel_id][$benefit_id] = round($benefit);
+						
+						if(!isset($total_benefits_array[$benefit_id]))
+						{
+							$total_benefits_array[$benefit_id] = 0;
+						}
+						
+						$total_benefits_array[$benefit_id] += round($benefit);
 				
 					$this->db->insert($table, $items);
 					endforeach;
@@ -599,6 +636,20 @@ class Payroll_model extends CI_Model
 							"personnel_id" => $personnel_id,
 							"payroll_item_amount" => round($allowance)
 						);
+						
+						if(!isset($total_allowance_amount[$personnel_id][$allowance_id]))
+						{
+							$total_allowance_amount[$personnel_id][$allowance_id] = 0;
+						}
+						
+						$total_allowance_amount[$personnel_id][$allowance_id] = round($allowance);
+						
+						if(!isset($total_allowances_array[$allowance_id]))
+						{
+							$total_allowances_array[$allowance_id] = 0;
+						}
+						
+						$total_allowances_array[$allowance_id] += round($allowance);
 				
 					$this->db->insert($table, $items);
 					endforeach;
@@ -619,7 +670,7 @@ class Payroll_model extends CI_Model
 				$nssf_query = $this->payroll_model->get_nssf();
 				$nssf = 0;
 				
-				if($nssf_query->num_rows() > 0)
+				if(($nssf_query->num_rows() > 0) && ($gross_taxable > 0))
 				{
 					foreach ($nssf_query->result() as $row2)
 					{
@@ -640,8 +691,25 @@ class Payroll_model extends CI_Model
 						}
 					}
 				}
+						
+				if(!isset($total_nssf_amount[$personnel_id]))
+				{
+					$total_nssf_amount[$personnel_id] = 0;
+				}
+				
+				$total_nssf_amount[$personnel_id] = round($nssf);
 				
 				$taxable = $gross_taxable - $nssf;
+				
+				$table_nssf = $this->get_table_id("nssf");
+				
+				$items = array(
+					"payroll_id" => $payroll_id,
+					"table" => $table_nssf,
+					"table_id" => 1,
+					"personnel_id" => $personnel_id,
+					"payroll_item_amount" => round($nssf)
+				);
 				
 				/*if($personnel_id == 242)
 				{
@@ -656,6 +724,13 @@ class Payroll_model extends CI_Model
 				{
 					$paye = 0;
 				}
+						
+				if(!isset($total_paye_amount[$personnel_id]))
+				{
+					$total_paye_amount[$personnel_id] = 0;
+				}
+				
+				$total_paye_amount[$personnel_id] = round($paye);
 				
 				$table_paye = $this->get_table_id("paye");
 				
@@ -685,6 +760,13 @@ class Payroll_model extends CI_Model
 				);
 			
 				$this->db->insert($table, $items);
+						
+				if(!isset($total_monthly_relief_amount[$personnel_id]))
+				{
+					$total_monthly_relief_amount[$personnel_id] = 0;
+				}
+				
+				$total_monthly_relief_amount[$personnel_id] = round($monthly_relief);
 				
 				/*
 					--------------------------------------------------------------------------------------
@@ -705,6 +787,13 @@ class Payroll_model extends CI_Model
 				);
 			
 				$this->db->insert($table, $items);
+						
+				if(!isset($total_insurance_relief[$personnel_id]))
+				{
+					$total_insurance_relief[$personnel_id] = 0;
+				}
+				
+				$total_insurance_relief[$personnel_id] = round($insurance_relief);
 				
 				//insurance amount
 				$table_relief = $this->get_table_id("insurance_amount");
@@ -717,18 +806,13 @@ class Payroll_model extends CI_Model
 				);
 			
 				$this->db->insert($table, $items);
+						
+				if(!isset($total_insurance_amount[$personnel_id]))
+				{
+					$total_insurance_amount[$personnel_id] = 0;
+				}
 				
-				$table_nssf = $this->get_table_id("nssf");
-				
-				$items = array(
-					"payroll_id" => $payroll_id,
-					"table" => $table_nssf,
-					"table_id" => 1,
-					"personnel_id" => $personnel_id,
-					"payroll_item_amount" => round($nssf)
-				);
-			
-				$this->db->insert($table, $items);
+				$total_insurance_amount[$personnel_id] = round($insurance_amount);
 				
 				/*
 					--------------------------------------------------------------------------------------
@@ -739,7 +823,7 @@ class Payroll_model extends CI_Model
 				$nhif_query = $this->payroll_model->calculate_nhif($gross);
 				$nhif = 0;
 				
-				if($nhif_query->num_rows() > 0)
+				if(($nhif_query->num_rows() > 0) && ($gross_taxable > 0))
 				{
 					foreach ($nhif_query->result() as $row2)
 					{
@@ -757,6 +841,13 @@ class Payroll_model extends CI_Model
 				);
 			
 				$this->db->insert($table, $items);
+						
+				if(!isset($total_nhif_amount[$personnel_id]))
+				{
+					$total_nhif_amount[$personnel_id] = 0;
+				}
+				
+				$total_nhif_amount[$personnel_id] = round($nhif);
 				
 				/*
 					--------------------------------------------------------------------------------------
@@ -779,6 +870,20 @@ class Payroll_model extends CI_Model
 							"personnel_id" => $personnel_id,
 							"payroll_item_amount" => round($deduction)
 						);
+						
+						if(!isset($total_deduction_amount[$personnel_id][$deduction_id]))
+						{
+							$total_deduction_amount[$personnel_id][$deduction_id] = 0;
+						}
+						
+						$total_deduction_amount[$personnel_id][$deduction_id] = round($deduction);
+						
+						if(!isset($total_deductions_array[$deduction_id]))
+						{
+							$total_deductions_array[$deduction_id] = 0;
+						}
+						
+						$total_deductions_array[$deduction_id] += round($deduction);
 				
 					$this->db->insert($table, $items);
 					endforeach;
@@ -805,6 +910,20 @@ class Payroll_model extends CI_Model
 							"personnel_id" => $personnel_id,
 							"payroll_item_amount" => round($other_deduction)
 						);
+						
+						if(!isset($total_other_deduction_amount[$personnel_id][$other_deduction_id]))
+						{
+							$total_other_deduction_amount[$personnel_id][$other_deduction_id] = 0;
+						}
+						
+						$total_other_deduction_amount[$personnel_id][$other_deduction_id] = round($other_deduction);
+						
+						if(!isset($total_other_deductions_array[$other_deduction_id]))
+						{
+							$total_other_deductions_array[$other_deduction_id] = 0;
+						}
+						
+						$total_other_deductions_array[$other_deduction_id] += round($other_deduction);
 				
 					$this->db->insert($table, $items);
 					endforeach;
@@ -831,6 +950,13 @@ class Payroll_model extends CI_Model
 							"personnel_id" => $personnel_id,
 							"payroll_item_amount" => round($savings)
 						);
+						
+						if(!isset($total_savings_amount[$personnel_id][$savings_id]))
+						{
+							$total_savings_amount[$personnel_id][$savings_id] = 0;
+						}
+						
+						$total_savings_amount[$personnel_id][$savings_id] = round($savings);
 				
 					$this->db->insert($table, $items);
 					endforeach;
@@ -858,6 +984,13 @@ class Payroll_model extends CI_Model
 							"personnel_id" => $personnel_id,
 							"payroll_item_amount" => round($amount)
 						);
+						
+						if(!isset($total_scheme_amount[$personnel_id][$scheme_id]))
+						{
+							$total_scheme_amount[$personnel_id][$scheme_id] = 0;
+						}
+						
+						$total_scheme_amount[$personnel_id][$scheme_id] = round($amount);
 				
 					$this->db->insert($table, $items);
 					endforeach;
@@ -865,10 +998,64 @@ class Payroll_model extends CI_Model
 			endforeach;
 		}
 		
+		$payroll_data = array(
+			'benefits' => $total_benefit_amount,
+			'total_benefits' => $total_benefits_array,
+			'payments' => $total_payment_amount,
+			'total_payments' => $total_payments_array,
+			'allowances' => $total_allowance_amount,
+			'total_allowances' => $total_allowances_array,
+			'deductions' => $total_deduction_amount,
+			'total_deductions' => $total_deductions_array,
+			'other_deductions' => $total_other_deduction_amount,
+			'total_other_deductions' => $total_other_deductions_array,
+			'nssf' => $total_nssf_amount,
+			'nhif' => $total_nhif_amount,
+			'life_ins' => $total_life_ins_amount,
+			'paye' => $total_paye_amount,
+			'monthly_relief' => $total_monthly_relief_amount,
+			'insurance_relief' => $total_insurance_relief,
+			'insurance' => $total_insurance_amount,
+			'scheme' => $total_scheme_amount,
+			'savings' => $total_savings_amount
+		);
+		
+		$encoded = json_encode($payroll_data);
+		$this->load->helper('file');
+		$payroll_path = realpath(APPPATH . '../assets/payroll/');
+		$file_name = md5(date('Y-m-d H:i:s'));
+		$file = $payroll_path.'/'.$file_name.'.txt';
+		
+		if ( ! write_file($file, $encoded))
+		{
+			echo 'Unable to write the file';
+		}
+		else
+		{
+			$this->db->where('payroll_id', $payroll_id);
+			$this->db->update('payroll', array('file_data' => $file_name));
+			echo 'File written!';
+		}
 		return TRUE;
 	}
 	
-	public function get_payroll_amount($personnel_id, $payroll_id, $table, $table_id)
+	public function calculate_total_payroll_amount($payments_amount, $payment_id)
+	{
+		$total = 0;
+		$count = count($payments_amount->$personnel_id);
+		
+		if($count > 0)
+		{
+			if(isset($payments_amount->$personnel_id->$table_id))
+			{
+				
+			}
+		}
+		
+		return $total;
+	}
+	
+	public function get_payroll_amount_old($personnel_id, $payroll_id, $table, $table_id)
 	{
 		$this->db->select('payroll_item_amount AS amount');
 		$this->db->from('payroll_item');
@@ -902,6 +1089,84 @@ class Payroll_model extends CI_Model
 		}
 		
 		return $amount;
+	}
+	
+	public function get_payroll_amount3($payroll_id, $table, $table_id)
+	{
+		$this->db->select('SUM(payroll_item_amount) AS amount');
+		$this->db->from('payroll_item');
+		$this->db->where("payroll_id = ".$payroll_id." AND `table` = ".$table." AND `table_id` = ".$table_id);
+		
+		$query = $this->db->get();
+		$amount = 0;
+		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$amount = $row->amount;
+		}
+		
+		return $amount;
+	}
+	
+	public function get_total_payroll_amount($payroll_items, $table, $table_id)
+	{
+		$total = 0;
+		if($payroll_items->num_rows() > 0)
+		{
+			foreach($payroll_items->result() as $res)
+			{
+				$payroll_item_amount = $res->payroll_item_amount;
+				$payroll_table = $res->table;
+				$payroll_table_id = $res->table_id;
+				
+				if(($payroll_table == $table) && ($payroll_table_id == $table_id))
+				{
+					$total += $payroll_item_amount;
+				}
+			}
+		}
+		
+		return $total;
+	}
+	
+	public function get_payroll_amount($personnel_id, $payroll_items, $table, $table_id)
+	{
+		$total = 0;
+		if(is_array($payroll_items))
+		{
+			if($payroll_items->num_rows() !== NULL)
+			{
+				if($payroll_items->num_rows() > 0)
+				{
+					foreach($payroll_items->result() as $res)
+					{
+						$payroll_item_amount = $res->payroll_item_amount;
+						$payroll_personnel_id = $res->personnel_id;
+						$payroll_table = $res->table;
+						$payroll_table_id = $res->table_id;
+						
+						if(($payroll_table == $table) && ($payroll_table_id == $table_id) && ($payroll_personnel_id == $personnel_id))
+						{
+							$total += $payroll_item_amount;
+						}
+					}
+				}
+			}
+		}
+		return $total;
+	}
+	
+	public function get_payroll_items($payroll_id)
+	{
+		$this->db->from('payroll_item');
+		$this->db->where("payroll_id = ".$payroll_id);
+		$this->db->order_by('`table`');
+		$this->db->order_by('`table_id`');
+		
+		$query = $this->db->get();
+		
+		return $query;
 	}
 	
 	function get_savings()
@@ -953,11 +1218,12 @@ class Payroll_model extends CI_Model
 	
 	public function get_all_payments()
 	{
-		$table = "payment";
-		$items = "*";
-		$order = "payment_name";
-		$this->db->select($items);
-		$result = $this->db->get($table);
+		//$table = "payment";
+		//$items = "*";
+		//$order = "payment_name";
+		$this->db->select('*');
+		$result = $this->db->get('payment');
+		//var_dump($result );die();
 		return $result;
 	}
 	
@@ -1434,6 +1700,7 @@ class Payroll_model extends CI_Model
 		
 		return $query;
 	}
+
 	
 	public function get_payroll($payroll_id)
 	{
@@ -1552,6 +1819,855 @@ class Payroll_model extends CI_Model
 		else{
 			return FALSE;
 		}
+	}
+	/*//individual p9 data
+	public function get_personnel_p9_data($personnel_id)
+	{	
+		$this->db->select('personnel_payment.personnel_payment_amount, personnel_allowance.personnel_allowance_amount, personnel_payment.personnel_id');
+		$this->db->where('personnel_allowance.personnel_id = '.$personnel_id);
+		$query = $this->db->get('personnel_payment LEFT JOIN personnel_allowance ON personnel_allowance.personnel_id = personnel_payment.personnel_id');
+			
+		return $query;
+	}*/
+	
+	//p9 data
+	public function get_p9_form_data($personnel_id, $from_month_id,$to_month_id,$year)
+	{
+		$this->db->select('');
+		$this->db->where('payroll.payroll_id = payroll_item.payroll_id AND payroll.payroll_status = 1 AND payroll_item.personnel_id ='.$personnel_id. '  AND (payroll.month_id >= '.$from_month_id. ' AND payroll.month_id <= '.$to_month_id. ') AND payroll.payroll_year ='.$year. ' AND payroll.branch_id ='.$this->session->userdata('branch_id'));
+		$query = $this->db->get('payroll,payroll_item');
+		
+		return $query;
+	}
+	
+	//p10 data
+	public function get_p10_form_data($from_month_id,$to_month_id,$year)
+	{
+		$this->db->select('');
+		$this->db->where('payroll.payroll_id = payroll_item.payroll_id AND payroll.payroll_status = 1 AND (payroll.month_id >= '.$from_month_id. ' AND payroll.month_id <= '.$to_month_id. ') AND payroll.payroll_year ='.$year. ' AND payroll.branch_id ='.$this->session->userdata('branch_id'));
+		$query = $this->db->get('payroll,payroll_item');
+		
+		return $query;
+	}
+	
+	public function get_p10_payroll_amount($payroll_id, $table, $table_id)
+	{
+		$this->db->select('SUM(payroll_item_amount) AS amount');
+		$this->db->from('payroll_item');
+		$this->db->where("payroll_id = ".$payroll_id." AND `table` = ".$table." AND table_id = ".$table_id);
+		
+		$query = $this->db->get();
+		$amount = 0;
+		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$amount = $row->amount;
+		}
+		
+		return $amount;
+	}
+	
+	//get bank_data reports
+	public function get_bank_report_data($personnel_id, $month, $branch_id)
+	{
+		$this->db->select('');
+		$this->db->where('payroll.payroll_id = payroll_item.payroll_id AND payroll.payroll_status = 1 AND payroll_item.personnel_id ='.$personnel_id. '  AND payroll.month_id ='.$month.' AND payroll.payroll_year ='.date('Y').' AND payroll.branch_id ='.$branch_id);
+		$query = $this->db->get('payroll,payroll_item');
+		
+		return $query;
+	}
+	
+	//get payroll reports for the branches
+	public function get_payroll_report($table, $where, $config, $page, $order, $order_method)
+	{
+		$this->db->select();
+		$this->db->where($where);
+		$this->db->order_by($order);
+		$query = $this->db->get($table);
+		
+		if ($query->num_rows() > 0)
+		{
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+		
+	}
+	public function get_payroll_summary($where)
+	{
+		$this->db->select('payroll.payroll_id, personnel.personnel_id,payroll.branch_id');
+		$this->db->where($where);
+		$query = $this->db->get('personnel, branch, payroll_item, payroll,month');
+		
+		return $query;
+	}
+	public function get_most_recent_month_active_payroll($branch_id, $month, $year)
+	{
+		$this->db->where('payroll_status = 1 AND payroll_closed = 0 AND branch_id ='.$branch_id.' AND month_id ='.$month.' AND payroll_year ='.$year);
+		$query = $this->db->get('payroll');
+		if($query->num_rows() > 0)
+		{
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+	public function get_most_recent_year_active_payroll($branch_id)
+	{
+		$this->db->select('MAX(payroll_year) as payroll_year');
+		$this->db->where('payroll_status = 1 AND payroll_closed = 0 AND branch_id ='.$branch_id);
+		$query = $this->db->get('payroll');
+		if($query->num_rows() > 0)
+		{
+			$recent_year = $query->row();
+			$year = $recent_year->payroll_year;
+		}
+		
+		return $year;
+	}
+	public function get_payroll_summary_report($branch_id, $payroll_items, $payment_table, $table_id)
+	{
+		$total = 0;
+		if($payroll_items->num_rows() > 0)
+		{
+			foreach($payroll_items->result() as $res)
+			{
+				$payroll_item_amount = $res->payroll_item_amount;
+				$payroll_personnel_id = $res->personnel_id;
+				$payroll_table = $res->table;
+				$payroll_table_id = $res->table_id;
+				
+				if(($payroll_table == $table) && ($payroll_table_id == $table_id) && ($payroll_personnel_id == $personnel_id))
+				{
+					$total += $payroll_item_amount;
+				}
+			}
+		}
+		
+		return $total;
+	}
+	
+	//update payment amounts to 0 when payroll is closed
+	public function update_payment_closing_balances()
+	{
+		$items['personnel_payment_amount'] = 0;
+		$items['personnel_payment_date'] = date('Y-m-d H-i-s');
+		$this->db->where('payment_id != 1');
+		$query = $this->db->update('personnel_payment',$items);	
+		return $query;
+	}
+	//update all allowances except house allowance
+	public function update_allowances_closing_balances()
+	{
+		$items['personnel_allowance_amount'] = 0;
+		$items['personnel_allowance_date'] = date('Y-m-d H-i-s');
+		$this->db->where('allowance_id != 7');
+		$query = $this->db->update('personnel_allowance',$items);	
+		return $query;
+	}
+	public function update_overtime_closing_balances()
+	{
+		$items['personnel_overtime_hours'] = 0;
+		$query = $this->db->update('personnel_overtime',$items);	
+		return $query;	
+	}
+	
+	public function update_overtime_hours($personnel_id)
+	{
+		$table = 'personnel_overtime';
+		$update_data['personnel_overtime_hours'] = $this->input->post('personnel_overtime_hours');
+		$overtime_type = $this->input->post('overtime_type');
+		$update_data['overtime_type_rate'] = $this->input->post('overtime_type_rate');
+		
+		//check if personnel has overtime hours
+		$where = array('personnel_id' => $personnel_id, "overtime_type" => $overtime_type);
+		$this->db->where($where);
+		$query = $this->db->get($table);
+		
+		//if personnel exists, update
+		if($query->num_rows() > 0)
+		{
+			$this->db->where($where);
+			if($this->db->update($table, $update_data))
+			{
+				return TRUE;
+			}
+			
+			else
+			{
+				return FALSE;
+			}
+		}
+		
+		//if personnel doesn't exist, insert
+		else
+		{
+			$update_data['personnel_id'] = $personnel_id;
+			$update_data['overtime_type'] = $overtime_type;
+			if($this->db->insert($table, $update_data))
+			{
+				return TRUE;
+			}
+			
+			else
+			{
+				return FALSE;
+			}
+		}
+	}
+	
+	public function get_overtime_hours($personnel_id)
+	{
+		$this->db->where('personnel.personnel_id = personnel_overtime.personnel_id AND personnel.branch_id = branch.branch_id AND personnel.personnel_id = '.$personnel_id);
+		$query = $this->db->get('personnel, branch, personnel_overtime');
+		
+		return $query;
+	}
+	
+	public function calculate_single_overtime($personnel_overtime_hours, $overtime_type, $overtime_type_rate, $branch_working_hours, $personnel_id)
+	{
+		$total_overtime = 0;
+		if($overtime_type_rate == 1)
+		{
+			if($overtime_type == 1)
+			{
+				$overtime_rate = $this->config->item('normal_overtime_rate');
+			}
+			else if($overtime_type == 2)
+			{
+				$overtime_rate = $this->config->item('holiday_overtime_rate');
+			}
+			
+			//get basic pay
+			$this->db->where('personnel_id', $personnel_id);
+			$basic_pay_query = $this->db->get('personnel_payment');
+			$basic_pay = 0;
+			if($basic_pay_query->num_rows() > 0)
+			{
+				$basic_row = $basic_pay_query->row();
+				$basic_pay = $basic_row->personnel_payment_amount;
+			}
+			if($branch_working_hours > 0)
+			{
+				$total_overtime = ($basic_pay * $overtime_rate * $personnel_overtime_hours) / $branch_working_hours;
+			}
+			else
+			{
+				$total_overtime = 0;
+			}
+		}
+		
+		else
+		{
+			$total_overtime = $personnel_overtime_hours;
+		}
+		
+		if(($total_overtime >= 0) && !empty($total_overtime))
+		{
+			return number_format($total_overtime, 2);
+		}
+		
+		else
+		{
+			return $total_overtime;
+		}
+	}
+	
+	public function calculate_overtime($personnel_id)
+	{
+		$query = $this->payroll_model->get_overtime_hours($personnel_id);
+		$total_overtime = 0;
+		
+		if($query->num_rows() > 0)
+		{
+			foreach($query->result() as $row)
+			{
+				$personnel_overtime_hours = $row->personnel_overtime_hours;
+				$branch_working_hours = $row->branch_working_hours;
+				$overtime_type = $row->overtime_type;
+				$overtime_type_rate = $row->overtime_type_rate;
+				
+				if($overtime_type_rate == 1)
+				{
+					if($overtime_type == 1)
+					{
+						$overtime_rate = $this->config->item('normal_overtime_rate');
+					}
+					else if($overtime_type == 2)
+					{
+						$overtime_rate = $this->config->item('holiday_overtime_rate');
+					}
+					
+					//get basic pay
+					$this->db->where('personnel_id', $personnel_id);
+					$basic_pay_query = $this->db->get('personnel_payment');
+					$basic_pay = 0;
+					if($basic_pay_query->num_rows() > 0)
+					{
+						$basic_row = $basic_pay_query->row();
+						$basic_pay = $basic_row->personnel_payment_amount;
+					}
+					if ($branch_working_hours > 0)
+					{
+						$total_overtime += ($basic_pay * $overtime_rate * $personnel_overtime_hours) / $branch_working_hours;
+					}
+					else
+					{
+						$total_overtime = 0;
+					}
+				}
+				
+				else
+				{
+					$total_overtime += $personnel_overtime_hours;
+				}
+			}
+		}
+		
+		//save allowance (overtime)
+		$this->db->where(array('personnel_id' => $personnel_id, 'allowance_id' => 1));
+		$query = $this->db->get('personnel_allowance');
+		
+		//if personnel exists, update
+		if($query->num_rows() > 0)
+		{
+			$this->db->where(array('personnel_id' => $personnel_id, 'allowance_id' => 1));
+			if($this->db->update('personnel_allowance', array('personnel_allowance_amount' => $total_overtime)))
+			{
+			}
+		}
+		
+		else
+		{
+			if($this->db->insert('personnel_allowance', array('personnel_allowance_amount' => $total_overtime, 'personnel_id' => $personnel_id, 'allowance_id' => 1)))
+			{
+			}
+		}
+		return number_format($total_overtime, 2);
+	}
+	
+	//total basic pay for each payroll
+	public function get_total_basic_pay($payroll_id,$branch_id)
+	{
+		$this->db->select('SUM(payroll_item_amount) AS total_basic_pay');
+		$this->db->where('payroll.payroll_id = payroll_item.payroll_id AND payroll_item.table = 7 AND  payroll_item.table_id = 1 AND payroll.payroll_status = 1 AND payroll_item.personnel_id = personnel.personnel_id AND personnel.branch_id = '.$branch_id.' AND payroll.branch_id ='.$branch_id);
+		$query = $this->db->get('payroll,payroll_item,personnel');
+		
+		if($query->num_rows() > 0)
+		{
+			$basic_row = $query->row();
+			$basic_pay = $basic_row->total_basic_pay;
+		}
+		return $basic_pay;
+	}
+	
+	//total benefits for each payroll
+	public function get_total_benefits($payroll_id,$branch_id)
+	{
+		$this->db->select('SUM(payroll_item_amount) AS total_benefits');
+		$this->db->where('payroll.payroll_id = payroll_item.payroll_id AND payroll_item.table = 8 AND  payroll_item.table_id = benefit.benefit_id AND payroll.payroll_status = 1 AND payroll_item.personnel_id = personnel.personnel_id AND personnel.branch_id = '.$branch_id.' AND payroll.branch_id ='.$branch_id);
+		$query = $this->db->get('payroll,payroll_item,personnel,benefit');
+		
+		if($query->num_rows() > 0)
+		{
+			$benefits = $query->row();
+			$total_benefits = $benefits->total_benefits;
+		}
+		return $total_benefits;
+	}
+	
+	//total allowances for each payroll
+	public function get_total_allowances($payroll_id,$branch_id)
+	{
+		$this->db->select('SUM(payroll_item_amount) AS total_allowances');
+		$this->db->where('payroll.payroll_id = payroll_item.payroll_id AND payroll_item.table = 3 AND  payroll_item.table_id = allowance.allowance_id AND payroll.payroll_status = 1 AND payroll_item.personnel_id = personnel.personnel_id AND personnel.branch_id = '.$branch_id.' AND payroll.branch_id ='.$branch_id);
+		$query = $this->db->get('payroll,payroll_item,personnel,allowance');
+		
+		if($query->num_rows() > 0)
+		{
+			$allowances = $query->row();
+			$total_allowances = $allowances->total_allowances;
+		}
+		return $total_allowances;
+	}
+	
+	//helb
+	public function get_total_helb($payroll_id,$branch_id)
+	{
+		$this->db->select('SUM(payroll_item_amount) AS total_helb');
+		$this->db->where('payroll.payroll_id = payroll_item.payroll_id AND payroll_item.table = 4 AND  payroll_item.table_id = deduction.deduction_id AND payroll.payroll_status = 1 AND payroll_item.personnel_id = personnel.personnel_id AND personnel.branch_id = '.$branch_id.' AND payroll.branch_id ='.$branch_id);
+		$query = $this->db->get('payroll,payroll_item,personnel,deduction');
+		
+		if($query->num_rows() > 0)
+		{
+			$helb = $query->row();
+			$helb_total = $helb->total_helb;
+		}
+		return $helb_total;
+	}
+	//paye
+	public function get_total_paye($payroll_id,$branch_id)
+	{
+		$this->db->select('SUM(payroll_item_amount) AS total_paye');
+		$this->db->where('payroll.payroll_id = payroll_item.payroll_id AND payroll_item.table = 9 AND  payroll_item.table_id = paye.paye_id AND payroll.payroll_status = 1 AND payroll_item.personnel_id = personnel.personnel_id AND personnel.branch_id = '.$branch_id.' AND payroll.branch_id ='.$branch_id);
+		$query = $this->db->get('payroll,payroll_item,personnel,paye');
+		
+		if($query->num_rows() > 0)
+		{
+			$paye = $query->row();
+			$paye_total = $paye->total_paye;
+		}
+		return $paye_total;
+	}
+	//import overtime template
+	function import_overtime_template()
+	{
+		$this->load->library('Excel');
+		
+		$title = 'Overtime Import Template';
+		$count=1;
+		$row_count=0;
+		
+		$report[$row_count][0] = 'Employee Number';
+		$report[$row_count][1] = 'Amount (Hrs/Value)';
+		$report[$row_count][2] = 'Overtime Type (Normal-1,Holiday-2)';
+		$report[$row_count][3] = 'Overtime Rate (Rate-1,Amount-2)';
+		
+		$row_count++;
+		
+		//create the excel document
+		$this->excel->addArray ( $report );
+		$this->excel->generateXML ($title);
+	}
+	//import overtime data
+	public function import_csv_overtime($upload_path)
+	{
+		//load the file model
+		$this->load->model('admin/file_model');
+		/*
+			-----------------------------------------------------------------------------------------
+			Upload csv
+			-----------------------------------------------------------------------------------------
+		*/
+		$response = $this->file_model->upload_csv($upload_path, 'import_csv');
+		
+		if($response['check'])
+		{
+			$file_name = $response['file_name'];
+			
+			$array = $this->file_model->get_array_from_csv($upload_path.'/'.$file_name);
+			//var_dump($array); die();
+			$response2 = $this->sort_overtime_data($array);
+		
+			if($this->file_model->delete_file($upload_path."\\".$file_name, $upload_path))
+			{
+			}
+			
+			return $response2;
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', $response['error']);
+			return FALSE;
+		}
+	}
+	//sort overtime imported data
+	public function sort_overtime_data($array)
+	{
+		//count total rows
+		$total_rows = count($array);
+		$total_columns = count($array[0]);//var_dump($array);die();
+		
+		//if products exist in array
+		if(($total_rows > 0) && ($total_columns == 4))
+		{
+			$response = '
+				<table class="table table-hover table-bordered ">
+					  <thead>
+						<tr>
+						  <th>#</th>
+						  <th>Member Number</th>
+						  <th>Comment</th>
+						</tr>
+					  </thead>
+					  <tbody>
+			';
+			
+			//retrieve the data from array
+			for($r = 1; $r < $total_rows; $r++)
+			{
+				$personnel_number = $array[$r][0];
+				$personnel_number = str_replace(" ", "", $personnel_number);
+				$branch_id = $this->input->post('branch_id');
+				
+				$items['personnel_overtime_hours'] = $array[$r][1];
+				$items['overtime_type'] = $array[$r][2];
+				$items['overtime_type_rate'] = $array[$r][3];
+				$comment = '';
+				if(!empty($personnel_number))
+				{
+					$personnel_id = $this->get_personnel_id($personnel_number, $branch_id);
+					$items['personnel_id'] = $personnel_id;
+					$overtime_type = $array[$r][2];
+					// check if the personnel overtime already exists
+					if($this->check_current_personnel_overtime_exists($personnel_id,$overtime_type))
+					{
+						$overtime_type = $array[$r][2];
+						
+						//personnel exists for that overtime type then update existing data
+						$this->db->where('personnel_id ='.$personnel_id.' AND overtime_type = '.$overtime_type);
+						if($this->db->update('personnel_overtime', $items))
+						{
+							$this->calculate_overtime($personnel_id);
+							$comment .= '<br/>'.$personnel_number.' overtime of '.$items['personnel_overtime_hours'].' successfully updated';
+							$class = 'success';
+						}
+						
+						else
+						{
+							$comment .= '<br/>'.$personnel_number.' overtime of '.$items['personnel_overtime_hours'].' could not be updated';
+							$class = 'danger';
+						}
+					}
+					else
+					{
+						// number does not exisit
+						//save product in the db
+						if($this->db->insert('personnel_overtime', $items))
+						{
+							$this->calculate_overtime($personnel_id);
+							$comment .= '<br/>'.$personnel_number.' overtime of '.$items['personnel_overtime_hours'].' successfully added to the database';
+							$class = 'success';
+						}
+						
+						else
+						{
+							$comment .= '<br/>Internal error. Could not add mpersonnel to the database. Please contact the site administrator';
+							$class = 'warning';
+						}
+					}
+				}
+				
+				else
+				{
+					$comment .= '<br/>Not saved ensure you have a member number entered';
+					$class = 'danger';
+				}
+				
+				
+				$response .= '
+					
+						<tr class="'.$class.'">
+							<td>'.$r.'</td>
+							<td>'.$personnel_number.'</td>
+							<td>'.$comment.'</td>
+						</tr> 
+				';
+			}
+			
+			$response .= '</table>';
+			
+			$return['response'] = $response;
+			$return['check'] = TRUE;
+		}
+		
+		//if no products exist
+		else
+		{
+			$return['response'] = 'Member data not found ';
+			$return['check'] = FALSE;
+		}
+		
+		return $return;
+	}
+	public function get_personnel_id($personnel_number, $branch_id)
+	{
+		$this->db->where('personnel_number = "'.$personnel_number.'" AND personnel.branch_id = '.$branch_id);
+		$this->db->select('personnel_id');
+		$result = $this->db->get('personnel');
+		$personnelid = 0;
+		if($result->num_rows() > 0)
+		{
+			foreach($result->result() as $personnel)
+			{
+				$personnelid = $personnel->personnel_id;
+			}
+		}
+		return $personnelid;
+	}
+	public function check_current_personnel_overtime_exists($personnel_id,$overtime_type)
+	{
+		$this->db->where('personnel_id =' .$personnel_id.' AND overtime_type = '.$overtime_type);
+		
+		$query = $this->db->get('personnel_overtime');
+		
+		if($query->num_rows() > 0)
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	public function get_personnel_emails($payroll_id)
+	{
+		$this->db->where('payroll.payroll_id = "'.$payroll_id.'" AND personnel.personnel_id = payroll_item.personnel_id AND payroll.payroll_id = payroll_item.payroll_id ');
+		$this->db->select('personnel.*');
+		$this->db->group_by(' personnel.personnel_id');
+		$result = $this->db->get('personnel, payroll, payroll_item');
+		
+		return $result;
+	}
+	public function get_branch_email($branch_id)
+	{
+		
+		$table = "branch";
+		$where = "branch_id = ".$branch_id;
+		
+		$this->db->where($where);
+		$this->db->select('branch_email');
+		$result = $this->db->get($table);
+		if($result->num_rows() > 0)
+		{
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+	public function get_other_benefits()
+	{
+		$this->db->where('benefit_id != 1 ');
+		$this->db->select('*');
+		$result = $this->db->get('benefit');
+		
+			return $result;
+	}
+	public function get_other_allowances()
+	{
+		$this->db->where('allowance_id != 1 AND allowance_id != 7 AND allowance_id != 9');
+		$this->db->select('*');
+		$result = $this->db->get('allowance');
+		
+		return $result;
+	}
+	
+	public function is_payslip_downloaded($personnel_id, $payroll_id)
+	{
+		$this->db->where('personnel_payslip_status = 1 AND personnel_id = '.$personnel_id.' AND payroll_id = '.$payroll_id);
+		$this->db->select('*');
+		$result = $this->db->get('personnel_payslip');
+		
+		if($result->num_rows() > 0)
+		{
+			$row = $result->row();
+			$personnel_payslip_name = $row->personnel_payslip_name;
+			
+			return $personnel_payslip_name;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	public function download_payslip($payroll_id, $personnel_id, $branches, $payslip_path)
+	{
+		$html = '';
+		$where = 'payroll_item.personnel_id = personnel.personnel_id AND payroll_item.payroll_id = '.$payroll_id.' AND payroll_item.personnel_id = '.$personnel_id;
+		
+		if($branches->num_rows() > 0)
+		{
+			$row = $branches->result();
+			$branch_id = $row[0]->branch_id;
+			$branch_name = $row[0]->branch_name;
+			$month_id = $row[0]->month_id;
+			$branch_image_name = $row[0]->branch_image_name;
+			$branch_address = $row[0]->branch_address;
+			$branch_post_code = $row[0]->branch_post_code;
+			$branch_city = $row[0]->branch_city;
+			$branch_phone = $row[0]->branch_phone;
+			$branch_email = $row[0]->branch_email;
+			$branch_location = $row[0]->branch_location;
+			$month_id = $row[0]->month_id;
+			$payroll_year = $row[0]->payroll_year;
+			$file_data = $row[0]->file_data;
+			if(empty($file_data))
+			{
+				echo 'Please generate the payroll again to view the bank report';
+				die();
+			}
+			$this->load->helper('file');
+			$payroll_path = realpath(APPPATH . '../assets/payroll/');
+			$file = $payroll_path.'\\'.$file_data.'.txt';
+			$data['payroll_data'] = json_decode(read_file($file));
+			$where .= ' AND branch_id = '.$branch_id;
+		}
+		$result = $this->personnel_model->get_personnel($personnel_id);
+		
+		if($result->num_rows() > 0)
+		{
+			$row2 = $result->row();
+			$onames = $row2->personnel_onames;
+			$fname = $row2->personnel_fname;
+			$personnel_number = $row2->personnel_number;
+			$nssf_number = $row2->personnel_nssf_number;
+			$nhif_number = $row2->personnel_nhif_number;
+			$kra_pin = $row2->personnel_kra_pin;
+			 
+			$data['personnel_number'] = $personnel_number;
+			$data['nssf_number'] = $nssf_number;
+			$data['nhif_number'] = $nhif_number;
+			$data['kra_pin'] = $kra_pin;
+			$data['personnel_name'] = $fname." ".$onames;
+			$data['personnel_id'] = $personnel_id;
+			$data['personnel_number'] = $row2->personnel_number;
+		}
+		$data['branch_name'] = $branch_name;
+		$data['branch_image_name'] = $branch_image_name;
+		$data['branch_id'] = $branch_id;
+		$data['branch_address'] = $branch_address;
+		$data['branch_post_code'] = $branch_post_code;
+		$data['branch_city'] = $branch_city;
+		$data['branch_phone'] = $branch_phone;
+		$data['branch_email'] = $branch_email;
+		$data['branch_location'] = $branch_location;
+		$data['personnel_id'] = $personnel_id;
+		$data['payroll_id'] = $payroll_id;
+		$data['savings_table'] = $this->payroll_model->get_table_id("savings");
+		$data['loan_scheme_table'] = $this->payroll_model->get_table_id("loan_scheme");
+		$data['payroll'] = $this->payroll_model->get_payroll($payroll_id);
+		$data['query'] = $this->personnel_model->retrieve_payroll_personnel($where);
+		$data['payments'] = $this->payroll_model->get_all_payments();
+		$data['benefits'] = $this->payroll_model->get_all_benefits();
+		$data['allowances'] = $this->payroll_model->get_all_allowances();
+		$data['deductions'] = $this->payroll_model->get_all_deductions();
+		$data['savings'] = $this->payroll_model->get_all_savings();
+		$data['loan_schemes'] = $this->payroll_model->get_all_loan_schemes();
+		$data['other_deductions'] = $this->payroll_model->get_all_other_deductions();
+		$data['personel_payments'] = $this->payroll_model->get_personnel_payments($personnel_id);
+		$data['personnel_benefits'] = $this->payroll_model->get_personnel_benefits($personnel_id);
+		$data['personnel_allowances'] = $this->payroll_model->get_personnel_allowances($personnel_id);
+		$data['personnel_deductions'] = $this->payroll_model->get_personnel_deductions($personnel_id);
+		$data['personnel_other_deductions'] = $this->payroll_model->get_personnel_other_deductions($personnel_id);
+		$data['personnel_savings'] = $this->payroll_model->get_personnel_savings($personnel_id);
+		$data['personnel_loan_schemes'] = $this->payroll_model->get_personnel_scheme($personnel_id);
+		$data['payroll_items'] = $this->payroll_model->get_payroll_items($payroll_id);
+		
+		$html = $this->load->view('payroll/payslips', $data, TRUE);
+		//echo $html; die();
+		//download title
+		$row = $data['query']->row();
+		$personnel_number = $row->personnel_number;
+		$personnel_fname = $row->personnel_fname;
+		$personnel_onames = $row->personnel_onames;
+		$personnel_national_id_number = $row->personnel_national_id_number;
+		$title = $month_id.' '.$payroll_year.' '.$personnel_onames.' '.$personnel_fname.' payslip.pdf';
+        //load mPDF library
+		
+		/*header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1
+		header('Pragma: no-cache'); // HTTP 1.0
+		header('Expires: 0'); // Proxies*/
+        /*$this->load->library('mpdf/mpdf');
+		$this->mpdf->WriteHTML($html);
+		$this->mpdf->SetProtection(array(), $personnel_national_id_number);
+		$this->mpdf->Output($title, 'F');*/
+		$mpdf=new mPDF();
+		$mpdf->WriteHTML($html);
+		$mpdf->SetProtection(array(), $personnel_national_id_number);
+		$mpdf->Output($title, 'F');
+		
+		//Add payslip to database
+		$this->db->where(array('personnel_id' => $personnel_id, 'payroll_id' => $payroll_id));
+		$this->db->update('personnel_payslip', array('personnel_payslip_status' => 0));
+		
+		$this->db->insert('personnel_payslip', array('personnel_payslip_name' => $title, 'personnel_id' => $personnel_id, 'payroll_id' => $payroll_id, 'personnel_payslip_status' => 1, 'created' => date('Y-m-d H:i:s'), 'created_by' => $this->session->userdata('personnel_id'), 'modified_by' => $this->session->userdata('personnel_id')));
+		
+		//check if file has finished downloaded
+		$payslip = $payslip_path.'/'.$title;
+		//echo $payslip;die();
+		while(!file_exists($payslip))
+		{
+			//print_r ($payslip);echo '<br/>';
+			$payslip = $payslip_path.'/'.$title;
+		}
+		return $title;
+		
+		/*$this->mpdf->WriteHTML($html);
+		
+		$content = $this->mpdf->Output('', 'S');
+		
+		$content = chunk_split(base64_encode($content));
+		
+		$mailto = 'alvaro@omnis.co.ke';
+		
+		$from_name = 'Omnis Limited';
+		
+		$from_mail = 'hr@omnis.co.ke';
+		
+		$replyto = 'hr@omnis.co.ke';
+		
+		$uid = md5(uniqid(time()));
+		
+		$subject = 'Payslip';
+		
+		$message = 'Find your payslip attached';
+		
+		$filename = 'payslip.pdf';
+		
+		$header = "From: ".$from_name." <".$from_mail.">\r\n";
+		
+		$header .= "Reply-To: ".$replyto."\r\n";
+		
+		$header .= "MIME-Version: 1.0\r\n";
+		
+		$header .= "Content-Type: multipart/mixed; boundary=\"".$uid."\"\r\n\r\n";
+		
+		$header .= "This is a multi-part message in MIME format.\r\n";
+		
+		$header .= "--".$uid."\r\n";
+		
+		$header .= "Content-type:text/plain; charset=iso-8859-1\r\n";
+		
+		$header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+		
+		$header .= $message."\r\n\r\n";
+		
+		$header .= "--".$uid."\r\n";
+		
+		$header .= "Content-Type: application/pdf; name=\"".$filename."\"\r\n";
+		
+		$header .= "Content-Transfer-Encoding: base64\r\n";
+		
+		$header .= "Content-Disposition: attachment; filename=\"".$filename."\"\r\n\r\n";
+		
+		$header .= $content."\r\n\r\n";
+		
+		$header .= "--".$uid."--";
+		
+		$is_sent = @mail($mailto, $subject, "", $header);
+		
+		$this->mpdf->Output();
+		
+		exit;*/
+	}
+	public function get_other_payments()
+	{
+		$this->db->where('payment_id > 1');
+		$this->db->select('*');
+		$result = $this->db->get('payment');
+		
+		return $result;
 	}
 }
 ?>

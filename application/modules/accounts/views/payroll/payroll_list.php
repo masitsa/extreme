@@ -13,11 +13,12 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th><a href="'.site_url().'accounts/payroll/month_id/'.$order_method.'/'.$page.'">Month</a></th>
-						<th><a href="'.site_url().'accounts/payroll/payroll_year/'.$order_method.'/'.$page.'">Year</a></th>
-						<th><a href="'.site_url().'accounts/payroll/created/'.$order_method.'/'.$page.'">Created</a></th>
-						<th><a href="'.site_url().'accounts/payroll/created_by/'.$order_method.'/'.$page.'">Created by</a></th>
-						<th><a href="'.site_url().'accounts/payroll/payroll_status/'.$order_method.'/'.$page.'">Status</a></th>
+						<th><a href="'.site_url().'accounts/payroll/branch.branch_name/'.$order_method.'/'.$page.'">Branch</a></th>
+						<th><a href="'.site_url().'accounts/payroll/payroll.month_id/'.$order_method.'/'.$page.'">Month</a></th>
+						<th><a href="'.site_url().'accounts/payroll/payroll.payroll_year/'.$order_method.'/'.$page.'">Year</a></th>
+						<th><a href="'.site_url().'accounts/payroll/payroll.created/'.$order_method.'/'.$page.'">Created</a></th>
+						<th><a href="'.site_url().'accounts/payroll/payroll.created_by/'.$order_method.'/'.$page.'">Created by</a></th>
+						<th><a href="'.site_url().'accounts/payroll/payroll.payroll_status/'.$order_method.'/'.$page.'">Status</a></th>
 						<!--<th>Payments</th>
 						<th>Benefits</th>
 						<th>Allowances</th>
@@ -26,7 +27,7 @@
 						<th>NHIF</th>
 						<th>Deductions</th>
 						<th>Net</th>-->
-						<th colspan="6">Reports</th>
+						<th colspan="9">Reports</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -38,6 +39,8 @@
 			
 			foreach ($query->result() as $row)
 			{
+				$branch_id = $row->branch_id;
+				$branch = $row->branch_name;
 				$payroll_id = $row->payroll_id;
 				$payroll_year = $row->payroll_year;
 				$month_name = $row->month_name;
@@ -136,7 +139,7 @@
 				else if($payroll_status == 1)
 				{
 					$status = '<span class="label label-success">Active</span>';
-					$button = '<a class="btn btn-default" href="'.site_url().'accounts/deactivate-payroll/'.$payroll_id.'" onclick="return confirm(\'Do you want to deactivate '.$payroll_name.'?\');" title="Deactivate '.$payroll_name.'"><i class="fa fa-thumbs-down"></i></a>';
+					$button = '<a class="btn btn-default" href="'.site_url().'accounts/deactivate-payroll/'.$payroll_id.'" onclick="return confirm(\'Do you want to close '.$payroll_name.'?\');" title="Close '.$payroll_name.'"><i class="fa fa-times"></i></a>';
 				}
 				
 				$count++;
@@ -168,16 +171,20 @@
 				'
 					<tr>
 						<td>'.$count.'</td>
+						<td>'.$branch.'</td>
 						<td>'.$month_name.'</td>
 						<td>'.$payroll_year.'</td>
 						<td>'.$created.'</td>
 						<td>'.$created_by.'</td>
 						<td>'.$status.'</td>
+						<td><a href="'.site_url().'accounts/payroll/generate-bank-report/'.$payroll_id.'" class="btn btn-sm btn-default" title="Generate Bank '.$payroll_name.'" target="_blank">Bank</a></td>
 						<td><a href="'.site_url().'accounts/print-paye-report/'.$payroll_id.'" class="btn btn-sm btn-danger" title="Print '.$payroll_name.' PAYE report" target="_blank">PAYE</a></td>
 						<td><a href="'.site_url().'accounts/print-nhif-report/'.$payroll_id.'" class="btn btn-sm btn-info" title="Print '.$payroll_name.' NHIF report" target="_blank">NHIF</a></td>
 						<td><a href="'.site_url().'accounts/print-nssf-report/'.$payroll_id.'" class="btn btn-sm btn-warning" title="Print '.$payroll_name.' NSSF report" target="_blank">NSSF</a></td>
 						<td><a href="'.site_url().'accounts/print-payroll/'.$payroll_id.'" class="btn btn-sm btn-success" title="Print '.$payroll_name.'" target="_blank">Payroll</a></td>
 						<td><a href="'.site_url().'accounts/print-month-payslips/'.$payroll_id.'" class="btn btn-sm btn-primary" title="Print '.$payroll_name.'" target="_blank">Payslips</a></td>
+						<td><a href="'.site_url().'accounts/print-month-summary/'.$payroll_id.'/'.$branch_id.'" class="btn btn-sm btn-primary" title="Summary '.$payroll_name.'" target="_blank">Summary</a></td>
+						<td><a href="'.site_url().'accounts/send-month-payslips/'.$payroll_id.'" class="btn btn-sm btn-success" title="Send Payslips for '.$payroll_name.'">Send Payslips</a></td>
 
 						<td>'.$button.'</td>
 					</tr> 
@@ -372,6 +379,7 @@
                             	<div class="row" style="margin-bottom:20px;">
                                     <div class="col-sm-4 col-sm-offset-8">
                                        <!-- <a href="<?php echo site_url();?>accounts/export-payroll" class="btn btn-sm btn-success">Export</a>-->
+                                        <a href="<?php echo site_url();?>accounts/all-payroll" class="btn btn-sm btn-warning pull-left">All Branches Payrolls</a>
                                         <a href="<?php echo site_url();?>accounts/salary-data" class="btn btn-sm btn-info pull-right">Edit personnel payment data</a>
                                         <?php
 										$search = $this->session->userdata('payroll_search');
@@ -391,8 +399,9 @@
 									<?php echo $result;?>
 							
                                 </div>
-							</div>
-                            <div class="panel-footer">
+                                <div class="panel-footer">
                             	<?php if(isset($links)){echo $links;}?>
                             </div>
+							</div>
+                            
 						</section>

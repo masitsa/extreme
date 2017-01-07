@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="AbstractBatchDecorator.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="Batch.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="BatchBuilder.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="BatchCommandTransfer.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="BatchClosureDivisor.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="BatchClosureTransfer.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="BatchDivisorInterface.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="BatchInterface.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="BatchRequestTransfer.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="BatchSizeDivisor.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="BatchTransferInterface.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="ExceptionBufferingBatch.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="FlushingBatch.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="HistoryBatch.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+<file name="NotifyingBatch.php" server="omnis.co.ke//var/www/html/" local="130887098380000000" remote="131064231600000000" Dst="0" />
+</dwsync>

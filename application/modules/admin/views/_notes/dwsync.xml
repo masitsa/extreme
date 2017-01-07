@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="account_overview.php" server="23.229.204.232/public_html/development/" local="130597462191513731" remote="130595436000000000" Dst="0" />
-<file name="dashboard.php" server="23.229.204.232/public_html/development/" local="130597462234288835" remote="130595436000000000" Dst="0" />
-<file name="settings.php" server="23.229.204.232/public_html/development/" local="130597462450655712" remote="130595436600000000" Dst="0" />
-<file name="upload.php" server="23.229.204.232/public_html/development/" local="130597462537830895" remote="130595436600000000" Dst="0" />
-<file name="send_mail.php" server="23.229.204.232/public_html/development/" local="130597418403992971" remote="130602392400000000" Dst="0" />
-<file name="dashboard.php" server="148.251.2.43/public_html/development/" local="130597462240000000" remote="130650276000000000" Dst="0" />
-<file name="send_mail.php" server="148.251.2.43/public_html/development/" local="130597418420000000" remote="130650276000000000" Dst="0" />
-<file name="settings.php" server="148.251.2.43/public_html/development/" local="130597462460000000" remote="130650276000000000" Dst="0" />
-<file name="upload.php" server="148.251.2.43/public_html/development/" local="130597462540000000" remote="130650276000000000" Dst="0" />
-<file name="account_overview.php" server="148.251.2.43/public_html/" local="130597462200000000" remote="130656301800000000" Dst="0" />
-<file name="dashboard.php" server="148.251.2.43/public_html/" local="130597462240000000" remote="130656301800000000" Dst="0" />
-<file name="send_mail.php" server="148.251.2.43/public_html/" local="130597418420000000" remote="130656301800000000" Dst="0" />
-<file name="settings.php" server="148.251.2.43/public_html/" local="130597462460000000" remote="130656301800000000" Dst="0" />
-<file name="upload.php" server="148.251.2.43/public_html/" local="130597462540000000" remote="130656301800000000" Dst="0" />
-<file name="company_details.php" server="privatebushflights.com/public_html/dobi.co.ke/" local="130825639228490369" remote="130825279800000000" Dst="0" />
-<file name="company_details.php" server="autospares.co.ke/public_html/erp/" local="130839314481315069" remote="130839314400000000" Dst="0" />
+<file name="account_overview.php" server="23.229.204.232/public_html/development/" local="130597462191513731" remote="130595436000000000" />
+<file name="dashboard.php" server="23.229.204.232/public_html/development/" local="130597462234288835" remote="130595436000000000" />
+<file name="settings.php" server="23.229.204.232/public_html/development/" local="130597462450655712" remote="130595436600000000" />
+<file name="upload.php" server="23.229.204.232/public_html/development/" local="130597462537830895" remote="130595436600000000" />
+<file name="send_mail.php" server="23.229.204.232/public_html/development/" local="130597418403992971" remote="130602392400000000" />
+<file name="dashboard.php" server="148.251.2.43/public_html/development/" local="130597462240000000" remote="130650276000000000" />
+<file name="send_mail.php" server="148.251.2.43/public_html/development/" local="130597418420000000" remote="130650276000000000" />
+<file name="settings.php" server="148.251.2.43/public_html/development/" local="130597462460000000" remote="130650276000000000" />
+<file name="upload.php" server="148.251.2.43/public_html/development/" local="130597462540000000" remote="130650276000000000" />
+<file name="account_overview.php" server="148.251.2.43/public_html/" local="130597462200000000" remote="130656301800000000" />
+<file name="dashboard.php" server="148.251.2.43/public_html/" local="130597462240000000" remote="130656301800000000" />
+<file name="send_mail.php" server="148.251.2.43/public_html/" local="130597418420000000" remote="130656301800000000" />
+<file name="settings.php" server="148.251.2.43/public_html/" local="130597462460000000" remote="130656301800000000" />
+<file name="upload.php" server="148.251.2.43/public_html/" local="130597462540000000" remote="130656301800000000" />
+<file name="company_details.php" server="privatebushflights.com/public_html/dobi.co.ke/" local="130825639228490369" remote="130825279800000000" />
+<file name="company_details.php" server="autospares.co.ke/public_html/erp/" local="130839314481315069" remote="130839314400000000" />
 </dwsync>
